@@ -9,13 +9,12 @@ import java.util.Date;
 import lombok.Data;
 
 /**
- * 帖子点赞
- *
+ * 题库题目
+ * @TableName question_bank_question
  */
-@TableName(value = "post_thumb")
+@TableName(value ="question_bank_question")
 @Data
-public class PostThumb implements Serializable {
-
+public class QuestionBankQuestion implements Serializable {
     /**
      * id
      */
@@ -23,9 +22,14 @@ public class PostThumb implements Serializable {
     private Long id;
 
     /**
-     * 帖子 id
+     * 题库 id
      */
-    private Long postId;
+    private Long questionBankId;
+
+    /**
+     * 题目 id
+     */
+    private Long questionId;
 
     /**
      * 创建用户 id
