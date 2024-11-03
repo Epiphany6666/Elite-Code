@@ -1,6 +1,12 @@
 package cn.luoyan.elitecode.controller;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONUtil;
+import cn.luoyan.elitecode.model.entity.QuestionBankQuestion;
+import cn.luoyan.elitecode.service.QuestionBankQuestionService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import cn.luoyan.elitecode.annotation.AuthCheck;
 import cn.luoyan.elitecode.common.BaseResponse;
@@ -153,14 +159,8 @@ public class QuestionController {
     @PostMapping("/list/page")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<Question>> listQuestionByPage(@RequestBody QuestionQueryRequest questionQueryRequest) {
-        long current = questionQueryRequest.getCurrent();
-        long size = questionQueryRequest.getPageSize();
-
-        // 
-
-        // 查询数据库
-        Page<Question> questionPage = questionService.page(new Page<>(current, size),
-                questionService.getQueryWrapper(questionQueryRequest));
+        ThrowUtils.throwIf(questionQueryRequest == null, ErrorCode.PARAMS_ERROR);
+        Page<Question> questionPage = questionService.listQuestionByPage(questionQueryRequest);
         return ResultUtils.success(questionPage);
     }
 

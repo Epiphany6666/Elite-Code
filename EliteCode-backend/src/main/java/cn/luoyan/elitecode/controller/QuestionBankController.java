@@ -1,5 +1,8 @@
 package cn.luoyan.elitecode.controller;
 
+import cn.luoyan.elitecode.model.dto.question.QuestionQueryRequest;
+import cn.luoyan.elitecode.model.entity.Question;
+import cn.luoyan.elitecode.service.QuestionService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import cn.luoyan.elitecode.annotation.AuthCheck;
 import cn.luoyan.elitecode.common.BaseResponse;
@@ -36,6 +39,9 @@ public class QuestionBankController {
 
     @Resource
     private QuestionBankService questionBankService;
+
+    @Resource
+    private QuestionService questionService;
 
     @Resource
     private UserService userService;
@@ -126,17 +132,29 @@ public class QuestionBankController {
     /**
      * 根据 id 获取题库（封装类）
      *
-     * @param id
+     * @param questionBankQueryRequest
      * @return
      */
     @GetMapping("/get/vo")
-    public BaseResponse<QuestionBankVO> getQuestionBankVOById(long id, HttpServletRequest request) {
+    public BaseResponse<QuestionBankVO> getQuestionBankVOById(QuestionBankQueryRequest questionBankQueryRequest, HttpServletRequest request) {
+        ThrowUtils.throwIf(questionBankQueryRequest == null, ErrorCode.PARAMS_ERROR);
+        Long id = questionBankQueryRequest.getId();
         ThrowUtils.throwIf(id <= 0, ErrorCode.PARAMS_ERROR);
         // 查询数据库
         QuestionBank questionBank = questionBankService.getById(id);
         ThrowUtils.throwIf(questionBank == null, ErrorCode.NOT_FOUND_ERROR);
+        // 查询题库封装类
+        QuestionBankVO questionBankVO = questionBankService.getQuestionBankVO(questionBank, request);
+        // 是否要关联查询题库下的题目列表
+        boolean needQueryQuestionList = questionBankQueryRequest.isNeedQueryQuestionList();
+        if (needQueryQuestionList) {
+            QuestionQueryRequest questionQueryRequest = new QuestionQueryRequest();
+            questionQueryRequest.setQuestionBankId(id);
+            Page<Question> questionPage = questionService.listQuestionByPage(questionQueryRequest);
+            questionBankVO.setQuestionPage(questionPage);
+        }
         // 获取封装类
-        return ResultUtils.success(questionBankService.getQuestionBankVO(questionBank, request));
+        return ResultUtils.success(questionBankVO);
     }
 
     /**
