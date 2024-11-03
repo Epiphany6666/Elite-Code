@@ -3,14 +3,19 @@ package cn.luoyan.elitecode.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.luoyan.elitecode.common.ErrorCode;
 import cn.luoyan.elitecode.constant.CommonConstant;
+import cn.luoyan.elitecode.exception.BusinessException;
 import cn.luoyan.elitecode.exception.ThrowUtils;
 import cn.luoyan.elitecode.mapper.QuestionBankQuestionMapper;
 import cn.luoyan.elitecode.model.dto.questionBankQuestion.QuestionBankQuestionQueryRequest;
+import cn.luoyan.elitecode.model.entity.Question;
+import cn.luoyan.elitecode.model.entity.QuestionBank;
 import cn.luoyan.elitecode.model.entity.QuestionBankQuestion;
 import cn.luoyan.elitecode.model.entity.User;
 import cn.luoyan.elitecode.model.vo.QuestionBankQuestionVO;
 import cn.luoyan.elitecode.model.vo.UserVO;
 import cn.luoyan.elitecode.service.QuestionBankQuestionService;
+import cn.luoyan.elitecode.service.QuestionBankService;
+import cn.luoyan.elitecode.service.QuestionService;
 import cn.luoyan.elitecode.service.UserService;
 import cn.luoyan.elitecode.utils.SqlUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -18,6 +23,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -39,6 +45,13 @@ public class QuestionBankQuestionServiceImpl extends ServiceImpl<QuestionBankQue
     @Resource
     private UserService userService;
 
+    @Resource
+    @Lazy
+    private QuestionService questionService;
+
+    @Resource
+    private QuestionBankService questionBankService;
+
     /**
      * 校验数据
      *
@@ -48,6 +61,17 @@ public class QuestionBankQuestionServiceImpl extends ServiceImpl<QuestionBankQue
     @Override
     public void validQuestionBankQuestion(QuestionBankQuestion questionBankQuestion, boolean add) {
         ThrowUtils.throwIf(questionBankQuestion == null, ErrorCode.PARAMS_ERROR);
+        // 题目和题库必须存在
+        Long questionId = questionBankQuestion.getQuestionId();
+        if (questionId != null) {
+            Question question = questionService.getById(questionId);
+            ThrowUtils.throwIf(question == null, ErrorCode.NOT_FOUND_ERROR, "题目不存在");
+        }
+        Long questionBankId = questionBankQuestion.getQuestionBankId();
+        if (questionBankId != null) {
+            QuestionBank questionBank = questionBankService.getById(questionBankId);
+            ThrowUtils.throwIf(questionBank == null, ErrorCode.NOT_FOUND_ERROR, "题库不存在");
+        }
         // 不需要校验
 //        // todo 从对象中取值
 //        String title = questionBankQuestion.getTitle();
