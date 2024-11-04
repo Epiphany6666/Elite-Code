@@ -2,7 +2,7 @@
 
 import {GithubFilled, LogoutOutlined, SearchOutlined,} from '@ant-design/icons';
 import {ProLayout,} from '@ant-design/pro-components';
-import {Dropdown, Input,} from 'antd';
+import {Dropdown, Input,} from  'antd';
 import React from 'react';
 import Image from "next/image";
 import {usePathname} from "next/navigation";
