@@ -1,40 +1,45 @@
-import localFont from "next/font/local";
-import {AntdRegistry} from "@ant-design/nextjs-registry";
+"use client";
+import { AntdRegistry } from "@ant-design/nextjs-registry";
 import BasicLayout from "@/layouts/BasicLayout";
-import React, {useCallback, useEffect} from "react";
-import "./globals.css";
-
-const geistSans = localFont({
-    src: "./fonts/GeistVF.woff",
-    variable: "--font-geist-sans",
-    weight: "100 900",
-});
-const geistMono = localFont({
-    src: "./fonts/GeistMonoVF.woff",
-    variable: "--font-geist-mono",
-    weight: "100 900",
-});
+import React, { useCallback, useEffect } from "react";
+import { Provider, useDispatch } from "react-redux";
+import store, { AppDispatch } from "@/stores";
+import { getLoginUserUsingGet } from "@/api/userController";
+import { setLoginUser } from "@/stores/loginUser";
 
 /**
- * 执行初始化逻辑的布局（多封装一层）
+ * 全局初始化逻辑
  * @param children
  * @constructor
  */
-const InitLayout: React.FC<
-    Readonly<{
-        children: React.ReactNode;
-    }>
-> = ({ children }) => {
-    /**
-     * 全局初始化函数，有全局单次调用的代码，都可以写到这里
-     */
-    const doInit = useCallback(() => {
-        console.log("hello 欢迎来到我的项目");
+const InitLayout: React.FC<Readonly<{
+    children: React.ReactNode;
+}>> = ({children}) => {
+    const dispatch = useDispatch<AppDispatch>();
+
+    // 初始化全局用户状态
+    const doInitLoginUser = useCallback(async () => {
+        const res = await getLoginUserUsingGet();
+        console.log("res", res)
+        if (res.data) {
+            // 更新全局用户状态
+            dispatch(setLoginUser(res.data));
+        } else {
+            // 仅用于测试
+            // setTimeout(() => {
+            //     const testUser = {
+            //         userName: "测试登录",
+            //         id: 1,
+            //         userAvatar: "https://hmleadnews5283.oss-cn-beijing.aliyuncs.com/07f5bf4c-fc23-44c1-b365-6c2fd47a412d.jpg",
+            //         userRole: "admin"
+            //     };
+            //     dispatch(setLoginUser(testUser));
+            // }, 3000);
+        }
     }, []);
 
-    // 只执行一次
     useEffect(() => {
-        doInit();
+        doInitLoginUser();
     }, []);
 
     return <>{children}</>;
@@ -47,13 +52,15 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="zh">
-        <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <body>
         <AntdRegistry>
-            <BasicLayout>
+            <Provider store={store}>
                 <InitLayout>
-                    {children}
+                    <BasicLayout>
+                        {children}
+                    </BasicLayout>
                 </InitLayout>
-            </BasicLayout>
+            </Provider>
         </AntdRegistry>
         </body>
         </html>

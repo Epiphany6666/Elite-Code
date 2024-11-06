@@ -7,9 +7,12 @@ import React from 'react';
 import Image from "next/image";
 import {usePathname} from "next/navigation";
 import Link from "next/link";
-import GlobalFooter from "@/components/GlobalFooter";
+import GlobalFooter from "/src/components/GlobalFooter";
 import './index.css'
 import menus from "../../../config/menus";
+import loginUser from "@/stores/loginUser";
+import {useSelector} from "react-redux";
+import {RootState} from "@/stores";
 
 /**
  * 搜索条
@@ -53,6 +56,8 @@ interface Props {
 
 export default function BasicLayout({children}: Props) {
     const pathname: string = usePathname();
+    // 当前登录用户
+    const loginUser = useSelector((state: RootState) => state.loginUser);
     return (
         <div
             id="basicLayout"
@@ -71,9 +76,9 @@ export default function BasicLayout({children}: Props) {
                     pathname,
                 }}
                 avatarProps={{
-                    src: 'https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg',
-                    size: 'small',
-                    title: '洛言',
+                    src: loginUser.userAvatar || "/assets/logo.png",
+                    size: "small",
+                    title: loginUser.userName || "luoyan",
                     render: (props, dom) => {
                         return (
                             <Dropdown
