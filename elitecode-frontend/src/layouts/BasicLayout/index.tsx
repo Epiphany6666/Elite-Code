@@ -2,7 +2,7 @@
 
 import {GithubFilled, LogoutOutlined, SearchOutlined,} from '@ant-design/icons';
 import {ProLayout,} from '@ant-design/pro-components';
-import {Dropdown, Input,} from  'antd';
+import {Dropdown, Input,} from 'antd';
 import React from 'react';
 import Image from "next/image";
 import {usePathname} from "next/navigation";
@@ -10,7 +10,6 @@ import Link from "next/link";
 import GlobalFooter from "/src/components/GlobalFooter";
 import './index.css'
 import menus from "../../../config/menus";
-import loginUser from "@/stores/loginUser";
 import {useSelector} from "react-redux";
 import {RootState} from "@/stores";
 

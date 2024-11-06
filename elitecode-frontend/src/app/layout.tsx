@@ -6,6 +6,7 @@ import { Provider, useDispatch } from "react-redux";
 import store, { AppDispatch } from "@/stores";
 import { getLoginUserUsingGet } from "@/api/userController";
 import { setLoginUser } from "@/stores/loginUser";
+import AccessLayout from "@/access/AccessLayout";
 
 /**
  * 全局初始化逻辑
@@ -57,7 +58,7 @@ export default function RootLayout({
             <Provider store={store}>
                 <InitLayout>
                     <BasicLayout>
-                        {children}
+                        <AccessLayout>{children}</AccessLayout>
                     </BasicLayout>
                 </InitLayout>
             </Provider>

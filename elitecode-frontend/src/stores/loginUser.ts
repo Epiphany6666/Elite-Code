@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import ACCESS_ENUM from "@/app/access/accessEnum";
+import ACCESS_ENUM from "@/access/accessEnum";
 
 // 默认用户
 const DEFAULT_USER: API.LoginUserVO = {
