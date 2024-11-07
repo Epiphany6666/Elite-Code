@@ -17,11 +17,6 @@ const menus = [
         name: "题目",
     },
     {
-        name: "面试鸭",
-        path: "https://mianshiya.com",
-        target: "_blank",
-    },
-    {
         path: "/admin",
         name: "管理",
         icon: <CrownOutlined />,
@@ -32,6 +27,11 @@ const menus = [
                 name: "用户管理",
                 access: ACCESS_ENUM.ADMIN,
             },
+            {
+                path: "/admin/bank",
+                name: "题库管理",
+                access: ACCESS_ENUM.ADMIN,
+            }
         ],
     },,
 ] as MenuDataItem[];
@@ -50,10 +50,10 @@ export const findMenuItemByPath = (
     path: string,
 ): MenuDataItem | null => {
     for (const menu of menus) {
-        if (menu.path === path) {
+        if (menu?.path === path) {
             return menu;
         }
-        if (menu.children) {
+        if (menu?.children) {
             const matchedMenuItem = findMenuItemByPath(menu.children, path);
             if (matchedMenuItem) {
                 return matchedMenuItem;
