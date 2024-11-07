@@ -3,7 +3,7 @@
 import {GithubFilled, LogoutOutlined, SearchOutlined,} from '@ant-design/icons';
 import {ProLayout,} from '@ant-design/pro-components';
 import {Dropdown, Input,} from 'antd';
-import React from 'react';
+import React, {useState} from 'react';
 import Image from "next/image";
 import {usePathname} from "next/navigation";
 import Link from "next/link";
@@ -12,6 +12,9 @@ import './index.css'
 import menus from "../../../config/menus";
 import {useSelector} from "react-redux";
 import {RootState} from "@/stores";
+import getAccessibleMenus from "@/access/menuAccess";
+import MdViewer from "@/components/MdViewer";
+import MdEditor from "@/components/MdEditor";
 
 /**
  * 搜索条
@@ -57,6 +60,7 @@ export default function BasicLayout({children}: Props) {
     const pathname: string = usePathname();
     // 当前登录用户
     const loginUser = useSelector((state: RootState) => state.loginUser);
+    const [text, setText] = useState<string>('');
     return (
         <div
             id="basicLayout"
@@ -120,7 +124,7 @@ export default function BasicLayout({children}: Props) {
                 onMenuHeaderClick={(e) => console.log(e)}
                 // 定义有哪些菜单
                 menuDataRender={() => {
-                    return menus;
+                    return getAccessibleMenus(loginUser, menus);
                 }}
                 // 定义了菜单项如何渲染
                 menuItemRender={(item, dom) => (
