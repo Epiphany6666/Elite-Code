@@ -1,9 +1,9 @@
 "use client";
 
-import {GithubFilled, LogoutOutlined, SearchOutlined,} from '@ant-design/icons';
+import {GithubFilled, LogoutOutlined,} from '@ant-design/icons';
 import {ProLayout,} from '@ant-design/pro-components';
-import {Dropdown, Input, message,} from 'antd';
-import React, {useState} from 'react';
+import {Dropdown, message,} from 'antd';
+import React from 'react';
 import Image from "next/image";
 import {usePathname, useRouter} from "next/navigation";
 import Link from "next/link";
@@ -13,48 +13,11 @@ import menus from "../../../config/menus";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "@/stores";
 import getAccessibleMenus from "@/access/menuAccess";
-import MdViewer from "@/components/MdViewer";
-import MdEditor from "@/components/MdEditor";
 import {userLogoutUsingPost} from "@/api/userController";
-import AccessEnum from "@/access/accessEnum";
 import {setLoginUser} from "@/stores/loginUser";
 import {DEFAULT_USER} from "@/constants/user";
+import SearchInput from "@/layouts/BasicLayout/components";
 
-/**
- * 搜索条
- * @constructor
- */
-const SearchInput = () => {
-    return (
-        <div
-            key="SearchOutlined"
-            aria-hidden
-            style={{
-                display: 'flex',
-                alignItems: 'center',
-                marginInlineEnd: 24,
-            }}
-            onMouseDown={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-            }}
-        >
-            <Input
-                style={{
-                    borderRadius: 4,
-                    marginInlineEnd: 12,
-                }}
-                prefix={
-                    <SearchOutlined
-                        style={{}}
-                    />
-                }
-                placeholder="搜索题目"
-                variant="borderless"
-            />
-        </div>
-    );
-};
 
 interface Props {
     children: React.ReactNode;

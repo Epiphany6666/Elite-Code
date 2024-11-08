@@ -31,7 +31,12 @@ const menus = [
                 path: "/admin/bank",
                 name: "题库管理",
                 access: ACCESS_ENUM.ADMIN,
-            }
+            },
+            {
+                path: "/admin/question",
+                name: "题目管理",
+                access: ACCESS_ENUM.ADMIN,
+            },
         ],
     },,
 ] as MenuDataItem[];

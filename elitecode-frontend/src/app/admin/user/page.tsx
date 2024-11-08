@@ -94,7 +94,7 @@ const UserAdminPage: React.FC = () => {
     {
       title: '创建时间',
       sorter: true,
-      dataIndex: 'createTime',
+      dataIndex: 'create_time',
       valueType: 'dateTime',
       hideInSearch: true,
       hideInForm: true,
@@ -102,7 +102,7 @@ const UserAdminPage: React.FC = () => {
     {
       title: '更新时间',
       sorter: true,
-      dataIndex: 'updateTime',
+      dataIndex: 'update_time',
       valueType: 'dateTime',
       hideInSearch: true,
       hideInForm: true,

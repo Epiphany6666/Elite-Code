@@ -65,7 +65,9 @@ public class QuestionController {
         Question question = new Question();
         BeanUtils.copyProperties(questionAddRequest, question);
         List<String> tags = questionAddRequest.getTags();
-        question.setTags(JSONUtil.toJsonStr(tags));
+        if (tags != null) {
+            question.setTags(JSONUtil.toJsonStr(tags));
+        }
         // 数据校验
         questionService.validQuestion(question, true);
         // todo 填充默认值
