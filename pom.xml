@@ -21,7 +21,7 @@
     </properties>
 
     <dependencies>
-        <!--web开发的场景启动器，无需写版本-->
+        <!--web开发的场景启动器-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
