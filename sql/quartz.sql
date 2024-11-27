@@ -24,5 +24,5 @@ create table if not exists sys_user
 -- ----------------------------
 -- 初始化-用户信息表数据
 -- ----------------------------
-INSERT INTO sys_user VALUES (1, '洛言', 'b0dd3697a192885d7c055db46155b26a', '管理员', 'https://pic.luo-yan.cn/avatar.jpg', '系统管理员', 'admin', 'admin', NOW(), '', NOW());
-INSERT INTO sys_user VALUES (2, 'testuser', 'b0dd3697a192885d7c055db46155b26a', '测试用户', 'https://pic.luo-yan.cn/avatar.jpg', '测试人员', 'user', 'admin', NOW(), '', NOW());
+INSERT INTO sys_user VALUES (1, '洛言', 'b0dd3697a192885d7c055db46155b26a', '管理员', 'https://pic.luo-yan.cn/elitecode/avatar.jpg', '系统管理员', 'admin', 'admin', NOW(), '', NOW());
+INSERT INTO sys_user VALUES (2, 'testuser', 'b0dd3697a192885d7c055db46155b26a', '测试用户', 'https://pic.luo-yan.cn/elitecode/avatar.jpg', '测试人员', 'user', 'admin', NOW(), '', NOW());
