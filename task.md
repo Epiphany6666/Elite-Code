@@ -31,7 +31,7 @@
   - [x] 搭建git
   - [x] 启动CDN加速
   - [x] 编写教程
-- [ ] 连接数据库
+- [x] 连接数据库
 - [ ] 整合Log4j
 - [ ] 整合Druid
 - [ ] 整合Knife4j：https://doc.xiaominfo.com/docs/quick-start
@@ -45,7 +45,9 @@
 
 **用户模块**
 
-- 注册登录
+- [ ] 注册
+- [ ] 登录
+- [ ] 注销
 
 ---
 
