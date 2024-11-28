@@ -8,3 +8,5 @@ spring:
     password: 123456qqq.
 mybatis:
   mapper-locations: classpath:/mapper/*.xml #mapper位置
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

@@ -1,6 +1,6 @@
 package cn.luoyan.elitecode.controller;
 
-import cn.luoyan.elitecode.mapper.UserMapper;
+import cn.luoyan.elitecode.mapper.SysUserMapper;
 import cn.luoyan.elitecode.model.entity.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class HelloController {
 
     @Autowired
-    private UserMapper userMapper;
+    private SysUserMapper userMapper;
 
     @GetMapping("/hello")
     public String hello() {
