@@ -1,9 +1,28 @@
+# 开发环境配置
 server:
   port: 8901
+  servlet:
+    context-path: /
+
+# Spring配置
 spring:
   profiles:
     active: druid
+
+# MyBatis配置
 mybatis:
   mapper-locations: classpath:/mapper/*.xml #mapper位置
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# Knife4j配置
+knife4j:
+  enable: true
+  openapi:
+    title: "接口文档"
+    version: 1.0
+    group:
+      default:
+        api-rule: package
+        api-rule-resources:
+          - cn.luoyan.elitecode.controller

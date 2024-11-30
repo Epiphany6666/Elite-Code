@@ -2,8 +2,8 @@ package cn.luoyan.elitecode.controller;
 
 import cn.luoyan.elitecode.model.entity.SysUser;
 import cn.luoyan.elitecode.service.SysUserService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,7 +19,7 @@ public class UserController {
     @Autowired
     private SysUserService userService;
 
-    @RequestMapping("/login")
+    @GetMapping("/login")
     private SysUser login(String userAccount, String password, HttpServletRequest request) throws Exception {
         return userService.login(userAccount, password, request);
     }

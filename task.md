@@ -33,7 +33,9 @@
   - [x] 编写教程
 - [x] 连接数据库
 - [ ] 整合Druid
-- [ ] 整合Knife4j：https://doc.xiaominfo.com/docs/quick-start
+- [x] 整合Knife4j：https://doc.xiaominfo.com/docs/quick-start
+- [ ] 全局异常处理器
+- [ ] 通用返回类
 - [ ] 规划后端项目目录
 - [ ] 解决跨域
 
