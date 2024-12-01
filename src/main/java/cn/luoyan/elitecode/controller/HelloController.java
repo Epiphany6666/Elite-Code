@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/hello")
 public class HelloController {
 
     @Autowired
@@ -20,8 +19,8 @@ public class HelloController {
         return "Hello, SpringBoot2!";
     }
 
-    @GetMapping("/{userId}")
-    public SysUser selectUserById(@PathVariable Long userId) {
-        return userMapper.selectUserById(userId);
-    }
+//    @GetMapping("/{userId}")
+//    public SysUser selectUserById(@PathVariable Long userId) {
+//        return userMapper.selectUserById(userId);
+//    }
 }
