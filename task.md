@@ -16,6 +16,8 @@
 
 - [ ] React回顾
 
+- [ ] 学习SpringSecurity
+
 **项目搭建（后端）**
 
 - [x] 创建Maven项目
@@ -32,7 +34,7 @@
   - [x] 启动CDN加速
   - [x] 编写教程
 - [x] 连接数据库
-- [ ] 整合Druid
+- [x] 整合Druid
 - [x] 整合Knife4j：https://doc.xiaominfo.com/docs/quick-start
 - [ ] 全局异常处理器
 - [ ] 通用返回类
