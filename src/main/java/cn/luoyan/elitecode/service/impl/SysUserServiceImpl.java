@@ -1,5 +1,7 @@
 package cn.luoyan.elitecode.service.impl;
 
+import cn.luoyan.elitecode.common.constant.HttpStatus;
+import cn.luoyan.elitecode.common.exception.BaseException;
 import cn.luoyan.elitecode.mapper.SysUserMapper;
 import cn.luoyan.elitecode.model.entity.SysUser;
 import cn.luoyan.elitecode.service.SysUserService;
@@ -27,13 +29,13 @@ public class SysUserServiceImpl implements SysUserService {
     public SysUser login(String userAccount, String password, HttpServletRequest request) throws Exception {
         // 1.校验
         if (StringUtils.isAnyBlank(userAccount, password)) {
-            throw new Exception("账号或密码为空");
+            throw new BaseException(HttpStatus.PARAMS_ERROR, "账号或密码为空");
         }
         if (userAccount.length() < 4) {
-            throw new Exception("账号长度不足4位");
+            throw new BaseException(HttpStatus.PARAMS_ERROR, "账号长度不足4位");
         }
         if (password.length() < 8) {
-            throw new Exception("密码长度不足8位");
+            throw new BaseException(HttpStatus.PARAMS_ERROR, "密码长度不足8位");
         }
 
         // 2.加密
@@ -42,7 +44,7 @@ public class SysUserServiceImpl implements SysUserService {
         // 4.查询用户是否存在
         SysUser user = userMapper.selectUserByUserAccountAndPassword(userAccount, encryptPassword);
         if (user == null) {
-            throw new Exception("账号或密码错误");
+            throw new BaseException(HttpStatus.PARAMS_ERROR, "账号或密码错误");
         }
 
         // 5.设置登录态

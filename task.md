@@ -36,8 +36,9 @@
 - [x] 连接数据库
 - [x] 整合Druid
 - [x] 整合Knife4j：https://doc.xiaominfo.com/docs/quick-start
+- [x] 封装自定义异常类
 - [ ] 全局异常处理器
-- [ ] 通用返回类
+- [x] 通用返回类
 - [ ] 规划后端项目目录
 - [ ] 解决跨域
 
