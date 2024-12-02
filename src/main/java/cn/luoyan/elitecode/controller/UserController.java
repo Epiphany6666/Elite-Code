@@ -1,5 +1,6 @@
 package cn.luoyan.elitecode.controller;
 
+import cn.luoyan.elitecode.common.AjaxResult;
 import cn.luoyan.elitecode.model.entity.SysUser;
 import cn.luoyan.elitecode.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,8 @@ public class UserController {
     private SysUserService userService;
 
     @GetMapping("/login")
-    private SysUser login(String userAccount, String password, HttpServletRequest request) throws Exception {
-        return userService.login(userAccount, password, request);
+    private AjaxResult<SysUser> login(String userAccount, String password, HttpServletRequest request) throws Exception {
+        return AjaxResult.success(userService.login(userAccount, password, request));
     }
 
 }
