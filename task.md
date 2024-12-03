@@ -37,14 +37,15 @@
 - [x] 整合Druid
 - [x] 整合Knife4j：https://doc.xiaominfo.com/docs/quick-start
 - [x] 封装自定义异常类
-- [ ] 全局异常处理器
+- [x] 全局异常处理器
 - [x] 通用返回类
-- [ ] 规划后端项目目录
+- [x] 规划后端项目目录
 - [ ] 解决跨域
 
 **项目搭建（前端）**
 
-- [ ] 搭建框架
+- [x] 初始化NextJS工程
+- [x] VSCode Prettier配置
 - [ ] 登录 / 注册页面
 
 **用户模块（后端）**
