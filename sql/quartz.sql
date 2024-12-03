@@ -4,8 +4,8 @@ use `elite-code`;
 -- ----------------------------
 -- 用户信息表
 -- ----------------------------
-drop table if exists sys_user;
-create table if not exists sys_user
+drop table if exists user;
+create table if not exists user
 (
     user_id       bigint                                 not null auto_increment comment '用户ID',
     user_account  varchar(256)                           not null comment '账号',
@@ -24,5 +24,5 @@ create table if not exists sys_user
 -- ----------------------------
 -- 初始化-用户信息表数据
 -- ----------------------------
-INSERT INTO sys_user VALUES (1, '洛言', '05356905ea85829918968f841e5a0944', '管理员', 'https://pic.luo-yan.cn/elitecode/avatar.jpg', '系统管理员', 'admin', 'admin', NOW(), '', NOW());
-INSERT INTO sys_user VALUES (2, 'testuser', '05356905ea85829918968f841e5a0944', '测试用户', 'https://pic.luo-yan.cn/elitecode/avatar.jpg', '测试人员', 'user', 'admin', NOW(), '', NOW());
+INSERT INTO user VALUES (1, '洛言', '05356905ea85829918968f841e5a0944', '管理员', 'https://pic.luo-yan.cn/elitecode/avatar.jpg', '系统管理员', 'admin', 'admin', NOW(), '', NOW());
+INSERT INTO user VALUES (2, 'testuser', '05356905ea85829918968f841e5a0944', '测试用户', 'https://pic.luo-yan.cn/elitecode/avatar.jpg', '测试人员', 'user', 'admin', NOW(), '', NOW());
