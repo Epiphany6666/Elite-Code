@@ -47,8 +47,16 @@
 **项目搭建（前端）**
 
 - [x] 初始化NextJS工程
-- [x] VSCode Prettier配置
+
+- [x] 引入AntDesign组件库
+
+- [ ] 通用布局
+
 - [ ] 登录 / 注册页面
+
+- [ ] 生产环境和本地环境配置：https://nextjs.org/docs/app/building-your-application/configuring/environment-variables
+
+  ![image-20241203185346267](./assets/image-20241203185346267.png)
 
 **用户模块（后端）**
 
@@ -60,7 +68,7 @@
 
 # P1
 
-
+- [ ] 登录改写JWT
 
 
 
@@ -91,3 +99,9 @@
 
 - [ ] 忘记密码
 - [ ] 将用户表中的角色字段抽取出来，做成用户表，然后新建 `用户-角色关联表`
+
+
+
+其他
+
+- [ ] 网站图标更换
