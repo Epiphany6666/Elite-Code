@@ -16,7 +16,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class SysUser implements Serializable {
+public class User implements Serializable {
     /**
      * 用户ID
      */
