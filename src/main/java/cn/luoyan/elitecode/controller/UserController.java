@@ -1,10 +1,12 @@
 package cn.luoyan.elitecode.controller;
 
 import cn.luoyan.elitecode.common.AjaxResult;
+import cn.luoyan.elitecode.common.constant.HttpStatus;
+import cn.luoyan.elitecode.common.exception.BaseException;
 import cn.luoyan.elitecode.model.dto.user.UserLoginDTO;
-import cn.luoyan.elitecode.model.entity.User;
 import cn.luoyan.elitecode.model.vo.LoginUserVO;
 import cn.luoyan.elitecode.service.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,6 +36,18 @@ public class UserController {
     private AjaxResult<LoginUserVO> login(@RequestBody UserLoginDTO userLoginDTO, HttpServletRequest request) {
         String userAccount = userLoginDTO.getUserAccount();
         String userPassword = userLoginDTO.getUserPassword();
+
+        // 校验
+        if (StringUtils.isAnyBlank(userAccount, userPassword)) {
+            throw new BaseException(HttpStatus.PARAMS_ERROR, "账号或密码为空");
+        }
+        if (userAccount.length() < 4) {
+            throw new BaseException(HttpStatus.PARAMS_ERROR, "账号长度不足4位");
+        }
+        if (userPassword.length() < 8) {
+            throw new BaseException(HttpStatus.PARAMS_ERROR, "密码长度不足8位");
+        }
+
         return AjaxResult.success(userService.login(userAccount, userPassword, request));
     }
 

@@ -29,30 +29,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public LoginUserVO login(String userAccount, String userPassword, HttpServletRequest request) {
-        // 1.校验
-        if (StringUtils.isAnyBlank(userAccount, userPassword)) {
-            throw new BaseException(HttpStatus.PARAMS_ERROR, "账号或密码为空");
-        }
-        if (userAccount.length() < 4) {
-            throw new BaseException(HttpStatus.PARAMS_ERROR, "账号长度不足4位");
-        }
-        if (userPassword.length() < 8) {
-            throw new BaseException(HttpStatus.PARAMS_ERROR, "密码长度不足8位");
-        }
-
-        // 2.加密
+        // 加密
         String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
 
-        // 4.查询用户是否存在
+        // 查询用户是否存在
         User user = userMapper.selectUserByUserAccountAndPassword(userAccount, encryptPassword);
         if (user == null) {
             throw new BaseException(HttpStatus.PARAMS_ERROR, "账号或密码错误");
         }
 
-        // 5.设置登录态
+        // 设置登录态
         request.getSession().setAttribute("user_login", user);
 
-        // 6.返回用户信息
+        // 返回用户信息
         return getLoginUserVO(user);
     }
 

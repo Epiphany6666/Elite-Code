@@ -24,6 +24,7 @@
         user_role,create_by,create_time,
         update_by,update_time
     </sql>
+
     <select id="selectUserById" resultMap="SysUserResult" parameterType="Long">
         select
             <include refid="selectUserVo"/>
@@ -33,9 +34,11 @@
             user_id = #{userId}
     </select>
 
-
     <select id="selectUserByUserAccountAndPassword" resultMap="SysUserResult">
-        select <include refid="selectUserVo"/> from user
+        select
+            <include refid="selectUserVo"/>
+        from
+            user
         where
             user_account = #{userAccount} and user_password = #{password}
     </select>
