@@ -54,7 +54,7 @@
 
 - [ ] 登录 / 注册页面
 
-- [ ] 生产环境和本地环境配置：https://nextjs.org/docs/app/building-your-application/configuring/environment-variables
+- [x] 生产环境和本地环境配置：https://nextjs.org/docs/app/building-your-application/configuring/environment-variables
 
   ![image-20241203185346267](./assets/image-20241203185346267.png)
 
@@ -69,6 +69,7 @@
 # P1
 
 - [ ] 登录改写JWT
+- [ ] 将角色抽取成角色表，建立 "用户-角色" 关联表
 
 
 
