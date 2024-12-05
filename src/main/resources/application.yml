@@ -14,6 +14,7 @@ mybatis:
   mapper-locations: classpath:/mapper/*.xml #mapper位置
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  type-aliases-package: cn.luoyan.elitecode.model.entity
 
 # Knife4j配置
 knife4j:

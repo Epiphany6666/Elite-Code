@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.luoyan.elitecode.mapper.UserMapper">
 
-    <resultMap id="SysUserResult" type="cn.luoyan.elitecode.model.entity.User">
+    <resultMap id="SysUserResult" type="User">
             <id property="userId" column="user_id"/>
             <result property="userAccount" column="user_account"/>
             <result property="userPassword" column="user_password"/>
@@ -24,7 +24,7 @@
         user_role,create_by,create_time,
         update_by,update_time
     </sql>
-    <select id="selectUserById" resultMap="SysUserResult" parameterType="java.lang.Long">
+    <select id="selectUserById" resultMap="SysUserResult" parameterType="Long">
         select
             <include refid="selectUserVo"/>
         from
