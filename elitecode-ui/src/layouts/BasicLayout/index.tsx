@@ -1,7 +1,9 @@
 'use client';
-import React from 'react';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import { Avatar, Layout, Menu, theme } from 'antd';
+import Dropdown from 'antd/es/dropdown/dropdown';
 import Image from 'next/image';
+import React from 'react';
+import './index.css';
 
 const { Header, Content, Footer } = Layout;
 
@@ -21,15 +23,16 @@ export default function BasicLayout({ children }: props) {
 
   return (
     <Layout>
-      <Header style={{ display: 'flex', alignItems: 'center' }}>
-        <div
-          className="demo-logo"
-          style={{ display: 'flex', alignItems: 'center' }}
-        >
+      <Header
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          borderBlockEnd: '1px solid rgba(5, 5, 5, 0.06)',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           <Image src="/assets/logo.png" alt="logo" width={40} height={40} />
-          <span style={{ color: 'red', marginLeft: '5px' }}>
-            易扣面试刷题平台
-          </span>
+          <span style={{ marginLeft: '5px' }}>易扣</span>
         </div>
         <Menu
           theme="light"
@@ -38,26 +41,42 @@ export default function BasicLayout({ children }: props) {
           items={items}
           style={{ flex: 1, minWidth: 0 }}
         />
+        <Dropdown menu={{ items }} placement="bottomRight">
+          <div>
+            <Avatar
+              src={
+                <Image
+                  src="/assets/notLoginUser.png"
+                  alt="avatar"
+                  width={40}
+                  height={40}
+                />
+              }
+            />
+            <span
+              style={{
+                marginInlineStart: '8px',
+                color: 'rgba(0, 0, 0, 0.45)',
+              }}
+            >
+              洛言
+            </span>
+          </div>
+        </Dropdown>
       </Header>
-      <Content style={{ padding: '0 48px' }}>
-        <Breadcrumb style={{ margin: '16px 0' }}>
-          <Breadcrumb.Item>Home</Breadcrumb.Item>
-          <Breadcrumb.Item>List</Breadcrumb.Item>
-          <Breadcrumb.Item>App</Breadcrumb.Item>
-        </Breadcrumb>
+      <Content>
         <div
           style={{
             background: colorBgContainer,
             minHeight: 280,
-            padding: 24,
-            borderRadius: borderRadiusLG,
+            padding: '0px 40px 32px',
           }}
         >
           {children}
         </div>
       </Content>
       <Footer style={{ textAlign: 'center' }}>
-        Eliete-Code面试刷题平台 ©{new Date().getFullYear()} Created by 洛言
+        Eliete-Code ©{new Date().getFullYear()} Created by 洛言
       </Footer>
     </Layout>
   );
