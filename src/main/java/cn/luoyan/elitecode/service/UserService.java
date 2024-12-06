@@ -27,4 +27,11 @@ public interface UserService {
      * @return 脱敏后的用户信息
      */
     LoginUserVO getLoginUserVO(User user);
+
+    /**
+     * 用户注册
+     * @param userAccount 用户账号
+     * @param userPassword 用户密码
+     */
+    Long register(String userAccount, String userPassword);
 }

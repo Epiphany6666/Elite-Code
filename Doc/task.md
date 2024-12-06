@@ -43,6 +43,8 @@
 - [x] 分层领域模型包规划：创建用户DTO、VO
 - [x] MyBatis别名配置
 - [x] 解决跨域
+- [x] 修改selectUserByUserAccountAndUserPassword为selectUserByUserAccount，原因：不仅仅是用户登录要用到selectUserByUserAccount，用户注册也需要用到
+- [ ] 整合logback：将Slf4j的日志替换为logback的、修改MyBatis日志打印为logback
 
 **项目搭建（前端）**
 
@@ -60,7 +62,7 @@
 
 **用户模块（后端）**
 
-- [ ] 注册
+- [x] 注册
 - [x] 登录
 - [ ] 注销
 
@@ -106,3 +108,23 @@
 其他
 
 - [ ] 网站图标更换
+
+
+
+---
+
+# git
+
+- [x] Commit message（提交说明）规范
+
+  阿里云的回答：https://zhuanlan.zhihu.com/p/182553920
+
+- [ ] tag复习
+
+- [ ] github中的release是如何产生的
+
+- [ ] Issue 提问的正确方式
+
+  教程：https://blog.csdn.net/cool99781/article/details/105821546
+
+  提问规范：https://github.com/ReadingPapers/Report/issues/2

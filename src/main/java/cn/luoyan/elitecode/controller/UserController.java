@@ -54,4 +54,28 @@ public class UserController {
         return AjaxResult.success(userService.login(userAccount, userPassword, request));
     }
 
+    @PostMapping("/register")
+    private AjaxResult<Long> register(@RequestBody UserRegisterDTO userRegisterDTO) {
+        if (userRegisterDTO == null) {
+            AjaxResult.error(HttpStatus.PARAMS_ERROR, "注册参数错误");
+        }
+        String userAccount = userRegisterDTO.getUserAccount();
+        String userPassword = userRegisterDTO.getUserPassword();
+        String checkPassword = userRegisterDTO.getCheckPassword();
+        if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword)) {
+            return AjaxResult.error(HttpStatus.PARAMS_ERROR, "账号或密码或校验密码为空");
+        }
+        if (userAccount.length() < 4) {
+            return AjaxResult.error(HttpStatus.PARAMS_ERROR, "账号长度不足4位");
+        }
+        if (userPassword.length() < 8) {
+            return AjaxResult.error(HttpStatus.PARAMS_ERROR, "密码长度不足8位");
+        }
+        if (!userPassword.equals(checkPassword)) {
+            return AjaxResult.error(HttpStatus.PARAMS_ERROR, "两次输入的密码不一致");
+        }
+        Long registerUserId = userService.register(userAccount, userPassword);
+        return AjaxResult.success(registerUserId);
+    }
+
 }

@@ -21,4 +21,11 @@ public interface UserMapper {
      * @return
      */
     User selectUserByUserAccount(String userAccount );
+
+    /**
+     * 用户注册
+     * @param user 用户信息
+     * @return
+     */
+    int insertUser(User user);
 }

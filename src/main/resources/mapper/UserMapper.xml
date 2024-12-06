@@ -43,4 +43,32 @@
             user_account = #{userAccount}
     </select>
 
+    <!-- int register(String userAccount, String encryptPassword); -->
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="userId">
+        insert into user(
+            <trim suffixOverrides=",">
+                <if test="userId != null and userId != 0">user_id,</if>
+                <if test="userAccount != null and userAccount != ''">user_account,</if>
+                <if test="userPassword != null and userPassword != ''">user_password,</if>
+                <if test="userAvatar != null and userAvatar != ''">user_avatar,</if>
+                <if test="userProfile != null and userProfile != ''">user_profile,</if>
+                <if test="userRole != null and userRole != ''">user_role,</if>
+                <if test="createBy != null and createBy != ''">create_by,</if>
+                <if test="updateBy != null and updateBy != ''">update_by,</if>
+            </trim>
+        )
+        values(
+            <trim suffixOverrides=",">
+                <if test="userId != null and userId != 0">#{userId},</if>
+                <if test="userAccount != null and userAccount != ''">#{userAccount},</if>
+                <if test="userPassword != null and userPassword != ''">#{userPassword},</if>
+                <if test="userAvatar != null and userAvatar != ''">#{userAvatar},</if>
+                <if test="userProfile != null and userProfile != ''">#{userProfile},</if>
+                <if test="userRole != null and userRole != ''">#{userRole},</if>
+                <if test="createBy != null and createBy != ''">#{createBy},</if>
+                <if test="updateBy != null and updateBy != ''">#{updateBy},</if>
+            </trim>
+        )
+    </insert>
+
 </mapper>
