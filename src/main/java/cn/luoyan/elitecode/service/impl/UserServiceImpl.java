@@ -1,12 +1,12 @@
 package cn.luoyan.elitecode.service.impl;
 
 import cn.luoyan.elitecode.common.constant.HttpStatus;
-import cn.luoyan.elitecode.common.exception.BaseException;
+import cn.luoyan.elitecode.common.exception.user.UserAccountNotFoundException;
+import cn.luoyan.elitecode.common.exception.user.UserPasswordNotMatchException;
 import cn.luoyan.elitecode.mapper.UserMapper;
 import cn.luoyan.elitecode.model.entity.User;
 import cn.luoyan.elitecode.model.vo.LoginUserVO;
 import cn.luoyan.elitecode.service.UserService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,13 +29,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public LoginUserVO login(String userAccount, String userPassword, HttpServletRequest request) {
-        // 加密
-        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
-
         // 查询用户是否存在
-        User user = userMapper.selectUserByUserAccountAndPassword(userAccount, encryptPassword);
+        User user = userMapper.selectUserByUserAccount(userAccount);
         if (user == null) {
-            throw new BaseException(HttpStatus.PARAMS_ERROR, "账号或密码错误");
+            throw new UserAccountNotFoundException(HttpStatus.PARAMS_ERROR, "账号不存在");
+        }
+        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
+        if (!encryptPassword.equals(user.getUserPassword())) {
+            throw new UserPasswordNotMatchException(HttpStatus.PARAMS_ERROR, "密码错误");
         }
 
         // 设置登录态

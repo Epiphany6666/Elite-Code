@@ -2,7 +2,6 @@ package cn.luoyan.elitecode.controller;
 
 import cn.luoyan.elitecode.common.AjaxResult;
 import cn.luoyan.elitecode.common.constant.HttpStatus;
-import cn.luoyan.elitecode.common.exception.BaseException;
 import cn.luoyan.elitecode.model.dto.user.UserLoginDTO;
 import cn.luoyan.elitecode.model.dto.user.UserRegisterDTO;
 import cn.luoyan.elitecode.model.vo.LoginUserVO;

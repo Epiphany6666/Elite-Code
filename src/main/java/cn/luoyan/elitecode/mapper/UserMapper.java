@@ -16,10 +16,9 @@ public interface UserMapper {
     public User selectUserById(Long userId);
 
     /**
-     * 根据用户账号和密码查询用户
+     * 根据用户账号查询用户
      * @param userAccount 用户账号
-     * @param password 用户密码
      * @return
      */
-    User selectUserByUserAccountAndPassword(String userAccount, String password);
+    User selectUserByUserAccount(String userAccount );
 }
