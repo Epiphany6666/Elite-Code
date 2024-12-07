@@ -44,8 +44,12 @@
 - [x] MyBatis别名配置
 - [x] 解决跨域
 - [x] 修改selectUserByUserAccountAndUserPassword为selectUserByUserAccount，原因：不仅仅是用户登录要用到selectUserByUserAccount，用户注册也需要用到
-- [ ] 整合logback：将Slf4j的日志替换为logback的、修改MyBatis日志打印为logback
 - [x] 将日志打印修改为自定义xml文件，同时修改MyBatis日志打印工具为Logback
+- [ ] 实体类角色字段类型修改为List，修改XML文件使数据库字段String-JSON类型与实体类字段List类型进行转换
+- [ ] 整理task，将已完成的任务移到后面，重新规划需要完成的任务
+- [ ] 学习Excel，将task抽取为：开发进度.xlsx
+- [ ] 坚持写工作周报
+  参考：https://blog.csdn.net/qq_39609151/article/details/83780540
 
 **项目搭建（前端）**
 
@@ -66,6 +70,10 @@
 - [x] 注册
 - [x] 登录
 - [ ] 注销
+- [ ] 分页获取用户数据
+- [ ] 修改用户信息
+- [ ] 获取个人信息
+- [ ] 整合ThreadLocal
 
 ---
 
@@ -88,7 +96,7 @@
 
 域名
 
-- [ ] `eleetcode.cn` 域名购买
+- [ ] `elite-code.cn` 域名购买
 - [ ] 域名备案
 
 
@@ -109,6 +117,8 @@
 其他
 
 - [ ] 网站图标更换
+- [ ] 将项目模块化
+  - [ ] （写博客）使用IDEA查看模块之间的依赖关系：https://blog.csdn.net/qq_27579471/article/details/121557639
 
 
 
