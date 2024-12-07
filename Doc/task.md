@@ -45,6 +45,7 @@
 - [x] 解决跨域
 - [x] 修改selectUserByUserAccountAndUserPassword为selectUserByUserAccount，原因：不仅仅是用户登录要用到selectUserByUserAccount，用户注册也需要用到
 - [ ] 整合logback：将Slf4j的日志替换为logback的、修改MyBatis日志打印为logback
+- [x] 将日志打印修改为自定义xml文件，同时修改MyBatis日志打印工具为Logback
 
 **项目搭建（前端）**
 

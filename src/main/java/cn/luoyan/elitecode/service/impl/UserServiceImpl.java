@@ -9,7 +9,8 @@ import cn.luoyan.elitecode.mapper.UserMapper;
 import cn.luoyan.elitecode.model.entity.User;
 import cn.luoyan.elitecode.model.vo.LoginUserVO;
 import cn.luoyan.elitecode.service.UserService;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,8 +23,9 @@ import javax.servlet.http.HttpServletRequest;
  * @author 洛言
  */
 @Service
-@Slf4j
 public class UserServiceImpl implements UserService {
+
+    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Autowired
     private UserMapper userMapper;

@@ -13,7 +13,7 @@ spring:
 mybatis:
   mapper-locations: classpath:/mapper/*.xml #mapper位置
   configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
   type-aliases-package: cn.luoyan.elitecode.model.entity
 
 # Knife4j配置
