@@ -46,6 +46,7 @@
 - [x] 修改selectUserByUserAccountAndUserPassword为selectUserByUserAccount，原因：不仅仅是用户登录要用到selectUserByUserAccount，用户注册也需要用到
 - [x] 将日志打印修改为自定义xml文件，同时修改MyBatis日志打印工具为Logback
 - [ ] 实体类角色字段类型修改为List，修改XML文件使数据库字段String-JSON类型与实体类字段List类型进行转换
+- [ ] 搜索提交规范中每一个规范英文代表什么
 - [ ] 整理task，将已完成的任务移到后面，重新规划需要完成的任务
 - [ ] 学习Excel，将task抽取为：开发进度.xlsx
 - [ ] 坚持写工作周报
@@ -73,7 +74,7 @@
 - [ ] 分页获取用户数据
 - [ ] 修改用户信息
 - [ ] 获取个人信息
-- [ ] 整合ThreadLocal
+- [ ] 使用ThreadLocal记录当前线程的用户id
 
 ---
 
@@ -91,6 +92,12 @@
 # P2
 
 用户模块
+
+
+
+其他
+
+- [ ] 上线项目，增加Knife4j账号密码配置
 
 
 
@@ -114,11 +121,18 @@
 
 
 
+框架
+
+- [ ] 使用SpringSecurity改写
+
+
+
 其他
 
 - [ ] 网站图标更换
 - [ ] 将项目模块化
   - [ ] （写博客）使用IDEA查看模块之间的依赖关系：https://blog.csdn.net/qq_27579471/article/details/121557639
+- [ ] 搭建服务器图床（参考使用Github作为图床），目的：能够使用PicGo上传
 
 
 
@@ -130,12 +144,35 @@
 
   阿里云的回答：https://zhuanlan.zhihu.com/p/182553920
 
-- [ ] tag复习
+- [x] tag复习
 
-- [ ] github中的release是如何产生的
+- [ ] Git整合分支的两种方法——合并(git merge)与变基(git rebase)的区别
+
+  参考文章：https://blog.csdn.net/wpw2000/article/details/115890784
+
+
+
+---
+
+# GitHub
+
+- [ ] github中的release是如何产生的（和tag的联系？）
+
+  <img src="./assets/image-20241207214443147.png" alt="image-20241207214443147" style="zoom:70%;" />
 
 - [ ] Issue 提问的正确方式
 
   教程：https://blog.csdn.net/cool99781/article/details/105821546
 
   提问规范：https://github.com/ReadingPapers/Report/issues/2
+
+- [ ] 了解GitHub导航栏中每一个按钮的作用和使用
+
+  ![image-20241207213944316](./assets/image-20241207213944316.png)
+
+- [ ] 在 Git 提交信息中使用 Emoji（参考Git笔记）
+
+- [ ] 美化github文件图标（参考Git笔记）
+
+- [ ] 如何做出炫酷的REDME？
+

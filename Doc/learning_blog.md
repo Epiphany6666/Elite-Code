@@ -1035,7 +1035,7 @@ SpringBoot官方推荐使用带有`-spring`的文件名作为配置，如`logbac
 
 ---
 
-## 八、logback-spring.xml自定义注意事项
+## 九、logback-spring.xml自定义
 
 接下来分享一份配置十分详细的logback.xml配置，参照注释，应该就能够掌握xml的定义。
 
