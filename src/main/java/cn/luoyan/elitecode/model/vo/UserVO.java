@@ -1,6 +1,7 @@
 package cn.luoyan.elitecode.model.vo;
 
 import java.util.Date;
+import java.util.List;
 
 public class UserVO {
 
@@ -32,7 +33,7 @@ public class UserVO {
     /**
      * 用户角色：user/admin/ban
      */
-    private String userRole;
+    private List<String> userRole;
 
     /**
      * 创建者
@@ -57,7 +58,7 @@ public class UserVO {
     public UserVO() {
     }
 
-    public UserVO(Long userId, String userAccount, String nickName, String userAvatar, String userProfile, String userRole, String createBy, Date createTime, String updateBy, Date updateTime) {
+    public UserVO(Long userId, String userAccount, String nickName, String userAvatar, String userProfile, List<String> userRole, String createBy, Date createTime, String updateBy, Date updateTime) {
         this.userId = userId;
         this.userAccount = userAccount;
         this.nickName = nickName;
@@ -154,7 +155,7 @@ public class UserVO {
      * 获取
      * @return userRole
      */
-    public String getUserRole() {
+    public List<String> getUserRole() {
         return userRole;
     }
 
@@ -162,7 +163,7 @@ public class UserVO {
      * 设置
      * @param userRole
      */
-    public void setUserRole(String userRole) {
+    public void setUserRole(List<String> userRole) {
         this.userRole = userRole;
     }
 

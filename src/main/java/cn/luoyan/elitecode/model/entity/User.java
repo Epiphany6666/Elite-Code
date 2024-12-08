@@ -2,6 +2,7 @@ package cn.luoyan.elitecode.model.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 用户信息表
@@ -41,7 +42,7 @@ public class User implements Serializable {
     /**
      * 用户角色：user/admin/ban
      */
-    private String userRole;
+    private List<String> userRole;
 
     /**
      * 创建者
@@ -68,7 +69,7 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(Long userId, String userAccount, String userPassword, String nickName, String userAvatar, String userProfile, String userRole, String createBy, Date createTime, String updateBy, Date updateTime, long serialVersionUID) {
+    public User(Long userId, String userAccount, String userPassword, String nickName, String userAvatar, String userProfile, List<String> userRole, String createBy, Date createTime, String updateBy, Date updateTime, long serialVersionUID) {
         this.userId = userId;
         this.userAccount = userAccount;
         this.userPassword = userPassword;
@@ -182,7 +183,7 @@ public class User implements Serializable {
      * 获取
      * @return userRole
      */
-    public String getUserRole() {
+    public List<String> getUserRole() {
         return userRole;
     }
 
@@ -190,7 +191,7 @@ public class User implements Serializable {
      * 设置
      * @param userRole
      */
-    public void setUserRole(String userRole) {
+    public void setUserRole(List<String> userRole) {
         this.userRole = userRole;
     }
 

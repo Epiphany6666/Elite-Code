@@ -45,7 +45,8 @@
 - [x] 解决跨域
 - [x] 修改selectUserByUserAccountAndUserPassword为selectUserByUserAccount，原因：不仅仅是用户登录要用到selectUserByUserAccount，用户注册也需要用到
 - [x] 将日志打印修改为自定义xml文件，同时修改MyBatis日志打印工具为Logback
-- [ ] 实体类角色字段类型修改为List，修改XML文件使数据库字段String-JSON类型与实体类字段List类型进行转换
+- [x] 实体类角色字段类型修改为List，修改XML文件使数据库字段String-JSON类型与实体类字段List类型进行转换（自写JSON类型处理器）
+- [ ] 数据库设置默认值好还是在代码中编写好？
 - [ ] 搜索提交规范中每一个规范英文代表什么
 - [ ] 整理task，将已完成的任务移到后面，重新规划需要完成的任务
 - [ ] 学习Excel，将task抽取为：开发进度.xlsx

@@ -61,6 +61,13 @@
             <artifactId>knife4j-openapi2-spring-boot-starter</artifactId>
             <version>4.4.0</version>
         </dependency>
+
+        <!-- Hutool工具类 -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.8.16</version>
+        </dependency>
     </dependencies>
 
 </project>

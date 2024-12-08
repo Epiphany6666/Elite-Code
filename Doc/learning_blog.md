@@ -1298,4 +1298,194 @@ Windows电脑按 <kbd>alt</kbd> 就可以使用放大镜
 
 ---
 
+# MyBatis自定义JSON类型处理器
+
+## 一、使用场景
+
+|         实体类          |                 数据库                  |
+| :---------------------: | :-------------------------------------: |
+|     `List<String>`      |           `["user", "admin"]`           |
+| `List<List<List<ADT>>>` | `{"ADT":[[{"BookingCode":["N","N"]}]]}` |
+
+复杂的Bean的定义如下（包含泛型）
+
+```java
+@Data
+public class ADT {
+    private List<String> BookingCode;
+}
+
+@Data
+public class Price {
+    private List<List<ADT>> ADT;
+}
+```
+
+---
+
+## 二、实现步骤
+
+**UserMapper.xml**
+
+~~~xml
+<resultMap id="UserResult" type="User">
+    <result property="userRole" column="user_role" typeHandler="cn.luoyan.elitecode.common.utils.JacksonTypeHandler"/>
+</resultMap>
+
+<insert id="insertUser" useGeneratedKeys="true" keyProperty="userId">
+    insert into user(
+    <if test="userRole != null and userRole != ''">user_role,</if>
+    )
+    values(
+    <!-- PS：这里typeHandler无需用引号包围 -->
+    <if test="userRole != null and userRole != ''">#{userRole, typeHandler=cn.luoyan.elitecode.common.utils.JacksonTypeHandler},</if>
+    )
+</insert>
+~~~
+
+**添加类型处理器**
+
+~~~java
+package cn.luoyan.elitecode.common.utils;
+
+import cn.hutool.core.lang.TypeReference;
+import cn.hutool.json.JSONUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.type.BaseTypeHandler;
+import org.apache.ibatis.type.JdbcType;
+
+import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+public class JacksonTypeHandler<T> extends BaseTypeHandler<T> {
+
+    private Class<T> type;
+
+    public JacksonTypeHandler(Class<T> type) {
+        this.type = type;
+    }
+
+    /**
+     * 将非空参数设置到 PreparedStatement 中的指定位置
+     *
+     * @param preparedStatement 要设置参数的 PreparedStatement 对象
+     * @param i                 参数的位置索引，从 1 开始
+     * @param parameter         要设置的参数值，类型为 String
+     * @param jdbcType          参数的 JDBC 类型，用于正确转换 Java 类型到数据库类型
+     * @throws SQLException 如果设置参数时发生 SQL 异常
+     */
+    @Override
+    public void setNonNullParameter(PreparedStatement preparedStatement, int i, T parameter, JdbcType jdbcType) throws SQLException {
+        preparedStatement.setString(i, this.toJSON(parameter));
+    }
+
+    /**
+     * 从 ResultSet 中获取指定列名的可为空结果
+     *
+     * @param resultSet  要从中获取结果的 ResultSet 对象
+     * @param columnName 列名
+     * @return 指定列名的结果，如果为空则返回 null
+     * @throws SQLException 如果获取结果时发生 SQL 异常
+     */
+    @Override
+    public T getNullableResult(ResultSet resultSet, String columnName) throws SQLException {
+        String json = resultSet.getString(columnName);
+        return StringUtils.isEmpty(json) ? null : this.parse(json);
+    }
+
+    /**
+     * 从 ResultSet 中获取指定列索引的可为空结果
+     *
+     * @param resultSet   要从中获取结果的 ResultSet 对象
+     * @param columnIndex 列的索引，从 1 开始
+     * @return 指定列索引的结果，如果为空则返回 null
+     * @throws SQLException 如果获取结果时发生 SQL 异常
+     */
+    @Override
+    public T getNullableResult(ResultSet resultSet, int columnIndex) throws SQLException {
+        String json = resultSet.getString(columnIndex);
+        return StringUtils.isEmpty(json) ? null : this.parse(json);
+    }
+
+    /**
+     * 从 CallableStatement 中获取指定列索引的可为空结果
+     *
+     * @param callableStatement 要从中获取结果的 CallableStatement 对象
+     * @param columnIndex       列的索引，从 1 开始
+     * @return 指定列索引的结果，如果为空则返回 null
+     * @throws SQLException 如果获取结果时发生 SQL 异常
+     */
+    @Override
+    public T getNullableResult(CallableStatement callableStatement, int columnIndex) throws SQLException {
+        String json = callableStatement.getString(columnIndex);
+        return StringUtils.isEmpty(json) ? null : this.parse(json);
+    }
+
+    /**
+     * 字符串转JSON
+     * @param parameter
+     * @return
+     */
+    private String toJSON(T parameter) {
+        return JSONUtil.toJsonStr(parameter);
+    }
+
+    /**
+     * JSON转字符串
+     * @param json
+     * @return
+     */
+    private T parse(String json) {
+        // 使用 TypeReference 来保留完整的泛型信息，避免因类型擦除导致的问题
+        return JSONUtil.toBean(json, new TypeReference<T>() {}, false);
+    }
+}
+~~~
+
+---
+
+## 三、为什么使用 `JSONUtil.toBean(json, new TypeReference<T>() {}, false)` 而不是直接使用 `JSONUtil.toBean(json, type)`？
+
+**1）`JSONUtil.toBean(json, type)`**
+
+这个方法主要用于将 JSON 对象转换为指定的 Java 类型。它的局限性在于：
+
+- 它接受一个 `Class` 对象作为参数，这个 `Class` 对象在运行时不包含泛型信息。
+- 由于 Java 的类型擦除机制，`List.class` 在运行时只代表原始的 `List` 类型，不包含元素类型信息。
+- 对于 `["user", "admin"]` 这样的 JSON 数组，该方法无法正确识别元素应该是什么类型。
+- 结果可能是一个包含 `Object` 类型元素的 `List`，而不是 `String` 类型。
+
+示例：
+
+```java
+String json = "[\"user\", \"admin\"]";
+List<String> list = JSONUtil.toBean(json, List.class); // 这不会正确工作
+```
+
+
+
+**2）`JSONUtil.toBean(json, new TypeReference<T>() {}, false)`**
+
+这个方法更加灵活，能够处理复杂的泛型类型：
+
+- Hutool 的 `TypeReference` 是一个抽象类，通过创建匿名内部类的方式来捕获完整的泛型类型信息。
+- 当你使用 `new TypeReference<List<String>>() {}` 时，Hutool 可以通过反射获取到完整的泛型类型信息，包括元素类型。
+- 这使得 Hutool 能够正确地将 JSON 数组中的元素解析为 `String` 类型。
+
+示例：
+
+```java
+String json = "[\"user\", \"admin\"]";
+List<String> list = JSONUtil.toBean(json, new TypeReference<List<String>>() {}, false); // 这可以正确工作
+```
+
+
+
+---
+
+
+
 # ----------------
