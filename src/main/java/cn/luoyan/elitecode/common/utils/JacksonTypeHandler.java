@@ -78,7 +78,7 @@ public class JacksonTypeHandler<T> extends BaseTypeHandler<T> {
     }
 
     /**
-     * 字符串转JSON
+     * 序列化为JSON字符串
      * @param parameter
      * @return
      */
@@ -87,7 +87,7 @@ public class JacksonTypeHandler<T> extends BaseTypeHandler<T> {
     }
 
     /**
-     * JSON转字符串
+     * JSON字符串解析
      * @param json
      * @return
      */

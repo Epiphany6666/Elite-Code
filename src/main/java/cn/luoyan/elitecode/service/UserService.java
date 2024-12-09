@@ -34,4 +34,10 @@ public interface UserService {
      * @param userPassword 用户密码
      */
     Long register(String userAccount, String userPassword);
+
+    /**
+     * 用户注销
+     * @param request
+     */
+    void userLogout(HttpServletRequest request);
 }

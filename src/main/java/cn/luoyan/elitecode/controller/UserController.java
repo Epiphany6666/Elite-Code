@@ -54,6 +54,11 @@ public class UserController {
         return AjaxResult.success(userService.login(userAccount, userPassword, request));
     }
 
+    /**
+     * 用户注册
+     * @param userRegisterDTO
+     * @return
+     */
     @PostMapping("/register")
     private AjaxResult<Long> register(@RequestBody UserRegisterDTO userRegisterDTO) {
         if (userRegisterDTO == null) {
@@ -76,6 +81,17 @@ public class UserController {
         }
         Long registerUserId = userService.register(userAccount, userPassword);
         return AjaxResult.success(registerUserId);
+    }
+
+    /**
+     * 用户注销
+     * @param request
+     * @return
+     */
+    @PostMapping("/logout")
+    private AjaxResult userLogout(HttpServletRequest request) {
+        userService.userLogout(request);
+        return AjaxResult.success();
     }
 
 }

@@ -1,10 +1,7 @@
 package cn.luoyan.elitecode.service.impl;
 
 import cn.luoyan.elitecode.common.constant.HttpStatus;
-import cn.luoyan.elitecode.common.exception.user.RegistrationFailedException;
-import cn.luoyan.elitecode.common.exception.user.UserAccountAlreadyExistsException;
-import cn.luoyan.elitecode.common.exception.user.UserAccountNotFoundException;
-import cn.luoyan.elitecode.common.exception.user.UserPasswordNotMatchException;
+import cn.luoyan.elitecode.common.exception.user.*;
 import cn.luoyan.elitecode.mapper.UserMapper;
 import cn.luoyan.elitecode.model.entity.User;
 import cn.luoyan.elitecode.model.vo.LoginUserVO;
@@ -26,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 public class UserServiceImpl implements UserService {
 
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
+    private static final String USER_LOGIN_STATE = "user_login";
 
     @Autowired
     private UserMapper userMapper;
@@ -45,7 +43,7 @@ public class UserServiceImpl implements UserService {
         }
 
         // 设置登录态
-        request.getSession().setAttribute("user_login", user);
+        request.getSession().setAttribute(USER_LOGIN_STATE, user);
 
         // 返回用户信息
         return getLoginUserVO(user);
@@ -87,5 +85,13 @@ public class UserServiceImpl implements UserService {
         }
         // 返回插入用户的id
         return user.getUserId();
+    }
+
+    @Override
+    public void userLogout(HttpServletRequest request) {
+        if (request.getSession().getAttribute(USER_LOGIN_STATE) == null) {
+            throw new UserNotLoggedInException(500, "用户未登录");
+        }
+        request.getSession().removeAttribute(USER_LOGIN_STATE);
     }
 }
