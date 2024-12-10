@@ -46,9 +46,10 @@
 - [x] 修改selectUserByUserAccountAndUserPassword为selectUserByUserAccount，原因：不仅仅是用户登录要用到selectUserByUserAccount，用户注册也需要用到
 - [x] 将日志打印修改为自定义xml文件，同时修改MyBatis日志打印工具为Logback
 - [x] 实体类角色字段类型修改为List，修改XML文件使数据库字段String-JSON类型与实体类字段List类型进行转换（自写JSON类型处理器）
-- [ ] 数据库设置默认值好还是在代码中编写好？
-- [ ] 搜索提交规范中每一个规范英文代表什么
-- [ ] 搭建服务器图床（参考使用Github作为图床），目的：能够使用PicGo上传
+- [x] 数据库设置默认值好还是在代码中编写好？
+  参考博客：https://www.navicat.com.cn/company/aboutus/blog/369-mysql-
+- [x] 搜索提交规范中每一个规范英文代表什么
+- [x] 搭建服务器图床，目的：能够使用PicGo上传
 - [ ] 整理task，将已完成的任务移到后面，重新规划需要完成的任务
 - [ ] 学习Excel，将task抽取为：开发进度.xlsx
 - [ ] 坚持写工作周报
@@ -176,4 +177,8 @@
 - [ ] 美化github文件图标（参考Git笔记）
 
 - [ ] 如何做出炫酷的REDME？
+
+- [ ] github上有项目可以命令行上传文件到百度网盘，可以尝试服务器写个shell脚本定期备份图片到百度网盘
+
+- [ ] 开源项目批量修改Markdown笔记中的链接
 

@@ -854,7 +854,7 @@ Logger 是通过 `<logger>` 元素配置的。一个 `<logger>` 元素必须包�
 
 ---
 
-# SpringBoot整合Bogback日志框架
+# SpringBoot整合Logback日志框架
 
 ## 一、引入
 
@@ -1485,6 +1485,203 @@ List<String> list = JSONUtil.toBean(json, new TypeReference<List<String>>() {}, 
 
 
 ---
+
+# 使用轻量应用服务器搭建图床（整合Typora、PicGo版）
+
+## 一、在Nginx配置静态资源映射
+
+我们需要通过Nginx设置一个网站，用来展示我们的图片，因为我们刚刚已经通过宝塔安装Nginx，所以在这再设置一个网站：
+
+![image-20241126214438554](./assets/image-20241126214438554.png)
+
+我们这里设置的图床网站地址为：`/www/wwwroot/elitecode`：默认创建的文件没有用可以删掉
+
+![image-20241126214516889](./assets/image-20241126214516889.png)
+
+---
+
+## 二、提供API接口
+
+编写API接口
+
+~~~java
+package cn.luoyan.elitecode.controller;
+
+import cn.luoyan.elitecode.common.AjaxResult;
+import cn.luoyan.elitecode.common.constant.HttpStatus;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;
+
+/**
+ * 文件接口
+ */
+@RestController
+@RequestMapping("/file")
+public class ImageUploadController {
+
+    @Value("${file.upload.path}")
+    private String uploadPath;
+    @Value("${file.upload.subdirectory}")
+    private String uploadSubdirectory;
+
+    @Value("${file.access.url}")
+    private String accessURL;
+    @Value("${file.access.subdirectory}")
+    private String accessSubdirectory;
+
+    //上传图片
+    @PostMapping("/upload")
+    public AjaxResult<String> uploadImg(MultipartFile uploadFile) {
+        if (uploadFile.isEmpty()) {
+            return AjaxResult.error(HttpStatus.PARAMS_ERROR, "请选择文件");
+        }
+        // 按月份存储，获取存储目录
+        String dir = DateTimeFormatter.ofPattern("yyyy-MM").format(Instant.now().atZone(ZoneId.of("Asia/Shanghai")));
+        File targetLocation = Paths.get(uploadPath, uploadSubdirectory, dir).toFile();
+        if (!targetLocation.exists()) {
+            targetLocation.mkdirs();
+        }
+        // 获取上传图片名称
+        String originalFilename = uploadFile.getOriginalFilename();
+        // 获取文件扩展名
+        String extName = originalFilename.substring(originalFilename.lastIndexOf("."));
+        // 拼接的图片路径，使用UUID命名避免文件发生覆盖
+        String newFileName = UUID.randomUUID().toString() + extName;
+        File filePath = new File(targetLocation, newFileName);
+        //上传图片
+        try {
+            uploadFile.transferTo(filePath);
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //返回图片访问url
+        return AjaxResult.success(accessURL + "/" + accessSubdirectory + "/" + dir + "/" + newFileName);
+    }
+}
+~~~
+
+application.yml
+
+~~~yml
+# 文件相关配置
+file:
+  upload:
+    # 文件上传的根路径
+    path: /www/wwwroot/elitecode
+    # 文件存储的子目录
+    subdirectory: cos
+  access:
+    # 文件访问的基础URL
+    url: https://pic.luo-yan.cn
+    # 文件访问URL的子路径
+    subdirectory: cos
+~~~
+
+---
+
+## 三、配置反向代理
+
+![image-20241210133717309](./assets/image-20241210133717309.png)
+
+---
+
+## 四、修改SpringBoot文件上传默认单个文件最大大小
+
+application.yml
+
+~~~yml
+# Spring配置
+spring:
+  servlet:
+    multipart:
+      #配置单个文件最大上传大小
+      max-file-size: 10MB
+      #配置单个请求最大上传大小(一次请求可以上传多个文件，多个文件的总大小不能超过100M，通过集合上传)
+      max-request-size: 100MB
+~~~
+
+---
+
+## 五、测试
+
+这里使用postman测试
+
+![image-20241210133436652](./assets/image-20241210133436652.png)
+
+点开返回的图像地址，可以发现图片上传成功
+
+![image-20241210133512868](./assets/image-20241210133512868.png)
+
+---
+
+## 六、整合PicGo
+
+插件官网：https://github.com/yuki-xin/picgo-plugin-web-uploader
+
+下载好release后导入PicGo即可
+
+![image-20241210133824871](./assets/image-20241210133824871.png)
+
+新建自定义Web图床
+
+![image-20241210133904447](./assets/image-20241210133904447.png)
+
+图床配置
+
+![image-20241210134023653](./assets/image-20241210134023653.png)
+
+---
+
+## 七、整合Typora
+
+在Typora的偏好设置中进行如图设置即可
+
+![image-20241210134224246](./assets/8bbf638b-033c-484b-b28e-90b046430ca2.png)
+
+随便复制一张图片到md文件，可以看见上传成功，并在md文件中成功显示图片
+
+![image-20241210134316157](./assets/image-20241210134316157.png)
+
+---
+
+## 八、踩坑
+
+最开始我的API返回的URL并没有封装成对象，而是直接返回一个字符串
+
+~~~java
+//上传图片
+@PostMapping("/upload")
+public String uploadImg(MultipartFile uploadFile) {
+    ....
+    //返回图片访问url
+    return accessURL + "/" + accessSubdirectory + "/" + dir + "/" + newFileName;
+}
+~~~
+
+当我在md文件中进行测试时，它所显示的格式如下图，多了一个双引号，导致图片无法正确显示
+
+![image-20241210134530491](./assets/image-20241210134530491.png)
+
+解决办法：将返回的URL封装成JSON对象，此时Typora即可正确解析格式
+
+
+
+---
+
+
 
 
 
