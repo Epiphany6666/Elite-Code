@@ -78,6 +78,7 @@
 - [ ] 修改用户信息
 - [ ] 获取个人信息
 - [ ] 使用ThreadLocal记录当前线程的用户id
+- [x] 制作个人简历，参考老鱼简历、超级简历
 
 ---
 
@@ -162,6 +163,12 @@
 
   <img src="./assets/image-20241207214443147.png" alt="image-20241207214443147" style="zoom:70%;" />
 
+  文章：
+
+  https://gitwebcn.com/49979.html
+
+  https://docs.github.com/zh/repositories/releasing-projects-on-github/managing-releases-in-a-repository
+
 - [ ] Issue 提问的正确方式
 
   教程：https://blog.csdn.net/cool99781/article/details/105821546
@@ -181,4 +188,14 @@
 - [ ] github上有项目可以命令行上传文件到百度网盘，可以尝试服务器写个shell脚本定期备份图片到百度网盘
 
 - [ ] 开源项目批量修改Markdown笔记中的链接
+
+- [ ] 贪吃蛇动画：
+
+  文章：https://www.14k.top/blog/github-contribution-grid-snake、https://zhuanlan.zhihu.com/p/415688871
+
+  Github：https://github.com/Platane/snk
+
+- [ ] Github-Readme-Stats
+
+  GitHub：https://github.com/anuraghazra/github-readme-stats
 
