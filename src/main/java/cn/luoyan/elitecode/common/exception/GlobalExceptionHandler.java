@@ -16,7 +16,7 @@ public class GlobalExceptionHandler {
     public AjaxResult handleBaseException(BaseException e, HttpServletRequest request) {
         String requestURI = request.getRequestURI();
         log.error("请求地址：{}，发生业务异常.", requestURI, e);
-        return AjaxResult.error(e.getMessage());
+        return AjaxResult.error(e.getCode(), e.getMessage());
     }
 
     @ExceptionHandler(RuntimeException.class)
