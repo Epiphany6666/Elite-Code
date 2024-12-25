@@ -3,8 +3,10 @@ package cn.luoyan.elitecode.controller;
 import cn.luoyan.elitecode.common.AjaxResult;
 import cn.luoyan.elitecode.common.constant.HttpStatus;
 import cn.luoyan.elitecode.model.dto.user.UserLoginDTO;
+import cn.luoyan.elitecode.model.dto.user.UserQueryDTO;
 import cn.luoyan.elitecode.model.dto.user.UserRegisterDTO;
 import cn.luoyan.elitecode.model.vo.LoginUserVO;
+import cn.luoyan.elitecode.model.vo.UserVO;
 import cn.luoyan.elitecode.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 用户信息
@@ -92,6 +94,21 @@ public class UserController {
     private AjaxResult userLogout(HttpServletRequest request) {
         userService.userLogout(request);
         return AjaxResult.success();
+    }
+
+    /**
+     * 根据条件分页查询用户脱敏信息
+     * @param userQueryDTO
+     * @return
+     */
+    @PostMapping("/list/page/vo")
+    private AjaxResult<List<UserVO>> listUserVOByPage(@RequestBody UserQueryDTO userQueryDTO) {
+        if (userQueryDTO == null) {
+            AjaxResult.error(HttpStatus.PARAMS_ERROR, "参数错误");
+        }
+        userQueryDTO.setOffset((userQueryDTO.getCurrent() - 1) * userQueryDTO.getPageSize());
+        List<UserVO> userVOList = userService.getUserVOPage(userQueryDTO);
+        return AjaxResult.success(userVOList);
     }
 
 }

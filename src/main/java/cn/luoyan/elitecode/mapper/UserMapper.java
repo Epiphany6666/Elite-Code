@@ -1,6 +1,8 @@
 package cn.luoyan.elitecode.mapper;
 
+import cn.luoyan.elitecode.model.dto.user.UserQueryDTO;
 import cn.luoyan.elitecode.model.entity.User;
+import java.util.List;
 
 /**
  * 用户表 数据层
@@ -28,4 +30,11 @@ public interface UserMapper {
      * @return
      */
     int insertUser(User user);
+
+    /**
+     * 根据条件分页查询用户列表
+     * @param user
+     * @return
+     */
+    List<User> selectUserList(UserQueryDTO user);
 }

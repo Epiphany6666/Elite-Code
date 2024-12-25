@@ -3,8 +3,10 @@ package cn.luoyan.elitecode.service.impl;
 import cn.luoyan.elitecode.common.constant.HttpStatus;
 import cn.luoyan.elitecode.common.exception.user.*;
 import cn.luoyan.elitecode.mapper.UserMapper;
+import cn.luoyan.elitecode.model.dto.user.UserQueryDTO;
 import cn.luoyan.elitecode.model.entity.User;
 import cn.luoyan.elitecode.model.vo.LoginUserVO;
+import cn.luoyan.elitecode.model.vo.UserVO;
 import cn.luoyan.elitecode.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 用户 处理层
@@ -50,19 +54,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public LoginUserVO getLoginUserVO(User user) {
-        if (user == null) {
-            return null;
-        }
-
-        // 脱敏
-        LoginUserVO loginUserVO = new LoginUserVO();
-        BeanUtils.copyProperties(user, loginUserVO);
-
-        return loginUserVO;
-    }
-
-    @Override
     public Long register(String userAccount, String userPassword) {
         // 查询用户是否存在
         User user = userMapper.selectUserByUserAccount(userAccount);
@@ -93,5 +84,32 @@ public class UserServiceImpl implements UserService {
             throw new UserNotLoggedInException(500, "用户未登录");
         }
         request.getSession().removeAttribute(USER_LOGIN_STATE);
+    }
+
+    @Override
+    public List<UserVO> getUserVOPage(UserQueryDTO userQueryDTO) {
+        List<User> userList = userMapper.selectUserList(userQueryDTO);
+        List<UserVO> userVOList = userList.stream().map(item -> getUserVO(item)).collect(Collectors.toList());
+        return userVOList;
+    }
+
+    @Override
+    public UserVO getUserVO(User user) {
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(user, userVO);
+        return userVO;
+    }
+
+
+    @Override
+    public LoginUserVO getLoginUserVO(User user) {
+        if (user == null) {
+            return null;
+        }
+
+        // 脱敏
+        LoginUserVO loginUserVO = new LoginUserVO();
+        BeanUtils.copyProperties(user, loginUserVO);
+        return loginUserVO;
     }
 }

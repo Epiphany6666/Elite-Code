@@ -1707,4 +1707,376 @@ public String uploadImg(MultipartFile uploadFile) {
 
 ![image-20241212003408087](./assets/image-20241212003408087.png)
 
+
+
+---
+
+# MyBatis XML时间范围查询
+
+方式一：使用实体字符
+
+~~~xml
+<if test="updateTime != null">and update_time &lt;= #{updateTime}</if>
+~~~
+
+方式二：
+
+~~~xml
+<if test="createTime != null">and createTime between #{startTime} and #{endTime}</if>
+~~~
+
+
+
+---
+
+# MySQL JSON函数
+
+PS：阅读MySQL官方文档真的很考验英语水平哈哈哈o(╥﹏╥)o
+
+祝明天四六级的小伙伴过过过~
+
+官网：https://dev.mysql.com/doc/refman/8.4/en/json-function-reference.html
+
+下面展示我遇到的两种情况，以后遇到会继续补充
+
+## 一、搜索JOSN值的函数
+
+官方文档：https://dev.mysql.com/doc/refman/8.4/en/json-search-functions.html#function_json-contains
+
+格式：
+
+~~~sql
+JSON_CONTAINS(target*, candidate[, path])
+~~~
+
+通过返回 1 或 0  来指示给定的候选 JSON 文档是否包含在目标 JSON 文档中。
+
+要仅检查路径上是否存在任何数据，请使用 `JSON_CONTAINS_PATH()`。
+
+以下规则定义了包含关系：
+
+1. 当且仅当候选标量和目标标量可比较且相等时，候选标量才包含在目标标量中。两个标量值可比较的条件是它们具有相同的 JSON_TYPE() 类型，但 INTEGER 和 DECIMAL 类型的值也可以互相比较。
+2. 当且仅当候选数组中的每个元素都包含在目标数组的某个元素中时，候选数组才包含在目标数组中。
+3. 当且仅当候选非数组包含在目标数组的某个元素中时，候选非数组才包含在目标数组中。
+4. 当且仅当候选对象中的每个键在目标对象中都有相同名称的键，并且与候选键关联的值包含在与目标键关联的值中时，候选对象才包含在目标对象中。
+
+使用场景：
+
+需求：后端存储 `user_roles字段` 为JSON数组，我想筛选有哪些用户具有某个角色
+
+~~~sql
+select * FROM user where JSON_CONTAINS(user_roles, '"admin"');
+~~~
+
+效果如下：
+
+![image-20241213211153028](./assets/image-20241213211153028.png)
+
+xml
+
+~~~xml
+<if test="userRole != null and userRole != ''">and JSON_CONTAINS(user_role, JSON_QUOTE(#{userRole}))</if>
+~~~
+
+---
+
+## 二、筛选JSON里面的字段
+
+官网文档：https://dev.mysql.com/doc/refman/8.4/en/json-search-functions.html#function_json-extract
+
+格式：
+
+~~~sql
+JSON_EXTRACT(json_doc, path[, path] ...)
+~~~
+
+从 JSON 文档中返回数据，数据由路径参数匹配的文档部分选出。如果任何参数为 NULL 或没有路径在文档中找到值，则返回 NULL。如果 json_doc 参数不是有效的 JSON 文档，或者任何路径参数不是有效的路径表达式，则会出现错误。
+
+返回值由路径参数匹配的所有值组成。如果这些参数可能返回多个值，匹配的值会自动包装成一个数组，顺序与生成它们的路径相对应。否则，返回值是单个匹配的值。
+
+使用场景：
+
+需求：写出mapper xml文件，我想要查找sys_data表中data字段，其中data字段是一个JSON，图二中的map参数，需要让JSON中的key与map中的key相等并且value也相等的数据，图三为sys_data表结构，请拿map中存储'key1'->'1'举例
+
+~~~xml
+<select id="shit" resultType="com.example.SysData">
+    SELECT *
+    FROM sys_data
+    WHERE docuId = #{docuId}
+    <if test="map != null and map.size() > 0">
+        <foreach item="value" index="key" collection="map">
+            AND JSON_EXTRACT(data, CONCAT('$.', #{key})) = #{value}
+        </foreach>
+    </if>
+</select>
+~~~
+
+1. `index`属性的作用：
+   - 在遍历集合时，`index`属性表示当前遍历到的元素的索引或键。
+   - 对于List或数组，它代表元素的索引（从0开始）。
+   - 对于Map，它代表当前元素的键（key）。
+2. `item="value"` 表示我们将Map的值赋值给变量"value"。
+3. JSON_EXTRACT 是一个MySQL函数，用于从JSON格式的数据中提取特定的值。这个函数在处理JSON数据时非常有用，特别是当你需要查询或操作存储在数据库中的JSON字段时。让我详细解释一下：
+   1. 基本用法： JSON_EXTRACT(json_doc, path)
+      - json_doc：JSON文档或JSON格式的字符串
+      - path：用于指定要提取的值的路径
+   2. 路径语法：
+      - '$'表示整个JSON文档
+      - '$.key'用于访问顶层的key
+      - '$[0]'用于访问数组的第一个元素
+      - '$.key1.key2'用于访问嵌套的JSON对象
+
+---
+
+## 三、将字符串作为 JSON 值引用
+
+格式：
+
+~~~sql
+JSON_QUOTE(string)
+~~~
+
+将字符串作为 JSON 值引用，通过用双引号包裹并转义内部引号和其他字符，然后将结果作为 utf8mb4 字符串返回。如果参数为 NULL，则返回 NULL。
+
+此函数通常用于生成有效的 JSON 字符串字面量，以包含在 JSON 文档中。
+
+某些特殊字符根据表 14.23 “JSON_UNQUOTE() 特殊字符转义序列”中的转义序列用反斜杠转义。
+
+
+
+---
+
+# 使用Excel做待办列表
+
+选中E2:E~(底)，【数据】→【数据验证】，允许【序列】，序列来源为：R,S
+
+<img src="./assets/image-20241217110523943.png" alt="image-20241217110523943" style="zoom:60%;" />
+
+将F2:F12单元格区域的字体设置为Wingdings 2。
+
+<img src="./assets/image-20241217110638128.png" alt="image-20241217110638128" style="zoom:60%;" />
+
+设置完成后，可在F列单击下拉菜单，选择R时，单元格显示为带方框的√号，表示当前事项已完成。选择S时，单元格显示为带方框的×号，表示当前事项尚未完成。
+
+选中A2:E~(底)单元格区域，【开始】选项卡→【条件格式】→【新建规则】
+
+<img src="./assets/image-20241217110839316.png" alt="image-20241217110839316" style="zoom:57%;" />
+
+选择【使用公式确定要设置格式的单元格】。
+
+在公式编辑框中输入以下公式，单击【格式】按钮，设置一种填充颜色：
+`=$E2="R"`
+
+<img src="./assets/image-20241217111053837.png" alt="image-20241217111053837" style="zoom:50%;" />
+
+测试：
+
+![image-20241217112237086](./assets/image-20241217112237086.png)
+
+
+
+---
+
+# MyBatis参数计算
+
+## 一、问题
+
+前端传入参数，PageRequest.java
+
+~~~java
+/**
+ * 当前页号
+ */
+private int current = 1;
+
+/**
+ * 页面大小
+ */
+private int pageSize = 10;
+~~~
+
+xml文件
+
+~~~xml
+limit #{(current - 1) * pageSize}, #{pageSize}
+~~~
+
+报错
+
+~~~
+org.mybatis.spring.MyBatisSystemException: nested exception is org.apache.ibatis.builder.BuilderException: Parsing error in {(current - 1) * pageSize} in position 14
+~~~
+
+---
+
+## 二、解决办法
+
+### ① 法一
+
+PageRequest.java 新增属性
+
+~~~java
+/**
+ * 分页起始索引（默认为0）
+ */
+private int offset = 0;
+~~~
+
+Controller中进行动态计算
+
+~~~java
+pageRequest.setOffset((pageRequest.getCurrent() - 1) * pageRequest.getPageSize());
+~~~
+
+xml
+
+~~~xml
+limit #{offset}, #{pageSize}
+~~~
+
+---
+
+### ② `<bind>` 标签
+
+官方文档：https://mybatis.org/mybatis-3/zh_CN/dynamic-sql.html#bind-1
+
+~~~xml
+<select id="selectUserList" resultMap="UserResult">
+    <bind name="offset" value="(current - 1) * pageSize" />
+    select
+    <include refid="selectUserVo"/>
+    from
+    user
+    <where>
+        <if test="userId != null and userId != 0">and user_id=#{userId}</if>
+        <if test="userAccount != null and userAccount != ''">and user_account like '%${userAccount}%'</if>
+        <if test="nickName != null and nickName != ''">and nick_name like '%#{nickName}%'</if>
+        <if test="userRole != null and userRole != ''">and JSON_CONTAINS(user_roles, JSON_QUOTE(#{userRole}))</if>
+        <if test="createBy != null and createBy != ''">and create_by like '%#{createBy}%'</if>
+        <if test="updateBy != null and updateBy != ''">and update_by like '%#{updateBy}%'</if>
+        <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>
+    </where>
+    <if test="sortField != null and sortField != ''">
+        ORDER BY #{sortField}, #{sortOrder}
+    </if>
+    limit #{offset}, #{pageSize}
+</select>
+~~~
+
+---
+
+### ③ 使用 `$` 字符串拼接
+
+xml
+
+~~~xml
+limit ${(current - 1) * pageSize}, #{pageSize}
+~~~
+
+
+
+---
+
+# 【MyBatis】原来 `${}` 和 `#{}` 藏有这么多坑！
+
+## 一、引入
+
+众所周知，MyBatis获取参数值的两种方式：`${}` 和 `#{}`；`${}` 的本质就是字符串拼接，`#{}` 的本质就是占位符赋值。
+
+`${}` 使用字符串拼接的方式拼接sql，若为字符串类型或日期类型的字段进行赋值时，需要手动加单引号；但是 `#{}` 使用占位符赋值的方式拼接sql，此时为字符串类型或日期类型的字段进行赋值时，可以自动添加单引号。
+
+接下来考考大家，下面 `？` 的地方应该填 `$` 还是 `#`？（下面参数均为String类型）
+
+~~~xml
+select * from t_user where username like '%？{username}%'
+~~~
+
+~~~java
+select * from t_user where username like "%"？{username}"%"
+~~~
+
+~~~xml
+<if test="orderByList != null and orderByList.size() != 0">
+    ORDER BY
+    <foreach collection="orderByList" separator="," item="orderByItem">
+        ？{orderByItem}
+    </foreach>
+</if>
+~~~
+
+---
+
+## 二、解释
+
+第一个案例应为 `$`，解释：
+
+由于我们使用的是模糊查询，`%#{username}%` 需要写在一对单引号中，单引号在mysql中表示的是一个字符串；当我们用 `#{}` 时，并且在执行时，`?` 会代替 `#{}` 的时候，`?` 就存在了 `#{}` 里面，这个时候就会把 `?` 当做字符串的一部分，因此应该使用 `${}` 进行字符串拼接
+
+~~~xml
+select * from t_user where username like '%${username}%'
+~~~
+
+---
+
+第二个案例应为 `#`，解释：
+
+~~~xml
+select * from t_user where username like "%"#{username}"%"
+~~~
+
+假设传入的参数 `username` 的值是 `john`，使用占位符后的 SQL 语句：
+
+~~~java
+SELECT * FROM t_user WHERE username LIKE "%john%"
+~~~
+
+在这种情况下，`#{username}` 会直接被替换为参数值，而不加引号。
+
+因此，替换后是 `"%john%"`，而不是 `"%""%john%""%"`。
+
+---
+
+第三个案例应为 `$`，
+
+~~~java
+<if test="orderByList != null and orderByList.size() != 0">
+    ORDER BY
+    <foreach collection="orderByList" separator="," item="orderByItem">
+        ${orderByItem}
+    </foreach>
+</if>
+~~~
+
+这是因为如果使用 `#{}`，那么在SQL解析的时候会加上单引号，假设传入的值为 `create_time desc, userId desc`，那么SQL解析后的结果就为
+
+~~~xml
+ORDER BY 'create_time desc, userId desc'
+~~~
+
+此时排序是不生效的，因此需要使用 `${}` 让它不自动加单引号
+
+~~~xml
+ORDER BY create_time desc, userId desc
+~~~
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # ----------------
