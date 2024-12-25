@@ -1,5 +1,7 @@
 package cn.luoyan.elitecode.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -42,7 +44,7 @@ public class User implements Serializable {
     /**
      * 用户角色：user/admin/ban
      */
-    private List<String> userRole;
+    private List<String> userRoles;
 
     /**
      * 创建者
@@ -52,6 +54,7 @@ public class User implements Serializable {
     /**
      * 创建时间
      */
+//    @JsonFormat(locale="zh", timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     /**
@@ -62,6 +65,7 @@ public class User implements Serializable {
     /**
      * 编辑时间
      */
+//    @DataFormat(locale="zh", timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;
@@ -69,14 +73,14 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(Long userId, String userAccount, String userPassword, String nickName, String userAvatar, String userProfile, List<String> userRole, String createBy, Date createTime, String updateBy, Date updateTime, long serialVersionUID) {
+    public User(Long userId, String userAccount, String userPassword, String nickName, String userAvatar, String userProfile, List<String> userRoles, String createBy, Date createTime, String updateBy, Date updateTime, long serialVersionUID) {
         this.userId = userId;
         this.userAccount = userAccount;
         this.userPassword = userPassword;
         this.nickName = nickName;
         this.userAvatar = userAvatar;
         this.userProfile = userProfile;
-        this.userRole = userRole;
+        this.userRoles = userRoles;
         this.createBy = createBy;
         this.createTime = createTime;
         this.updateBy = updateBy;
@@ -183,16 +187,16 @@ public class User implements Serializable {
      * 获取
      * @return userRole
      */
-    public List<String> getUserRole() {
-        return userRole;
+    public List<String> getUserRoles() {
+        return userRoles;
     }
 
     /**
      * 设置
      * @param userRole
      */
-    public void setUserRole(List<String> userRole) {
-        this.userRole = userRole;
+    public void setUserRoles(List<String> userRoles) {
+        this.userRoles = userRoles;
     }
 
     /**
@@ -260,6 +264,6 @@ public class User implements Serializable {
     }
 
     public String toString() {
-        return "User{userId = " + userId + ", userAccount = " + userAccount + ", userPassword = " + userPassword + ", nickName = " + nickName + ", userAvatar = " + userAvatar + ", userProfile = " + userProfile + ", userRole = " + userRole + ", createBy = " + createBy + ", createTime = " + createTime + ", updateBy = " + updateBy + ", updateTime = " + updateTime + "}";
+        return "User{userId = " + userId + ", userAccount = " + userAccount + ", userPassword = " + userPassword + ", nickName = " + nickName + ", userAvatar = " + userAvatar + ", userProfile = " + userProfile + ", userRoles = " + userRoles + ", createBy = " + createBy + ", createTime = " + createTime + ", updateBy = " + updateBy + ", updateTime = " + updateTime + "}";
     }
 }

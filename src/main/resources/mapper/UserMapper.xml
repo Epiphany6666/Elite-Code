@@ -11,7 +11,7 @@
             <result property="nickName" column="nick_name"/>
             <result property="userAvatar" column="user_avatar"/>
             <result property="userProfile" column="user_profile"/>
-            <result property="userRole" column="user_role" typeHandler="cn.luoyan.elitecode.common.utils.JacksonTypeHandler"/>
+            <result property="userRoles" column="user_roles" typeHandler="cn.luoyan.elitecode.common.utils.JacksonTypeHandler"/>
             <result property="createBy" column="create_by"/>
             <result property="createTime" column="create_time"/>
             <result property="updateBy" column="update_by"/>
@@ -21,7 +21,7 @@
     <sql id="selectUserVo">
         user_id,user_account,user_password,
         nick_name,user_avatar,user_profile,
-        user_role,create_by,create_time,
+        user_roles,create_by,create_time,
         update_by,update_time
     </sql>
 

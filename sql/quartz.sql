@@ -13,7 +13,7 @@ create table if not exists user
     nick_name     varchar(256)  default user.user_account not null comment '用户昵称',
     user_avatar   varchar(1024) default ''                not null comment '用户头像',
     user_profile  varchar(512)  default ''                not null comment '用户简介',
-    user_role     varchar(256)  default '["user"]'            not null comment '用户角色：user/admin/ban',
+    user_roles    varchar(256)  default '["user"]'            not null comment '用户角色：user/admin/ban',
     create_by     varchar(64)   default '' comment '创建者',
     create_time   datetime      default current_timestamp not null comment '创建时间',
     update_by     varchar(64)   default '' comment '更新者',

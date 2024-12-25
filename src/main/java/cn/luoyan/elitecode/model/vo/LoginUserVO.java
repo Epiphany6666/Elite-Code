@@ -1,6 +1,5 @@
 package cn.luoyan.elitecode.model.vo;
 
-
 import java.util.Date;
 import java.util.List;
 
@@ -34,7 +33,7 @@ public class LoginUserVO {
     /**
      * 用户角色：user/admin/ban
      */
-    private List<String> userRole;
+    private List<String> userRoles;
 
     /**
      * 创建者
@@ -59,13 +58,13 @@ public class LoginUserVO {
     public LoginUserVO() {
     }
 
-    public LoginUserVO(Long userId, String userAccount, String nickName, String userAvatar, String userProfile, List<String> userRole, String createBy, Date createTime, String updateBy, Date updateTime) {
+    public LoginUserVO(Long userId, String userAccount, String nickName, String userAvatar, String userProfile, List<String> userRoles, String createBy, Date createTime, String updateBy, Date updateTime) {
         this.userId = userId;
         this.userAccount = userAccount;
         this.nickName = nickName;
         this.userAvatar = userAvatar;
         this.userProfile = userProfile;
-        this.userRole = userRole;
+        this.userRoles = userRoles;
         this.createBy = createBy;
         this.createTime = createTime;
         this.updateBy = updateBy;
@@ -154,18 +153,18 @@ public class LoginUserVO {
 
     /**
      * 获取
-     * @return userRole
+     * @return userRoles
      */
-    public List<String> getUserRole() {
-        return userRole;
+    public List<String> getUserRoles() {
+        return userRoles;
     }
 
     /**
      * 设置
-     * @param userRole
+     * @param userRoles
      */
-    public void setUserRole(List<String> userRole) {
-        this.userRole = userRole;
+    public void setUserRoles(List<String> userRoles) {
+        this.userRoles = userRoles;
     }
 
     /**
@@ -233,6 +232,6 @@ public class LoginUserVO {
     }
 
     public String toString() {
-        return "LoginUserVO{userId = " + userId + ", userAccount = " + userAccount + ", nickName = " + nickName + ", userAvatar = " + userAvatar + ", userProfile = " + userProfile + ", userRole = " + userRole + ", createBy = " + createBy + ", createTime = " + createTime + ", updateBy = " + updateBy + ", updateTime = " + updateTime + "}";
+        return "LoginUserVO{userId = " + userId + ", userAccount = " + userAccount + ", nickName = " + nickName + ", userAvatar = " + userAvatar + ", userProfile = " + userProfile + ", userRoles = " + userRoles + ", createBy = " + createBy + ", createTime = " + createTime + ", updateBy = " + updateBy + ", updateTime = " + updateTime + "}";
     }
 }
