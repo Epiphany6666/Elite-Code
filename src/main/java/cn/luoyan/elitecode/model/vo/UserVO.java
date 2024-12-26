@@ -3,6 +3,9 @@ package cn.luoyan.elitecode.model.vo;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * 用户VO（脱敏）
+ */
 public class UserVO {
 
     /**

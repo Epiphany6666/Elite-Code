@@ -4,6 +4,9 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/**
+ * 主应用程序启动类
+ */
 @MapperScan("cn.luoyan.elitecode.mapper")
 @SpringBootApplication
 public class MainApplication {

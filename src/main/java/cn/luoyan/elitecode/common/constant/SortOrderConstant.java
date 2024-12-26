@@ -1,5 +1,8 @@
 package cn.luoyan.elitecode.common.constant;
 
+/**
+ * 排序顺序常量类
+ */
 public interface SortOrderConstant {
 
     /**

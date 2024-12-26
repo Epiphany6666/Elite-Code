@@ -2,11 +2,13 @@ package cn.luoyan.elitecode.model.dto.user;
 
 import cn.luoyan.elitecode.common.PageRequest;
 import com.fasterxml.jackson.annotation.JsonFormat;
-
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * 用户查询DTO
+ */
 public class UserQueryDTO extends PageRequest implements Serializable {
     @Serial
     private static final long serialVersionUID = -4231433818967834013L;

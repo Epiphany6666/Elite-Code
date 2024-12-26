@@ -10,14 +10,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class JacksonTypeHandler<T> extends BaseTypeHandler<T> {
+/**
+ * JSON类型处理器
+ * @param <T> 泛型参数，表示要序列化和反序列化的对象类型
+ */
+public class JSONTypeHandler<T> extends BaseTypeHandler<T> {
 
     private Class<T> type;
 
-    public JacksonTypeHandler() {
+    public JSONTypeHandler() {
     }
 
-    public JacksonTypeHandler(Class<T> type) {
+    public JSONTypeHandler(Class<T> type) {
         this.type = type;
     }
 

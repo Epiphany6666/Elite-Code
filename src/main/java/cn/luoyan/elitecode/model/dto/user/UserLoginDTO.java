@@ -1,5 +1,8 @@
 package cn.luoyan.elitecode.model.dto.user;
 
+/**
+ * 用户登录DTO
+ */
 public class UserLoginDTO {
 
     private String userAccount;

@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * 用户信息
+ * 用户控制器
  */
 @RestController
 @RequestMapping("/user")

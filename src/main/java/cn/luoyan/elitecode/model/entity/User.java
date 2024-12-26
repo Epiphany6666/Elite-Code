@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 用户信息表
+ * 用户实体类
  * @TableName sys_user
  */
 public class User implements Serializable {

@@ -1328,18 +1328,21 @@ public class Price {
 **UserMapper.xml**
 
 ~~~xml
+
 <resultMap id="UserResult" type="User">
-    <result property="userRole" column="user_role" typeHandler="cn.luoyan.elitecode.common.utils.JacksonTypeHandler"/>
+    <result property="userRole" column="user_role" typeHandler="cn.luoyan.elitecode.common.utils.JSONTypeHandler"/>
 </resultMap>
 
 <insert id="insertUser" useGeneratedKeys="true" keyProperty="userId">
-    insert into user(
-    <if test="userRole != null and userRole != ''">user_role,</if>
-    )
-    values(
-    <!-- PS：这里typeHandler无需用引号包围 -->
-    <if test="userRole != null and userRole != ''">#{userRole, typeHandler=cn.luoyan.elitecode.common.utils.JacksonTypeHandler},</if>
-    )
+insert into user(
+<if test="userRole != null and userRole != ''">user_role,</if>
+)
+values(
+<!-- PS：这里typeHandler无需用引号包围 -->
+<if test="userRole != null and userRole != ''">
+    #{userRole, typeHandler=cn.luoyan.elitecode.common.utils.JacksonTypeHandler},
+</if>
+)
 </insert>
 ~~~
 

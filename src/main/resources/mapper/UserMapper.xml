@@ -11,7 +11,7 @@
             <result property="nickName" column="nick_name"/>
             <result property="userAvatar" column="user_avatar"/>
             <result property="userProfile" column="user_profile"/>
-            <result property="userRoles" column="user_roles" typeHandler="cn.luoyan.elitecode.common.utils.JacksonTypeHandler"/>
+            <result property="userRoles" column="user_roles" typeHandler="cn.luoyan.elitecode.common.utils.JSONTypeHandler"/>
             <result property="createBy" column="create_by"/>
             <result property="createTime" column="create_time"/>
             <result property="updateBy" column="update_by"/>

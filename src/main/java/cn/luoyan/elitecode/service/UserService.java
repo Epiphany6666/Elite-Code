@@ -10,7 +10,6 @@ import java.util.List;
 /**
  * 用户 业务层
  *
- * @author 洛言
  */
 public interface UserService {
 

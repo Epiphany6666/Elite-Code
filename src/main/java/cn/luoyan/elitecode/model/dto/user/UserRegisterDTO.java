@@ -1,5 +1,8 @@
 package cn.luoyan.elitecode.model.dto.user;
 
+/**
+ * 用户注册DTO
+ */
 public class UserRegisterDTO {
 
     private String userAccount;

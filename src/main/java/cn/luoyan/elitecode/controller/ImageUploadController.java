@@ -22,17 +22,25 @@ import java.util.UUID;
 @RequestMapping("/file")
 public class ImageUploadController {
 
+    // 文件上传主目录
     @Value("${file.upload.path}")
     private String uploadPath;
+    // 文件上传子目录
     @Value("${file.upload.subdirectory}")
     private String uploadSubdirectory;
 
+    // 文件访问的根 URL
     @Value("${file.access.url}")
     private String accessURL;
+    // 文件访问子目录
     @Value("${file.access.subdirectory}")
     private String accessSubdirectory;
 
-    //上传图片
+    /**
+     * 上传图片
+     * @param uploadFile 客户端上传的文件
+     * @return {@link AjaxResult} 包含上传结果的对象，成功时返回文件访问 URL
+     */
     @PostMapping("/upload")
     public AjaxResult<String> uploadImg(MultipartFile uploadFile) {
         if (uploadFile.isEmpty()) {
