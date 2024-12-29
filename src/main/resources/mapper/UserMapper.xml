@@ -70,8 +70,9 @@
             </trim>
         )
     </insert>
+
     <!--  List<UserVO> selectUserList(User user); -->
-    <select id="selectUserList" resultMap="UserResult">
+    <select id="getUserByPage" resultMap="UserResult">
         select
             <include refid="selectUserVo"/>
         from
@@ -91,6 +92,23 @@
                     ${sortField}
                 </foreach>
         </if>
-        limit #{offset}, #{pageSize}
+        limit #{current}, #{pageSize}
+    </select>
+
+    <!-- Long getTotal(UserQueryDTO userQueryDTO); -->
+    <select id="getTotal" resultType="java.lang.Long">
+        select
+            count(*)
+        from
+            user
+        <where>
+            <if test="userId != null">and user_id=#{userId}</if>
+            <if test="userAccount != null and userAccount != ''">and user_account like "%"#{userAccount}"%"</if>
+            <if test="nickName != null and nickName != ''">and nick_name like "%"#{nickName}"%"</if>
+            <if test="userRole != null and userRole != ''">and JSON_CONTAINS(user_roles, JSON_QUOTE(#{userRole}))</if>
+            <if test="createBy != null and createBy != ''">and create_by like "%"#{createBy}"%"</if>
+            <if test="updateBy != null and updateBy != ''">and update_by like "%"#{updateBy}"%"</if>
+            <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>
+        </where>
     </select>
 </mapper>

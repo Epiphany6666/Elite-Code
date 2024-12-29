@@ -1,5 +1,6 @@
 package cn.luoyan.elitecode.service.impl;
 
+import cn.luoyan.elitecode.common.PageResult;
 import cn.luoyan.elitecode.common.constant.HttpStatus;
 import cn.luoyan.elitecode.common.exception.user.*;
 import cn.luoyan.elitecode.mapper.UserMapper;
@@ -86,10 +87,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserVO> getUserVOPage(UserQueryDTO userQueryDTO) {
-        List<User> userList = userMapper.selectUserList(userQueryDTO);
+    public PageResult<UserVO> getUserVOPage(UserQueryDTO userQueryDTO) {
+        if (userQueryDTO.getCurrent() != null && userQueryDTO.getPageSize() != null) {
+            userQueryDTO.setCurrent((userQueryDTO.getCurrent() - 1) * userQueryDTO.getPageSize());
+        }
+        List<User> userList = userMapper.getUserByPage(userQueryDTO);
         List<UserVO> userVOList = userList.stream().map(item -> getUserVO(item)).collect(Collectors.toList());
-        return userVOList;
+        Long total = userMapper.getTotal(userQueryDTO);
+        PageResult<UserVO> pageResult = new PageResult<>();
+        pageResult.setData(userVOList);
+        pageResult.setTotal(total);
+        return pageResult;
     }
 
     @Override

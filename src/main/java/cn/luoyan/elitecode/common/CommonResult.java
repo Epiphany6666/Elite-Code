@@ -9,7 +9,7 @@ import java.util.HashMap;
  * 通用返回类
  * @param <T>
  */
-public class AjaxResult<T> extends HashMap<String, Object> {
+public class CommonResult<T> extends HashMap<String, Object> {
 
     /**
      * 状态码
@@ -27,27 +27,27 @@ public class AjaxResult<T> extends HashMap<String, Object> {
     private static final String DATA_TAG = "data";
 
     /**
-     * 初始化一个新创建的 AjaxResult 对象，使其表示一个空消息
+     * 初始化一个新创建的 CommonResult 对象，使其表示一个空消息
      */
-    public AjaxResult() {
+    public CommonResult() {
     }
 
     /**
-     * 初始化一个新创建的 AjaxResult 对象
+     * 初始化一个新创建的 CommonResult 对象
      * @param code 状态码
      * @param msg 信息
      */
-    public AjaxResult(int code, String msg) {
+    public CommonResult(int code, String msg) {
         this(code, msg, null);
     }
 
     /**
-     * 初始化一个新创建的 AjaxResult 对象
+     * 初始化一个新创建的 CommonResult 对象
      * @param code 状态码
      * @param msg 信息
      * @param data 数据对象
      */
-    public AjaxResult(int code, String msg, T data) {
+    public CommonResult(int code, String msg, T data) {
         super.put(CODE_TAG, code);
         super.put(MSG_TAG, msg);
         if (ObjectUtils.isNotEmpty(data)) {
@@ -59,8 +59,8 @@ public class AjaxResult<T> extends HashMap<String, Object> {
      * 返回成功消息
      * @return 成功消息
      */
-    public static AjaxResult success() {
-        return AjaxResult.success(null);
+    public static CommonResult success() {
+        return CommonResult.success(null);
     }
 
     /**
@@ -68,8 +68,8 @@ public class AjaxResult<T> extends HashMap<String, Object> {
      * @param data 数据对象
      * @return 成功消息
      */
-    public static <T> AjaxResult<T> success(T data) {
-        return new AjaxResult(HttpStatus.SUCCESS, "操作成功", data);
+    public static <T> CommonResult<T> success(T data) {
+        return new CommonResult(HttpStatus.SUCCESS, "操作成功", data);
     }
 
     /**
@@ -77,8 +77,8 @@ public class AjaxResult<T> extends HashMap<String, Object> {
      * @param msg 错误信息
      * @return 错误消息
      */
-    public static AjaxResult error(String msg) {
-        return new AjaxResult(HttpStatus.SYSTEM_ERROR, msg);
+    public static CommonResult error(String msg) {
+        return new CommonResult(HttpStatus.SYSTEM_ERROR, msg);
     }
 
     /**
@@ -87,8 +87,8 @@ public class AjaxResult<T> extends HashMap<String, Object> {
      * @param msg 错误信息
      * @return 错误消息
      */
-    public static <T> AjaxResult<T> error(int code, String msg) {
-        return new AjaxResult(code, msg, null);
+    public static <T> CommonResult<T> error(int code, String msg) {
+        return new CommonResult(code, msg, null);
     }
 
 }

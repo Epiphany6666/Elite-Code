@@ -1510,7 +1510,7 @@ List<String> list = JSONUtil.toBean(json, new TypeReference<List<String>>() {}, 
 ~~~java
 package cn.luoyan.elitecode.controller;
 
-import cn.luoyan.elitecode.common.AjaxResult;
+import cn.luoyan.elitecode.common.CommonResult;
 import cn.luoyan.elitecode.common.constant.HttpStatus;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -1545,9 +1545,9 @@ public class ImageUploadController {
 
     //上传图片
     @PostMapping("/upload")
-    public AjaxResult<String> uploadImg(MultipartFile uploadFile) {
+    public CommonResult<String> uploadImg(MultipartFile uploadFile) {
         if (uploadFile.isEmpty()) {
-            return AjaxResult.error(HttpStatus.PARAMS_ERROR, "请选择文件");
+            return CommonResult.error(HttpStatus.PARAMS_ERROR, "请选择文件");
         }
         // 按月份存储，获取存储目录
         String dir = DateTimeFormatter.ofPattern("yyyy-MM").format(Instant.now().atZone(ZoneId.of("Asia/Shanghai")));
@@ -1571,7 +1571,7 @@ public class ImageUploadController {
             e.printStackTrace();
         }
         //返回图片访问url
-        return AjaxResult.success(accessURL + "/" + accessSubdirectory + "/" + dir + "/" + newFileName);
+        return CommonResult.success(accessURL + "/" + accessSubdirectory + "/" + dir + "/" + newFileName);
     }
 }
 ~~~

@@ -12,22 +12,16 @@ public class PageRequest implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 6445240999999115607L;
+
     /**
      * 当前页号
      */
-    private int current = 1;
+    private Integer current = 1;
 
     /**
      * 页面大小
      */
-    private int pageSize = 10;
-
-    /**
-     * 分页起始索引（默认为0）
-     * 添加 @JsonIgnore 注解使该字段在序列化和反序列化时被忽略，从而不在 Swagger 文档中显示
-     */
-    @JsonIgnore
-    private transient int offset = 0;
+    private Integer pageSize = 10;
 
     /**
      * 排序字段列表，支持多个字段
@@ -39,18 +33,17 @@ public class PageRequest implements Serializable {
     public PageRequest() {
     }
 
-    public PageRequest(int current, int pageSize, int offset, List<String> SortFieldPair) {
+    public PageRequest(Integer current, Integer pageSize, List<String> sortFieldPair) {
         this.current = current;
         this.pageSize = pageSize;
-        this.offset = offset;
-        this.sortFieldPair = SortFieldPair;
+        this.sortFieldPair = sortFieldPair;
     }
 
     /**
      * 获取
      * @return current
      */
-    public int getCurrent() {
+    public Integer getCurrent() {
         return current;
     }
 
@@ -58,7 +51,7 @@ public class PageRequest implements Serializable {
      * 设置
      * @param current
      */
-    public void setCurrent(int current) {
+    public void setCurrent(Integer current) {
         this.current = current;
     }
 
@@ -66,7 +59,7 @@ public class PageRequest implements Serializable {
      * 获取
      * @return pageSize
      */
-    public int getPageSize() {
+    public Integer getPageSize() {
         return pageSize;
     }
 
@@ -74,29 +67,13 @@ public class PageRequest implements Serializable {
      * 设置
      * @param pageSize
      */
-    public void setPageSize(int pageSize) {
+    public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
     }
 
     /**
      * 获取
-     * @return offset
-     */
-    public int getOffset() {
-        return offset;
-    }
-
-    /**
-     * 设置
-     * @param offset
-     */
-    public void setOffset(int offset) {
-        this.offset = offset;
-    }
-
-    /**
-     * 获取
-     * @return SortFieldPair
+     * @return sortFieldPair
      */
     public List<String> getSortFieldPair() {
         return sortFieldPair;
@@ -104,13 +81,13 @@ public class PageRequest implements Serializable {
 
     /**
      * 设置
-     * @param SortFieldPair
+     * @param sortFieldPair
      */
-    public void setSortFieldPair(List<String> SortFieldPair) {
-        this.sortFieldPair = SortFieldPair;
+    public void setSortFieldPair(List<String> sortFieldPair) {
+        this.sortFieldPair = sortFieldPair;
     }
 
     public String toString() {
-        return "PageRequest{current = " + current + ", pageSize = " + pageSize + ", offset = " + offset + ", SortFieldPair = " + sortFieldPair + "}";
+        return "PageRequest{current = " + current + ", pageSize = " + pageSize + ", sortFieldPair = " + sortFieldPair + "}";
     }
 }

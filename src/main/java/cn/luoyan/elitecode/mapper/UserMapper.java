@@ -32,8 +32,15 @@ public interface UserMapper {
 
     /**
      * 根据条件分页查询用户列表
-     * @param user
+     * @param userQueryDTO
      * @return
      */
-    List<User> selectUserList(UserQueryDTO user);
+    List<User> getUserByPage(UserQueryDTO userQueryDTO);
+
+    /**
+     * 获取总条数
+     * @param userQueryDTO
+     * @return
+     */
+    Long getTotal(UserQueryDTO userQueryDTO);
 }

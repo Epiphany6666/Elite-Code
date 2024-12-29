@@ -1,5 +1,6 @@
 package cn.luoyan.elitecode.service;
 
+import cn.luoyan.elitecode.common.PageResult;
 import cn.luoyan.elitecode.model.dto.user.UserQueryDTO;
 import cn.luoyan.elitecode.model.entity.User;
 import cn.luoyan.elitecode.model.vo.LoginUserVO;
@@ -40,7 +41,7 @@ public interface UserService {
      * @param userQueryDTO
      * @return
      */
-    List<UserVO> getUserVOPage(UserQueryDTO userQueryDTO);
+    PageResult<UserVO> getUserVOPage(UserQueryDTO userQueryDTO);
 
     /**
      * 获取用户脱敏信息
