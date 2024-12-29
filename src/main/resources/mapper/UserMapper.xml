@@ -111,4 +111,18 @@
             <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>
         </where>
     </select>
+
+    <!-- void updateByPrimaryKeySelective(User user); -->
+    <update id="updateByPrimaryKeySelective">
+        UPDATE user
+        <set>
+            <if test="userAccount != null and userAccount != ''">user_account = #{userAccount},</if>
+            <if test="nickName != null and nickName != ''">nick_name = #{nickName},</if>
+            <if test="userProfile != null and userProfile != ''">user_profile = #{userProfile},</if>
+            <if test="userRoles != null and userRoles.size() != 0">user_roles = #{userRoles, typeHandler=cn.luoyan.elitecode.common.utils.JSONTypeHandler},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </set>
+        where
+            user_id = #{userId}
+    </update>
 </mapper>

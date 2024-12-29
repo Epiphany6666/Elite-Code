@@ -1,10 +1,12 @@
 package cn.luoyan.elitecode.service.impl;
 
+import cn.luoyan.elitecode.common.BaseContext;
 import cn.luoyan.elitecode.common.PageResult;
 import cn.luoyan.elitecode.common.constant.HttpStatus;
 import cn.luoyan.elitecode.common.exception.user.*;
 import cn.luoyan.elitecode.mapper.UserMapper;
 import cn.luoyan.elitecode.model.dto.user.UserQueryDTO;
+import cn.luoyan.elitecode.model.dto.user.UserUpdateDTO;
 import cn.luoyan.elitecode.model.entity.User;
 import cn.luoyan.elitecode.model.vo.LoginUserVO;
 import cn.luoyan.elitecode.model.vo.UserVO;
@@ -119,5 +121,13 @@ public class UserServiceImpl implements UserService {
         LoginUserVO loginUserVO = new LoginUserVO();
         BeanUtils.copyProperties(user, loginUserVO);
         return loginUserVO;
+    }
+
+    @Override
+    public void updateUser(UserUpdateDTO userUpdateDTO) {
+        User user = new User();
+        BeanUtils.copyProperties(userUpdateDTO, user);
+        user.setUpdateBy(BaseContext.getCurrentId());
+        userMapper.updateByPrimaryKeySelective(user);
     }
 }

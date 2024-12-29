@@ -2,11 +2,11 @@ package cn.luoyan.elitecode.service;
 
 import cn.luoyan.elitecode.common.PageResult;
 import cn.luoyan.elitecode.model.dto.user.UserQueryDTO;
+import cn.luoyan.elitecode.model.dto.user.UserUpdateDTO;
 import cn.luoyan.elitecode.model.entity.User;
 import cn.luoyan.elitecode.model.vo.LoginUserVO;
 import cn.luoyan.elitecode.model.vo.UserVO;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * 用户 业务层
@@ -56,4 +56,10 @@ public interface UserService {
      * @return 脱敏后的用户信息
      */
     LoginUserVO getLoginUserVO(User user);
+
+    /**
+     * 更新用户信息
+     * @param userUpdateDTO
+     */
+    void updateUser(UserUpdateDTO userUpdateDTO);
 }

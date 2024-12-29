@@ -43,4 +43,12 @@ public interface UserMapper {
      * @return
      */
     Long getTotal(UserQueryDTO userQueryDTO);
+
+    /**
+     * 根据主键动态更新用户信息
+     * <p>该方法会根据传入的 Employee 对象中的非空字段进行更新操作，
+     * 只有非空字段才会被更新到数据库对应的表中。</p>
+     * @param user
+     */
+    void updateByPrimaryKeySelective(User user);
 }

@@ -6,15 +6,13 @@ import cn.luoyan.elitecode.common.constant.HttpStatus;
 import cn.luoyan.elitecode.model.dto.user.UserLoginDTO;
 import cn.luoyan.elitecode.model.dto.user.UserQueryDTO;
 import cn.luoyan.elitecode.model.dto.user.UserRegisterDTO;
+import cn.luoyan.elitecode.model.dto.user.UserUpdateDTO;
 import cn.luoyan.elitecode.model.vo.LoginUserVO;
 import cn.luoyan.elitecode.model.vo.UserVO;
 import cn.luoyan.elitecode.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -107,6 +105,20 @@ public class UserController {
             CommonResult.error(HttpStatus.PARAMS_ERROR, "参数错误");
         }
         return userService.getUserVOPage(userQueryDTO);
+    }
+
+    /**
+     * 更新用户信息
+     * @param userUpdateDTO
+     * @return
+     */
+    @PutMapping("/")
+    private CommonResult updateUser(@RequestBody UserUpdateDTO userUpdateDTO) {
+        if (userUpdateDTO == null) {
+            CommonResult.error(HttpStatus.PARAMS_ERROR, "更新用户信息参数错误");
+        }
+        userService.updateUser(userUpdateDTO);
+        return CommonResult.success();
     }
 
 }
