@@ -1,7 +1,6 @@
 package cn.luoyan.elitecode.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -11,6 +10,10 @@ import java.util.List;
  * @TableName sys_user
  */
 public class User implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -6603178573463538791L;
+
     /**
      * 用户ID
      */
@@ -49,31 +52,28 @@ public class User implements Serializable {
     /**
      * 创建者
      */
-    private String createBy;
+    private Long createBy;
 
     /**
      * 创建时间
      */
-//    @JsonFormat(locale="zh", timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     /**
      * 更新者
      */
-    private String updateBy;
+    private Long updateBy;
 
     /**
      * 编辑时间
      */
-//    @DataFormat(locale="zh", timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
-    private static final long serialVersionUID = 1L;
 
     public User() {
     }
 
-    public User(Long userId, String userAccount, String userPassword, String nickName, String userAvatar, String userProfile, List<String> userRoles, String createBy, Date createTime, String updateBy, Date updateTime, long serialVersionUID) {
+    public User(Long userId, String userAccount, String userPassword, String nickName, String userAvatar, String userProfile, List<String> userRoles, Long createBy, Date createTime, Long updateBy, Date updateTime) {
         this.userId = userId;
         this.userAccount = userAccount;
         this.userPassword = userPassword;
@@ -185,7 +185,7 @@ public class User implements Serializable {
 
     /**
      * 获取
-     * @return userRole
+     * @return userRoles
      */
     public List<String> getUserRoles() {
         return userRoles;
@@ -193,7 +193,7 @@ public class User implements Serializable {
 
     /**
      * 设置
-     * @param userRole
+     * @param userRoles
      */
     public void setUserRoles(List<String> userRoles) {
         this.userRoles = userRoles;
@@ -203,7 +203,7 @@ public class User implements Serializable {
      * 获取
      * @return createBy
      */
-    public String getCreateBy() {
+    public Long getCreateBy() {
         return createBy;
     }
 
@@ -211,7 +211,7 @@ public class User implements Serializable {
      * 设置
      * @param createBy
      */
-    public void setCreateBy(String createBy) {
+    public void setCreateBy(Long createBy) {
         this.createBy = createBy;
     }
 
@@ -235,7 +235,7 @@ public class User implements Serializable {
      * 获取
      * @return updateBy
      */
-    public String getUpdateBy() {
+    public Long getUpdateBy() {
         return updateBy;
     }
 
@@ -243,7 +243,7 @@ public class User implements Serializable {
      * 设置
      * @param updateBy
      */
-    public void setUpdateBy(String updateBy) {
+    public void setUpdateBy(Long updateBy) {
         this.updateBy = updateBy;
     }
 

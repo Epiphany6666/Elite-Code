@@ -47,7 +47,7 @@
     <insert id="insertUser" useGeneratedKeys="true" keyProperty="userId">
         insert into user(
             <trim suffixOverrides=",">
-                <if test="userId != null and userId != 0">user_id,</if>
+                <if test="userId != null">user_id,</if>
                 <if test="userAccount != null and userAccount != ''">user_account,</if>
                 <if test="userPassword != null and userPassword != ''">user_password,</if>
                 <if test="userAvatar != null and userAvatar != ''">user_avatar,</if>
@@ -59,12 +59,12 @@
         )
         values(
             <trim suffixOverrides=",">
-                <if test="userId != null and userId != 0">#{userId},</if>
+                <if test="userId != null">#{userId},</if>
                 <if test="userAccount != null and userAccount != ''">#{userAccount},</if>
                 <if test="userPassword != null and userPassword != ''">#{userPassword},</if>
                 <if test="userAvatar != null and userAvatar != ''">#{userAvatar},</if>
                 <if test="userProfile != null and userProfile != ''">#{userProfile},</if>
-                <if test="userRoles != null and userRoles != ''">#{userRoles, typeHandler=cn.luoyan.elitecode.common.utils.JacksonTypeHandler},</if>
+                <if test="userRoles != null and userRoles != ''">#{userRoles, typeHandler=cn.luoyan.elitecode.common.utils.JSONTypeHandler},</if>
                 <if test="createBy != null and createBy != ''">#{createBy},</if>
                 <if test="updateBy != null and updateBy != ''">#{updateBy},</if>
             </trim>

@@ -110,17 +110,45 @@
 **用户模块（后端）**
 
 - [x] 注册
+
 - [x] 登录
+
 - [x] 注销
+
 - [x] 分页获取用户数据
+
 - [ ] 更新个人信息
-- [ ] 修改用户信息
+
 - [x] 根据id更新用户信息
+
+- [ ] 更新个人信息头像
+
+  若依：/avatar
+
+  微人事：/hr/userface
+
 - [ ] 修改
+
 - [ ] 获取个人信息
-- [ ] 使用ThreadLocal记录当前线程的用户id
+
 - [x] 使用ThreadLocal记录当前线程的用户id
+
 - [x] 制作个人简历，参考老鱼简历、超级简历
+
+- [ ] 重置密码
+
+  微人事：/hr/pass
+
+  若依：/updatePwd
+
+- [ ] 包名从cn.luoyan.elitecode改为cn.elitecode
+
+- [ ] 补充Swagger注解
+
+
+
+- [ ] 新增日志模块
+- [ ] 整合 SpringSecurity
 
 ---
 
