@@ -48,6 +48,7 @@ public class UserServiceImpl implements UserService {
 
         // 设置登录态
         request.getSession().setAttribute(USER_LOGIN_STATE, user);
+        BaseContext.setCurrentId(user.getUserId());
 
         // 返回用户信息
         return getLoginUserVO(user);
