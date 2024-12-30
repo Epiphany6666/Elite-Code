@@ -153,4 +153,30 @@ public class UserServiceImpl implements UserService {
         }
         return user.getUserId();
     }
+
+    /**
+     * 批量删除用户
+     * @param userIds 需要删除的id数组
+     */
+    @Override
+    public void removeByUserIds(Long[] userIds) {
+        for (Long userId : userIds) {
+            checkUserAllowed(new User(userId));
+        }
+        int result = userMapper.deleteUserByIds(userIds);
+        if (result <= 0) {
+            log.error("批量删除用户失败：{}", result);
+        }
+    }
+
+    private void checkUserAllowed(User user) {
+        if (ObjectUtil.isNotNull(user.getUserId()) && isAdmin(user.getUserId())) {
+            throw new AdminNotAllowedException(HttpStatus.ADMIN_NOT_ALLOWED_ERROR, "不允许操作超级管理员用户");
+        }
+    }
+
+    private boolean isAdmin(Long userId) {
+        List<Long> adminUserIds = userMapper.selectAdminUserIds();
+        return adminUserIds.contains(userId);
+    }
 }

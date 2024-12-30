@@ -128,4 +128,17 @@
         where
             user_id = #{userId}
     </update>
+
+    <!-- List<Long> selectAdminUserIds(); -->
+    <select id="selectAdminUserIds" resultType="java.lang.Long">
+        select user_id from user where JSON_CONTAINS(user_roles, JSON_QUOTE('admin'))
+    </select>
+
+    <delete id="deleteUserByIds">
+        delete from user where user_id in
+        <foreach collection="userIds" open="(" separator="," close=")" item="userId">
+            #{userId}
+        </foreach>
+    </delete>
+
 </mapper>

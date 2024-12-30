@@ -82,4 +82,10 @@ public interface UserService {
      * @return 结果
      */
     Long addUser(User user);
+
+    /**
+     * 批量删除用户
+     * @param userIds 需要删除的id数组
+     */
+    void removeByUserIds(Long[] userIds);
 }

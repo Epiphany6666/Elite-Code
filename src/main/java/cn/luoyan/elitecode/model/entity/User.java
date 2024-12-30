@@ -69,8 +69,12 @@ public class User implements Serializable {
      */
     private Date updateTime;
 
-
     public User() {
+
+    }
+
+    public User(Long userId) {
+        this.userId = userId;
     }
 
     public User(Long userId, String userAccount, String userPassword, String nickName, String userAvatar, String userProfile, List<String> userRoles, Long createBy, Date createTime, Long updateBy, Date updateTime) {

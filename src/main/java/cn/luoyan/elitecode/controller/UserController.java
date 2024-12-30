@@ -1,5 +1,6 @@
 package cn.luoyan.elitecode.controller;
 
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import cn.luoyan.elitecode.common.BaseContext;
@@ -165,6 +166,21 @@ public class UserController {
             CommonResult.error(HttpStatus.PARAMS_ERROR, "更新用户信息参数错误");
         }
         userService.updateUser(userUpdateDTO);
+        return CommonResult.success();
+    }
+
+    /**
+     * 批量删除用户
+     * @param userIds 需要删除的id数组
+     * @return 结果
+     */
+    @DeleteMapping("/{userIds}")
+    private CommonResult remove(@PathVariable Long[] userIds) {
+        Long id = BaseContext.getCurrentId();
+        if (ArrayUtil.contains(userIds, id)) {
+            return CommonResult.error(HttpStatus.PARAMS_ERROR, "不能删除当前用户");
+        }
+        userService.removeByUserIds(userIds);
         return CommonResult.success();
     }
 
