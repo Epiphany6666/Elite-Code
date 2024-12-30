@@ -52,7 +52,7 @@
                 <if test="userPassword != null and userPassword != ''">user_password,</if>
                 <if test="userAvatar != null and userAvatar != ''">user_avatar,</if>
                 <if test="userProfile != null and userProfile != ''">user_profile,</if>
-                <if test="userRole != null and userRole != ''">user_roles,</if>
+                <if test="userRoles != null and userRoles != ''">user_roles,</if>
                 <if test="createBy != null and createBy != ''">create_by,</if>
                 <if test="updateBy != null and updateBy != ''">update_by,</if>
             </trim>
@@ -110,6 +110,9 @@
             <if test="updateBy != null and updateBy != ''">and update_by like "%"#{updateBy}"%"</if>
             <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>
         </where>
+    </select>
+    <select id="checkUserAccountUnique" resultType="cn.luoyan.elitecode.model.entity.User">
+        select user_id, user_account from user where user_account = #{userAccount} limit 1
     </select>
 
     <!-- void updateByPrimaryKeySelective(User user); -->

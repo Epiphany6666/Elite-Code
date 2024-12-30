@@ -1,8 +1,10 @@
 package cn.luoyan.elitecode.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
 import cn.luoyan.elitecode.common.BaseContext;
 import cn.luoyan.elitecode.common.PageResult;
 import cn.luoyan.elitecode.common.constant.HttpStatus;
+import cn.luoyan.elitecode.common.constant.UserConstant;
 import cn.luoyan.elitecode.common.exception.user.*;
 import cn.luoyan.elitecode.mapper.UserMapper;
 import cn.luoyan.elitecode.model.dto.user.UserQueryDTO;
@@ -57,27 +59,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Long register(String userAccount, String userPassword) {
-        // 查询用户是否存在
-        User user = userMapper.selectUserByUserAccount(userAccount);
-        if (user != null) {
-            throw new UserAccountAlreadyExistsException(HttpStatus.PARAMS_ERROR, "账号已存在");
-        }
-
-        // 加密
-        String encryptPassword = DigestUtils.md5DigestAsHex(userPassword.getBytes());
-
-        // 插入数据库
-        user = new User();
-        user.setUserAccount(userAccount);
-        user.setUserPassword(encryptPassword);
-        int result = userMapper.insertUser(user);
-
-        if (result <= 0) {
-            log.error("用户插入数据库失败：{}", result);
+    public Long register(User user) {
+        boolean regFlag = this.registerUser(user);
+        if (!regFlag) {
             throw new RegistrationFailedException(HttpStatus.SYSTEM_ERROR, "注册失败");
         }
-        // 返回插入用户的id
+        // 若成功，返回注册用户的id
         return user.getUserId();
     }
 
@@ -129,5 +116,30 @@ public class UserServiceImpl implements UserService {
         BeanUtils.copyProperties(userUpdateDTO, user);
         user.setUpdateBy(BaseContext.getCurrentId());
         userMapper.updateByPrimaryKeySelective(user);
+    }
+
+    /**
+     * 校验用户账号是否唯一
+     *
+     * @param user 用户信息
+     * @return 结果
+     */
+    @Override
+    public boolean checkUserAccountUnique(User user) {
+        Long userId = ObjectUtil.isNull(user.getUserId()) ? -1L : user.getUserId();
+        User info = userMapper.checkUserAccountUnique(user.getUserAccount());
+        if (ObjectUtil.isNotNull(info) && info.getUserId().longValue() != userId.longValue()) {
+            return UserConstant.NOT_UNIQUE;
+        }
+        return UserConstant.UNIQUE;
+    }
+
+    @Override
+    public boolean registerUser(User user) {
+        int result = userMapper.insertUser(user);
+        if (result <= 0) {
+            log.error("用户插入数据库失败：{}", result);
+        }
+        return true;
     }
 }

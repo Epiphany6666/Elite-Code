@@ -3,15 +3,18 @@ package cn.luoyan.elitecode.controller;
 import cn.luoyan.elitecode.common.CommonResult;
 import cn.luoyan.elitecode.common.PageResult;
 import cn.luoyan.elitecode.common.constant.HttpStatus;
+import cn.luoyan.elitecode.common.constant.UserConstant;
 import cn.luoyan.elitecode.model.dto.user.UserLoginDTO;
 import cn.luoyan.elitecode.model.dto.user.UserQueryDTO;
 import cn.luoyan.elitecode.model.dto.user.UserRegisterDTO;
 import cn.luoyan.elitecode.model.dto.user.UserUpdateDTO;
+import cn.luoyan.elitecode.model.entity.User;
 import cn.luoyan.elitecode.model.vo.LoginUserVO;
 import cn.luoyan.elitecode.model.vo.UserVO;
 import cn.luoyan.elitecode.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
@@ -64,22 +67,38 @@ public class UserController {
         if (userRegisterDTO == null) {
             CommonResult.error(HttpStatus.PARAMS_ERROR, "注册参数错误");
         }
+
+        // 校验
         String userAccount = userRegisterDTO.getUserAccount();
         String userPassword = userRegisterDTO.getUserPassword();
         String checkPassword = userRegisterDTO.getCheckPassword();
-        if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword)) {
-            return CommonResult.error(HttpStatus.PARAMS_ERROR, "账号或密码或校验密码为空");
+        if (StringUtils.isEmpty(userAccount)) {
+            return CommonResult.error(HttpStatus.PARAMS_ERROR, "用户账号不能为空");
         }
-        if (userAccount.length() < 4) {
-            return CommonResult.error(HttpStatus.PARAMS_ERROR, "账号长度不足4位");
+        if (StringUtils.isEmpty(userPassword)) {
+            return CommonResult.error(HttpStatus.PARAMS_ERROR, "用户密码不能为空");
         }
-        if (userPassword.length() < 8) {
-            return CommonResult.error(HttpStatus.PARAMS_ERROR, "密码长度不足8位");
+        if (StringUtils.isEmpty(checkPassword)) {
+            return CommonResult.error(HttpStatus.PARAMS_ERROR, "校验密码不能为空");
+        }
+        if (userAccount.length() < UserConstant.USER_ACCOUNT_MIN_LENGTH
+                || userAccount.length() > UserConstant.USER_ACCOUNT_MAX_LENGTH) {
+            return CommonResult.error(HttpStatus.PARAMS_ERROR, "账号长度必须在2到20个字符之间");
+        }
+        if (userPassword.length() < UserConstant.USER_PASSWORD_MIN_LENGTH
+                || userPassword.length() > UserConstant.USER_PASSWORD_MAX_LENGTH) {
+            return CommonResult.error(HttpStatus.PARAMS_ERROR, "密码长度必须在6到20个字符之间");
         }
         if (!userPassword.equals(checkPassword)) {
             return CommonResult.error(HttpStatus.PARAMS_ERROR, "两次输入的密码不一致");
         }
-        Long registerUserId = userService.register(userAccount, userPassword);
+        User user = new User();
+        user.setUserAccount(userRegisterDTO.getUserAccount());
+        if (!userService.checkUserAccountUnique(user)) {
+            return CommonResult.error(HttpStatus.PARAMS_ERROR, "用户注册 '" + user.getUserAccount() + "' 失败，账号已存在");
+        }
+        user.setUserPassword(DigestUtils.md5DigestAsHex(userPassword.getBytes()));
+        Long registerUserId = userService.register(user);
         return CommonResult.success(registerUserId);
     }
 

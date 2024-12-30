@@ -24,7 +24,7 @@ public interface UserMapper {
     User selectUserByUserAccount(String userAccount );
 
     /**
-     * 用户注册
+     * 插入用户
      * @param user 用户信息
      * @return
      */
@@ -51,4 +51,11 @@ public interface UserMapper {
      * @param user
      */
     void updateByPrimaryKeySelective(User user);
+
+    /**
+     * 校验用户账号是否唯一
+     * @param userAccount 用户账号
+     * @return 结果
+     */
+    User checkUserAccountUnique(String userAccount);
 }

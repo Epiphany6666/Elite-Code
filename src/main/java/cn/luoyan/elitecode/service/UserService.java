@@ -25,10 +25,9 @@ public interface UserService {
 
     /**
      * 用户注册
-     * @param userAccount 用户账号
-     * @param userPassword 用户密码
+     * @param user 用户信息
      */
-    Long register(String userAccount, String userPassword);
+    Long register(User user);
 
     /**
      * 用户注销
@@ -62,4 +61,18 @@ public interface UserService {
      * @param userUpdateDTO
      */
     void updateUser(UserUpdateDTO userUpdateDTO);
+
+    /**
+     * 校验用户账号是否唯一
+     * @param user 用户信息
+     * @return 结果
+     */
+    boolean checkUserAccountUnique(User user);
+
+    /**
+     * 注册用户信息
+     * @param user 用户信息
+     * @return 结果
+     */
+    boolean registerUser(User user);
 }
