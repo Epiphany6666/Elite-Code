@@ -1,5 +1,6 @@
 package cn.luoyan.elitecode.controller;
 
+import cn.hutool.core.util.StrUtil;
 import cn.luoyan.elitecode.common.CommonResult;
 import cn.luoyan.elitecode.common.PageResult;
 import cn.luoyan.elitecode.common.constant.HttpStatus;
@@ -33,7 +34,6 @@ public class UserController {
      * @param userLoginDTO
      * @param request
      * @return
-     * @throws Exception
      */
     @PostMapping("/login")
     private CommonResult<LoginUserVO> login(@RequestBody UserLoginDTO userLoginDTO, HttpServletRequest request) {
@@ -47,11 +47,19 @@ public class UserController {
         if (StringUtils.isAnyBlank(userAccount, userPassword)) {
             return CommonResult.error(HttpStatus.PARAMS_ERROR, "账号或密码为空");
         }
-        if (userAccount.length() < 4) {
-            return CommonResult.error(HttpStatus.PARAMS_ERROR, "账号长度不足4位");
+        if (StrUtil.isEmpty(userAccount)) {
+            return CommonResult.error(HttpStatus.PARAMS_ERROR, "用户账号不能为空");
         }
-        if (userPassword.length() < 8) {
-            return CommonResult.error(HttpStatus.PARAMS_ERROR, "密码长度不足8位");
+        if (StrUtil.isEmpty(userPassword)) {
+            return CommonResult.error(HttpStatus.PARAMS_ERROR, "用户密码不能为空");
+        }
+        if (userAccount.length() < UserConstant.USER_ACCOUNT_MIN_LENGTH
+                || userAccount.length() > UserConstant.USER_ACCOUNT_MAX_LENGTH) {
+            return CommonResult.error(HttpStatus.PARAMS_ERROR, "账号长度必须在2到20个字符之间");
+        }
+        if (userPassword.length() < UserConstant.USER_PASSWORD_MIN_LENGTH
+                || userPassword.length() > UserConstant.USER_PASSWORD_MAX_LENGTH) {
+            return CommonResult.error(HttpStatus.PARAMS_ERROR, "密码长度必须在6到20个字符之间");
         }
 
         return CommonResult.success(userService.login(userAccount, userPassword, request));
@@ -97,7 +105,7 @@ public class UserController {
         if (!userService.checkUserAccountUnique(user)) {
             return CommonResult.error(HttpStatus.PARAMS_ERROR, "用户注册 '" + user.getUserAccount() + "' 失败，账号已存在");
         }
-        user.setUserPassword(DigestUtils.md5DigestAsHex(userPassword.getBytes()));
+        user.setUserPassword(DigestUtils.md5DigestAsHex((UserConstant.SALT + userPassword).getBytes()));
         Long registerUserId = userService.register(user);
         return CommonResult.success(registerUserId);
     }
@@ -127,7 +135,7 @@ public class UserController {
     }
 
     /**
-     * 更新用户信息
+     * 更新用户信息=
      * @param userUpdateDTO
      * @return
      */

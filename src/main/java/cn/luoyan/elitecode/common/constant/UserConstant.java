@@ -6,6 +6,11 @@ package cn.luoyan.elitecode.common.constant;
 public interface UserConstant {
 
     /**
+     * 盐值
+     */
+    String SALT = "luoyan";
+
+    /**
      * 校验是否唯一的返回标识
      */
     boolean NOT_UNIQUE = false;

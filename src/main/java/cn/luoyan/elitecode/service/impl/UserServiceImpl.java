@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 
 /**
  * 用户 处理层
- *
  */
 @Service
 public class UserServiceImpl implements UserService {
@@ -36,8 +35,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
 
-    private final static String SALT = "luoyan";
-
     @Override
     public LoginUserVO login(String userAccount, String userPassword, HttpServletRequest request) {
         // 查询用户是否存在
@@ -45,7 +42,7 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             throw new UserAccountNotFoundException(HttpStatus.PARAMS_ERROR, "账号不存在");
         }
-        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
+        String encryptPassword = DigestUtils.md5DigestAsHex((UserConstant.SALT + userPassword).getBytes());
         if (!encryptPassword.equals(user.getUserPassword())) {
             throw new UserPasswordNotMatchException(HttpStatus.PARAMS_ERROR, "密码错误");
         }
