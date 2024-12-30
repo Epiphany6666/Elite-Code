@@ -1,8 +1,7 @@
 package cn.luoyan.elitecode.common;
 
+import cn.hutool.core.util.ObjectUtil;
 import cn.luoyan.elitecode.common.constant.HttpStatus;
-import org.apache.commons.lang3.ObjectUtils;
-
 import java.util.HashMap;
 
 /**
@@ -50,7 +49,7 @@ public class CommonResult<T> extends HashMap<String, Object> {
     public CommonResult(int code, String msg, T data) {
         super.put(CODE_TAG, code);
         super.put(MSG_TAG, msg);
-        if (ObjectUtils.isNotEmpty(data)) {
+        if (ObjectUtil.isNotEmpty(data)) {
             super.put(DATA_TAG, data);
         }
     }

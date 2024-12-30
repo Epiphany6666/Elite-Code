@@ -13,7 +13,6 @@ import cn.luoyan.elitecode.model.entity.User;
 import cn.luoyan.elitecode.model.vo.LoginUserVO;
 import cn.luoyan.elitecode.model.vo.UserVO;
 import cn.luoyan.elitecode.service.UserService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
@@ -45,9 +44,6 @@ public class UserController {
         String userPassword = userLoginDTO.getUserPassword();
 
         // 校验
-        if (StringUtils.isAnyBlank(userAccount, userPassword)) {
-            return CommonResult.error(HttpStatus.PARAMS_ERROR, "账号或密码为空");
-        }
         if (StrUtil.isEmpty(userAccount)) {
             return CommonResult.error(HttpStatus.PARAMS_ERROR, "用户账号不能为空");
         }
@@ -81,13 +77,13 @@ public class UserController {
         String userAccount = userRegisterDTO.getUserAccount();
         String userPassword = userRegisterDTO.getUserPassword();
         String checkPassword = userRegisterDTO.getCheckPassword();
-        if (StringUtils.isEmpty(userAccount)) {
+        if (StrUtil.isEmpty(userAccount)) {
             return CommonResult.error(HttpStatus.PARAMS_ERROR, "用户账号不能为空");
         }
-        if (StringUtils.isEmpty(userPassword)) {
+        if (StrUtil.isEmpty(userPassword)) {
             return CommonResult.error(HttpStatus.PARAMS_ERROR, "用户密码不能为空");
         }
-        if (StringUtils.isEmpty(checkPassword)) {
+        if (StrUtil.isEmpty(checkPassword)) {
             return CommonResult.error(HttpStatus.PARAMS_ERROR, "校验密码不能为空");
         }
         if (userAccount.length() < UserConstant.USER_ACCOUNT_MIN_LENGTH

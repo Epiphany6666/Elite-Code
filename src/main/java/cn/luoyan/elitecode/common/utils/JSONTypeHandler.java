@@ -1,8 +1,8 @@
 package cn.luoyan.elitecode.common.utils;
 
 import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 import java.sql.CallableStatement;
@@ -50,7 +50,7 @@ public class JSONTypeHandler<T> extends BaseTypeHandler<T> {
     @Override
     public T getNullableResult(ResultSet resultSet, String columnName) throws SQLException {
         String json = resultSet.getString(columnName);
-        return StringUtils.isEmpty(json) ? null : this.parse(json);
+        return StrUtil.isEmpty(json) ? null : this.parse(json);
     }
 
     /**
@@ -64,7 +64,7 @@ public class JSONTypeHandler<T> extends BaseTypeHandler<T> {
     @Override
     public T getNullableResult(ResultSet resultSet, int columnIndex) throws SQLException {
         String json = resultSet.getString(columnIndex);
-        return StringUtils.isEmpty(json) ? null : this.parse(json);
+        return StrUtil.isEmpty(json) ? null : this.parse(json);
     }
 
     /**
@@ -78,7 +78,7 @@ public class JSONTypeHandler<T> extends BaseTypeHandler<T> {
     @Override
     public T getNullableResult(CallableStatement callableStatement, int columnIndex) throws SQLException {
         String json = callableStatement.getString(columnIndex);
-        return StringUtils.isEmpty(json) ? null : this.parse(json);
+        return StrUtil.isEmpty(json) ? null : this.parse(json);
     }
 
     /**
