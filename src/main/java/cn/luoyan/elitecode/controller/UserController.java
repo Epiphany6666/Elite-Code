@@ -1,19 +1,19 @@
 package cn.luoyan.elitecode.controller;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.digest.DigestUtil;
+import cn.luoyan.elitecode.common.BaseContext;
 import cn.luoyan.elitecode.common.CommonResult;
 import cn.luoyan.elitecode.common.PageResult;
 import cn.luoyan.elitecode.common.constant.HttpStatus;
 import cn.luoyan.elitecode.common.constant.UserConstant;
-import cn.luoyan.elitecode.model.dto.user.UserLoginDTO;
-import cn.luoyan.elitecode.model.dto.user.UserQueryDTO;
-import cn.luoyan.elitecode.model.dto.user.UserRegisterDTO;
-import cn.luoyan.elitecode.model.dto.user.UserUpdateDTO;
+import cn.luoyan.elitecode.model.dto.user.*;
 import cn.luoyan.elitecode.model.entity.User;
 import cn.luoyan.elitecode.model.vo.LoginUserVO;
 import cn.luoyan.elitecode.model.vo.UserVO;
 import cn.luoyan.elitecode.service.UserService;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
@@ -135,7 +135,27 @@ public class UserController {
     }
 
     /**
-     * 更新用户信息=
+     * 新增用户
+     * @param userAddDTO
+     * @return
+     */
+    @PostMapping("/")
+    private CommonResult addUser(@RequestBody UserAddDTO userAddDTO) {
+        if (userAddDTO == null) {
+            CommonResult.error(HttpStatus.PARAMS_ERROR, "新增用户参数错误");
+        }
+        User user = new User();
+        BeanUtils.copyProperties(userAddDTO, user);
+        if (!userService.checkUserAccountUnique(user)) {
+            return CommonResult.error(HttpStatus.PARAMS_ERROR, "新增用户 '" + user.getUserAccount() + "' 失败，账号已存在");
+        }
+        user.setCreateBy(BaseContext.getCurrentId());
+        user.setUserPassword(DigestUtil.md5Hex((UserConstant.SALT + user.getUserPassword()).getBytes()));
+        return CommonResult.success(userService.addUser(user));
+    }
+
+    /**
+     * 更新用户信息
      * @param userUpdateDTO
      * @return
      */

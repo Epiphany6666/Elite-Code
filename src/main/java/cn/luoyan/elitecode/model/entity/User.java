@@ -20,7 +20,7 @@ public class User implements Serializable {
     private Long userId;
 
     /**
-     * 账号
+     * 账号（唯一）
      */
     private String userAccount;
 

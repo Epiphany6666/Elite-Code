@@ -139,4 +139,18 @@ public class UserServiceImpl implements UserService {
         }
         return true;
     }
+
+    /**
+     * 新增用户
+     * @param user 用户信息
+     * @return 结果
+     */
+    @Override
+    public Long addUser(User user) {
+        int result = userMapper.insertUser(user);
+        if (result <= 0) {
+            log.error("用户插入数据库失败：{}", result);
+        }
+        return user.getUserId();
+    }
 }
