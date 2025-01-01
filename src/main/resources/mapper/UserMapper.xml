@@ -12,6 +12,7 @@
             <result property="userAvatar" column="user_avatar"/>
             <result property="userProfile" column="user_profile"/>
             <result property="userRoles" column="user_roles" typeHandler="cn.luoyan.elitecode.common.utils.JSONTypeHandler"/>
+            <result property="delFlag" column="del_flag"/>
             <result property="createBy" column="create_by"/>
             <result property="createTime" column="create_time"/>
             <result property="updateBy" column="update_by"/>
@@ -21,7 +22,7 @@
     <sql id="selectUserVo">
         user_id,user_account,user_password,
         nick_name,user_avatar,user_profile,
-        user_roles,create_by,create_time,
+        user_roles,del_flag,create_by,create_time,
         update_by,update_time
     </sql>
 
@@ -31,7 +32,7 @@
         from
             user
         where
-            user_id = #{userId}
+            user_id = #{userId} and del_flag = #{delFlag}
     </select>
 
     <select id="selectUserByUserAccount" resultMap="UserResult">
@@ -40,7 +41,7 @@
         from
             user
         where
-            user_account = #{userAccount}
+            user_account = #{userAccount} and del_flag = '0'
     </select>
 
     <!-- int register(String userAccount, String encryptPassword); -->
@@ -74,10 +75,10 @@
     <!--  List<UserVO> selectUserList(User user); -->
     <select id="getUserByPage" resultMap="UserResult">
         select
-            <include refid="selectUserVo"/>
+        <include refid="selectUserVo"/>
         from
-            user
-        <where>
+        user
+        where del_flag = '0'
             <if test="userId != null">and user_id=#{userId}</if>
             <if test="userAccount != null and userAccount != ''">and user_account like "%"#{userAccount}"%"</if>
             <if test="nickName != null and nickName != ''">and nick_name like "%"#{nickName}"%"</if>
@@ -85,13 +86,12 @@
             <if test="createBy != null and createBy != ''">and create_by like "%"#{createBy}"%"</if>
             <if test="updateBy != null and updateBy != ''">and update_by like "%"#{updateBy}"%"</if>
             <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>
-        </where>
-        <if test="sortFieldPair != null and sortFieldPair.size() > 0">
-            ORDER BY
+            <if test="sortFieldPair != null and sortFieldPair.size() > 0">
+                ORDER BY
                 <foreach collection="sortFieldPair" separator="," item="sortField">
                     ${sortField}
                 </foreach>
-        </if>
+            </if>
         limit #{current}, #{pageSize}
     </select>
 
@@ -101,7 +101,7 @@
             count(*)
         from
             user
-        <where>
+        where del_flag = '0'
             <if test="userId != null">and user_id=#{userId}</if>
             <if test="userAccount != null and userAccount != ''">and user_account like "%"#{userAccount}"%"</if>
             <if test="nickName != null and nickName != ''">and nick_name like "%"#{nickName}"%"</if>
@@ -109,10 +109,10 @@
             <if test="createBy != null and createBy != ''">and create_by like "%"#{createBy}"%"</if>
             <if test="updateBy != null and updateBy != ''">and update_by like "%"#{updateBy}"%"</if>
             <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>
-        </where>
     </select>
+
     <select id="checkUserAccountUnique" resultMap="UserResult">
-        select user_id, user_account from user where user_account = #{userAccount} limit 1
+        select user_id, user_account from user where user_account = #{userAccount} and del_flag = '0' limit 1
     </select>
 
     <!-- void updateByPrimaryKeySelective(User user); -->
@@ -131,11 +131,11 @@
 
     <!-- List<Long> selectAdminUserIds(); -->
     <select id="selectAdminUserIds" resultType="java.lang.Long">
-        select user_id from user where JSON_CONTAINS(user_roles, JSON_QUOTE('admin'))
+        select user_id from user where JSON_CONTAINS(user_roles, JSON_QUOTE('admin')) and del_flag = '0'
     </select>
 
     <delete id="deleteUserByIds">
-        delete from user where user_id in
+        update user set del_flag = '2' where user_id in
         <foreach collection="userIds" open="(" separator="," close=")" item="userId">
             #{userId}
         </foreach>

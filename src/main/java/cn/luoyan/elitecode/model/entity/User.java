@@ -50,6 +50,11 @@ public class User implements Serializable {
     private List<String> userRoles;
 
     /**
+     * 删除标志（0代表存在，2代表删除）
+     */
+    private String delFlag;
+
+    /**
      * 创建者
      */
     private Long createBy;
@@ -69,15 +74,14 @@ public class User implements Serializable {
      */
     private Date updateTime;
 
-    public User() {
-
-    }
-
     public User(Long userId) {
         this.userId = userId;
     }
 
-    public User(Long userId, String userAccount, String userPassword, String nickName, String userAvatar, String userProfile, List<String> userRoles, Long createBy, Date createTime, Long updateBy, Date updateTime) {
+    public User() {
+    }
+
+    public User(Long userId, String userAccount, String userPassword, String nickName, String userAvatar, String userProfile, List<String> userRoles, String delFlag, Long createBy, Date createTime, Long updateBy, Date updateTime) {
         this.userId = userId;
         this.userAccount = userAccount;
         this.userPassword = userPassword;
@@ -85,6 +89,7 @@ public class User implements Serializable {
         this.userAvatar = userAvatar;
         this.userProfile = userProfile;
         this.userRoles = userRoles;
+        this.delFlag = delFlag;
         this.createBy = createBy;
         this.createTime = createTime;
         this.updateBy = updateBy;
@@ -205,6 +210,22 @@ public class User implements Serializable {
 
     /**
      * 获取
+     * @return delFlag
+     */
+    public String getDelFlag() {
+        return delFlag;
+    }
+
+    /**
+     * 设置
+     * @param delFlag
+     */
+    public void setDelFlag(String delFlag) {
+        this.delFlag = delFlag;
+    }
+
+    /**
+     * 获取
      * @return createBy
      */
     public Long getCreateBy() {
@@ -268,6 +289,6 @@ public class User implements Serializable {
     }
 
     public String toString() {
-        return "User{userId = " + userId + ", userAccount = " + userAccount + ", userPassword = " + userPassword + ", nickName = " + nickName + ", userAvatar = " + userAvatar + ", userProfile = " + userProfile + ", userRoles = " + userRoles + ", createBy = " + createBy + ", createTime = " + createTime + ", updateBy = " + updateBy + ", updateTime = " + updateTime + "}";
+        return "User{userId = " + userId + ", userAccount = " + userAccount + ", userPassword = " + userPassword + ", nickName = " + nickName + ", userAvatar = " + userAvatar + ", userProfile = " + userProfile + ", userRoles = " + userRoles + ", delFlag = " + delFlag + ", createBy = " + createBy + ", createTime = " + createTime + ", updateBy = " + updateBy + ", updateTime = " + updateTime + "}";
     }
 }
