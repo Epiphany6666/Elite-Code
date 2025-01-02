@@ -2064,15 +2064,689 @@ ORDER BY create_time desc, userId desc
 
 
 
+---
+
+# 使用虚拟机安装Linux
+
+## 一、内容
+
+![img](./assets/re_linux_install_mind-C_fyUKpd.jpg)
+
+---
+
+## 二、虚拟机软件安装
+
+### ① VirtualBox的安装
+
+> VirtualBox 是一款开源虚拟机软件，由Sun公司出品，现在则由Oracle进行开发。VirtualBox号称是最强的免费虚拟机软件，它性能优异且简单易用。可虚拟的系统包括Windows、Linux、MacOS、Android等操作系统！本文将使用VirtualBox作为虚拟机来安装Linux系统。
+
+- 我们先下载VirtualBox安装包，下载地址：https://www.virtualbox.org/wiki/Downloads
+
+![img](./assets/re_linux_install_02-CPzom1ao.png)
+
+- 下载完成后双击运行安装包一路点击下一步即可：
+
+![img](./assets/re_linux_install_03-LOsc343N.png)
+
+- 中途需要自定义一下安装路径：
+
+![img](./assets/re_linux_install_04-wAPcXYsy.png)
+
+- 最后点击完成，完成安装。
+
+![img](./assets/re_linux_install_05-Djk_YVZf.png)
+
+---
+
+### ② VMWare安装
+
+进入官网的 [VMware Workstation Pro 页面](https://www.vmware.com/cn/products/workstation-pro.html)，浏览功能特性、应用场景、系统要求等。下滑页面点击 `试用 Workstation 17Pro` 下方的下载链接，跳转至[下载页面](https://www.vmware.com/products/workstation-pro/workstation-pro-evaluation.html)。
+
+![image-20231017112413188](./assets/3h9702fa.jpeg)
+
+在下载页面中下滑，根据操作系统选择合适的产品，在这里以 Windows10 系统为例，选择 `Workstation 17 Pro for Windows`，开始下载安装文件。
+
+![image-20231017112708205](./assets/szg0w0i8.jpeg)
+
+在我们下载好的文件夹中找到安装文件，双击，等待安装程序运行。
+
+![image-20231017113215986](./assets/akdtezu8.jpeg)
+
+点击**下一步**——> 选中**接受许可后**——>点击 **下一步**。
+
+![image-20231017113735870](./assets/jl34fmcy.jpeg)
+
+![image-20231017113727383](./assets/6xlxpjsf.jpeg)
+
+更改安装路径：把**√**去掉——>点击右上角的“更改”，修改安装路径，默认本地C盘（这个路径看自己情况决定，最好文件名是纯英文 ）——>点击**确定**——>点击“下一步”。（虚拟机名字并不会创建一层文件夹）
+
+![image-20231017113348079](./assets/c72fxh3r.jpeg)
+
+![image-20231017113359689](./assets/zobtapch.jpeg)
+
+![image-20231017113410187](./assets/jlbu12yt.jpeg)
+
+默认，点击**下一步**——>点击**安装**，开始安装。
+
+建议把两个“√”都取消，启动自检要是开了的话，每次一打开VW就会内存爆满，客户计划就是垃圾根本没用
+
+![image-20231017113435418](./assets/zu7nbanf.jpeg)
+
+按照步骤，点击右下角许可证密钥，输入密钥——>点击 **输入**——>点击“完成”退出安装向导。
+
+建议输入许可证密钥，可以永久使用VMware，否则就是试用版本一个月。
+
+---
+
+## 三、创建虚拟机
+
+### ① VirtualBox
+
+- 创建一个Linux虚拟机：（虚拟机名字并不会创建一层文件夹）
+
+![img](./assets/re_linux_install_06-BOvVJuuq.png)
+
+- 分配虚拟机内存大小，可以根据自己电脑配置来决定：
+
+![img](./assets/re_linux_install_07-DpxEKpNk.png)
+
+- 创建虚拟硬盘，设置好虚拟硬盘的大小，这里推荐设置`30G`以上：
+
+![img](./assets/re_linux_install_08-BSMK_Nl1.png)
+
+- 设置完成后确认安装信息如下。
+
+![img](./assets/re_linux_install_09-DdfzPNZ3.png)
+
+---
+
+### ② VMWare
+
+打开VMware虚拟机，**文件 → 新建虚拟机 → 自定义 → 下一步**。
+
+![image-20231017114420560](./assets/2zwlrkoh.jpeg)
+
+**硬盘兼容性**选择默认就可以，继续**下一步**。
+
+![image-20231017114443012](./assets/y33gu05a.jpeg)
+
+进入 **客户机操作系统** 选择 **稍后安装操作系统** （因为tfwf要在虚拟机安装完成之后，把不需要的硬件删除，所以选择稍后安装操作系统）。
+
+![image-20231017114532888](./assets/n3c7gkeo.jpeg)
+
+选择客户端操作系统：**客户机操作系统 → Linux**→ 版本选 **CentOS 7 64位** → **下一步**，注意：版本一定要对应镜像文件版本。
+
+![image-20231017114559489](./assets/mg0uvlf9.jpeg)
+
+命名虚拟机，位置（G:\Document\Leo-test），这样可以在 **VM-Mmirrors**，文件夹放多个操作系统。
+
+![image-20231017114816774](./assets/6ob8gbeo.jpeg)
+
+![image-20231017114855634](./assets/ebcra13y.jpeg)
+
+**处理器配置**，可以根据您的系统选择。这里大家可以打开自己的任务管理器查看自己的电脑的配置。
+
+![image-20231017115020067](./assets/fcyc48o4.jpeg)
+
+这里以笔者的电脑为例，8核16个处理器，这里虚拟机的**处理器的数量和每个处理器的核数** 相乘不可以超过自己电脑的逻辑处理器数。
+
+![image-20231017115246821](./assets/4l0tg0xm.jpeg)
+
+笔者这里设置为4096也就是4个G，大家测试学习的话，其实两个G就够了。
+
+![image-20231017115429339](./assets/tqqik8qr.jpeg)
+
+网络类型 → NAT模式（可以使虚拟机与主机使用同一网络）
+
+![image-20231017115508467](./assets/1cwtdash.jpeg)
+
+这里默认即可
+
+![image-20231017115545189](./assets/j6fyelcs.jpeg)
+
+![image-20231017115555470](./assets/rv64ln91.jpeg)
+
+![image-20231017115601752](./assets/vz7n7af3.jpeg)
+
+磁盘容量一般20G就够了，因为笔者后面需要装的东西比较多，这里给了50G，大家适量给就可以了。
+
+![image-20231017115704869](./assets/piyp96ky.jpeg)
+
+指定磁盘文件（.vmdk）文件
+
+![image-20231017115833316](./assets/glyjvn7l.jpeg)
+
+这样虚拟机差不多就准备好了，接下来删除一些不需要的硬件。
+
+![image-20231017115901732](./assets/39blceuw.jpeg)
+
+自定义硬件 → 移除 **USB控制器、声卡、打印机**（这样可以让虚拟器启动的快一点）。
+
+![image-20231017115942923](./assets/h3ntuf06.jpeg)
+
+至此，虚拟机中的硬件已经搭建完成。
+
+---
+
+## 四、CentOS系统安装
+
+> CentOS（Community Enterprise Operating System）是Linux发行版之一，中文意思为社区企业操作系统。它是来自于商业版 Red Hat Enterprise Linux依照开放源代码规定释出的源代码所编译而成，因此具有高度稳定性且完全开源。本文将以CentOS 7.9为例来介绍Linux系统的安装。
+
+这里我们将从阿里云的`开源镜像站`进行下载，网站地址为：https://mirrors.aliyun.com
+
+这里我们选择的下载文件为`CentOS-7-x86_64-DVD-2009.iso`，下载地址：https://mirrors.aliyun.com/centos/7.9.2009/isos/x86_64/
+
+![img](./assets/re_linux_install_01-CJMbTc_-.png)
+
+**VirtualBox**：为虚拟机添加虚拟光盘，虚拟光盘指定为我们下载的ISO镜像文件：
+
+![img](./assets/re_linux_install_10-CcUrh64F.png)
+
+配置网络（一定要先配NAT，再配Host-Only）
+
+| 模式名称              | 特点                                                         |
+| --------------------- | ------------------------------------------------------------ |
+| 网络地址转换(NAT)     | 连接这个网络可以访问外部网络，但是外部网络不可访问虚拟机     |
+| 桥接网卡              | 这个网络完全可以共享主机网络，主机网络发生变化时，也跟随变化，IP地址变动 |
+| 仅主机(Host-Only)网络 | 这个网络也可以用来主机访问虚拟机以及虚拟机上web服务，但是虚拟机不可访问外网 |
+
+![image-20250102232156404](./assets/image-20250102232156404.png)
+
+![image-20250102232230562](./assets/image-20250102232230562.png)
+
+点击启动运行虚拟机：
+
+![img](./assets/re_linux_install_11-d7i-ZMbO.png)
+
+**VMWare**：点击 **CD/DVD（IDE）**
+
+![image-20231017131911763](./assets/l1qafpxl.jpeg)
+
+在连接处选择 **使用ISO映像文件 **选择CentOS 7 iso文件，确定。 ![image-20231017132011082](./assets/or1lzmdj.jpeg)
+
+**开始安装虚拟机**，进入CentOS安装界面。
+
+![image-20231017132041814](./assets/fioqdpy8.jpeg)
+
+- 运行成功后，选择`Install CentOS 7`进行安装：
+
+![img](./assets/re_linux_install_12-DPZFrESV.png)
+
+- 选择系统安装过程中的语言，建议选择`English`选项：
+
+![img](./assets/re_linux_install_13-CHAgov-D.png)
+
+- 需要进行设置的部分示意图：
+
+![img](./assets/re_linux_install_14-CXW-OHqj.png)
+
+- 时区设置，地区选择`Asia`，城市选择`Shanghai`：
+
+![img](./assets/re_linux_install_15-C8ez032X.png)
+
+- 语言支持选择安装英文、简体中文两种语言安装包：
+
+![img](./assets/re_linux_install_16-B3awP1kP.png)
+
+- 软件安装设置选择`Server with GUI`，同时选择如图三种附加环境：
+
+![img](./assets/re_linux_install_17-TsKF3Sm4.png)
+
+- 磁盘分区设置，直接设置自动分区即可：
+
+![img](./assets/re_linux_install_18-DlZn9Rqt.png)
+
+- 如果你想手动分区的话可以参考下，有时候虚拟机设置的内存较小，需要创建一个较大的`swap`分区：
+
+![img](./assets/linux_install_18-Cht07OK5.png)
+
+- 按如图所示进行手动分区操作；
+
+![img](./assets/linux_install_19-x8jYrger.png)
+
+- 关于分区的几个目录的说明：
+  - /：根分区；
+  - swap：交换分区，可以当虚拟内存使用；
+  - /boot：存储系统的引导信息和内核信息；
+  - /usr：存储系统应用软件安装信息；
+  - /var：存储系统日志信息。
+- 网络设置，设置主机名称和进行网络激活操作：
+
+![img](./assets/re_linux_install_19-DE6lYoB7.png)
+
+- 单击`Begin Installation`进行安装：
+
+![img](./assets/re_linux_install_20-DbErWryR.png)
+
+- 安装过程中可以设置`root`用户的密码；
+
+![img](./assets/re_linux_install_21-01ql0PFf.png)
+
+- 完成安装后重新启动即可进入系统，第一次启动需要同意协议并完成配置：
+
+![img](./assets/re_linux_install_22-Dq7mD0CA.png)
+
+---
+
+## 五、SSH客户端工具
+
+Tabby是一款现代化的终端连接工具，开源并且跨平台，支持在Windows、MacOS、Linux系统下使用。Tabby在Github上已有20k+Star，可见它是一款非常流行的终端工具！
+
+![img](./assets/tabby_start_01-DEpM08XC.png)
+
+---
+
+## 六、静态IP设置
+
+### ① VirtualBox
+
+在VirtualBox中配置IP地址网关和网段（IP地址的范围）
+
+![image-20250102213228704](./assets/image-20250102213228704.png)
+
+IPv4地址可以随便写
+
+![image-20250102214200312](./assets/image-20250102214200312.png)
+
+![image-20250102214504282](./assets/image-20250102214504282.png)
+
+编辑IP配置文件 `vim /etc/sysconfig/network-scripts/ifcfg-enp0s3`，更改该ifcfg-enp0s3下的内容为 yes，如果在安装 CentOS 的时候就设置了网络，则可以忽略这一步。
+
+![image-20250102230217185](./assets/image-20250102230217185.png)
+
+保存文件并重启网络服务，重启网络的命令是 `systemctl restart network`
+
+`ping www.baidu.com` 可以 ping 通，说明与外网已经连通
+
+但是此时我们的 IP 任然是动态的 IP，我们需要在添加一个网卡，也就是网卡 2（配置Most-Only的）
+
+编辑IP配置文件 `vim /etc/sysconfig/network-scripts/ifcfg-enp0s8`，更改该ifcfg-enp0s8下的内容为
+
+- 第四行：BOOTPROTO=static
+- 倒数第二行：ONBOOT=yes
+- 倒数第一行：IPADDR=192.168.xx.xxx 备注：这里的IP地址为最小地址和最大地址之间的地址
+
+![image-20250102214653329](./assets/image-20250102214653329.png)
+
+然后在命令行使用`ifconfig` / `ip addr` 命令来获取IP地址。
+
+![image-20250102214757284](./assets/image-20250102214757284.png)
+
+---
+
+### ② VMWare
+
+配置固定IP需要2个大步骤：
+
+1. 在VMware Workstation（或Fusion）中配置IP地址网关和网段（IP地址的范围）
+2. 在Linux系统中手动修改配置文件，固定IP
+
+首先让我们，先进行第一步，跟随图片进行操作
+
+![image-20231007125637788](./assets/image-20231007125637788.png)
+
+![image-20231007125651598](./assets/image-20231007125651598.png)
+
+下面88.0可以任意的修改，这是一个网段，表示我们的IP地址的范围是192.168.88.0到192.168.88.254之间，但推荐使用88
+
+子网掩码一定要确认是255.255.255.0
+
+![image-20231007125704924](./assets/image-20231007125704924.png)
+
+![image-20231007125715331](./assets/image-20231007125715331.png)
+
+现在进行第二步，在Linux系统中修改固定IP
+
+使用vim编辑 `/etc/sysconfig/network-scripts/ifcfg-ens33`（网卡的配置文件）文件，填入如下内容
+
+dhcp是自动获取的意思
+
+IPADDR只要是192.168.88.0到192.168.88.254之间都可以，这里的IP地址一定要和VMWare里面配置的ip一致
+
+DNS1：域名解析的服务器这里设置为网关即可，VMWare会自动去做域名解析的
+
+![image-20231007125954856](./assets/image-20231007125954856.png)
+
+执行：`systemctl restart network` 重启网卡，执行ifconfig即可看到ip地址固定为192.168.88.130了
+
+或者 `service network restart`
+
+---
+
+## 七、修改默认启动模式
+
+如果不想默认启动图形化界面的话，可以修改默认的启动模式，因为图形化界面还是比较占用内存的，使用命令如下。
+
+```
+# 将默认级别修改为多用户文本模式
+systemctl set-default multi-user.target
+# 将默认级别修改为图形用户界面模式
+systemctl set-default graphical.target
+# 重启
+reboot
+```
+
+修改启动模式后启动，可能会遇到网卡默认没有开启的情况，可以使用如下命令进行开启。
+
+```
+ifup enp0s3
+```
+
+---
+
+## 八、VirtualBox虚拟机后台运行
+
+启动虚拟机时，采用“无界面启动”；
+
+![image-20250102234017787](./assets/image-20250102234017787.png)
+
+如果界面已经启动了，我们想退出界面，但是不退出系统（系统上有服务在运行）
+
+那就 顶部菜单-控制-分离式界面
+
+![image-20250102234500249](./assets/image-20250102234500249.png)
+
+---
+
+## 九、更换 阿里云/清华大学 yum 软件源
+
+阿里云参考：https://developer.aliyun.com/mirror/centos
+
+清华参考：https://mirrors.tuna.tsinghua.edu.cn/help/centos/
+
+阿里云（推荐）：
+
+```bash
+mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
+curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+```
+
+清华：
+
+```bash
+mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak
+vi /etc/yum.repos.d/CentOS-Base.repo
 
 
 
+# CentOS-Base.repo
+#
+# The mirror system uses the connecting IP address of the client and the
+# update status of each mirror to pick mirrors that are updated to and
+# geographically close to the client.  You should use this for CentOS updates
+# unless you are manually picking other mirrors.
+#
+# If the mirrorlist= does not work for you, as a fall back you can try the
+# remarked out baseurl= line instead.
+#
+#
+
+[base]
+name=CentOS-$releasever - Base
+baseurl=https://mirrors.tuna.tsinghua.edu.cn/centos/$releasever/os/$basearch/
+#mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=os
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+
+#released updates
+[updates]
+name=CentOS-$releasever - Updates
+baseurl=https://mirrors.tuna.tsinghua.edu.cn/centos/$releasever/updates/$basearch/
+#mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=updates
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+
+#additional packages that may be useful
+[extras]
+name=CentOS-$releasever - Extras
+baseurl=https://mirrors.tuna.tsinghua.edu.cn/centos/$releasever/extras/$basearch/
+#mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=extras
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+
+#additional packages that extend functionality of existing packages
+[centosplus]
+name=CentOS-$releasever - Plus
+baseurl=https://mirrors.tuna.tsinghua.edu.cn/centos/$releasever/centosplus/$basearch/
+#mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=centosplus
+gpgcheck=1
+enabled=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+```
+
+更新软件包缓存
+
+```undefined
+yum clean all
+yum makecache
+```
+
+---
+
+## 十、关闭防火墙
+
+~~~bash
+systemctl disable firewalld
+systemctl stop firewalld
+~~~
+
+---
+
+## 十一、复制虚拟机
+
+### ① VirtualBox（同电脑、跨电脑）
+
+#### 1.同一个virtualBox（同一台电脑）复制虚拟机
+
+##### 右键复制
+
+选中待复制的虚拟机，右键复制此虚拟机。
+
+**注：** 待复制的虚拟机需处于关闭状态
+
+![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/15ac6969ec4caf73a6e6b393989964c1.png)
+
+设置新的虚拟机名称，并且为所有网卡重新生成MAC地址。
+
+![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/f634a0167253127682676fc7e7024cfc.png)
+
+选择完全复制。
+
+![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/303f34c32931e82d5bf0ce89a827be6a.png)
+
+点击复制后，等待几分钟后即可完成。
+
+![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/93be3b8051d9584e0700cfc9c2c67eac.png)
+
+复制ubuntu-server-1为新的ubuntu-server-2后如下图。
+
+![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/1e916ced3f2f3e9c351a3be0d1774d92.png)
+
+**注：**
+新复制的虚拟机和老的虚拟机拥有相同的：
+
+- hostname
+- IP设置
+- 登录用户名、密码
+- 已安装的软件
+- …
+
+---
+
+##### 修改虚拟机hostname
+
+新的虚拟机被复制完成后，还需要修改新虚拟机的hostname和IP地址，避免和老的虚拟机发生IP地址冲突。
+如下为修改hostname的相关命令，修改完成后可重启生效。
+
+```bash
+# 修改/etc/hostname内容为新的主机名，
+# 如ubuntu-server-2
+vim /etc/hostname
+
+# 修改/etc/hosts，
+# 修改如下图中红框中内容为新的主机名，如ubuntu-server-2
+vim /etc/hosts
+
+# 都修改完成后，记得重启虚拟机
+reboot
+12345678910
+```
+
+![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/b33a021e45fb52d06dd7be37ca826239.png)
+
+---
+
+##### 修改虚拟机IP
+
+修改新虚拟机的IP为同网段新的IP，避免与老的虚拟机发生IP地址冲突。
+
+```bash
+# 修改网络配置,
+# 修改如下图中红框中内容为新的不冲突IP，
+# 如从原192.168.3.101修改为192.168.3.102
+vim /etc/netplan/00-installer-config.yaml
+# 应用新的网络配置
+sudo netplan apply
+123456
+```
+
+![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/d4d4c4ad30b0629e32726356d4ee3dc1.png)
+
+---
+
+#### 2.跨电脑复制
+
+##### 拷贝.vdi文件
+
+选中待复制的虚拟机，右键`在资源管理器中显示`，即可打开该虚拟机对应的存储目录。
+![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/c0c4635f70ef1bee6173dbb1166c19c6.jpeg)
+
+**注：** 待复制的虚拟机需处于关闭状态
+直接拷贝对应虚拟机存储目录中的.vdi文件到新电脑上。
+![在这里插入图片描述](./assets/65b852c94b25e4b54faa73eefd1274cf.png)
+
+---
+
+##### 以拷贝的.vdi文件新建虚拟机
+
+在新电脑上新建虚拟机，设置好内存后，
+在设置虚拟硬盘这步，选择`使用已有的虚拟硬盘文件`，
+可选择**右边的按钮（选择一个虚拟硬盘）**，
+![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/4160d3844c89b985ce2650777e321a1d.png)
+在弹出对话框后点击`注册`，
+选中`已存在的vdi文件（即之前从其他电脑Virtualbox虚拟机文件夹里拷贝的.vdi文件）`进行注册，
+（**注：** 可以将已存在的.vdi文件放在当前新建虚拟机的存储目录，便于统一管理）
+然后即可在上一步中通过下拉列表选择对应的.vdi文件，
+仅第一次添加时需要注册，添加完成后即出现在下拉列表中，
+下拉列表中还同时包含当前VirtualBox之前创建的虚拟机vdi文件。
+![在这里插入图片描述](https://i-blog.csdnimg.cn/blog_migrate/6e200ffb71498fb725c579d558106205.png)
+点击下一步即可完成虚拟机创建。
+
+---
+
+##### 修改网络配置
+
+新创建完成的虚拟机需要根据当前虚拟机的环境修改相应网络设置，例如：
+
+- 从`桥接网卡`模式迁移到`桥接网卡`模式，需修改网络IP
+- 从`桥接网卡`模式迁移到`NAT + Host-only`模式，需修改VirtualBox网络网卡设置、修改网络IP
+
+**注：** 关于网络的修改具体可参见我之前的博客：[VirtualBox安装ubuntu虚拟机 - 4. 虚拟机网络设置](https://blog.csdn.net/luo15242208310/article/details/121593870)
+
+修改网络IP命令如下
+
+```bash
+# 修改网络配置
+vim /etc/netplan/00-installer-config.yaml
+
+# 重置网络
+sudo netplan apply
+12345
+```
+
+参考：
+[virtualBox复制虚拟机 - 同电脑](https://blog.csdn.net/luoqinglong850102/article/details/81905501)
+[virtualBox复制虚拟机 - 同电脑、跨电脑](https://www.cnblogs.com/zhaoyang-1989/p/6962527.html)
+
+---
+
+### ② VMWare
+
+**选中.vmx文件和所有的.vmdk文件，添加到压缩文件
+　　vmx是虚拟系统配置文件，而vmdk则是虚拟磁盘文件，它们都是VMware所支持的文件格式**
+　　![在这里插入图片描述](./assets/790926ac9f5dc4e89c84d0869817ab21.png)
+![在这里插入图片描述](./assets/e405af17866632bdfec26ffe56cfb670.png)
+**2、复制压缩文件到另一台电脑上，并解压**
+![在这里插入图片描述](./assets/00c6781d62a6a007ec3267453e391423.png)
+**3、在另一台电脑上打开VMware
+　　点击打开虚拟机
+　　选择解压后的.vmx文件
+　　开启此虚拟机
+　　选择“ 我已经复制该虚拟机”**
+　　![在这里插入图片描述](./assets/f8ef869e7409dd4d6e14943f3dc5c3fe.png)
+![在这里插入图片描述](./assets/82cdab74876b6023d9278450e2cd89ef.png)
+![在这里插入图片描述](./assets/820068f471c08dbc3e6f18935e2f7028.png)
+![在这里插入图片描述](./assets/cc64f9d0fc77b36012fcb9f06344c83e.png)
+![在这里插入图片描述](./assets/6dc9deaa396450d1dbfd173d8ee560ad.png)
+
+---
+
+## 十二、VirtualBox快照创建
+
+1、点击控制——>生成备份系统快照
+
+![在这里插入图片描述](./assets/342a1fe8bc4324e9f0924cf64f5422fe.png)
+
+2、添加快照名称和描述，方便以后还原
+
+![在这里插入图片描述](./assets/7dd744342b0acb8a0c915abcdd6adccf.png)
+
+3、等待一会
+
+![在这里插入图片描述](./assets/028b3c5acace76c55c4779a22c7f4de9.png)
+
+4、备份完成后可在VirtualBox管理器中看到生成的备份
+
+![在这里插入图片描述](./assets/291108a49d6d9a075628430169151f4a.png)
+
+---
+
+## 十三、VirtualBox虚拟机开机自启
+
+首先在VirtualBox里面本身提供一个启动虚拟机的方式，直接利用VirtualBox安装目录下的VBoxManage.exe
+
+![img](./assets/d5c9b3370fcafb8cba66876e881f5288.png)
+
+VBoxManage.exe命令如下
+
+VBoxManage.exe startvm ([uuid](https://so.csdn.net/so/search?q=uuid&spm=1001.2101.3001.7020))|(name)  [--type |gui|sdl|headless]
+
+我现在有两台linux虚拟机，分别叫nginx_vb nginx_vb2
+
+那么我想开机自启且不显示窗口，命令如下
+
+D:\VirtualBox\VBoxManage startvm nginx_vb --type headless
+D:\VirtualBox\VBoxManage startvm nginx_vb2 --type headless
+
+![img](./assets/6b998c16fb8516e08dfbf432f367dba0.png)
+
+在cmd窗口运行结果如下
+
+![img](./assets/40d7396eb6c68d84a55c360122129e00.png)
+
+接下来就是将这个命令写入bat脚本，并保存到win开机自启动目录下，这个目录是隐藏的，需要点击显示隐藏文件
+
+![img](./assets/7e89345ff4ce2642b3262e91882637a9.png)
+
+![img](./assets/6c9d6eeb2c54c66059f27e6f109abb46.png)
+
+英文目录路径如下
+
+C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp，保存后即可，重启windows，能发现自动启动成功（并没有窗口，打开VirtualBox窗口，能看到两台Linux机器已经启动了）
 
 
 
-
-
-
+---
 
 
 

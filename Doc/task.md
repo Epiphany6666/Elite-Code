@@ -118,8 +118,11 @@
 - [x] 分页获取用户数据
 
 - [x] 新增用户
+
 - [x] 批量删除用户
+
 - [x] 增加逻辑删除（del_flag）
+
 - [ ] 更新个人信息
 
 - [x] 根据id更新用户信息
@@ -142,7 +145,7 @@
 
   微人事：/hr/pass
 
-  若依：/updatePwd
+  若依：/updatePwd、/resetPwd
 
 - [ ] 包名从cn.luoyan.elitecode改为cn.elitecode
 
@@ -150,10 +153,15 @@
 
 - [x] 校验规范修改（不为空和查询数据库应该合并成一个方法）
 
+- [ ] 抽取Register、LoginController
+
 - [x] 删除Common3工具类，只使用hutool工具类
+
+
 
 - [ ] 新增日志模块
 - [ ] 整合 SpringSecurity
+- [x] 分模块开发
 
 ---
 
