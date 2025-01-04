@@ -42,16 +42,3 @@ knife4j:
         api-rule: package
         api-rule-resources:
           - cn.elitecode.web.controller
-
-# 文件相关配置
-file:
-  upload:
-    # 文件上传的根路径
-    path: /www/wwwroot/elitecode
-    # 文件存储的子目录
-    subdirectory: cos
-  access:
-    # 文件访问的基础URL
-    url: https://pic.luo-yan.cn
-    # 文件访问URL的子路径
-    subdirectory: cos
