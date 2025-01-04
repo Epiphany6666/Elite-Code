@@ -2,7 +2,6 @@ package cn.elitecode.mapper;
 
 import cn.elitecode.model.dto.user.UserQueryDTO;
 import cn.elitecode.model.entity.User;
-
 import java.util.List;
 
 /**
@@ -72,4 +71,11 @@ public interface UserMapper {
      * @return
      */
     int deleteUserByIds(Long[] userIds);
+
+    /**
+     * 修改用户头像
+     * @param userId 用户ID
+     * @param avatarUrl 头像地址
+     */
+    int updateUserAvatar(Long userId, String avatarUrl);
 }

@@ -2,9 +2,9 @@ package cn.elitecode.service.impl;
 
 import cn.elitecode.common.BaseContext;
 import cn.elitecode.common.PageResult;
+import cn.elitecode.common.exception.user.*;
 import cn.elitecode.constant.HttpStatus;
 import cn.elitecode.constant.UserConstant;
-import cn.elitecode.exception.user.*;
 import cn.elitecode.mapper.UserMapper;
 import cn.elitecode.model.dto.user.UserQueryDTO;
 import cn.elitecode.model.dto.user.UserUpdateDTO;
@@ -167,6 +167,21 @@ public class UserServiceImpl implements UserService {
         if (result <= 0) {
             log.error("批量删除用户失败：{}", result);
         }
+    }
+
+    /**
+     * 修改用户头像
+     * @param userId 用户ID
+     * @param avatarUrl 头像地址
+     */
+    @Override
+    public boolean updateUserAvatar(Long userId, String avatarUrl) {
+        int result = userMapper.updateUserAvatar(userId, avatarUrl);
+        if (result <= 0) {
+            log.error("修改用户头像失败：{}", result);
+            return false;
+        }
+        return true;
     }
 
     private void checkUserAllowed(User user) {

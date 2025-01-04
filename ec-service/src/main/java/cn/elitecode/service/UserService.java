@@ -88,4 +88,11 @@ public interface UserService {
      * @param userIds 需要删除的id数组
      */
     void removeByUserIds(Long[] userIds);
+
+    /**
+     * 修改用户头像
+     * @param userId 用户ID
+     * @param avatarUrl 头像地址
+     */
+    boolean updateUserAvatar(Long userId, String avatarUrl);
 }

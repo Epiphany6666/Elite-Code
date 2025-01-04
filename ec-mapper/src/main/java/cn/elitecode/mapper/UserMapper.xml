@@ -141,4 +141,9 @@
         </foreach>
     </delete>
 
+    <!-- int updateUserAvatar(Long userId, String avatarUrl); -->
+    <update id="updateUserAvatar">
+        update user set user_avatar = #{avatarUrl} where user_id = #{userId}
+    </update>
+
 </mapper>
