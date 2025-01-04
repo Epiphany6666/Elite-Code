@@ -1,4 +1,4 @@
-package cn.elitecode.exception;
+package cn.elitecode.common.exception;
 
 import cn.elitecode.common.CommonResult;
 import org.slf4j.Logger;

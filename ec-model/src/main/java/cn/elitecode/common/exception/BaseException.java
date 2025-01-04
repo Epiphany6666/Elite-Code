@@ -1,4 +1,4 @@
-package cn.elitecode.exception;
+package cn.elitecode.common.exception;
 
 /**
  * 封装自定义异常类

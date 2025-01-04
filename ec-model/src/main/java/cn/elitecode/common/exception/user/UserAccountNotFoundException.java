@@ -1,6 +1,6 @@
-package cn.elitecode.exception.user;
+package cn.elitecode.common.exception.user;
 
-import cn.elitecode.exception.BaseException;
+import cn.elitecode.common.exception.BaseException;
 
 /**
  * 用户账号未找到异常
