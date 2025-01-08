@@ -2744,13 +2744,178 @@ D:\VirtualBox\VBoxManage startvm nginx_vb2 --type headless
 
 C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp，保存后即可，重启windows，能发现自动启动成功（并没有窗口，打开VirtualBox窗口，能看到两台Linux机器已经启动了）
 
+---
+
+## 十四、将Docker容器设为自启动和取消容器自启动
+
+先熟悉下`--restart`参数
+
+```bash
+--restart参数=
+	no
+		默认策略，在容器退出时不重启容器
+	on-failure
+		在容器非正常退出时（退出状态非0），才会重启容器
+	on-failure:3
+		在容器非正常退出时重启容器，最多重启3次
+	always
+		在容器退出时总是重启容器
+#开机自启
+	unless-stopped
+		在容器退出时总是重启容器，但是不考虑在Docker守护进程启动时就已经停止了的容器
+# 一般推荐使用always参数
+	--restart=always
+```
+
+将正在运行的容器设为自启动
+
+```bash
+# docker update --restart=always 容器名或容器ID
+docker update --restart=always <CONTAINER ID>
+# 例如将tomcat设为自启动
+docker update --restart=always tomcat
+```
+
+将自启动的容器取消自启动
+
+```bash
+# docker update --restart=no 容器名或容器ID
+docker update --restart=no <CONTAINER ID>
+# 例如取消tomcat的自启动
+docker update --restart=no tomcat
+```
+
 
 
 ---
 
+# 查看SpringBoot推荐的兼容的依赖版本
+
+## 方法一
+
+- 在项目中的父pom查看，就可以找到推荐的版本
+
+  ![img](./assets/2061808-20211027114851484-383816063.png)
+
+---
+
+## 方法二
+
+https://docs.spring.io/spring-boot/docs/2.0.3.RELEASE/reference/htmlsingle/#appendix-dependency-versions
+利用该网址，将其中的版本号处换成需要查询的版本号，即可在网页中搜索 你要查询的报名，即可找到用相应的依赖信息
 
 
 
+---
+
+# DeepLX
+
+DeepL 被誉为全世界最精准的[机器翻译](https://so.csdn.net/so/search?q=机器翻译&spm=1001.2101.3001.7020)，比最接近他们的竞争对手[**准确三倍以上**](https://www.deepl.com/zh/whydeepl)
+
+## 一、看看 DeepL 和 微软翻译 的对比 👇👇
+
+三句英文:
+
+```
+Walking on eggshells during the software update.
+Wang's VR game is a rollercoaster of emotions.
+Caught between a rock and a hard drive with this coding dilemma
+```
+
+| DeepL                                       | 微软翻译                                   | 谷歌翻译                          |
+| ------------------------------------------- | ------------------------------------------ | --------------------------------- |
+| 在软件更新时提心吊胆                        | 在软件更新期间在蛋壳上行走                 | 软件更新期间如履薄冰。            |
+| Wang 的 VR 游戏让人的情绪如过山车般起伏不定 | Wang的VR游戏是情绪的过山车                 | Wang 的 VR 游戏就像坐过山车一样。 |
+| 编码难题让我左右为难                        | 夹在岩石和硬盘驱动器之间，陷入这种编码困境 | 陷入这种编码困境的岩石和硬盘之间  |
+
+---
+
+## 二、什么是DeepLX
+
+**DeepLX** 是一个开源项目，它基于 DeepL 免费服务，将其转换为本地 API，提供给第三方程序使用，如浏览器插件: 沉浸式翻译
+
+说人话就是: DeepL可以免费使用,但有限制,使用**DeepLX**可以无限制的调用DeepL API来翻译
+
+你可能会问: 我直接使用DeepL不就行了,为什么要搞DeepLX？
+
+因为DeepL服务器部署在海外,国内连接阻力大；DeepL的付费版不支持国内银行卡购买，而免费版又受到严格限制。
+
+---
+
+## 三、部署DeepLX
+
+项目：https://github.com/OwO-Network/DeepLX
+
+官网：https://deeplx.owo.network/
+
+Docker、MacOS安装文档：https://deeplx.owo.network/install/
+
+整合沉浸式翻译：https://deeplx.owo.network/integration/immersive-translate.html
+
+腾讯云函数部署：https://juejin.cn/post/7342697016181047296、https://github.com/LegendLeo/deeplx-serverless
+
+
+
+---
+
+# 虚拟机使用宿主机的Clash
+
+1、在 `/etc/systemd/system` 目录下创建 `docker.service.d` 目录
+
+~~~sh
+sudo mkdir -p /etc/systemd/system/docker.service.d
+~~~
+
+2、在该目录下创建 `http-proxy.conf` 文件
+
+~~~sh
+sudo touch /etc/systemd/system/docker.service.d/[http](https://so.csdn.net/so/search?q=http&spm=1001.2101.3001.7020)-proxy.conf
+~~~
+
+3、选用你最喜欢的编辑器，编辑该文件并添加下面的内容，这里使用 `vi/vim` 进行编辑。
+
+~~~sh
+sudo vim /etc/systemd/system/docker.service.d/http-proxy.conf
+~~~
+
+4、根据自身需要添加下面的内容并替换为实际的配置，一般只需要加 `HTTP_PROXY` 和 `HTTPS_PROXY`：
+
+~~~
+[Service]
+Environment="HTTP_PROXY=http://proxy.example.com:8080/"
+Environment="HTTPS_PROXY=http://proxy.example.com:8080/"
+Environment="NO_PROXY=localhost,127.0.0.1,.example.com"
+~~~
+
+【注】`HTTP_PROXY` 用于代理访问 `http` 请求，`HTTPS_PROXY` 用于代理访问 `https` 请求，如果想某个 `IP`或`域名`**不走代理**则配置到 `NO_PROXY`中。
+
+宿主机终端输入 `ipconfig` 获取到宿主机的局域网ip
+
+![image-20250108215141315](./assets/image-20250108215141315.png)
+
+Clash打开 `局域网连接（LAN）`，并且查看端口
+
+![image-20250108222807692](./assets/image-20250108222807692.png)
+
+因此我的配置文件就应该为
+
+~~~
+[Service]
+Environment="HTTP_PROXY=http://172.23.109.159:7897/"
+Environment="HTTPS_PROXY=http://172.23.109.159:7897/"
+Environment="NO_PROXY=localhost,127.0.0.1,.example.com"
+~~~
+
+5、刷新更改并重新启动 `Docker`
+
+~~~bash
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+~~~
+
+
+
+---
 
 
 
