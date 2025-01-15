@@ -2901,8 +2901,8 @@ Clash打开 `局域网连接（LAN）`，并且查看端口
 
 ~~~
 [Service]
-Environment="HTTP_PROXY=http://172.23.109.159:7897/"
-Environment="HTTPS_PROXY=http://172.23.109.159:7897/"
+Environment="HTTP_PROXY=http://172.23.167.247:7897/"
+Environment="HTTPS_PROXY=http://172.23.167.247:7897/"
 Environment="NO_PROXY=localhost,127.0.0.1,.example.com"
 ~~~
 
@@ -2916,6 +2916,108 @@ sudo systemctl restart docker
 
 
 ---
+
+# IDEA开启热部署
+
+## 一、手动热部署
+
+pom.xml文件内引入依赖
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-devtools</artifactId>
+    <optional>true</optional>
+</dependency>
+12345
+```
+
+![构建](./assets/d0fea69e1ae650f326107c060649e499.png)
+
+构建比重启会快不少，如果不喜欢使用自动热部署的，可以使用此方法
+
+---
+
+## 二、自动热部署
+
+pom.xml文件内引入依赖
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-devtools</artifactId>
+    <optional>true</optional>
+</dependency>
+12345
+```
+
+在设置里面将自动构建项目和并行编译独立模块这两个勾选
+
+![自动构建项目](./assets/9745fce03686d83685dfa7aba4067030.png)
+
+IDEA2022版本的注册表内没有compiler.automake.allow.when.app.running这个选项，需要在设置里的高级设置里开启
+
+![高级设置](./assets/5df6a5a72c7fe213717cf17f46a71f64.png)
+
+开启自动热部署后，修改业务代码，当IDEA失去焦点5秒钟，就会自动进行构建
+
+---
+
+## 三、热部署的范围控制
+
+配置中默认不参与热部署的目录信息如下
+
+- /META-INF/maven
+- /META-INF/resources
+- /resources
+- /static
+- /public
+- /templates
+
+以上目录中的文件如果发生变化，是不参与热部署的。如果想修改配置，可以通过application.yml文件进行设定哪些文件不参与热部署操作
+
+```yaml
+spring:
+  devtools:
+    restart:
+      # 设置不参与热部署的文件或文件夹
+      exclude: static/**,public/**,config/application.yml
+```
+
+---
+
+## 四、关闭热部署
+
+线上环境运行时是不可能使用热部署功能的，所以需要强制关闭此功能，通过配置可以关闭此功能。
+
+```yaml
+spring:
+  devtools:
+    restart:
+      enabled: false
+```
+
+如果当心配置文件层级过多导致相符覆盖最终引起配置失效，可以提高配置的层级，在更高层级中配置关闭热部署。例如在启动容器前通过系统属性设置关闭热部署功能。
+
+```java
+@SpringBootApplication
+public class SSMPApplication {
+    public static void main(String[] args) {
+        System.setProperty("spring.devtools.restart.enabled","false");
+        SpringApplication.run(SSMPApplication.class);
+    }
+}
+```
+
+
+
+---
+
+
+
+
+
+
 
 
 

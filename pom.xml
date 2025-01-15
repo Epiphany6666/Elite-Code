@@ -25,6 +25,15 @@
         <hutool.version>5.8.16</hutool.version>
     </properties>
 
+    <dependencies>
+        <!-- spring-boot-devtools -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional> <!-- 表示依赖不会传递 -->
+        </dependency>
+    </dependencies>
+
     <dependencyManagement>
         <dependencies>
             <!-- SpringBoot的依赖配置-->
