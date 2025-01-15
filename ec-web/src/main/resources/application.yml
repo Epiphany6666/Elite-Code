@@ -2,7 +2,7 @@
 elitecode:
   # 文件上传相关配置
   fileupload:
-    # 上传路径（Windows：D:/upload/     Linux：/elitecode/upload/
+    # 上传路径（Windows：D:/upload/     Linux：/elitecode/upload/）
     upload-path: /elitecode/upload/
     # 资源映射路径 前缀
     resource-prefix: http://192.168.88.130/
@@ -16,7 +16,7 @@ server:
 # Spring配置
 spring:
   profiles:
-    active: druid
+    active: dev # 默认为开发环境
   servlet:
     multipart:
       #配置单个文件最大上传大小

@@ -147,7 +147,7 @@
 
   若依：/updatePwd、/resetPwd
 
-- [ ] 包名从cn.luoyan.elitecode改为cn.elitecode
+- [x] 包名从cn.luoyan.elitecode改为cn.elitecode
 
 - [ ] 补充Swagger注解
 
@@ -161,6 +161,7 @@
 
 - [ ] 新增日志模块
 - [ ] 整合 SpringSecurity
+- [ ] 操作日志
 - [x] 分模块开发
 
 ---
@@ -211,6 +212,17 @@
 框架
 
 - [ ] 使用SpringSecurity改写
+- [ ] 学若依
+  - 手动写字符串格式化类StrFormatter
+
+
+
+文件管理
+
+- [ ] mall：minio
+- [ ] vhr：fastdfs（分布式文件管理系统）
+
+
 
 
 

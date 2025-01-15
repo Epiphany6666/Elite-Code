@@ -4,12 +4,6 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.2</version>
-    </parent>
-
     <groupId>cn.elitecode</groupId>
     <artifactId>Elite-Code</artifactId>
     <version>1.0-SNAPSHOT</version>
@@ -24,6 +18,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <spring-boot.version>2.7.2</spring-boot.version>
         <mybatis.version>2.2.2</mybatis.version>
         <druid.version>1.2.6</druid.version>
         <knife4j.version>4.4.0</knife4j.version>
@@ -32,6 +27,15 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- SpringBoot的依赖配置-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
             <!-- Mybatis整合Spring -->
             <dependency>
                 <groupId>org.mybatis.spring.boot</groupId>
@@ -63,6 +67,7 @@
     </dependencyManagement>
 
     <build>
+        <finalName>${project.artifactId}</finalName>
         <resources>
             <resource>
                 <directory>src/main/java</directory>
