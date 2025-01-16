@@ -20,6 +20,7 @@ public class ResourceConfig implements WebMvcConfigurer {
     public CorsFilter corsFilter()
     {
         CorsConfiguration config = new CorsConfiguration();
+        //允许跨越发送cookie
         config.setAllowCredentials(true);
         // 设置访问源地址
         config.addAllowedOriginPattern("*");
