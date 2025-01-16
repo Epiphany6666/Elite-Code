@@ -35,7 +35,7 @@ mybatis:
 knife4j:
   enable: true
   openapi:
-    title: "接口文档"
+    title: "EliteCode面试刷题平台"
     version: 1.0
     group:
       default:

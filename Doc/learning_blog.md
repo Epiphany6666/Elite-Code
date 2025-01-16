@@ -3013,7 +3013,127 @@ public class SSMPApplication {
 
 ---
 
+# JSON时间序列化与反序列化
 
+- 若依：在属性上加 `@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")`
+
+- 苍穹外卖：
+
+  JacksonObjectMapper.java
+
+  ~~~java
+  /**
+   * 对象映射器:基于jackson将Java对象转为json，或者将json转为Java对象
+   * 将JSON解析为Java对象的过程称为 [从JSON反序列化Java对象]
+   * 从Java对象生成JSON的过程称为 [序列化Java对象到JSON]
+   */
+  public class JacksonObjectMapper extends ObjectMapper {
+  
+      public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
+      public static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+      public static final String DEFAULT_TIME_FORMAT = "HH:mm:ss";
+  
+      public JacksonObjectMapper() {
+          super();
+          //收到未知属性时不报异常
+          this.configure(FAIL_ON_UNKNOWN_PROPERTIES, false);
+  
+          //反序列化时，属性不存在的兼容处理
+          this.getDeserializationConfig().withoutFeatures(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+  
+          SimpleModule simpleModule = new SimpleModule()
+              .addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_FORMAT)))
+              .addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern(DEFAULT_DATE_FORMAT)))
+              .addDeserializer(LocalTime.class, new LocalTimeDeserializer(DateTimeFormatter.ofPattern(DEFAULT_TIME_FORMAT)))
+              .addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_FORMAT)))
+              .addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern(DEFAULT_DATE_FORMAT)))
+              .addSerializer(LocalTime.class, new LocalTimeSerializer(DateTimeFormatter.ofPattern(DEFAULT_TIME_FORMAT)));
+  
+          //注册功能模块 例如，可以添加自定义序列化器和反序列化器
+          this.registerModule(simpleModule);
+      }
+  }
+  ~~~
+
+  WebMvcConfiguration.java
+
+  ~~~java
+  public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+      log.info("扩展消息转换器...");
+      //创建一个消息转换器对象
+      MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+      //需要为消息转换器设置一个对象转换器，对象转换器可以将Java对象序列化为json数据
+      converter.setObjectMapper(new JacksonObjectMapper());
+      //将自己的消息转化器加入容器中
+      converters.add(0, converter);
+  }
+  ~~~
+
+- 微人事：无createTime字段
+
+- mall：
+
+  后端无序列化，格式为 `2018-09-29T05:55:30.000+00:00`
+
+  前端：
+
+  ~~~jsx
+  <el-table-column label="添加时间" width="160" align="center">
+      <template slot-scope="scope">{{scope.row.createTime | formatDateTime}}</template>
+  </el-table-column>
+  
+  export default {
+      filters: {
+          formatDateTime(time) {
+              if (time == null || time === '') {
+                  return 'N/A';
+              }
+              let date = new Date(time);
+              return formatDate(date, 'yyyy-MM-dd hh:mm:ss')
+          }
+      },
+  }
+  ~~~
+
+- 学成在线
+
+  ~~~java
+  @Configuration
+  public class LocalDateTimeConfig {
+      /*
+       * 序列化内容
+       *   LocalDateTime -> String
+       * 服务端返回给客户端内容
+       * */
+      @Bean
+      public LocalDateTimeSerializer localDateTimeSerializer() {
+          return new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+      }
+  
+      /*
+       * 反序列化内容
+       *   String -> LocalDateTime
+       * 客户端传入服务端数据
+       * */
+      @Bean
+      public LocalDateTimeDeserializer localDateTimeDeserializer() {
+          return new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+      }
+  
+      // 配置
+      @Bean
+      public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
+          return builder -> {
+              builder.serializerByType(LocalDateTime.class, localDateTimeSerializer());
+              builder.deserializerByType(LocalDateTime.class, localDateTimeDeserializer());
+          };
+      }
+  }
+  ~~~
+
+  
+
+---
 
 
 
