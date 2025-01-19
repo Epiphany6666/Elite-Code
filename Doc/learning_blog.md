@@ -1088,7 +1088,7 @@ SpringBoot官方推荐使用带有`-spring`的文件名作为配置，如`logbac
         输出到文件，只记录INFO级别信息
         name设置为info_file：表示当前的设置是跟文件相关的，只记录INFO级别信息，后面的class表示是那个类完成的往文件输出的工作
     -->
-    <appender name="info_file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="file_info" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!--指定日志文件拆分和压缩规则-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--

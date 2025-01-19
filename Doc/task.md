@@ -1,25 +1,3 @@
-# 复习类
-
-- [x] JDBC回顾
-
-- [x] ServerSocket回顾
-
-- [ ] JavaWeb回顾
-
-- [ ] SSM回顾
-
-  前端
-
-- [x] TS回顾
-
-- [x] React回顾
-
-- [ ] 学习SpringSecurity
-
-
-
----
-
 # 项目搭建（后端）
 
 - [x] 创建Maven项目
@@ -27,18 +5,20 @@
 - [x] 搭建SpringBoot工程，使用2.7.2版本
 
 - [ ] 库表设计
+
   - [x] 用户表
-  - [ ]  题目表
+  - [ ] 题目表
   - [ ] 题库表
   - [ ] 题目关联表
-  
+
 - [x] 使用CDN和轻量应用服务器搭建个人图床
+
   - [x] 搭建宝塔
   - [x] 静态网址绑定
   - [x] 搭建git
   - [x] 启动CDN加速
   - [x] 编写教程
-  
+
 - [x] 连接数据库
 
 - [x] 整合Druid
@@ -67,7 +47,7 @@
 
 - [x] 数据库设置默认值好还是在代码中编写好？
   参考博客：https://www.navicat.com.cn/company/aboutus/blog/369-mysql-
-  
+
 - [x] 搜索提交规范中每一个规范英文代表什么
 
 - [x] 搭建服务器图床，目的：能够使用PicGo上传
@@ -80,8 +60,30 @@
 
 - [ ] 坚持写工作周报
   参考：https://blog.csdn.net/qq_39609151/article/details/83780540
-  
+
 - [ ] 学习Excel数据验证、函数
+
+- [x] 包名从cn.luoyan.elitecode改为cn.elitecode
+
+- [ ] 补充Swagger注解
+
+- [x] 校验规范修改（不为空和查询数据库应该合并成一个方法）
+
+- [ ] 抽取Register、LoginController
+
+- [x] 删除Common3工具类，只使用hutool工具类
+
+- [ ] 新增日志模块
+
+- [ ] 整合 SpringSecurity
+
+- [ ] 操作日志
+
+- [x] 分模块开发
+
+  - [ ] （写博客）使用IDEA查看模块之间的依赖关系：https://blog.csdn.net/qq_27579471/article/details/121557639
+
+- [ ] SpringSecurity整合JWT
 
 
 
@@ -103,11 +105,11 @@
 
 
 
----
+----
 
-# P0 
+# 用户模块
 
-**用户模块（后端）**
+## 【后端】
 
 - [x] 注册
 
@@ -147,67 +149,36 @@
 
   若依：/updatePwd、/resetPwd
 
-- [x] 包名从cn.luoyan.elitecode改为cn.elitecode
-
-- [ ] 补充Swagger注解
-
-- [x] 校验规范修改（不为空和查询数据库应该合并成一个方法）
-
-- [ ] 抽取Register、LoginController
-
-- [x] 删除Common3工具类，只使用hutool工具类
-
-
-
-- [ ] 新增日志模块
-- [ ] 整合 SpringSecurity
-- [ ] 操作日志
-- [x] 分模块开发
-
----
-
-# P1
-
-- [ ] 登录改写JWT
-- [ ] 将角色抽取成角色表，建立 "用户-角色" 关联表
-
-
-
-
-
----
-
-# P2
-
-用户模块
-
-
-
-其他
-
-- [ ] 上线项目，增加Knife4j账号密码配置
-
-
-
-域名
-
-- [ ] `elite-code.cn` 域名购买
-- [ ] 域名备案
-
-
-
-
-
----
-
-# P3
-
-用户模块
-
 - [ ] 忘记密码
+
 - [ ] 将用户表中的角色字段抽取出来，做成用户表，然后新建 `用户-角色关联表`
 
+---
 
+## 【前端】
+
+
+
+
+
+
+
+----
+
+# 上线
+
+- [ ] 上线项目，增加Knife4j账号密码配置
+- [ ] `elite-code.cn` 域名购买
+- [ ] 域名备案
+- [x] 网站图标更换
+- [ ] SEO 全方位解决方案：https://juejin.cn/post/7241813423460581435
+- [ ] 学习PS，学会用PS抠图
+
+
+
+----
+
+# 其他
 
 框架
 
@@ -224,19 +195,19 @@
 
 
 
+----
+
+# 思考
+
+- [ ] 校验写在Controller还是Service好？
+
+  因为就算写在Controller，Service方法也有可能对外暴露一个rpc协议的接口，由其他程序来调用。
+
+- [ ] 
 
 
-其他
 
-- [ ] 网站图标更换
-- [ ] 将项目模块化
-  - [ ] （写博客）使用IDEA查看模块之间的依赖关系：https://blog.csdn.net/qq_27579471/article/details/121557639
-- [ ] SEO 全方位解决方案：https://juejin.cn/post/7241813423460581435
-- [ ] 学习PS，学会用PS抠图
-
-
-
----
+----
 
 # git
 
@@ -297,4 +268,34 @@
 - [ ] Github-Readme-Stats
 
   GitHub：https://github.com/anuraghazra/github-readme-stats
+
+
+
+
+
+----
+
+# 复习类
+
+- [x] JDBC回顾
+
+- [x] ServerSocket回顾
+
+- [ ] JavaWeb回顾
+
+- [ ] SSM回顾
+
+  前端
+
+- [x] TS回顾
+
+- [x] React回顾
+
+- [ ] 学习SpringSecurity
+
+
+
+
+
+
 
