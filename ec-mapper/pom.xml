@@ -28,7 +28,6 @@
         <dependency>
             <groupId>cn.elitecode</groupId>
             <artifactId>ec-model</artifactId>
-            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
