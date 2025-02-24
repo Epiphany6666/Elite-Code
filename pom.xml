@@ -45,13 +45,13 @@
 
             <dependency>
                 <groupId>cn.elitecode</groupId>
-                <artifactId>ec-service</artifactId>
+                <artifactId>ec-mapper</artifactId>
                 <version>${ec.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>cn.elitecode</groupId>
-                <artifactId>ec-model</artifactId>
+                <artifactId>ec-service</artifactId>
                 <version>${ec.version}</version>
             </dependency>
 
