@@ -3135,7 +3135,11 @@ public class SSMPApplication {
 
 ---
 
+# 插件
 
+unplugin-vue-setup-extend-plus：让 vue 脚本设置语法支持 name 属性
+
+`normalize.css`：CSS样式重置
 
 
 

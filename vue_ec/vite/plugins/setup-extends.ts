@@ -1,7 +1,7 @@
 // vite.config.ts
 import vueSetupExtend from 'unplugin-vue-setup-extend-plus/vite'
-import { PluginOption } from 'vite'
+import { Plugin } from 'vite'
 
-export default function createSetupExtend():PluginOption {
+export default function createSetupExtend() {
   return vueSetupExtend({ /* options */ })
 }

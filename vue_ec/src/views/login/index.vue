@@ -1,6 +1,7 @@
 <script setup lang="ts" name="login">
 import { reactive } from 'vue'
 import axios from 'axios'
+import { User, Lock } from '@element-plus/icons-vue'
 
 // do not use same name with ref
 const loginForm = reactive({
@@ -19,12 +20,26 @@ const onSubmit = async () => {
 <template>
   <div class="login">
     <el-form :model="loginForm" label-width="auto" style="max-width: 200px">
-      <h3>面试刷题平台</h3>
+      <h3 class="title">面试刷题平台</h3>
       <el-form-item label="账号">
-        <el-input v-model="loginForm.userAccount" />
+        <el-input
+          v-model="loginForm.userAccount"
+          type="text"
+          size="large"
+          autocomplete="true"
+          placeholder="请输入账号"
+          :prefix-icon="User"
+        />
       </el-form-item>
       <el-form-item label="密码">
-        <el-input v-model="loginForm.userPassword" />
+        <el-input
+          v-model="loginForm.userPassword"
+          type="password"
+          size="large"
+          autocomplete="true"
+          placeholder="请输入密码"
+          :prefix-icon="Lock"
+        />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">登录</el-button>
@@ -33,4 +48,15 @@ const onSubmit = async () => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.login {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  margin: 140px auto;
+}
+.title {
+  text-align: center;
+  color: #5b9cf8;
+}
+</style>
