@@ -9,7 +9,7 @@ const loginForm = reactive({
   userPassword: '',
 })
 
-const onSubmit = async () => {
+const handleLogin = async () => {
   const res = await axios.post('http://localhost:8901/user/login', {
     ...loginForm,
   })
@@ -42,7 +42,8 @@ const onSubmit = async () => {
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">登录</el-button>
+        <el-button type="primary" @click="handleLogin">登录</el-button>
+        <el-button type="info" @click="$router.push('/register')">去注册</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -52,8 +53,8 @@ const onSubmit = async () => {
 .login {
   display: flex;
   justify-content: center;
+  align-items: center;
   height: 100%;
-  margin: 140px auto;
 }
 .title {
   text-align: center;
