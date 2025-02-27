@@ -113,7 +113,41 @@
 - [x] 样式编写
 - [x] 跳转登录页
 
+---
 
+## 布局
+
+- [ ] 样式编写
+
+- [ ] 像若依（AppMain.vue）一样加一个过度
+
+  ~~~html
+  <router-view v-slot="{ Component, route }">
+    <transition name="fade-transform" mode="out-in">
+      <keep-alive :include="tagsViewStore.cachedViews">
+        <component v-if="!route.meta.link" :is="Component" :key="route.path"/>
+      </keep-alive>
+    </transition>
+  </router-view>
+  ~~~
+
+- [ ] 使用keepalive缓存router-view
+
+- [ ] 自写`<sidebar class="sidebar-container"></sidebar>`，参考mall
+
+  ~~~html
+  <div class="app-wrapper" :class="classObj">
+    <sidebar class="sidebar-container"></sidebar>
+    <div class="main-container">
+      <navbar></navbar>
+      <app-main></app-main>
+    </div>
+  </div>
+  ~~~
+
+- [ ] 实现个人中心、退出登录跳转
+
+- [ ] 抽离Navbar
 
 
 
