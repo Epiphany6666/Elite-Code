@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { CaretBottom, Document, Menu } from '@element-plus/icons-vue'
+import { useUserStore } from '@/store/modules/user.ts'
+const userStore = useUserStore()
 </script>
 
 <template>
@@ -39,7 +41,7 @@ import { CaretBottom, Document, Menu } from '@element-plus/icons-vue'
           <div>
             <el-dropdown placement="bottom-end" trigger="click">
               <div class="avatar-wrapper">
-                <el-avatar shape="square" class="user-avatar" src="/notLoginUser.png" />
+                <el-avatar shape="square" class="user-avatar" :src="userStore.avatar || '/notLoginUser.png'" />
                 <el-icon><CaretBottom /></el-icon>
               </div>
               <template #dropdown>

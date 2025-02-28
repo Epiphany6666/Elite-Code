@@ -2,6 +2,12 @@
 import { reactive } from 'vue'
 import axios from 'axios'
 import { User, Lock } from '@element-plus/icons-vue'
+import { useRouter } from 'vue-router'
+import { useUserStore } from '@/store/modules/user.ts'
+import type {UserState} from '@/types/userState.d.ts'
+
+const router = useRouter()
+const userStore = useUserStore()
 
 // do not use same name with ref
 const loginForm = reactive({
@@ -9,11 +15,22 @@ const loginForm = reactive({
   userPassword: '',
 })
 
+const handleGoHome = () => {
+  router.push('/home')
+}
+
 const handleLogin = async () => {
   const res = await axios.post('http://localhost:8901/user/login', {
     ...loginForm,
   })
   console.log(res)
+  const user:UserState = res.data.data
+  userStore.id = user.id
+  userStore.account = user.account
+  userStore.avatar = user.avatar
+  userStore.roles = user.roles
+  // 跳转到主页
+  handleGoHome()
 }
 </script>
 
@@ -23,7 +40,7 @@ const handleLogin = async () => {
       <h3 class="title">面试刷题平台</h3>
       <el-form-item label="账号">
         <el-input
-          v-model="loginForm.userAccount"
+          v-model="loginForm.account"
           type="text"
           size="large"
           autocomplete="true"
@@ -33,7 +50,7 @@ const handleLogin = async () => {
       </el-form-item>
       <el-form-item label="密码">
         <el-input
-          v-model="loginForm.userPassword"
+          v-model="loginForm.password"
           type="password"
           size="large"
           autocomplete="true"
