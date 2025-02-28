@@ -21,7 +21,7 @@ public interface UserMapper {
      * @param userAccount 用户账号
      * @return
      */
-    User selectUserByUserAccount(String userAccount );
+    User selectUserByAccount(String userAccount );
 
     /**
      * 插入用户
@@ -57,13 +57,13 @@ public interface UserMapper {
      * @param userAccount 用户账号
      * @return 结果
      */
-    User checkUserAccountUnique(String userAccount);
+    User checkAccountUnique(String userAccount);
 
     /**
      * 查找所有管理员用户的ID
      * @return 结果
      */
-    List<Long> selectAdminUserIds();
+    List<Long> selectAdminIds();
 
     /**
      * 批量删除用户
@@ -77,5 +77,5 @@ public interface UserMapper {
      * @param userId 用户ID
      * @param avatarUrl 头像地址
      */
-    int updateUserAvatar(Long userId, String avatarUrl);
+    int updateAvatar(Long userId, String avatarUrl);
 }

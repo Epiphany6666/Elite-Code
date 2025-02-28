@@ -11,12 +11,12 @@ public class UserAddDTO implements Serializable {
     /**
      * 账号
      */
-    private String userAccount;
+    private String account;
 
     /**
      * 密码
      */
-    private String userPassword;
+    private String password;
 
     /**
      * 用户昵称
@@ -26,60 +26,60 @@ public class UserAddDTO implements Serializable {
     /**
      * 用户头像
      */
-    private String userAvatar;
+    private String avatar;
 
     /**
      * 用户简介
      */
-    private String userProfile;
+    private String profile;
 
     /**
      * 用户角色：user/admin/ban
      */
-    private List<String> userRoles;
+    private List<String> roles;
 
     public UserAddDTO() {
     }
 
     public UserAddDTO(String userAccount, String userPassword, String nickName, String userAvatar, String userProfile, List<String> userRoles) {
-        this.userAccount = userAccount;
-        this.userPassword = userPassword;
+        this.account = userAccount;
+        this.password = userPassword;
         this.nickName = nickName;
-        this.userAvatar = userAvatar;
-        this.userProfile = userProfile;
-        this.userRoles = userRoles;
+        this.avatar = userAvatar;
+        this.profile = userProfile;
+        this.roles = userRoles;
     }
 
     /**
      * 获取
      * @return userAccount
      */
-    public String getUserAccount() {
-        return userAccount;
+    public String getAccount() {
+        return account;
     }
 
     /**
      * 设置
-     * @param userAccount
+     * @param account
      */
-    public void setUserAccount(String userAccount) {
-        this.userAccount = userAccount;
+    public void setAccount(String account) {
+        this.account = account;
     }
 
     /**
      * 获取
      * @return userPassword
      */
-    public String getUserPassword() {
-        return userPassword;
+    public String getPassword() {
+        return password;
     }
 
     /**
      * 设置
-     * @param userPassword
+     * @param password
      */
-    public void setUserPassword(String userPassword) {
-        this.userPassword = userPassword;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     /**
@@ -102,51 +102,51 @@ public class UserAddDTO implements Serializable {
      * 获取
      * @return userAvatar
      */
-    public String getUserAvatar() {
-        return userAvatar;
+    public String getAvatar() {
+        return avatar;
     }
 
     /**
      * 设置
-     * @param userAvatar
+     * @param avatar
      */
-    public void setUserAvatar(String userAvatar) {
-        this.userAvatar = userAvatar;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     /**
      * 获取
      * @return userProfile
      */
-    public String getUserProfile() {
-        return userProfile;
+    public String getProfile() {
+        return profile;
     }
 
     /**
      * 设置
-     * @param userProfile
+     * @param profile
      */
-    public void setUserProfile(String userProfile) {
-        this.userProfile = userProfile;
+    public void setProfile(String profile) {
+        this.profile = profile;
     }
 
     /**
      * 获取
      * @return userRoles
      */
-    public List<String> getUserRoles() {
-        return userRoles;
+    public List<String> getRoles() {
+        return roles;
     }
 
     /**
      * 设置
-     * @param userRoles
+     * @param roles
      */
-    public void setUserRoles(List<String> userRoles) {
-        this.userRoles = userRoles;
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 
     public String toString() {
-        return "UserAddDTO{userAccount = " + userAccount + ", userPassword = " + userPassword + ", nickName = " + nickName + ", userAvatar = " + userAvatar + ", userProfile = " + userProfile + ", userRoles = " + userRoles + "}";
+        return "UserAddDTO{userAccount = " + account + ", userPassword = " + password + ", nickName = " + nickName + ", userAvatar = " + avatar + ", userProfile = " + profile + ", userRoles = " + roles + "}";
     }
 }

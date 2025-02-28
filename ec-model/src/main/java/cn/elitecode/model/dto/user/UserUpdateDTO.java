@@ -12,12 +12,12 @@ public class UserUpdateDTO implements Serializable {
     /**
      * 用户ID
      */
-    private Long userId;
+    private Long id;
 
     /**
      * 账号
      */
-    private String userAccount;
+    private String account;
 
     /**
      * 用户昵称
@@ -27,54 +27,54 @@ public class UserUpdateDTO implements Serializable {
     /**
      * 用户简介
      */
-    private String userProfile;
+    private String profile;
 
     /**
      * 用户角色：user/admin/ban
      */
-    private List<String> userRoles;
+    private List<String> roles;
 
     public UserUpdateDTO() {
     }
 
-    public UserUpdateDTO(Long userId, String userAccount, String nickName, String userProfile, List<String> userRoles) {
-        this.userId = userId;
-        this.userAccount = userAccount;
+    public UserUpdateDTO(Long id, String account, String nickName, String profile, List<String> roles) {
+        this.id = id;
+        this.account = account;
         this.nickName = nickName;
-        this.userProfile = userProfile;
-        this.userRoles = userRoles;
+        this.profile = profile;
+        this.roles = roles;
     }
 
     /**
      * 获取
      * @return userId
      */
-    public Long getUserId() {
-        return userId;
+    public Long getId() {
+        return id;
     }
 
     /**
      * 设置
-     * @param userId
+     * @param id
      */
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     /**
      * 获取
      * @return userAccount
      */
-    public String getUserAccount() {
-        return userAccount;
+    public String getAccount() {
+        return account;
     }
 
     /**
      * 设置
-     * @param userAccount
+     * @param account
      */
-    public void setUserAccount(String userAccount) {
-        this.userAccount = userAccount;
+    public void setAccount(String account) {
+        this.account = account;
     }
 
     /**
@@ -97,35 +97,35 @@ public class UserUpdateDTO implements Serializable {
      * 获取
      * @return userProfile
      */
-    public String getUserProfile() {
-        return userProfile;
+    public String getProfile() {
+        return profile;
     }
 
     /**
      * 设置
-     * @param userProfile
+     * @param profile
      */
-    public void setUserProfile(String userProfile) {
-        this.userProfile = userProfile;
+    public void setProfile(String profile) {
+        this.profile = profile;
     }
 
     /**
      * 获取
      * @return userRoles
      */
-    public List<String> getUserRoles() {
-        return userRoles;
+    public List<String> getRoles() {
+        return roles;
     }
 
     /**
      * 设置
-     * @param userRoles
+     * @param roles
      */
-    public void setUserRoles(List<String> userRoles) {
-        this.userRoles = userRoles;
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 
     public String toString() {
-        return "UserUpdateDTO{userId = " + userId + ", userAccount = " + userAccount + ", nickName = " + nickName + ", userProfile = " + userProfile + ", userRoles = " + userRoles + "}";
+        return "UserUpdateDTO{userId = " + id + ", userAccount = " + account + ", nickName = " + nickName + ", userProfile = " + profile + ", userRoles = " + roles + "}";
     }
 }

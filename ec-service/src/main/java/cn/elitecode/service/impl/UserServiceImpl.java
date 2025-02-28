@@ -38,18 +38,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public LoginUserVO login(String userAccount, String userPassword, HttpServletRequest request) {
         // 查询用户是否存在
-        User user = userMapper.selectUserByUserAccount(userAccount);
+        User user = userMapper.selectUserByAccount(userAccount);
         if (user == null) {
             throw new UserAccountNotFoundException(HttpStatus.PARAMS_ERROR, "账号不存在");
         }
         String encryptPassword = DigestUtils.md5DigestAsHex((UserConstant.SALT + userPassword).getBytes());
-        if (!encryptPassword.equals(user.getUserPassword())) {
+        if (!encryptPassword.equals(user.getPassword())) {
             throw new UserPasswordNotMatchException(HttpStatus.PARAMS_ERROR, "密码错误");
         }
 
         // 设置登录态
         request.getSession().setAttribute(USER_LOGIN_STATE, user);
-        BaseContext.setCurrentId(user.getUserId());
+        BaseContext.setCurrentId(user.getId());
 
         // 返回用户信息
         return getLoginUserVO(user);
@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
             throw new RegistrationFailedException(HttpStatus.SYSTEM_ERROR, "注册失败");
         }
         // 若成功，返回注册用户的id
-        return user.getUserId();
+        return user.getId();
     }
 
     @Override
@@ -123,9 +123,9 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public boolean checkUserAccountUnique(User user) {
-        Long userId = ObjectUtil.isNull(user.getUserId()) ? -1L : user.getUserId();
-        User info = userMapper.checkUserAccountUnique(user.getUserAccount());
-        if (ObjectUtil.isNotNull(info) && info.getUserId().longValue() != userId.longValue()) {
+        Long userId = ObjectUtil.isNull(user.getId()) ? -1L : user.getId();
+        User info = userMapper.checkAccountUnique(user.getAccount());
+        if (ObjectUtil.isNotNull(info) && info.getId().longValue() != userId.longValue()) {
             return UserConstant.NOT_UNIQUE;
         }
         return UserConstant.UNIQUE;
@@ -151,7 +151,7 @@ public class UserServiceImpl implements UserService {
         if (result <= 0) {
             log.error("用户插入数据库失败：{}", result);
         }
-        return user.getUserId();
+        return user.getId();
     }
 
     /**
@@ -176,7 +176,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public boolean updateUserAvatar(Long userId, String avatarUrl) {
-        int result = userMapper.updateUserAvatar(userId, avatarUrl);
+        int result = userMapper.updateAvatar(userId, avatarUrl);
         if (result <= 0) {
             log.error("修改用户头像失败：{}", result);
             return false;
@@ -185,13 +185,13 @@ public class UserServiceImpl implements UserService {
     }
 
     private void checkUserAllowed(User user) {
-        if (ObjectUtil.isNotNull(user.getUserId()) && isAdmin(user.getUserId())) {
+        if (ObjectUtil.isNotNull(user.getId()) && isAdmin(user.getId())) {
             throw new AdminNotAllowedException(HttpStatus.ADMIN_NOT_ALLOWED_ERROR, "不允许操作超级管理员用户");
         }
     }
 
     private boolean isAdmin(Long userId) {
-        List<Long> adminUserIds = userMapper.selectAdminUserIds();
+        List<Long> adminUserIds = userMapper.selectAdminIds();
         return adminUserIds.contains(userId);
     }
 }

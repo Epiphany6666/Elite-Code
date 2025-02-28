@@ -11,12 +11,12 @@ public class UserVO {
     /**
      * 用户ID
      */
-    private Long userId;
+    private Long id;
 
     /**
      * 账号
      */
-    private String userAccount;
+    private String account;
 
     /**
      * 用户昵称
@@ -26,17 +26,17 @@ public class UserVO {
     /**
      * 用户头像
      */
-    private String userAvatar;
+    private String avatar;
 
     /**
      * 用户简介
      */
-    private String userProfile;
+    private String profile;
 
     /**
      * 用户角色：user/admin/ban
      */
-    private List<String> userRoles;
+    private List<String> roles;
 
     /**
      * 创建者
@@ -62,12 +62,12 @@ public class UserVO {
     }
 
     public UserVO(Long userId, String userAccount, String nickName, String userAvatar, String userProfile, List<String> userRoles, String createBy, Date createTime, String updateBy, Date updateTime) {
-        this.userId = userId;
-        this.userAccount = userAccount;
+        this.id = userId;
+        this.account = userAccount;
         this.nickName = nickName;
-        this.userAvatar = userAvatar;
-        this.userProfile = userProfile;
-        this.userRoles = userRoles;
+        this.avatar = userAvatar;
+        this.profile = userProfile;
+        this.roles = userRoles;
         this.createBy = createBy;
         this.createTime = createTime;
         this.updateBy = updateBy;
@@ -78,32 +78,32 @@ public class UserVO {
      * 获取
      * @return userId
      */
-    public Long getUserId() {
-        return userId;
+    public Long getId() {
+        return id;
     }
 
     /**
      * 设置
-     * @param userId
+     * @param id
      */
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     /**
      * 获取
      * @return userAccount
      */
-    public String getUserAccount() {
-        return userAccount;
+    public String getAccount() {
+        return account;
     }
 
     /**
      * 设置
-     * @param userAccount
+     * @param account
      */
-    public void setUserAccount(String userAccount) {
-        this.userAccount = userAccount;
+    public void setAccount(String account) {
+        this.account = account;
     }
 
     /**
@@ -126,48 +126,48 @@ public class UserVO {
      * 获取
      * @return userAvatar
      */
-    public String getUserAvatar() {
-        return userAvatar;
+    public String getAvatar() {
+        return avatar;
     }
 
     /**
      * 设置
-     * @param userAvatar
+     * @param avatar
      */
-    public void setUserAvatar(String userAvatar) {
-        this.userAvatar = userAvatar;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     /**
      * 获取
      * @return userProfile
      */
-    public String getUserProfile() {
-        return userProfile;
+    public String getProfile() {
+        return profile;
     }
 
     /**
      * 设置
-     * @param userProfile
+     * @param profile
      */
-    public void setUserProfile(String userProfile) {
-        this.userProfile = userProfile;
+    public void setProfile(String profile) {
+        this.profile = profile;
     }
 
     /**
      * 获取
      * @return userRoles
      */
-    public List<String> getUserRoles() {
-        return userRoles;
+    public List<String> getRoles() {
+        return roles;
     }
 
     /**
      * 设置
-     * @param userRoles
+     * @param roles
      */
-    public void setUserRoles(List<String> userRoles) {
-        this.userRoles = userRoles;
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 
     /**
@@ -235,6 +235,6 @@ public class UserVO {
     }
 
     public String toString() {
-        return "UserVO{userId = " + userId + ", userAccount = " + userAccount + ", nickName = " + nickName + ", userAvatar = " + userAvatar + ", userProfile = " + userProfile + ", userRoles = " + userRoles + ", createBy = " + createBy + ", createTime = " + createTime + ", updateBy = " + updateBy + ", updateTime = " + updateTime + "}";
+        return "UserVO{userId = " + id + ", userAccount = " + account + ", nickName = " + nickName + ", userAvatar = " + avatar + ", userProfile = " + profile + ", userRoles = " + roles + ", createBy = " + createBy + ", createTime = " + createTime + ", updateBy = " + updateBy + ", updateTime = " + updateTime + "}";
     }
 }

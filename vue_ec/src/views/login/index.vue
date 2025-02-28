@@ -11,8 +11,8 @@ const userStore = useUserStore()
 
 // do not use same name with ref
 const loginForm = reactive({
-  userAccount: '',
-  userPassword: '',
+  account: '',
+  password: '',
 })
 
 const handleGoHome = () => {

@@ -40,8 +40,8 @@ public class UserController {
         if (userLoginDTO == null) {
             return CommonResult.error(HttpStatus.PARAMS_ERROR, "登录参数错误");
         }
-        String userAccount = userLoginDTO.getUserAccount();
-        String userPassword = userLoginDTO.getUserPassword();
+        String userAccount = userLoginDTO.getAccount();
+        String userPassword = userLoginDTO.getPassword();
 
         // 校验
         if (StrUtil.isEmpty(userAccount)) {
@@ -74,8 +74,8 @@ public class UserController {
         }
 
         // 校验
-        String userAccount = userRegisterDTO.getUserAccount();
-        String userPassword = userRegisterDTO.getUserPassword();
+        String userAccount = userRegisterDTO.getAccount();
+        String userPassword = userRegisterDTO.getPassword();
         String checkPassword = userRegisterDTO.getCheckPassword();
         if (StrUtil.isEmpty(userAccount)) {
             return CommonResult.error(HttpStatus.PARAMS_ERROR, "用户账号不能为空");
@@ -98,11 +98,11 @@ public class UserController {
             return CommonResult.error(HttpStatus.PARAMS_ERROR, "两次输入的密码不一致");
         }
         User user = new User();
-        user.setUserAccount(userRegisterDTO.getUserAccount());
+        user.setAccount(userRegisterDTO.getAccount());
         if (!userService.checkUserAccountUnique(user)) {
-            return CommonResult.error(HttpStatus.PARAMS_ERROR, "用户注册 '" + user.getUserAccount() + "' 失败，账号已存在");
+            return CommonResult.error(HttpStatus.PARAMS_ERROR, "用户注册 '" + user.getAccount() + "' 失败，账号已存在");
         }
-        user.setUserPassword(DigestUtils.md5DigestAsHex((UserConstant.SALT + userPassword).getBytes()));
+        user.setPassword(DigestUtils.md5DigestAsHex((UserConstant.SALT + userPassword).getBytes()));
         Long registerUserId = userService.register(user);
         return CommonResult.success(registerUserId);
     }
@@ -144,10 +144,10 @@ public class UserController {
         User user = new User();
         BeanUtils.copyProperties(userAddDTO, user);
         if (!userService.checkUserAccountUnique(user)) {
-            return CommonResult.error(HttpStatus.PARAMS_ERROR, "新增用户 '" + user.getUserAccount() + "' 失败，账号已存在");
+            return CommonResult.error(HttpStatus.PARAMS_ERROR, "新增用户 '" + user.getAccount() + "' 失败，账号已存在");
         }
         user.setCreateBy(BaseContext.getCurrentId());
-        user.setUserPassword(DigestUtil.md5Hex((UserConstant.SALT + user.getUserPassword()).getBytes()));
+        user.setPassword(DigestUtil.md5Hex((UserConstant.SALT + user.getPassword()).getBytes()));
         return CommonResult.success(userService.addUser(user));
     }
 

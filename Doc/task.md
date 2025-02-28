@@ -94,19 +94,23 @@
 - [x] 初始化Vue3
 - [x] 创建路由
 - [ ] 自己写默认样式(@/assets/styles/index.less)
-- [ ] 封装axios
+- [ ] 封装axios、api
+- [ ] 使用**NProgress**搭建轻量级的页面加载进度条（参考若依，在全局路由守卫中）
+
+---
 
 ## 登录
 
 - [ ] 
-- [ ] 样式编写
+- [x] 样式编写
 - [ ] 表单校验
-- [ ] 登录成功跳转到主页
+- [x] 登录成功跳转到主页
 - [ ] 记住密码
 - [ ] 登录按钮增加loading（参考若依）
 - [ ] 动态加载和管理 SVG 图标
 - [x] 搭建Pnia
 - [x] 获取用户信息放到Pinia
+- [ ] 将获取用户信息放到
 
 ---
 
@@ -266,17 +270,17 @@
 
 ----
 
-# 其他
-
-框架
+# 框架
 
 - [ ] 使用SpringSecurity改写
 - [ ] 学若依
-  - 手动写字符串格式化类StrFormatter
+  - [ ] 手动写字符串格式化类StrFormatter
 
 
 
-文件管理
+----
+
+# 文件管理
 
 - [ ] mall：minio
 - [ ] vhr：fastdfs（分布式文件管理系统）
@@ -290,6 +294,10 @@
 - [ ] 校验写在Controller还是Service好？
 
   因为就算写在Controller，Service方法也有可能对外暴露一个rpc协议的接口，由其他程序来调用。
+
+- [ ] Mac安装Docker
+
+- [ ] 使用Docker部署EC
 
 - [ ] 
 

@@ -17,17 +17,17 @@ public class User implements Serializable {
     /**
      * 用户ID
      */
-    private Long userId;
+    private Long id;
 
     /**
      * 账号（唯一）
      */
-    private String userAccount;
+    private String account;
 
     /**
      * 密码
      */
-    private String userPassword;
+    private String password;
 
     /**
      * 用户昵称
@@ -37,17 +37,17 @@ public class User implements Serializable {
     /**
      * 用户头像
      */
-    private String userAvatar;
+    private String avatar;
 
     /**
      * 用户简介
      */
-    private String userProfile;
+    private String profile;
 
     /**
      * 用户角色：user/admin/ban
      */
-    private List<String> userRoles;
+    private List<String> roles;
 
     /**
      * 删除标志（0代表存在，2代表删除）
@@ -75,20 +75,20 @@ public class User implements Serializable {
     private Date updateTime;
 
     public User(Long userId) {
-        this.userId = userId;
+        this.id = userId;
     }
 
     public User() {
     }
 
     public User(Long userId, String userAccount, String userPassword, String nickName, String userAvatar, String userProfile, List<String> userRoles, String delFlag, Long createBy, Date createTime, Long updateBy, Date updateTime) {
-        this.userId = userId;
-        this.userAccount = userAccount;
-        this.userPassword = userPassword;
+        this.id = userId;
+        this.account = userAccount;
+        this.password = userPassword;
         this.nickName = nickName;
-        this.userAvatar = userAvatar;
-        this.userProfile = userProfile;
-        this.userRoles = userRoles;
+        this.avatar = userAvatar;
+        this.profile = userProfile;
+        this.roles = userRoles;
         this.delFlag = delFlag;
         this.createBy = createBy;
         this.createTime = createTime;
@@ -100,48 +100,48 @@ public class User implements Serializable {
      * 获取
      * @return userId
      */
-    public Long getUserId() {
-        return userId;
+    public Long getId() {
+        return id;
     }
 
     /**
      * 设置
-     * @param userId
+     * @param id
      */
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     /**
      * 获取
      * @return userAccount
      */
-    public String getUserAccount() {
-        return userAccount;
+    public String getAccount() {
+        return account;
     }
 
     /**
      * 设置
-     * @param userAccount
+     * @param account
      */
-    public void setUserAccount(String userAccount) {
-        this.userAccount = userAccount;
+    public void setAccount(String account) {
+        this.account = account;
     }
 
     /**
      * 获取
      * @return userPassword
      */
-    public String getUserPassword() {
-        return userPassword;
+    public String getPassword() {
+        return password;
     }
 
     /**
      * 设置
-     * @param userPassword
+     * @param password
      */
-    public void setUserPassword(String userPassword) {
-        this.userPassword = userPassword;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     /**
@@ -164,48 +164,48 @@ public class User implements Serializable {
      * 获取
      * @return userAvatar
      */
-    public String getUserAvatar() {
-        return userAvatar;
+    public String getAvatar() {
+        return avatar;
     }
 
     /**
      * 设置
-     * @param userAvatar
+     * @param avatar
      */
-    public void setUserAvatar(String userAvatar) {
-        this.userAvatar = userAvatar;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     /**
      * 获取
      * @return userProfile
      */
-    public String getUserProfile() {
-        return userProfile;
+    public String getProfile() {
+        return profile;
     }
 
     /**
      * 设置
-     * @param userProfile
+     * @param profile
      */
-    public void setUserProfile(String userProfile) {
-        this.userProfile = userProfile;
+    public void setProfile(String profile) {
+        this.profile = profile;
     }
 
     /**
      * 获取
      * @return userRoles
      */
-    public List<String> getUserRoles() {
-        return userRoles;
+    public List<String> getRoles() {
+        return roles;
     }
 
     /**
      * 设置
-     * @param userRoles
+     * @param roles
      */
-    public void setUserRoles(List<String> userRoles) {
-        this.userRoles = userRoles;
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 
     /**
@@ -289,6 +289,6 @@ public class User implements Serializable {
     }
 
     public String toString() {
-        return "User{userId = " + userId + ", userAccount = " + userAccount + ", userPassword = " + userPassword + ", nickName = " + nickName + ", userAvatar = " + userAvatar + ", userProfile = " + userProfile + ", userRoles = " + userRoles + ", delFlag = " + delFlag + ", createBy = " + createBy + ", createTime = " + createTime + ", updateBy = " + updateBy + ", updateTime = " + updateTime + "}";
+        return "User{userId = " + id + ", userAccount = " + account + ", userPassword = " + password + ", nickName = " + nickName + ", userAvatar = " + avatar + ", userProfile = " + profile + ", userRoles = " + roles + ", delFlag = " + delFlag + ", createBy = " + createBy + ", createTime = " + createTime + ", updateBy = " + updateBy + ", updateTime = " + updateTime + "}";
     }
 }

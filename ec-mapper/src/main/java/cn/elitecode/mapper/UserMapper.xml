@@ -5,13 +5,13 @@
 <mapper namespace="cn.elitecode.mapper.UserMapper">
 
     <resultMap id="UserResult" type="User">
-            <id property="userId" column="user_id"/>
-            <result property="userAccount" column="user_account"/>
-            <result property="userPassword" column="user_password"/>
+            <id property="id" column="user_id"/>
+            <result property="account" column="user_account"/>
+            <result property="password" column="user_password"/>
             <result property="nickName" column="nick_name"/>
-            <result property="userAvatar" column="user_avatar"/>
-            <result property="userProfile" column="user_profile"/>
-            <result property="userRoles" column="user_roles" typeHandler="cn.elitecode.JSONTypeHandler"/>
+            <result property="avatar" column="user_avatar"/>
+            <result property="profile" column="user_profile"/>
+            <result property="roles" column="user_roles" typeHandler="cn.elitecode.JSONTypeHandler"/>
             <result property="delFlag" column="del_flag"/>
             <result property="createBy" column="create_by"/>
             <result property="createTime" column="create_time"/>
@@ -32,40 +32,40 @@
         from
             user
         where
-            user_id = #{userId} and del_flag = #{delFlag}
+            user_id = #{id} and del_flag = #{delFlag}
     </select>
 
-    <select id="selectUserByUserAccount" resultMap="UserResult">
+    <select id="selectUserByAccount" resultMap="UserResult">
         select
             <include refid="selectUserVo"/>
         from
             user
         where
-            user_account = #{userAccount} and del_flag = '0'
+            user_account = #{account} and del_flag = '0'
     </select>
 
-    <!-- int register(String userAccount, String encryptPassword); -->
-    <insert id="insertUser" useGeneratedKeys="true" keyProperty="userId">
+    <!-- int register(String account, String encryptPassword); -->
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
         insert into user(
             <trim suffixOverrides=",">
-                <if test="userId != null">user_id,</if>
-                <if test="userAccount != null and userAccount != ''">user_account,</if>
-                <if test="userPassword != null and userPassword != ''">user_password,</if>
-                <if test="userAvatar != null and userAvatar != ''">user_avatar,</if>
-                <if test="userProfile != null and userProfile != ''">user_profile,</if>
-                <if test="userRoles != null and userRoles.size() > 0">user_roles,</if>
+                <if test="id != null">user_id,</if>
+                <if test="account != null and account != ''">user_account,</if>
+                <if test="password != null and password != ''">user_password,</if>
+                <if test="avatar != null and avatar != ''">user_avatar,</if>
+                <if test="profile != null and profile != ''">user_profile,</if>
+                <if test="roles != null and roles.size() > 0">user_roles,</if>
                 <if test="createBy != null and createBy != ''">create_by,</if>
                 <if test="updateBy != null and updateBy != ''">update_by,</if>
             </trim>
         )
         values(
             <trim suffixOverrides=",">
-                <if test="userId != null">#{userId},</if>
-                <if test="userAccount != null and userAccount != ''">#{userAccount},</if>
-                <if test="userPassword != null and userPassword != ''">#{userPassword},</if>
-                <if test="userAvatar != null and userAvatar != ''">#{userAvatar},</if>
-                <if test="userProfile != null and userProfile != ''">#{userProfile},</if>
-                <if test="userRoles != null and userRoles.size() > 0">#{userRoles, typeHandler=cn.elitecode.JSONTypeHandler},</if>
+                <if test="id != null">#{id},</if>
+                <if test="account != null and account != ''">#{account},</if>
+                <if test="password != null and password != ''">#{password},</if>
+                <if test="avatar != null and avatar != ''">#{avatar},</if>
+                <if test="profile != null and profile != ''">#{profile},</if>
+                <if test="roles != null and roles.size() > 0">#{roles, typeHandler=cn.elitecode.JSONTypeHandler},</if>
                 <if test="createBy != null and createBy != ''">#{createBy},</if>
                 <if test="updateBy != null and updateBy != ''">#{updateBy},</if>
             </trim>
@@ -79,8 +79,8 @@
         from
         user
         where del_flag = '0'
-            <if test="userId != null">and user_id=#{userId}</if>
-            <if test="userAccount != null and userAccount != ''">and user_account like "%"#{userAccount}"%"</if>
+            <if test="id != null">and user_id=#{id}</if>
+            <if test="account != null and account != ''">and user_account like "%"#{account}"%"</if>
             <if test="nickName != null and nickName != ''">and nick_name like "%"#{nickName}"%"</if>
             <if test="userRole != null and userRole != ''">and JSON_CONTAINS(user_roles, JSON_QUOTE(#{userRole}))</if>
             <if test="createBy != null and createBy != ''">and create_by like "%"#{createBy}"%"</if>
@@ -102,8 +102,8 @@
         from
             user
         where del_flag = '0'
-            <if test="userId != null">and user_id=#{userId}</if>
-            <if test="userAccount != null and userAccount != ''">and user_account like "%"#{userAccount}"%"</if>
+            <if test="id != null">and user_id=#{id}</if>
+            <if test="account != null and account != ''">and user_account like "%"#{account}"%"</if>
             <if test="nickName != null and nickName != ''">and nick_name like "%"#{nickName}"%"</if>
             <if test="userRole != null and userRole != ''">and JSON_CONTAINS(user_roles, JSON_QUOTE(#{userRole}))</if>
             <if test="createBy != null and createBy != ''">and create_by like "%"#{createBy}"%"</if>
@@ -111,39 +111,39 @@
             <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>
     </select>
 
-    <select id="checkUserAccountUnique" resultMap="UserResult">
-        select user_id, user_account from user where user_account = #{userAccount} and del_flag = '0' limit 1
+    <select id="checkAccountUnique" resultMap="UserResult">
+        select user_id, user_account from user where user_account = #{account} and del_flag = '0' limit 1
     </select>
 
     <!-- void updateByPrimaryKeySelective(User user); -->
     <update id="updateByPrimaryKeySelective">
         UPDATE user
         <set>
-            <if test="userAccount != null and userAccount != ''">user_account = #{userAccount},</if>
+            <if test="account != null and account != ''">user_account = #{account},</if>
             <if test="nickName != null and nickName != ''">nick_name = #{nickName},</if>
-            <if test="userProfile != null and userProfile != ''">user_profile = #{userProfile},</if>
-            <if test="userRoles != null and userRoles.size() > 0">user_roles = #{userRoles, typeHandler=cn.elitecode.JSONTypeHandler},</if>
+            <if test="profile != null and profile != ''">user_profile = #{profile},</if>
+            <if test="roles != null and roles.size() > 0">user_roles = #{roles, typeHandler=cn.elitecode.JSONTypeHandler},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
         </set>
         where
-            user_id = #{userId}
+            user_id = #{id}
     </update>
 
     <!-- List<Long> selectAdminUserIds(); -->
-    <select id="selectAdminUserIds" resultType="java.lang.Long">
+    <select id="selectAdminIds" resultType="java.lang.Long">
         select user_id from user where JSON_CONTAINS(user_roles, JSON_QUOTE('admin')) and del_flag = '0'
     </select>
 
     <delete id="deleteUserByIds">
         update user set del_flag = '2' where user_id in
-        <foreach collection="userIds" open="(" separator="," close=")" item="userId">
-            #{userId}
+        <foreach collection="ids" open="(" separator="," close=")" item="id">
+            #{id}
         </foreach>
     </delete>
 
-    <!-- int updateUserAvatar(Long userId, String avatarUrl); -->
-    <update id="updateUserAvatar">
-        update user set user_avatar = #{avatarUrl} where user_id = #{userId}
+    <!-- int updateUserAvatar(Long id, String avatarUrl); -->
+    <update id="updateAvatar">
+        update user set user_avatar = #{avatarUrl} where user_id = #{id}
     </update>
 
 </mapper>

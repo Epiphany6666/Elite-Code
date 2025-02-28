@@ -5,51 +5,51 @@ package cn.elitecode.model.dto.user;
  */
 public class UserLoginDTO {
 
-    private String userAccount;
-    private String userPassword;
+    private String account;
+    private String password;
 
 
     public UserLoginDTO() {
     }
 
     public UserLoginDTO(String userAccount, String userPassword) {
-        this.userAccount = userAccount;
-        this.userPassword = userPassword;
+        this.account = userAccount;
+        this.password = userPassword;
     }
 
     /**
      * 获取
      * @return userAccount
      */
-    public String getUserAccount() {
-        return userAccount;
+    public String getAccount() {
+        return account;
     }
 
     /**
      * 设置
-     * @param userAccount
+     * @param account
      */
-    public void setUserAccount(String userAccount) {
-        this.userAccount = userAccount;
+    public void setAccount(String account) {
+        this.account = account;
     }
 
     /**
      * 获取
      * @return userPassword
      */
-    public String getUserPassword() {
-        return userPassword;
+    public String getPassword() {
+        return password;
     }
 
     /**
      * 设置
-     * @param userPassword
+     * @param password
      */
-    public void setUserPassword(String userPassword) {
-        this.userPassword = userPassword;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String toString() {
-        return "UserLoginDTO{userAccount = " + userAccount + ", userPassword = " + userPassword + "}";
+        return "UserLoginDTO{userAccount = " + account + ", userPassword = " + password + "}";
     }
 }

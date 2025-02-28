@@ -1,7 +1,7 @@
 package cn.elitecode.model.dto.user;
 
 import cn.elitecode.common.PageRequest;
-import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
@@ -15,12 +15,12 @@ public class UserQueryDTO extends PageRequest implements Serializable {
     /**
      * 用户ID
      */
-    private Long userId;
+    private Long id;
 
     /**
      * 账号
      */
-    private String userAccount;
+    private String account;
 
     /**
      * 用户昵称
@@ -30,7 +30,7 @@ public class UserQueryDTO extends PageRequest implements Serializable {
     /**
      * 用户角色：user/admin/ban
      */
-    private String userRole;
+    private String role;
 
     /**
      * 创建者
@@ -56,11 +56,11 @@ public class UserQueryDTO extends PageRequest implements Serializable {
     public UserQueryDTO() {
     }
 
-    public UserQueryDTO(Long userId, String userAccount, String nickName, String userRole, String createBy, Date startTime, String updateBy, Date endTime) {
-        this.userId = userId;
-        this.userAccount = userAccount;
+    public UserQueryDTO(Long userId, String userAccount, String nickName, String role, String createBy, Date startTime, String updateBy, Date endTime) {
+        this.id = userId;
+        this.account = userAccount;
         this.nickName = nickName;
-        this.userRole = userRole;
+        this.role = role;
         this.createBy = createBy;
         this.startTime = startTime;
         this.updateBy = updateBy;
@@ -71,32 +71,32 @@ public class UserQueryDTO extends PageRequest implements Serializable {
      * 获取
      * @return userId
      */
-    public Long getUserId() {
-        return userId;
+    public Long getId() {
+        return id;
     }
 
     /**
      * 设置
-     * @param userId
+     * @param id
      */
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     /**
      * 获取
      * @return userAccount
      */
-    public String getUserAccount() {
-        return userAccount;
+    public String getAccount() {
+        return account;
     }
 
     /**
      * 设置
-     * @param userAccount
+     * @param account
      */
-    public void setUserAccount(String userAccount) {
-        this.userAccount = userAccount;
+    public void setAccount(String account) {
+        this.account = account;
     }
 
     /**
@@ -119,16 +119,16 @@ public class UserQueryDTO extends PageRequest implements Serializable {
      * 获取
      * @return userRole
      */
-    public String getUserRole() {
-        return userRole;
+    public String getRole() {
+        return role;
     }
 
     /**
      * 设置
-     * @param userRole
+     * @param role
      */
-    public void setUserRole(String userRole) {
-        this.userRole = userRole;
+    public void setRole(String role) {
+        this.role = role;
     }
 
     /**
@@ -196,6 +196,6 @@ public class UserQueryDTO extends PageRequest implements Serializable {
     }
 
     public String toString() {
-        return "UserQueryDTO{userId = " + userId + ", userAccount = " + userAccount + ", nickName = " + nickName + ", userRole = " + userRole + ", createBy = " + createBy + ", startTime = " + startTime + ", updateBy = " + updateBy + ", endTime = " + endTime + "}";
+        return "UserQueryDTO{userId = " + id + ", userAccount = " + account + ", nickName = " + nickName + ", userRole = " + role + ", createBy = " + createBy + ", startTime = " + startTime + ", updateBy = " + updateBy + ", endTime = " + endTime + "}";
     }
 }
