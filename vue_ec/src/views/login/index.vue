@@ -4,7 +4,8 @@ import axios from 'axios'
 import { User, Lock } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/store/modules/user.ts'
-import type {UserState} from '@/types/userState.d.ts'
+import { login } from '@/api/user.ts'
+import type { LoginUserVO } from '@/types/user'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -20,11 +21,9 @@ const handleGoHome = () => {
 }
 
 const handleLogin = async () => {
-  const res = await axios.post('http://localhost:8901/user/login', {
-    ...loginForm,
-  })
+  const res = await login(loginForm.account, loginForm.password)
   console.log(res)
-  const user:UserState = res.data.data
+  const user:LoginUserVO = res.data.data
   userStore.id = user.id
   userStore.account = user.account
   userStore.avatar = user.avatar
@@ -60,7 +59,7 @@ const handleLogin = async () => {
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="handleLogin">登录</el-button>
-        <el-button type="info" @click="$router.push('/register')">去注册</el-button>
+        <el-button type="info" @click="router.push('/register')">去注册</el-button>
       </el-form-item>
     </el-form>
   </div>

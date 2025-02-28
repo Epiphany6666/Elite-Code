@@ -94,7 +94,7 @@
 - [x] 初始化Vue3
 - [x] 创建路由
 - [ ] 自己写默认样式(@/assets/styles/index.less)
-- [ ] 封装axios、api
+- [x] 封装axios实例、api
 - [ ] 使用**NProgress**搭建轻量级的页面加载进度条（参考若依，在全局路由守卫中）
 
 ---
