@@ -1,21 +1,40 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
-import axios from 'axios'
+import { onMounted, reactive } from 'vue'
 import { useRouter } from 'vue-router'
+import { register } from '@/api/user.ts'
 const router = useRouter()
 
 const registerForm = reactive({
-  userAccount: '',
-  userPassword: '',
+  account: '',
+  password: '',
   checkPassword: ''
 })
 
-const handleRegister = async () => {
-  const res = await axios.post('http://localhost:8901/user/register', {
-    ...registerForm
+onMounted(() => {
+  ElMessage({
+    message: `注册成功，即将跳转登录页...`,
+    type: 'success',
   })
-  console.log("@@register", res)
-  router.push('/login')
+})
+
+const handleRegister = () => {
+  register(registerForm.account, registerForm.password, registerForm.checkPassword)
+    .then(res => {
+      console.log("@@register", res)
+      ElMessage({
+        message: `${registerForm.account} 注册成功，即将跳转登录页...`,
+        type: 'success',
+      })
+      setTimeout(() => {
+        router.push('/login')
+      }, 3000)
+    })
+    .catch(error => {
+      ElMessage({
+        message: error,
+        type: 'error'
+      })
+    })
 }
 
 </script>
@@ -25,10 +44,10 @@ const handleRegister = async () => {
     <el-form :model="registerForm" style="max-width: 200px">
       <h3 class="title">注册</h3>
       <el-form-item label="账号">
-        <el-input v-model="registerForm.userAccount" />
+        <el-input v-model="registerForm.account" />
       </el-form-item>
       <el-form-item label="密码">
-        <el-input v-model="registerForm.userPassword" />
+        <el-input v-model="registerForm.password" />
       </el-form-item>
       <el-form-item label="确认密码">
         <el-input v-model="registerForm.checkPassword" />
@@ -36,7 +55,7 @@ const handleRegister = async () => {
 
       <el-form-item>
         <el-button type="primary" @click="handleRegister">注册</el-button>
-        <el-button type="info" @click="$router.push('/login')">去登录</el-button>
+        <el-button type="info" @click="router.push('/login')">去登录</el-button>
       </el-form-item>
     </el-form>
   </div>

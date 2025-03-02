@@ -3151,9 +3151,86 @@ less：https://lesscss.org/
 
 
 
+----
 
+# 解决vue3按需引入element-plus的组件而样式不显示的问题
 
+## 一、问题
 
+按照[官方文档的按需引入提示](https://element-plus.gitee.io/zh-CN/guide/quickstart.html#按需导入)后，运用官方组件仍然显示不出一些样式
+![在这里插入图片描述](./assets/bb0f4c407ef274a01b7ba8109cec5845.png)
+[element-plus–Message 消息提示](https://element-plus.gitee.io/zh-CN/component/message.html#不同状态)
+
+```javascript
+<template>
+  <el-button :plain="true" @click="open2">success</el-button>
+  <el-button :plain="true" @click="open3">warning</el-button>
+  <el-button :plain="true" @click="open1">message</el-button>
+  <el-button :plain="true" @click="open4">error</el-button>
+</template>
+
+<script lang="ts" setup>
+import { ElMessage } from 'element-plus'
+
+const open1 = () => {
+  ElMessage('this is a message.')
+}
+const open2 = () => {
+  ElMessage({
+    message: 'Congrats, this is a success message.',
+    type: 'success',
+  })
+}
+const open3 = () => {
+  ElMessage({
+    message: 'Warning, this is a warning message.',
+    type: 'warning',
+  })
+}
+const open4 = () => {
+  ElMessage.error('Oops, this is a error message.')
+}
+</script>
+1234567891011121314151617181920212223242526272829
+```
+
+预期样式：
+![在这里插入图片描述](./assets/d16a0809cf5fb5422ed5e276763105a9.png)
+实际样式
+![在这里插入图片描述](./assets/73604d3b004c4c9622bd03bdb362d8d1.png)
+
+---
+
+## 二、解决方法
+
+1.去除单独引入`import { ElMessage } from 'element-plus`’
+
+```javascript
+<template>
+  <el-button :plain="true" @click="open">success</el-button>
+</template>
+
+<script lang="ts" setup>
+//解决方法：去掉引用
+// import { ElMessage } from 'element-plus'
+
+const open = () => {
+  ElMessage({
+    message: 'Congrats, this is a success message.',
+    type: 'success',
+  })
+}
+</script>
+
+12345678910111213141516
+```
+
+2.进入**`tsconfig.app.json`**文件
+在`"include"`中加入`"auto-imports.d.ts"`来解决message爆红出错问题
+![在这里插入图片描述](./assets/7b23ff56092be13ba368944a8b7666e0.png)
+
+就可以啦！
+![在这里插入图片描述](./assets/d8d24b385122ba80696223d7a506dc20.png)
 
 
 

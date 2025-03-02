@@ -20,3 +20,9 @@ export declare interface LoginUserVO {
   /** 编辑时间 */
   updateTime: Date
 }
+
+export declare interface userRegisterDTO {
+  account: string
+  password: string
+  checkPassword: string
+}
