@@ -3234,6 +3234,47 @@ const open = () => {
 
 
 
+----
+
+# 在沉浸式翻译中使用 DeepLX
+
+## 一、开启沉浸式翻译的 Beta 测试特性
+
+在沉浸式翻译的设置界面，左下角的开发者设置中，打开 Beta 测试特性
+![image](./assets/QmdTDxbemACumGjTPQzKqS79EXK3yLDzGZjRKxWpsLL4Xz)
+
+---
+
+## 二、开启 DeepLX 翻译服务
+
+在 “翻译服务” 中，开启 DeepLX (Beta) 服务，并点击去修改
+![image](./assets/QmcdrqEUQny7eGpwSuhsJRvuYS3iZDtxC3N2sNPok34giT)
+
+---
+
+## 三、配置 DeepLX 翻译
+
+在 API URL 中填入下方整理好的地址即可
+
+> 逗号分隔代表了多个可选地址，可实现并发
+
+```
+https://api.deeplx.org/translate,https://deeplx.vercel.app/translate,https://deeplxpro.vercel.app/translate,https://deeplx.llleman.com/translate,https://translates.me/v2/translate,https://deeplx.papercar.top/translate,https://dlx.bitjss.com/translate,https://deeplx.ychinfo.com/translate,https://free-deepl.speedcow.top/translate,https://deeplx.keyrotate.com/translate,https://deepx.dumpit.top/translate,https://deepl.wuyongx.uk/translate,https://ghhosa.zzaning.com/translate,https://deeplx.he-sb.top/translate,https://deepl.aimoyu.tech/translate,https://deepl.tr1ck.cn/translate,https://translate.dftianyi.com/translate,https://deeplx.2077000.xyz:2087/translate
+```
+
+![image](./assets/QmYvwLMynsQnJ9XsPkWnYEw4nYch1smq2YEKbZU89n2996)
+
+---
+
+## 四、测试
+
+点击测试服务，成功即可
+![image](./assets/QmbUWk1kdnCtzPwG9ka9uL4bpbD9jmeYvNvtYBP2KGuuCu)
+
+
+
+---
+
 
 
 # ----------------
