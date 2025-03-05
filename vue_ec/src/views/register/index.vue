@@ -1,51 +1,99 @@
-<script setup lang="ts">
-import { reactive } from 'vue'
+<script setup lang="ts" name="register">
+import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { register } from '@/api/user.ts'
+import { Lock, User } from '@element-plus/icons-vue'
+import type { FormRules } from 'element-plus'
+import type { userRegisterDTO } from '@/types/user'
 const router = useRouter()
 
+const registerFormRef = ref()
 const registerForm = reactive({
   account: '',
   password: '',
   checkPassword: ''
 })
 
-const handleRegister = () => {
-  register(registerForm.account, registerForm.password, registerForm.checkPassword)
-    .then(res => {
-      console.log("@@register", res)
-      ElMessage({
-        message: `${registerForm.account} 注册成功，即将跳转登录页...`,
-        type: 'success',
-      })
-      setTimeout(() => {
-        router.push('/login')
-      }, 3000)
-    })
-    .catch(error => {
+const equalToPassword = (rule: any, value: any, callback: any) => {
+  if (value !== registerForm.password) {
+    callback(new Error('两次输入密码不一致'))
+  } else {
+    callback()
+  }
+}
 
-    })
+const registerRules = reactive<FormRules<userRegisterDTO>>({
+  account: [
+    { type: 'string', required: true, trigger: 'blur', message: '请输入您的账号' },
+    { type: 'string', min: 2, max: 20, trigger: 'blur', message: '账号长度必须在2到20个字符之间' }
+  ],
+  password: [
+    { type: 'string', required: true, trigger: 'blur', message: '请输入您的密码' },
+    { type: 'string', min: 6, max: 20, trigger: 'blur', message: '密码长度必须在6到20个字符之间' }
+  ],
+  checkPassword: [
+    { type: 'string', required: true, trigger: 'blur', message: '请再次输入您的密码' },
+    { type: 'string', validator: equalToPassword, trigger: 'blur' }
+  ]
+})
+
+const handleRegister = () => {
+  registerFormRef.value.validate(valid => {
+    if (valid) {
+      register(registerForm.account, registerForm.password, registerForm.checkPassword).then(res => {
+        ElMessage({
+          message: `${registerForm.account} 注册成功，即将跳转登录页...`,
+          type: 'success',
+        })
+        setTimeout(() => {
+          router.push('/login')
+        }, 3000)
+      })
+    }
+  })
 }
 
 </script>
 
 <template>
   <div class="register">
-    <el-form :model="registerForm" style="max-width: 200px">
+    <el-form
+      ref="registerFormRef"
+      :model="registerForm"
+      :rules="registerRules"
+      style="width: 250px"
+    >
       <h3 class="title">注册</h3>
-      <el-form-item label="账号">
-        <el-input v-model="registerForm.account" />
+      <el-form-item prop="account">
+        <el-input
+          type="text"
+          v-model="registerForm.account"
+          placeholder="账号"
+          :prefix-icon="User"
+        />
       </el-form-item>
-      <el-form-item label="密码">
-        <el-input v-model="registerForm.password" />
+      <el-form-item prop="password">
+        <el-input
+          type="password"
+          v-model="registerForm.password"
+          placeholder="密码"
+          :prefix-icon="Lock"
+        />
       </el-form-item>
-      <el-form-item label="确认密码">
-        <el-input v-model="registerForm.checkPassword" />
+      <el-form-item prop="checkPassword">
+        <el-input
+          type="password"
+          v-model="registerForm.checkPassword"
+          placeholder="确认密码"
+          :prefix-icon="Lock"
+        />
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" @click="handleRegister">注册</el-button>
-        <el-button type="info" @click="router.push('/login')">去登录</el-button>
+        <el-button type="primary" @click="handleRegister" style="width: 100%">注册</el-button><br>
+        <div>
+          <router-link to="/login">已有账号？去登录</router-link>
+        </div>
       </el-form-item>
     </el-form>
   </div>

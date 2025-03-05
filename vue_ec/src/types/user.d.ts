@@ -26,3 +26,8 @@ export declare interface userRegisterDTO {
   password: string
   checkPassword: string
 }
+
+export declare interface userLoginDTO {
+  account: string
+  password: string
+}
