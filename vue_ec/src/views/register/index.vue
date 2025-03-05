@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, reactive } from 'vue'
+import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { register } from '@/api/user.ts'
 const router = useRouter()
@@ -8,13 +8,6 @@ const registerForm = reactive({
   account: '',
   password: '',
   checkPassword: ''
-})
-
-onMounted(() => {
-  ElMessage({
-    message: `注册成功，即将跳转登录页...`,
-    type: 'success',
-  })
 })
 
 const handleRegister = () => {
@@ -30,10 +23,7 @@ const handleRegister = () => {
       }, 3000)
     })
     .catch(error => {
-      ElMessage({
-        message: error,
-        type: 'error'
-      })
+
     })
 }
 
