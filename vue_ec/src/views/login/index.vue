@@ -7,6 +7,7 @@ import { login } from '@/api/user.ts'
 import type { LoginUserVO, userLoginDTO } from '@/types/user'
 import type { FormRules } from 'element-plus'
 
+const title = import.meta.env.VITE_APP_TITLE
 const router = useRouter()
 const userStore = useUserStore()
 const loginFormRef = ref()
@@ -57,7 +58,7 @@ const handleLogin = async () => {
       label-width="auto"
       style="width: 250px"
     >
-      <h3 class="title">面试刷题平台</h3>
+      <h3 class="title">{{title}}</h3>
       <el-form-item prop="account">
         <el-input
           v-model="loginForm.account"
