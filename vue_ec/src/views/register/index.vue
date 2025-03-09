@@ -105,6 +105,7 @@ const handleRegister = () => {
   justify-content: center;
   align-items: center;
   height: 100%;
+  background: url("@/assets/images/login-background.png") center/cover;
 }
 .title {
   text-align: center;
