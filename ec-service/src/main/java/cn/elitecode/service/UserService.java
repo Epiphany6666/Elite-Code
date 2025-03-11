@@ -2,7 +2,6 @@ package cn.elitecode.service;
 
 import cn.elitecode.common.PageResult;
 import cn.elitecode.model.dto.user.UserQueryDTO;
-import cn.elitecode.model.dto.user.UserUpdateDTO;
 import cn.elitecode.model.entity.User;
 import cn.elitecode.model.vo.LoginUserVO;
 import cn.elitecode.model.vo.UserVO;
@@ -57,10 +56,10 @@ public interface UserService {
     LoginUserVO getLoginUserVO(User user);
 
     /**
-     * 更新用户信息
-     * @param userUpdateDTO
+     * 根据id更新用户信息
+     * @param user
      */
-    void updateUser(UserUpdateDTO userUpdateDTO);
+    void updateUser(User user);
 
     /**
      * 校验用户账号是否唯一

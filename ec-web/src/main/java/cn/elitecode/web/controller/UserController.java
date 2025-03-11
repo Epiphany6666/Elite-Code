@@ -153,6 +153,7 @@ public class UserController {
 
     /**
      * 更新用户信息
+     * 管理员根据用户id修改用户信息
      * @param userUpdateDTO
      * @return
      */
@@ -161,7 +162,28 @@ public class UserController {
         if (userUpdateDTO == null) {
             CommonResult.error(HttpStatus.PARAMS_ERROR, "更新用户信息参数错误");
         }
-        userService.updateUser(userUpdateDTO);
+        if (userUpdateDTO.getId() == null) {
+            CommonResult.error(HttpStatus.PARAMS_ERROR, "用户ID不能为空");
+        }
+        User user = new User();
+        BeanUtils.copyProperties(userUpdateDTO, user);
+        userService.updateUser(user);
+        return CommonResult.success();
+    }
+
+    /**
+     * 更新个人信息
+     * @param updateProfileDto
+     * @return
+     */
+    @PutMapping("/mine")
+    private CommonResult updateProfile(@RequestBody UserUpdateProfileDto updateProfileDto) {
+        if (updateProfileDto == null) {
+            CommonResult.error(HttpStatus.PARAMS_ERROR, "更新个人信息参数错误");
+        }
+        User user = new User(BaseContext.getCurrentId());
+        BeanUtils.copyProperties(updateProfileDto, user);
+        userService.updateUser(user);
         return CommonResult.success();
     }
 

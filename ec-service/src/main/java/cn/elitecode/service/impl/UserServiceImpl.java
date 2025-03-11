@@ -7,7 +7,6 @@ import cn.elitecode.constant.HttpStatus;
 import cn.elitecode.constant.UserConstant;
 import cn.elitecode.mapper.UserMapper;
 import cn.elitecode.model.dto.user.UserQueryDTO;
-import cn.elitecode.model.dto.user.UserUpdateDTO;
 import cn.elitecode.model.entity.User;
 import cn.elitecode.model.vo.LoginUserVO;
 import cn.elitecode.model.vo.UserVO;
@@ -19,6 +18,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -108,9 +108,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(UserUpdateDTO userUpdateDTO) {
-        User user = new User();
-        BeanUtils.copyProperties(userUpdateDTO, user);
+    public void updateUser(User user) {
         user.setUpdateBy(BaseContext.getCurrentId());
         userMapper.updateByPrimaryKeySelective(user);
     }

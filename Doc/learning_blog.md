@@ -3779,6 +3779,49 @@ class Person implements Serializable{
 
 ---
 
+# 更新用户信息（管理员操作）和更新个人信息（用户自主操作）应当分开实现
+
+以下答案由deepseek回答，但我觉得回答的非常好，因此摘录下来。
+
+1. **权限隔离原则**  
+
+   - 管理员接口需要校验管理员权限（如`hasRole('ADMIN')`）
+   - 个人接口需要校验用户身份（如`@PreAuthorize("principal.id == #userId")`）
+   - *OWASP建议：对敏感操作实施最小权限原则[1]*
+
+2. **请求参数差异**  
+
+   - 管理员可能修改敏感字段（如角色、账户状态）
+
+   - 用户只能修改非敏感字段（如昵称、头像）
+
+   - 示例DTO：
+
+     java
+
+     ```java
+     // 管理员DTO
+     class AdminUserUpdateDTO {
+         Long userId;
+         String role;
+         Boolean enabled;
+         // 其他字段...
+     }
+     
+     // 个人DTO
+     class ProfileUpdateDTO {
+         String nickname;
+         String avatar;
+         // 其他可修改字段...
+     }
+     ```
+
+
+
+---
+
+
+
 
 
 

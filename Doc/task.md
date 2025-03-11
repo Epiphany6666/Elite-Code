@@ -85,6 +85,7 @@
 
 - [ ] SpringSecurity整合JWT
 
+- [x] 更新个人信息接口
 
 ---
 
