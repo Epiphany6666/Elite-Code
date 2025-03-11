@@ -1,6 +1,6 @@
 export declare interface UserState {
   id: string
-  account: string
+  username: string
   avatar: string
   roles: Array<string>
 }

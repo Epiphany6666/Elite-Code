@@ -40,18 +40,18 @@ public class UserController {
         if (userLoginDTO == null) {
             return CommonResult.error(HttpStatus.PARAMS_ERROR, "登录参数错误");
         }
-        String userAccount = userLoginDTO.getAccount();
+        String username = userLoginDTO.getUsername();
         String userPassword = userLoginDTO.getPassword();
 
         // 校验
-        if (StrUtil.isEmpty(userAccount)) {
+        if (StrUtil.isEmpty(username)) {
             return CommonResult.error(HttpStatus.PARAMS_ERROR, "用户账号不能为空");
         }
         if (StrUtil.isEmpty(userPassword)) {
             return CommonResult.error(HttpStatus.PARAMS_ERROR, "用户密码不能为空");
         }
-        if (userAccount.length() < UserConstant.USER_ACCOUNT_MIN_LENGTH
-                || userAccount.length() > UserConstant.USER_ACCOUNT_MAX_LENGTH) {
+        if (username.length() < UserConstant.USER_ACCOUNT_MIN_LENGTH
+                || username.length() > UserConstant.USER_ACCOUNT_MAX_LENGTH) {
             return CommonResult.error(HttpStatus.PARAMS_ERROR, "账号长度必须在2到20个字符之间");
         }
         if (userPassword.length() < UserConstant.USER_PASSWORD_MIN_LENGTH
@@ -59,7 +59,7 @@ public class UserController {
             return CommonResult.error(HttpStatus.PARAMS_ERROR, "密码长度必须在6到20个字符之间");
         }
 
-        return CommonResult.success(userService.login(userAccount, userPassword, request));
+        return CommonResult.success(userService.login(username, userPassword, request));
     }
 
     /**
@@ -74,10 +74,10 @@ public class UserController {
         }
 
         // 校验
-        String userAccount = userRegisterDTO.getAccount();
+        String username = userRegisterDTO.getUsername();
         String userPassword = userRegisterDTO.getPassword();
         String checkPassword = userRegisterDTO.getCheckPassword();
-        if (StrUtil.isEmpty(userAccount)) {
+        if (StrUtil.isEmpty(username)) {
             return CommonResult.error(HttpStatus.PARAMS_ERROR, "用户账号不能为空");
         }
         if (StrUtil.isEmpty(userPassword)) {
@@ -86,8 +86,8 @@ public class UserController {
         if (StrUtil.isEmpty(checkPassword)) {
             return CommonResult.error(HttpStatus.PARAMS_ERROR, "校验密码不能为空");
         }
-        if (userAccount.length() < UserConstant.USER_ACCOUNT_MIN_LENGTH
-                || userAccount.length() > UserConstant.USER_ACCOUNT_MAX_LENGTH) {
+        if (username.length() < UserConstant.USER_ACCOUNT_MIN_LENGTH
+                || username.length() > UserConstant.USER_ACCOUNT_MAX_LENGTH) {
             return CommonResult.error(HttpStatus.PARAMS_ERROR, "账号长度必须在2到20个字符之间");
         }
         if (userPassword.length() < UserConstant.USER_PASSWORD_MIN_LENGTH
@@ -98,9 +98,9 @@ public class UserController {
             return CommonResult.error(HttpStatus.PARAMS_ERROR, "两次输入的密码不一致");
         }
         User user = new User();
-        user.setAccount(userRegisterDTO.getAccount());
-        if (!userService.checkUserAccountUnique(user)) {
-            return CommonResult.error(HttpStatus.PARAMS_ERROR, "用户注册 '" + user.getAccount() + "' 失败，账号已存在");
+        user.setUsername(userRegisterDTO.getUsername());
+        if (!userService.checkUsernameUnique(user)) {
+            return CommonResult.error(HttpStatus.PARAMS_ERROR, "用户注册 '" + user.getUsername() + "' 失败，账号已存在");
         }
         user.setPassword(DigestUtils.md5DigestAsHex((UserConstant.SALT + userPassword).getBytes()));
         Long registerUserId = userService.register(user);
@@ -143,8 +143,8 @@ public class UserController {
         }
         User user = new User();
         BeanUtils.copyProperties(userAddDTO, user);
-        if (!userService.checkUserAccountUnique(user)) {
-            return CommonResult.error(HttpStatus.PARAMS_ERROR, "新增用户 '" + user.getAccount() + "' 失败，账号已存在");
+        if (!userService.checkUsernameUnique(user)) {
+            return CommonResult.error(HttpStatus.PARAMS_ERROR, "新增用户 '" + user.getUsername() + "' 失败，账号已存在");
         }
         user.setCreateBy(BaseContext.getCurrentId());
         user.setPassword(DigestUtil.md5Hex((UserConstant.SALT + user.getPassword()).getBytes()));

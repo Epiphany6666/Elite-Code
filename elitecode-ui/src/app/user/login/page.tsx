@@ -5,7 +5,7 @@ import axios from 'axios';
 import React from 'react';
 
 type FieldType = {
-  userAccount?: string;
+  username?: string;
   userPassword?: string;
 };
 
@@ -43,8 +43,8 @@ const UserLoginPage: React.FC = () => (
   >
     <Form.Item<FieldType>
       label="Username"
-      name="userAccount"
-      rules={[{ required: true, message: 'Please input your userAccount!' }]}
+      name="username"
+      rules={[{ required: true, message: 'Please input your username!' }]}
     >
       <Input />
     </Form.Item>

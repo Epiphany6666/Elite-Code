@@ -16,12 +16,12 @@ public interface UserService {
 
     /**
      * 用户登录
-     * @param userAccount 用户账号
+     * @param username 用户账号
      * @param userPassword 用户密码
      * @param request
      * @return 用户信息
      */
-    LoginUserVO login(String userAccount, String userPassword, HttpServletRequest request);
+    LoginUserVO login(String username, String userPassword, HttpServletRequest request);
 
     /**
      * 用户注册
@@ -67,7 +67,7 @@ public interface UserService {
      * @param user 用户信息
      * @return 结果
      */
-    boolean checkUserAccountUnique(User user);
+    boolean checkUsernameUnique(User user);
 
     /**
      * 注册用户

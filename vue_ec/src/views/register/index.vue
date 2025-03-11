@@ -4,12 +4,12 @@ import { useRouter } from 'vue-router'
 import { register } from '@/api/user.ts'
 import { Lock, User } from '@element-plus/icons-vue'
 import type { FormRules } from 'element-plus'
-import type { userRegisterDTO } from '@/types/user'
+import type { UserRegisterDTO } from '@/types/user'
 const router = useRouter()
 
 const registerFormRef = ref()
 const registerForm = reactive({
-  account: '',
+  username: '',
   password: '',
   checkPassword: ''
 })
@@ -22,8 +22,8 @@ const equalToPassword = (rule: any, value: any, callback: any) => {
   }
 }
 
-const registerRules = reactive<FormRules<userRegisterDTO>>({
-  account: [
+const registerRules = reactive<FormRules<UserRegisterDTO>>({
+  username: [
     { type: 'string', required: true, trigger: 'blur', message: '请输入您的账号' },
     { type: 'string', min: 2, max: 20, trigger: 'blur', message: '账号长度必须在2到20个字符之间' }
   ],
@@ -40,9 +40,9 @@ const registerRules = reactive<FormRules<userRegisterDTO>>({
 const handleRegister = () => {
   registerFormRef.value.validate(valid => {
     if (valid) {
-      register(registerForm.account, registerForm.password, registerForm.checkPassword).then(res => {
+      register(registerForm.username, registerForm.password, registerForm.checkPassword).then(res => {
         ElMessage({
-          message: `${registerForm.account} 注册成功，即将跳转登录页...`,
+          message: `${registerForm.username} 注册成功，即将跳转登录页...`,
           type: 'success',
         })
         setTimeout(() => {
@@ -64,10 +64,10 @@ const handleRegister = () => {
       style="width: 250px"
     >
       <h3 class="title">注册</h3>
-      <el-form-item prop="account">
+      <el-form-item prop="username">
         <el-input
           type="text"
-          v-model="registerForm.account"
+          v-model="registerForm.username"
           placeholder="账号"
           :prefix-icon="User"
         />

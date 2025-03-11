@@ -1,7 +1,5 @@
 package cn.elitecode.model.entity;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -9,10 +7,7 @@ import java.util.List;
  * 用户实体类
  * @TableName sys_user
  */
-public class User implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = -6603178573463538791L;
+public class User {
 
     /**
      * 用户ID
@@ -22,7 +17,7 @@ public class User implements Serializable {
     /**
      * 账号（唯一）
      */
-    private String account;
+    private String username;
 
     /**
      * 密码
@@ -81,14 +76,14 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(Long userId, String userAccount, String userPassword, String nickName, String userAvatar, String userProfile, List<String> userRoles, String delFlag, Long createBy, Date createTime, Long updateBy, Date updateTime) {
-        this.id = userId;
-        this.account = userAccount;
-        this.password = userPassword;
+    public User(Long id, String username, String password, String nickName, String avatar, String profile, List<String> roles, String delFlag, Long createBy, Date createTime, Long updateBy, Date updateTime) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
         this.nickName = nickName;
-        this.avatar = userAvatar;
-        this.profile = userProfile;
-        this.roles = userRoles;
+        this.avatar = avatar;
+        this.profile = profile;
+        this.roles = roles;
         this.delFlag = delFlag;
         this.createBy = createBy;
         this.createTime = createTime;
@@ -98,7 +93,7 @@ public class User implements Serializable {
 
     /**
      * 获取
-     * @return userId
+     * @return id
      */
     public Long getId() {
         return id;
@@ -114,23 +109,23 @@ public class User implements Serializable {
 
     /**
      * 获取
-     * @return userAccount
+     * @return username
      */
-    public String getAccount() {
-        return account;
+    public String getUsername() {
+        return username;
     }
 
     /**
      * 设置
-     * @param account
+     * @param username
      */
-    public void setAccount(String account) {
-        this.account = account;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     /**
      * 获取
-     * @return userPassword
+     * @return password
      */
     public String getPassword() {
         return password;
@@ -162,7 +157,7 @@ public class User implements Serializable {
 
     /**
      * 获取
-     * @return userAvatar
+     * @return avatar
      */
     public String getAvatar() {
         return avatar;
@@ -178,7 +173,7 @@ public class User implements Serializable {
 
     /**
      * 获取
-     * @return userProfile
+     * @return profile
      */
     public String getProfile() {
         return profile;
@@ -194,7 +189,7 @@ public class User implements Serializable {
 
     /**
      * 获取
-     * @return userRoles
+     * @return roles
      */
     public List<String> getRoles() {
         return roles;
@@ -289,6 +284,7 @@ public class User implements Serializable {
     }
 
     public String toString() {
-        return "User{userId = " + id + ", userAccount = " + account + ", userPassword = " + password + ", nickName = " + nickName + ", userAvatar = " + avatar + ", userProfile = " + profile + ", userRoles = " + roles + ", delFlag = " + delFlag + ", createBy = " + createBy + ", createTime = " + createTime + ", updateBy = " + updateBy + ", updateTime = " + updateTime + "}";
+        return "User{id = " + id + ", username = " + username + ", password = " + password + ", nickName = " + nickName + ", avatar = " + avatar + ", profile = " + profile + ", roles = " + roles + ", delFlag = " + delFlag + ", createBy = " + createBy + ", createTime = " + createTime + ", updateBy = " + updateBy + ", updateTime = " + updateTime + "}";
     }
+
 }

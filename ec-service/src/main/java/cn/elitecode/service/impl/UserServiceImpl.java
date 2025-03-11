@@ -36,11 +36,11 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
 
     @Override
-    public LoginUserVO login(String userAccount, String userPassword, HttpServletRequest request) {
+    public LoginUserVO login(String username, String userPassword, HttpServletRequest request) {
         // 查询用户是否存在
-        User user = userMapper.selectUserByAccount(userAccount);
+        User user = userMapper.selectUserByUsername(username);
         if (user == null) {
-            throw new UserAccountNotFoundException(HttpStatus.PARAMS_ERROR, "账号不存在");
+            throw new UsernameNotFoundException(HttpStatus.PARAMS_ERROR, "账号不存在");
         }
         String encryptPassword = DigestUtils.md5DigestAsHex((UserConstant.SALT + userPassword).getBytes());
         if (!encryptPassword.equals(user.getPassword())) {
@@ -122,9 +122,9 @@ public class UserServiceImpl implements UserService {
      * @return 结果
      */
     @Override
-    public boolean checkUserAccountUnique(User user) {
+    public boolean checkUsernameUnique(User user) {
         Long userId = ObjectUtil.isNull(user.getId()) ? -1L : user.getId();
-        User info = userMapper.checkAccountUnique(user.getAccount());
+        User info = userMapper.checkUsernameUnique(user.getUsername());
         if (ObjectUtil.isNotNull(info) && info.getId().longValue() != userId.longValue()) {
             return UserConstant.NOT_UNIQUE;
         }

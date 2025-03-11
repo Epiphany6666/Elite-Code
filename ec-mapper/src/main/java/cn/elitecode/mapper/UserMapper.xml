@@ -5,13 +5,13 @@
 <mapper namespace="cn.elitecode.mapper.UserMapper">
 
     <resultMap id="UserResult" type="User">
-            <id property="id" column="user_id"/>
-            <result property="account" column="user_account"/>
-            <result property="password" column="user_password"/>
+            <id property="id" column="id"/>
+            <result property="username" column="username"/>
+            <result property="password" column="password"/>
             <result property="nickName" column="nick_name"/>
-            <result property="avatar" column="user_avatar"/>
-            <result property="profile" column="user_profile"/>
-            <result property="roles" column="user_roles" typeHandler="cn.elitecode.JSONTypeHandler"/>
+            <result property="avatar" column="avatar"/>
+            <result property="profile" column="profile"/>
+            <result property="roles" column="roles" typeHandler="cn.elitecode.JSONTypeHandler"/>
             <result property="delFlag" column="del_flag"/>
             <result property="createBy" column="create_by"/>
             <result property="createTime" column="create_time"/>
@@ -20,9 +20,9 @@
     </resultMap>
 
     <sql id="selectUserVo">
-        user_id,user_account,user_password,
-        nick_name,user_avatar,user_profile,
-        user_roles,del_flag,create_by,create_time,
+        id,username,password,
+        nick_name,avatar,profile,
+        roles,del_flag,create_by,create_time,
         update_by,update_time
     </sql>
 
@@ -32,28 +32,28 @@
         from
             user
         where
-            user_id = #{id} and del_flag = #{delFlag}
+            id = #{id} and del_flag = #{delFlag}
     </select>
 
-    <select id="selectUserByAccount" resultMap="UserResult">
+    <select id="selectUserByUsername" resultMap="UserResult">
         select
             <include refid="selectUserVo"/>
         from
             user
         where
-            user_account = #{account} and del_flag = '0'
+            username = #{username} and del_flag = '0'
     </select>
 
-    <!-- int register(String account, String encryptPassword); -->
+    <!-- int register(String username, String encryptPassword); -->
     <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
         insert into user(
             <trim suffixOverrides=",">
-                <if test="id != null">user_id,</if>
-                <if test="account != null and account != ''">user_account,</if>
-                <if test="password != null and password != ''">user_password,</if>
-                <if test="avatar != null and avatar != ''">user_avatar,</if>
-                <if test="profile != null and profile != ''">user_profile,</if>
-                <if test="roles != null and roles.size() > 0">user_roles,</if>
+                <if test="id != null">id,</if>
+                <if test="username != null and username != ''">username,</if>
+                <if test="password != null and password != ''">password,</if>
+                <if test="avatar != null and avatar != ''">avatar,</if>
+                <if test="profile != null and profile != ''">profile,</if>
+                <if test="roles != null and roles.size() > 0">roles,</if>
                 <if test="createBy != null and createBy != ''">create_by,</if>
                 <if test="updateBy != null and updateBy != ''">update_by,</if>
             </trim>
@@ -61,7 +61,7 @@
         values(
             <trim suffixOverrides=",">
                 <if test="id != null">#{id},</if>
-                <if test="account != null and account != ''">#{account},</if>
+                <if test="username != null and username != ''">#{username},</if>
                 <if test="password != null and password != ''">#{password},</if>
                 <if test="avatar != null and avatar != ''">#{avatar},</if>
                 <if test="profile != null and profile != ''">#{profile},</if>
@@ -79,10 +79,10 @@
         from
         user
         where del_flag = '0'
-            <if test="id != null">and user_id=#{id}</if>
-            <if test="account != null and account != ''">and user_account like "%"#{account}"%"</if>
+            <if test="id != null">and id=#{id}</if>
+            <if test="username != null and username != ''">and username like "%"#{username}"%"</if>
             <if test="nickName != null and nickName != ''">and nick_name like "%"#{nickName}"%"</if>
-            <if test="userRole != null and userRole != ''">and JSON_CONTAINS(user_roles, JSON_QUOTE(#{userRole}))</if>
+            <if test="userRole != null and userRole != ''">and JSON_CONTAINS(roles, JSON_QUOTE(#{userRole}))</if>
             <if test="createBy != null and createBy != ''">and create_by like "%"#{createBy}"%"</if>
             <if test="updateBy != null and updateBy != ''">and update_by like "%"#{updateBy}"%"</if>
             <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>
@@ -102,40 +102,40 @@
         from
             user
         where del_flag = '0'
-            <if test="id != null">and user_id=#{id}</if>
-            <if test="account != null and account != ''">and user_account like "%"#{account}"%"</if>
+            <if test="id != null">and id=#{id}</if>
+            <if test="username != null and username != ''">and username like "%"#{username}"%"</if>
             <if test="nickName != null and nickName != ''">and nick_name like "%"#{nickName}"%"</if>
-            <if test="userRole != null and userRole != ''">and JSON_CONTAINS(user_roles, JSON_QUOTE(#{userRole}))</if>
+            <if test="userRole != null and userRole != ''">and JSON_CONTAINS(roles, JSON_QUOTE(#{userRole}))</if>
             <if test="createBy != null and createBy != ''">and create_by like "%"#{createBy}"%"</if>
             <if test="updateBy != null and updateBy != ''">and update_by like "%"#{updateBy}"%"</if>
             <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>
     </select>
 
-    <select id="checkAccountUnique" resultMap="UserResult">
-        select user_id, user_account from user where user_account = #{account} and del_flag = '0' limit 1
+    <select id="checkUsernameUnique" resultMap="UserResult">
+        select id, username from user where username = #{username} and del_flag = '0' limit 1
     </select>
 
     <!-- void updateByPrimaryKeySelective(User user); -->
     <update id="updateByPrimaryKeySelective">
         UPDATE user
         <set>
-            <if test="account != null and account != ''">user_account = #{account},</if>
+            <if test="username != null and username != ''">username = #{username},</if>
             <if test="nickName != null and nickName != ''">nick_name = #{nickName},</if>
-            <if test="profile != null and profile != ''">user_profile = #{profile},</if>
-            <if test="roles != null and roles.size() > 0">user_roles = #{roles, typeHandler=cn.elitecode.JSONTypeHandler},</if>
+            <if test="profile != null and profile != ''">profile = #{profile},</if>
+            <if test="roles != null and roles.size() > 0">roles = #{roles, typeHandler=cn.elitecode.JSONTypeHandler},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
         </set>
         where
-            user_id = #{id}
+            id = #{id}
     </update>
 
     <!-- List<Long> selectAdminUserIds(); -->
     <select id="selectAdminIds" resultType="java.lang.Long">
-        select user_id from user where JSON_CONTAINS(user_roles, JSON_QUOTE('admin')) and del_flag = '0'
+        select id from user where JSON_CONTAINS(roles, JSON_QUOTE('admin')) and del_flag = '0'
     </select>
 
     <delete id="deleteUserByIds">
-        update user set del_flag = '2' where user_id in
+        update user set del_flag = '2' where id in
         <foreach collection="ids" open="(" separator="," close=")" item="id">
             #{id}
         </foreach>
@@ -143,7 +143,7 @@
 
     <!-- int updateUserAvatar(Long id, String avatarUrl); -->
     <update id="updateAvatar">
-        update user set user_avatar = #{avatarUrl} where user_id = #{id}
+        update user set avatar = #{avatarUrl} where id = #{id}
     </update>
 
 </mapper>

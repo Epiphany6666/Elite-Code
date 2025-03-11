@@ -2,16 +2,13 @@ package cn.elitecode.model.dto.user;
 
 import cn.elitecode.common.PageRequest;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.util.Date;
 
 /**
  * 用户查询DTO
  */
-public class UserQueryDTO extends PageRequest implements Serializable {
-    @Serial
-    private static final long serialVersionUID = -4231433818967834013L;
+public class UserQueryDTO extends PageRequest {
+
     /**
      * 用户ID
      */
@@ -20,7 +17,7 @@ public class UserQueryDTO extends PageRequest implements Serializable {
     /**
      * 账号
      */
-    private String account;
+    private String username;
 
     /**
      * 用户昵称
@@ -38,38 +35,37 @@ public class UserQueryDTO extends PageRequest implements Serializable {
     private String createBy;
 
     /**
-     * 创建时间
-     */
-    private Date startTime;
-
-    /**
      * 更新者
      */
     private String updateBy;
 
     /**
-     * 编辑时间
+     * 开始时间
+     */
+    private Date startTime;
+
+    /**
+     * 结束时间
      */
     private Date endTime;
-
 
     public UserQueryDTO() {
     }
 
-    public UserQueryDTO(Long userId, String userAccount, String nickName, String role, String createBy, Date startTime, String updateBy, Date endTime) {
-        this.id = userId;
-        this.account = userAccount;
+    public UserQueryDTO(Long id, String username, String nickName, String role, String createBy, String updateBy, Date startTime, Date endTime) {
+        this.id = id;
+        this.username = username;
         this.nickName = nickName;
         this.role = role;
         this.createBy = createBy;
-        this.startTime = startTime;
         this.updateBy = updateBy;
+        this.startTime = startTime;
         this.endTime = endTime;
     }
 
-        /**
+    /**
      * 获取
-     * @return userId
+     * @return id
      */
     public Long getId() {
         return id;
@@ -85,18 +81,18 @@ public class UserQueryDTO extends PageRequest implements Serializable {
 
     /**
      * 获取
-     * @return userAccount
+     * @return username
      */
-    public String getAccount() {
-        return account;
+    public String getUsername() {
+        return username;
     }
 
     /**
      * 设置
-     * @param account
+     * @param username
      */
-    public void setAccount(String account) {
-        this.account = account;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     /**
@@ -117,7 +113,7 @@ public class UserQueryDTO extends PageRequest implements Serializable {
 
     /**
      * 获取
-     * @return userRole
+     * @return role
      */
     public String getRole() {
         return role;
@@ -149,22 +145,6 @@ public class UserQueryDTO extends PageRequest implements Serializable {
 
     /**
      * 获取
-     * @return startTime
-     */
-    public Date getStartTime() {
-        return startTime;
-    }
-
-    /**
-     * 设置
-     * @param startTime
-     */
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
-
-    /**
-     * 获取
      * @return updateBy
      */
     public String getUpdateBy() {
@@ -177,6 +157,22 @@ public class UserQueryDTO extends PageRequest implements Serializable {
      */
     public void setUpdateBy(String updateBy) {
         this.updateBy = updateBy;
+    }
+
+    /**
+     * 获取
+     * @return startTime
+     */
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    /**
+     * 设置
+     * @param startTime
+     */
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
     }
 
     /**
@@ -196,6 +192,6 @@ public class UserQueryDTO extends PageRequest implements Serializable {
     }
 
     public String toString() {
-        return "UserQueryDTO{userId = " + id + ", userAccount = " + account + ", nickName = " + nickName + ", userRole = " + role + ", createBy = " + createBy + ", startTime = " + startTime + ", updateBy = " + updateBy + ", endTime = " + endTime + "}";
+        return "UserQueryDTO{id = " + id + ", username = " + username + ", nickName = " + nickName + ", role = " + role + ", createBy = " + createBy + ", updateBy = " + updateBy + ", startTime = " + startTime + ", endTime = " + endTime + "}";
     }
 }

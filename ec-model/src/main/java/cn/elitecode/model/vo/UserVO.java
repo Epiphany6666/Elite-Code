@@ -16,7 +16,7 @@ public class UserVO {
     /**
      * 账号
      */
-    private String account;
+    private String username;
 
     /**
      * 用户昵称
@@ -61,13 +61,13 @@ public class UserVO {
     public UserVO() {
     }
 
-    public UserVO(Long userId, String userAccount, String nickName, String userAvatar, String userProfile, List<String> userRoles, String createBy, Date createTime, String updateBy, Date updateTime) {
-        this.id = userId;
-        this.account = userAccount;
+    public UserVO(Long id, String username, String nickName, String avatar, String profile, List<String> roles, String createBy, Date createTime, String updateBy, Date updateTime) {
+        this.id = id;
+        this.username = username;
         this.nickName = nickName;
-        this.avatar = userAvatar;
-        this.profile = userProfile;
-        this.roles = userRoles;
+        this.avatar = avatar;
+        this.profile = profile;
+        this.roles = roles;
         this.createBy = createBy;
         this.createTime = createTime;
         this.updateBy = updateBy;
@@ -76,7 +76,7 @@ public class UserVO {
 
     /**
      * 获取
-     * @return userId
+     * @return id
      */
     public Long getId() {
         return id;
@@ -92,18 +92,18 @@ public class UserVO {
 
     /**
      * 获取
-     * @return userAccount
+     * @return username
      */
-    public String getAccount() {
-        return account;
+    public String getUsername() {
+        return username;
     }
 
     /**
      * 设置
-     * @param account
+     * @param username
      */
-    public void setAccount(String account) {
-        this.account = account;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     /**
@@ -124,7 +124,7 @@ public class UserVO {
 
     /**
      * 获取
-     * @return userAvatar
+     * @return avatar
      */
     public String getAvatar() {
         return avatar;
@@ -140,7 +140,7 @@ public class UserVO {
 
     /**
      * 获取
-     * @return userProfile
+     * @return profile
      */
     public String getProfile() {
         return profile;
@@ -156,7 +156,7 @@ public class UserVO {
 
     /**
      * 获取
-     * @return userRoles
+     * @return roles
      */
     public List<String> getRoles() {
         return roles;
@@ -235,6 +235,7 @@ public class UserVO {
     }
 
     public String toString() {
-        return "UserVO{userId = " + id + ", userAccount = " + account + ", nickName = " + nickName + ", userAvatar = " + avatar + ", userProfile = " + profile + ", userRoles = " + roles + ", createBy = " + createBy + ", createTime = " + createTime + ", updateBy = " + updateBy + ", updateTime = " + updateTime + "}";
+        return "UserVO{id = " + id + ", username = " + username + ", nickName = " + nickName + ", avatar = " + avatar + ", profile = " + profile + ", roles = " + roles + ", createBy = " + createBy + ", createTime = " + createTime + ", updateBy = " + updateBy + ", updateTime = " + updateTime + "}";
     }
+
 }

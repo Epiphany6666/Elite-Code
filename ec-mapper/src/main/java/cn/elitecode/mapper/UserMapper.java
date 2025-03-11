@@ -18,10 +18,10 @@ public interface UserMapper {
 
     /**
      * 根据用户账号查询用户
-     * @param userAccount 用户账号
+     * @param username 用户账号
      * @return
      */
-    User selectUserByAccount(String userAccount );
+    User selectUserByUsername(String username );
 
     /**
      * 插入用户
@@ -54,10 +54,10 @@ public interface UserMapper {
 
     /**
      * 校验用户账号是否唯一
-     * @param userAccount 用户账号
+     * @param username 用户账号
      * @return 结果
      */
-    User checkAccountUnique(String userAccount);
+    User checkUsernameUnique(String username);
 
     /**
      * 查找所有管理员用户的ID

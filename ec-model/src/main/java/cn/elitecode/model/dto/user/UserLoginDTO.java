@@ -5,37 +5,36 @@ package cn.elitecode.model.dto.user;
  */
 public class UserLoginDTO {
 
-    private String account;
+    private String username;
     private String password;
-
 
     public UserLoginDTO() {
     }
 
-    public UserLoginDTO(String userAccount, String userPassword) {
-        this.account = userAccount;
-        this.password = userPassword;
+    public UserLoginDTO(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
 
     /**
      * 获取
-     * @return userAccount
+     * @return username
      */
-    public String getAccount() {
-        return account;
+    public String getUsername() {
+        return username;
     }
 
     /**
      * 设置
-     * @param account
+     * @param username
      */
-    public void setAccount(String account) {
-        this.account = account;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     /**
      * 获取
-     * @return userPassword
+     * @return password
      */
     public String getPassword() {
         return password;
@@ -50,6 +49,6 @@ public class UserLoginDTO {
     }
 
     public String toString() {
-        return "UserLoginDTO{userAccount = " + account + ", userPassword = " + password + "}";
+        return "UserLoginDTO{username = " + username + ", password = " + password + "}";
     }
 }

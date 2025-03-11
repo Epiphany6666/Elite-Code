@@ -2,7 +2,7 @@ export declare interface LoginUserVO {
   /** 用户ID */
   id: string
   /** 账号 */
-  account: string
+  username: string
   /** 用户昵称 */
   nickName: string
   /** 用户头像 */
@@ -21,13 +21,22 @@ export declare interface LoginUserVO {
   updateTime: Date
 }
 
-export declare interface userRegisterDTO {
-  account: string
+export declare interface UserRegisterDTO {
+  username: string
   password: string
   checkPassword: string
 }
 
-export declare interface userLoginDTO {
-  account: string
+export declare interface UserLoginDTO {
+  username: string
   password: string
+}
+
+export declare interface UserAddDTO {
+  username: string,
+  avatar: string,
+  nickName: string,
+  password: string,
+  profile: string,
+  roles: []
 }

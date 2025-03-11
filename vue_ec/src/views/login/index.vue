@@ -4,15 +4,15 @@ import { Lock, User } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/store/modules/user.ts'
 import { login } from '@/api/user.ts'
-import type { LoginUserVO, userLoginDTO } from '@/types/user'
+import type { LoginUserVO, UserLoginDTO } from '@/types/user'
 import type { FormRules } from 'element-plus'
 
 const title = import.meta.env.VITE_APP_TITLE
 const router = useRouter()
 const userStore = useUserStore()
 const loginFormRef = ref()
-const loginForm = reactive<userLoginDTO>({
-  account: 'luoyan',
+const loginForm = reactive<UserLoginDTO>({
+  username: 'luoyan',
   password: '12345678'
 })
 
@@ -20,8 +20,8 @@ const handleGoHome = () => {
   router.push('/home')
 }
 
-const loginRules = reactive<FormRules<userLoginDTO>>({
-  account: [
+const loginRules = reactive<FormRules<UserLoginDTO>>({
+  username: [
     { type: 'string', required: true, trigger: 'blur', message: '请输入您的账号' },
     { type: 'string', min: 2, max: 20, trigger: 'blur', message: '账号长度必须在2到20个字符之间' }
   ],
@@ -34,11 +34,11 @@ const loginRules = reactive<FormRules<userLoginDTO>>({
 const handleLogin = async () => {
   await loginFormRef.value.validate(valid => {
     if (valid) {
-      login(loginForm.account, loginForm.password).then(res => {
+      login(loginForm.username, loginForm.password).then(res => {
         console.log(res)
         const user: LoginUserVO = res.data
         userStore.id = user.id
-        userStore.account = user.account
+        userStore.username = user.username
         userStore.avatar = user.avatar
         userStore.roles = user.roles
         // 跳转到主页
@@ -58,10 +58,10 @@ const handleLogin = async () => {
       label-width="auto"
       style="width: 250px"
     >
-      <h3 class="title">{{title}}</h3>
-      <el-form-item prop="account">
+      <h3 class="title">{{ title }}</h3>
+      <el-form-item prop="username">
         <el-input
-          v-model="loginForm.account"
+          v-model="loginForm.username"
           type="text"
           placeholder="账号"
           :prefix-icon="User"

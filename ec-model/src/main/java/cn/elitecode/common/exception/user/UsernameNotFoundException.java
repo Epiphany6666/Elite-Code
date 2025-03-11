@@ -5,12 +5,12 @@ import cn.elitecode.common.exception.BaseException;
 /**
  * 用户账号未找到异常
  */
-public class UserAccountNotFoundException extends BaseException {
+public class UsernameNotFoundException extends BaseException {
 
-    public UserAccountNotFoundException() {
+    public UsernameNotFoundException() {
     }
 
-    public UserAccountNotFoundException(int code, String msg) {
+    public UsernameNotFoundException(int code, String msg) {
         super(code, msg);
     }
 }

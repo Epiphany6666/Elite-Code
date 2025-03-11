@@ -1,13 +1,8 @@
 package cn.elitecode.model.dto.user;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.util.List;
 
-public class UserUpdateDTO implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = -7748132921047099038L;
+public class UserUpdateDTO {
 
     /**
      * 用户ID
@@ -17,7 +12,7 @@ public class UserUpdateDTO implements Serializable {
     /**
      * 账号
      */
-    private String account;
+    private String username;
 
     /**
      * 用户昵称
@@ -37,9 +32,9 @@ public class UserUpdateDTO implements Serializable {
     public UserUpdateDTO() {
     }
 
-    public UserUpdateDTO(Long id, String account, String nickName, String profile, List<String> roles) {
+    public UserUpdateDTO(Long id, String username, String nickName, String profile, List<String> roles) {
         this.id = id;
-        this.account = account;
+        this.username = username;
         this.nickName = nickName;
         this.profile = profile;
         this.roles = roles;
@@ -47,7 +42,7 @@ public class UserUpdateDTO implements Serializable {
 
     /**
      * 获取
-     * @return userId
+     * @return id
      */
     public Long getId() {
         return id;
@@ -63,18 +58,18 @@ public class UserUpdateDTO implements Serializable {
 
     /**
      * 获取
-     * @return userAccount
+     * @return username
      */
-    public String getAccount() {
-        return account;
+    public String getUsername() {
+        return username;
     }
 
     /**
      * 设置
-     * @param account
+     * @param username
      */
-    public void setAccount(String account) {
-        this.account = account;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     /**
@@ -95,7 +90,7 @@ public class UserUpdateDTO implements Serializable {
 
     /**
      * 获取
-     * @return userProfile
+     * @return profile
      */
     public String getProfile() {
         return profile;
@@ -111,7 +106,7 @@ public class UserUpdateDTO implements Serializable {
 
     /**
      * 获取
-     * @return userRoles
+     * @return roles
      */
     public List<String> getRoles() {
         return roles;
@@ -126,6 +121,7 @@ public class UserUpdateDTO implements Serializable {
     }
 
     public String toString() {
-        return "UserUpdateDTO{userId = " + id + ", userAccount = " + account + ", nickName = " + nickName + ", userProfile = " + profile + ", userRoles = " + roles + "}";
+        return "UserUpdateDTO{id = " + id + ", username = " + username + ", nickName = " + nickName + ", profile = " + profile + ", roles = " + roles + "}";
     }
+
 }
