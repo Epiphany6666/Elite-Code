@@ -182,6 +182,12 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
+    @Override
+    public UserVO getUserVOById(Long userId) {
+        User user = userMapper.selectUserById(userId);
+        return getUserVO(user);
+    }
+
     private void checkUserAllowed(User user) {
         if (ObjectUtil.isNotNull(user.getId()) && isAdmin(user.getId())) {
             throw new AdminNotAllowedException(HttpStatus.ADMIN_NOT_ALLOWED_ERROR, "不允许操作超级管理员用户");

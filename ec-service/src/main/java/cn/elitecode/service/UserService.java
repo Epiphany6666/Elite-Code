@@ -94,4 +94,11 @@ public interface UserService {
      * @param avatarUrl 头像地址
      */
     boolean updateUserAvatar(Long userId, String avatarUrl);
+
+    /**
+     * 根据id获取用户信息（脱敏）
+     * @param userId
+     * @return
+     */
+    UserVO getUserVOById(Long userId);
 }

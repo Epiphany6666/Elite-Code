@@ -176,7 +176,7 @@ public class UserController {
      * @param updateProfileDto
      * @return
      */
-    @PutMapping("/mine")
+    @PutMapping("/profile")
     private CommonResult updateProfile(@RequestBody UserUpdateProfileDto updateProfileDto) {
         if (updateProfileDto == null) {
             CommonResult.error(HttpStatus.PARAMS_ERROR, "更新个人信息参数错误");
@@ -185,6 +185,17 @@ public class UserController {
         BeanUtils.copyProperties(updateProfileDto, user);
         userService.updateUser(user);
         return CommonResult.success();
+    }
+
+    /**
+     * 获取个人信息
+     * @return
+     */
+    @GetMapping("/profle")
+    private CommonResult<UserVO> profile() {
+        Long userId = BaseContext.getCurrentId();
+        UserVO userVO = userService.getUserVOById(userId);
+        return CommonResult.success(userVO);
     }
 
     /**
