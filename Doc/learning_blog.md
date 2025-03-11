@@ -1765,10 +1765,10 @@ JSON_CONTAINS(target*, candidate[, path])
 
 使用场景：
 
-需求：后端存储 `user_roles字段` 为JSON数组，我想筛选有哪些用户具有某个角色
+需求：后端存储 `roles字段` 为JSON数组，我想筛选有哪些用户具有某个角色
 
 ~~~sql
-select * FROM user where JSON_CONTAINS(user_roles, '"admin"');
+select * FROM user where JSON_CONTAINS(roles, '"admin"');
 ~~~
 
 效果如下：
@@ -1951,10 +1951,10 @@ limit #{offset}, #{pageSize}
     from
     user
     <where>
-        <if test="userId != null and userId != 0">and user_id=#{userId}</if>
+        <if test="userId != null and userId != 0">and id=#{userId}</if>
         <if test="userAccount != null and userAccount != ''">and user_account like '%${userAccount}%'</if>
         <if test="nickName != null and nickName != ''">and nick_name like '%#{nickName}%'</if>
-        <if test="userRole != null and userRole != ''">and JSON_CONTAINS(user_roles, JSON_QUOTE(#{userRole}))</if>
+        <if test="userRole != null and userRole != ''">and JSON_CONTAINS(roles, JSON_QUOTE(#{userRole}))</if>
         <if test="createBy != null and createBy != ''">and create_by like '%#{createBy}%'</if>
         <if test="updateBy != null and updateBy != ''">and update_by like '%#{updateBy}%'</if>
         <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>
@@ -3153,6 +3153,416 @@ less：https://lesscss.org/
 
 ----
 
+# 从 Vue 3 的项目模板学习 tsconfig 配置
+
+前两天写了篇文章，喷 TypeScript 太过难用了，不过难用也得学啊，主要是因为我用过静态强类型语言，在项目规模变大的时候，确实对项目的质量把控是有帮助的，这可能就是后端[程序员](https://so.csdn.net/so/search?q=程序员&spm=1001.2101.3001.7020)学习前端的迷信吧。反正我认识一个资深的前端朋友，他就反感且他自己也不会选择 TypeScript，他说自己很有自信能写对，也知道自己在写些什么，好吧。
+
+那么 TypeScript 为什么那么痛苦呢？我觉得根本原因还是 `javascript` 这个语言，本身是一个弱类型动态语言，原生就不支持类型之类的事情，而 TypeScript 又选择了不破坏它的核心，只是渐进式增补类型到代码里。所以，就处处要照顾原有的一些设定。
+
+好吧好吧，书归正言，本文打算介绍 Vue 3 项目中，如果运用 TypeScript 的话，如何配置 `tsconfig.json`。上次我们已经从官方[脚手架](https://so.csdn.net/so/search?q=脚手架&spm=1001.2101.3001.7020)，创建了一个 Vue 3 + TypeScript 的项目，这个脚手架其实很有价值，比如，里面就提供了一套 `tsconfig` 的配置，通过学习这个配置，我们可以了解一些 TypeScript 在项目中的正确用法。
+
+## 一、`tsconfig.json` 的作用
+
+官网：https://www.typescriptlang.org/tsconfig/
+
+我们在项目中使用 TypeScript 的时候，实际执行还是 `javascript`，所以要想执行，先需要编译，将代码进行转换：
+
+```shell
+tsc source.ts
+```
+
+这是处理单个代码文件的时候的做法，不过，一般我们项目里都有成百上千的源码文件，不可能一个一个去处理，这时候就需要用 `tsconfig.json` 告诉编译器，或者一些处理工具，如何处理 TypeScript 的问题。
+
+通过此配置文件，我们可以告诉编译器，编译的选项，需要处理的文件集合，目标文件的目录等等。
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES5",             // 目标语言的版本
+    "module": "commonjs",        // 指定生成代码的模板标准
+    "noImplicitAny": true,       // 不允许隐式的 any 类型
+    "removeComments": true,      // 删除注释 
+    "preserveConstEnums": true,  // 保留 const 和 enum 声明
+    "sourceMap": true            // 生成目标文件的sourceMap文件
+  },
+  "files": [   // 指定待编译文件
+    "./src/index.ts"  
+  ]
+}
+```
+
+这是一个典型的 `tsconfig.json`。
+
+---
+
+## 二、基本介绍
+
+`tsconfig.json` 的顶层字段有：
+
+- compileOnSave 行为开关
+- compilerOptions 编译选项
+- exclude 排除一些文件
+- extends 继承一份配置
+- files 文件列表
+- include 包括的文件
+- references 项目引用，配置可以切成多块来分别设置
+- typeAcquisition 本项目中的自动类型检查，2.1 以上支持
+
+最重要的是编译选项，常用的一些大概有：
+
+```json
+{
+  // ...
+  "compilerOptions": {
+    "incremental": true, // TS编译器在第一次编译之后会生成一个存储编译信息的文件，第二次编译会在第一次的基础上进行增量编译，可以提高编译的速度
+    "tsBuildInfoFile": "./buildFile", // 增量编译文件的存储位置
+    "diagnostics": true, // 打印诊断信息 
+    "target": "ES5", // 目标语言的版本
+    "module": "CommonJS", // 生成代码的模板标准
+    "outFile": "./app.js", // 将多个相互依赖的文件生成一个文件，可以用在AMD模块中，即开启时应设置"module": "AMD",
+    "lib": ["DOM", "ES2015", "ScriptHost", "ES2019.Array"], // TS需要引用的库，即声明文件，es5 默认引用dom、es5、scripthost,如需要使用es的高级版本特性，通常都需要配置，如es8的数组新特性需要引入"ES2019.Array",
+    "allowJS": true, // 允许编译器编译JS，JSX文件
+    "checkJs": true, // 允许在JS文件中报错，通常与allowJS一起使用
+    "outDir": "./dist", // 指定输出目录
+    "rootDir": "./", // 指定输出文件目录(用于输出)，用于控制输出目录结构
+    "declaration": true, // 生成声明文件，开启后会自动生成声明文件
+    "declarationDir": "./file", // 指定生成声明文件存放目录
+    "emitDeclarationOnly": true, // 只生成声明文件，而不会生成js文件
+    "sourceMap": true, // 生成目标文件的sourceMap文件
+    "inlineSourceMap": true, // 生成目标文件的inline SourceMap，inline SourceMap会包含在生成的js文件中
+    "declarationMap": true, // 为声明文件生成sourceMap
+    "typeRoots": [], // 声明文件目录，默认时node_modules/@types
+    "types": [], // 加载的声明文件包
+    "removeComments":true, // 删除注释 
+    "noEmit": true, // 不输出文件,即编译后不会生成任何js文件
+    "noEmitOnError": true, // 发送错误时不输出任何文件
+    "noEmitHelpers": true, // 不生成helper函数，减小体积，需要额外安装，常配合importHelpers一起使用
+    "importHelpers": true, // 通过tslib引入helper函数，文件必须是模块
+    "downlevelIteration": true, // 降级遍历器实现，如果目标源是es3/5，那么遍历器会有降级的实现
+    "strict": true, // 开启所有严格的类型检查
+    "alwaysStrict": true, // 在代码中注入'use strict'
+    "noImplicitAny": true, // 不允许隐式的any类型
+    "strictNullChecks": true, // 不允许把null、undefined赋值给其他类型的变量
+    "strictFunctionTypes": true, // 不允许函数参数双向协变
+    "strictPropertyInitialization": true, // 类的实例属性必须初始化
+    "strictBindCallApply": true, // 严格的bind/call/apply检查
+    "noImplicitThis": true, // 不允许this有隐式的any类型
+    "noUnusedLocals": true, // 检查只声明、未使用的局部变量(只提示不报错)
+    "noUnusedParameters": true, // 检查未使用的函数参数(只提示不报错)
+    "noFallthroughCasesInSwitch": true, // 防止switch语句贯穿(即如果没有break语句后面不会执行)
+    "noImplicitReturns": true, //每个分支都会有返回值
+    "esModuleInterop": true, // 允许export=导出，由import from 导入
+    "allowUmdGlobalAccess": true, // 允许在模块中全局变量的方式访问umd模块
+    "moduleResolution": "node", // 模块解析策略，ts默认用node的解析策略，即相对的方式导入
+    "baseUrl": "./", // 解析非相对模块的基地址，默认是当前目录
+    "paths": { // 路径映射，相对于baseUrl
+      // 如使用jq时不想使用默认版本，而需要手动指定版本，可进行如下配置
+      "jquery": ["node_modules/jquery/dist/jquery.min.js"]
+    },
+    "rootDirs": ["src","out"], // 将多个目录放在一个虚拟目录下，用于运行时，即编译后引入文件的位置可能发生变化，这也设置可以虚拟src和out在同一个目录下，不用再去改变路径也不会报错
+    "listEmittedFiles": true, // 打印输出文件
+    "listFiles": true// 打印编译的文件(包括引用的声明文件)
+  }
+}
+```
+
+----
+
+## 三、[Vue 3](https://so.csdn.net/so/search?q=Vue 3&spm=1001.2101.3001.7020) 的 `tsconfig.json` 的结构分析
+
+Vue 3 的 Web 项目有什么特点呢？代码会在多种不同的环境运行，也会有多种不同的编译需求。
+
+从配置文件中，我们可以看到，Vue 3 的实现的 App，在线上需要在浏览器运转，但是在测试的时候，需要在命令行环境运转，上线时候不需要测试的代码，所以编译至少有两种需求。
+
+此外，很多配置文件，比如 Vite 的，Vitest 的，都是在命令行运行的，也是用的 ts 作为代码载体，还需要进行一些语法检查，这就又是一套需求。
+
+![在这里插入图片描述](./assets/df83c46f34dbb4651b342e3cf0a6157e.png)
+
+可以看到，脚手架项目里，提供了四个 `tsconfig.json` 文件，如上面解释的那样，每个需求，单独占一个配置文件。
+
+这种结构给我们一种启示，在我们自己的项目里，如果运用了 TypeScript，也可以用这种方法来分拆配置，以提高编译的速度和体验。下面分别介绍一下每个配置文件。
+
+---
+
+### 1. 总配置 `tsconfig.json`
+
+首先，我们来看一下总配置文件 `tsconfig.json` ：
+
+```json
+{
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    },
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.vitest.json"
+    }
+  ]
+}
+```
+
+这个文件使用了 TypeScript 的 `references` 功能。“项目引用” 允许一个 TypeScript 项目以声明方式，依赖其他 TypeScript 项目。这在大型代码库中尤其有用，可以帮助组织和分隔代码到更小的、可管理的单元，并且还可以提高编译速度和编辑器响应速度。
+
+`references` 官网：https://www.typescriptlang.org/tsconfig/#references
+
+`files` 官网：https://www.typescriptlang.org/tsconfig/#files
+
+这里的关键点是 `files`、`references` 两个属性：
+
+- `files`: 在这个例子中，`files` 数组是空的。这意味着此配置文件本身不直接包含任何 TypeScript 文件。这是因为它作为一个顶层项目配置，用于引用其他的 TypeScript 配置文件，而不是直接处理文件。
+- `references`: 这个属性包含了一个对象数组，每个对象指向一个不同的 `tsconfig` 文件。这表明当前项目依赖于这些子项目或配置。每个引用都通过 `path` 属性指定，指向一个子项目的 `tsconfig.json` 文件。
+  - `./tsconfig.app.json` 是为前端应用配置的 TypeScript 设置。
+  - `./tsconfig.vitest.json` 是为 Vitest 测试框架配置的 TypeScript 设置。
+  - `./tsconfig.node.json` 是针对 Node.js 环境进行配置的 TypeScript 设置。
+
+使用这种结构的主要好处包括：
+
+- **代码隔离**：不同部分的代码可以有不同的编译设置，例如，前端代码和后端代码可能需要不同的 `target` 或 `lib` 设置。
+- **构建优化**：通过只编译改动的项目，可以减少构建时间。TypeScript 可以更智能地处理依赖项，只重新编译那些需要更新的部分。
+- **更好的代码组织**：对于大型项目，这种方法可以帮助更好地组织代码，将其分割成较小、更容易管理的部分。
+
+总之，这种方式为大型和模块化的 TypeScript 项目提供了一个更清晰和更可维护的结构。
+
+---
+
+### 2. 测试 `tsconfig.app.json`
+
+然后，我们来看看 `tsconfig.app.json` 的配置文件，这个 `app` 指的应该就是项目的主体代码，是一个 SPA（单页应用）所以也叫 App。
+
+```json
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "include": ["src/**/*", "src/**/*.vue", "types/**/*.d.ts"],
+  "exclude": ["src/**/__tests__/*"],
+  "compilerOptions": {
+    "composite": true,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}
+```
+
+让我们逐个看看配置中的关键部分及其意义：
+
+#### a. 继承基础配置
+
+`extends` 官网：https://www.typescriptlang.org/tsconfig/#extends
+
+- `"extends": "@vue/tsconfig/tsconfig.dom.json"`: 这表明该配置继承自一个预设的 TypeScript 配置，专为在 DOM 环境中运行的 Vue 应用程序设计。这个预设可能包含了一套推荐的编译器选项，适用于大多数 Vue 项目，如适当的 `lib` 选项（比如包含 `dom` 和其他浏览器环境的类型定义），以及为 Vue 文件和 DOM API 使用的最佳实践。
+
+#### b. 包含和排除的文件
+
+`include` 官网：https://www.typescriptlang.org/tsconfig/#include
+
+`exclude` 官网：https://www.typescriptlang.org/tsconfig/#exclude
+
+- `"include": ["src/**/*", "src/**/*.vue", "types/**/*.d.ts"]`: 指定了 TypeScript 编译器应该包含哪些文件。这里包括了项目的 `src` 目录下的所有文件（无论何种扩展名），所有 Vue 组件文件（`.vue`），以及 `types` 目录下的所有 TypeScript 声明文件（`.d.ts`）。这确保了项目中所有相关的文件都将被 TypeScript 处理。
+- `"exclude": ["src/**/__tests__/*"]`: 排除了所有在 `__tests__` 目录下的文件，这通常是单元测试文件所在的地方。这样做可以防止测试文件被编译到生产构建中，同时也可能加快编译过程，因为测试文件不会被 TypeScript 处理。
+
+#### c. 编译器选项
+
+- `"composite": true`: 启用了项目的组合模式，这对于大型项目或者当你想要将项目分割成多个子项目时非常有用。它允许 TypeScript 项目引用其他 TypeScript 项目，便于代码的模块化和重用。
+
+- `"tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo"`: 指定了 TypeScript 构建信息文件的存放位置。这个文件用于存储关于项目的增量编译信息，可以帮助 TypeScript 编译器快速地执行后续的编译，提高构建性能。
+
+- `"baseUrl": "."`: 设置了模块解析的基准目录为项目的根目录。这是 `paths` 映射的基础。
+
+  `baseUrl` 官网：https://www.typescriptlang.org/tsconfig/#baseUrl
+
+- `"paths": {"@/*": ["./src/*"]}`: 提供了一个别名配置，允许在项目中使用 `@` 前缀来引用 `src` 目录下的文件。这是一种常见的做法，可以使得在项目中引用模块时的路径更简洁明了。
+
+总结而言，这个 `tsconfig.app.json` 配置为前端 Vue 应用提供了一套合理的默认 TypeScript 编译设置，通过继承、文件包含/排除规则和编译器选项来优化开发和构建过程。
+
+---
+
+### 3. 测试 `tsconfig.vitest.json`
+
+然后，我们看一下 `tsconfig.vitest.json` 的内容：
+
+```json
+{
+  "extends": "./tsconfig.app.json",
+  "exclude": [],
+  "compilerOptions": {
+    "composite": true,
+    "lib": [],
+    "types": ["node", "jsdom"]
+  }
+}
+123456789
+```
+
+通过比较 `tsconfig.app.json` 和 `tsconfig.vitest.json` 的内容，我们可以明确地看到两者之间的区别，并理解为什么要将它们分开。下面是主要的区别及其潜在的考虑因素：
+
+#### a. 继承的基础配置
+
+- **tsconfig.app.json**: 这个文件继承自 `@vue/tsconfig/tsconfig.dom.json`，这表明它主要针对在浏览器环境下运行的 Vue 应用程序进行配置。它包含了适用于 DOM 环境的默认配置，比如对 DOM API 的类型检查支持。
+- **tsconfig.vitest.json**: 这个文件则继承自 `tsconfig.app.json`，意味着它会沿用应用程序配置的所有设置，但同时它提供了一些特定的调整来适配测试环境。
+
+#### b. 包含和排除的文件
+
+- **tsconfig.app.json** 明确排除了 `src/**/__tests__/*` 目录，这意味着应用程序的编译过程会忽略测试文件。这有助于保持生产构建的清洁，确保测试代码不会被错误地包含在最终的构建中。
+- **tsconfig.vitest.json** 移除了 `exclude` 配置，这表明在进行测试时，所有的文件包括测试文件都会被考虑。这是合理的，因为进行测试时，你会希望包括测试文件及其依赖。
+
+#### c. 编译器选项
+
+- **tsconfig.app.json** 中设置了 `composite` 为 `true` 并指定了 `tsBuildInfoFile` 路径，这是为了支持增量编译以提高构建性能。此外，它还配置了 `baseUrl` 和 `paths` 以支持模块的别名导入，这在大型项目中非常有用，可以简化模块引用的路径。
+- **tsconfig.vitest.json** 同样设置了 `composite` 为 `true`，但它并没有覆盖 `tsBuildInfoFile` 的设置，这意味着测试构建也会使用相同的增量编译信息文件。不过，它添加了 `lib` 和 `types` 的设置：
+  - `lib`: 虽然这里显示为空数组，但通常这个选项用于指定编译过程中包含的库文件。如果实际使用中没有指定，可能是因为它依赖于从 `tsconfig.app.json` 继承来的配置，或者是为了避免与继承的设置冲突。
+  - `types`: 明确包括了 `node` 和 `jsdom` 类型定义。这是因为 Vitest 运行于 Node.js 环境中，并可能模拟 DOM 环境（通过 `jsdom`），这与浏览器环境下的应用程序开发有所不同。这种配置确保了在测试代码中可以正确地使用 Node.js 和 DOM 的类型定义。
+
+#### d. 为什么分开？
+
+分开这两个配置文件的主要原因是为了分别优化应用程序构建和测试环境。通过这种方式，可以确保生产构建不会包含测试代码，同时测试环境能够访问特定的类型定义和库，以模拟应用运行的环境。此外，这种分离还允许针对不同的环境使用不同的 TypeScript 编译选项，以最大化性能和效率。
+
+---
+
+### 4. 命令行环境 `tsconfig.node.json`
+
+最后，是 `tsconfig.node.json` 配置文件：
+
+```json
+{
+  "extends": "@tsconfig/node20/tsconfig.json",
+  "include": [
+    "vite.config.*",
+    "vitest.config.*",
+    "cypress.config.*",
+    "nightwatch.conf.*",
+    "playwright.config.*"
+  ],
+  "compilerOptions": {
+    "composite": true,
+    "noEmit": true,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "types": ["node"]
+  }
+}
+12345678910111213141516171819
+```
+
+这个 `tsconfig.node.json` 配置文件主要针对 Node.js 环境进行配置，并且它似乎专门用于工具和配置文件的 TypeScript 支持。让我们分解这个配置文件的关键部分来理解它的作用：
+
+#### a. 继承的基础配置
+
+- `"extends": "@tsconfig/node20/tsconfig.json"`: 这表示该配置文件继承自 `@tsconfig/node20` 的预设配置，这是一个针对 Node.js 20 的预设 TypeScript 配置。这样的预设配置提供了适合于特定 Node.js 版本的默认编译选项，比如适当的 `lib` 设置和其他编译器标志，以确保 TypeScript 代码能够兼容该 Node.js 版本。
+
+#### b. 包含的文件
+
+- `"include": [...]`: 通过这个设置，配置文件指定了一系列的工具配置文件（如 Vite、Vitest、Cypress、Nightwatch 和 Playwright 的配置文件），这些文件通常使用 JavaScript 或 TypeScript 编写。包含这些文件意味着 TypeScript 编译器会处理它们，以便进行类型检查和其他 TypeScript 特有的分析。
+
+#### c. 编译器选项
+
+- `"composite": true`: 这个选项启用了项目引用支持，使得该配置可以作为其他 TypeScript 项目的引用。这在大型项目中有助于模块化和代码组织。
+- `"noEmit": true`: 这表示 TypeScript 编译器将执行类型检查但不输出 JavaScript 代码。这对于配置文件来说是理想的设置，因为你通常不需要将这些 TypeScript 编写的配置文件编译成 JavaScript，它们通常是直接由 Node.js 运行时或相应的工具直接解析执行的。
+- `"tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo"`: 指定了增量编译信息文件的路径，这有助于加速连续的编译过程。
+- `"module": "ESNext"`, `"moduleResolution": "Bundler"`: 这些设置指定了模块格式和模块解析策略。尽管 `noEmit` 为 `true`，这些设置仍对类型检查和编辑器支持有影响。
+- `"types": ["node"]`: 明确包含了 `node` 类型声明，这对于编写 Node.js 环境下运行的配置文件是必要的，确保所有 Node.js 的 API 在类型检查时可用。
+
+#### d. 工具配置文件的 TypeScript 支持
+
+对于问及工具配置文件是否需要编译的部分，实际上，当配置文件以 TypeScript 编写时，确实需要一个过程来处理这些文件，以便工具能够理解和使用它们。不过，由于这里 `noEmit` 被设置为 `true`，这个过程更多是类型检查而非传统意义上的编译过程。在实际开发流程中，某些工具和框架支持直接执行 TypeScript 文件，或者开发者可能会使用其他方式（如 `ts-node`）来执行或转换这些 TypeScript 编写的配置文件。
+
+#### e. `outDir` 的缺失
+
+由于 `"noEmit": true` 禁止了文件输出，所以这个配置中不需要也没有指定 `outDir`。如果在其他场景中，TypeScript 代码需要被编译成 JavaScript，那么 `outDir` 配置项就会指定编译后的 JavaScript 文件应该存放的目录。
+
+总结而言，这个 `tsconfig.node.json` 配置文件为 Node.js 环境下的工具和配置文件提供了 TypeScript 支持，主要用于类型检查而非代码编译。
+
+---
+
+## 四、可能的优化
+
+看最上面的截图，我们看到项目的根目录下，就有了 4 个 `tsconfig.*` 的配置文件，这样让根目录显得文件很多很乱。这能不能优化呢？
+
+了解了这个文件的结构后，显然，不难猜到，显然也是可以优化的，比如将所有的子配置文件都放入一个文件夹里，外面只保留一个总配置文件即可。
+
+要整理项目根目录中并列放置的多个 `tsconfig` 文件，使目录显得更整洁，可以考虑将所有 TypeScript 配置文件移动到一个专门的目录中。这样不仅可以清理根目录，还能保持项目的配置结构清晰和有序。下面是如何实现这一点的步骤：
+
+#### 1. 创建一个配置目录
+
+首先，在项目的根目录下创建一个新的目录来存放所有 TypeScript 配置文件。通常，你可以命名这个目录为 `tsconfig` 或者 `config`，或者任何具有描述性且便于理解的名称。
+
+例如，创建一个名为 `tsconfigs` 的目录：
+
+```bash
+mkdir tsconfigs
+1
+```
+
+#### 2. 移动 TypeScript 配置文件
+
+然后，将所有的 `tsconfig` 文件移动到你刚创建的目录中。确保调整这些文件的位置后，更新任何依赖这些文件路径的引用，比如在 `package.json` 中的脚本命令。
+
+```bash
+mv tsconfig.json tsconfig.app.json tsconfig.node.json tsconfig.vitest.json tsconfigs/
+1
+```
+
+#### 3. 更新文件引用
+
+如果这些配置文件之间存在相互引用（例如，通过 `extends` 属性继承另一个配置），你需要更新这些引用以反映新的路径。确保在引用路径中包含新的目录名。
+
+例如，如果 `tsconfig.vitest.json` 继承了 `tsconfig.app.json`：
+
+```json
+// Before
+{
+  "extends": "./tsconfig.app.json"
+}
+
+// After
+{
+  "extends": "./tsconfigs/tsconfig.app.json"
+}
+123456789
+```
+
+#### 4. 更新项目中的其他引用
+
+此外，如果你的项目中的其他工具或脚本引用了这些 `tsconfig` 文件（如构建脚本、IDE 配置等），记得更新这些引用路径。
+
+例如，在 `package.json` 中使用特定的 `tsconfig` 文件进行构建或测试的命令也应该相应更新：
+
+```json
+// Before
+"scripts": {
+  "build": "tsc -p tsconfig.app.json",
+  "test": "vitest --config tsconfig.vitest.json"
+}
+
+// After
+"scripts": {
+  "build": "tsc -p tsconfigs/tsconfig.app.json",
+  "test": "vitest --config tsconfigs/tsconfig.vitest.json"
+}
+1234567891011
+```
+
+#### 5. 验证更改
+
+在完成这些步骤后，确保运行项目的构建和测试命令来验证配置更改是否正确无误。如果遇到路径相关的错误，检查所有更新过的引用是否正确指向新的配置文件路径。
+
+通过这种方式，你可以有效地组织和管理项目的 TypeScript 配置，使得根目录更加整洁，同时保持了配置的可访问性和可维护性。
+
+## 总结
+
+使用 TypeScript 的项目需要编译配置文件 `tsconfig.json`，本文详细介绍了配置文件的作用，关键的配置字段简介。以及利用 Vue 3 项目模板，当作案例，详细分析了 `tsconfig.json` 的用法和最佳实践。
+
+
+
+----
+
 # 解决vue3按需引入element-plus的组件而样式不显示的问题
 
 ## 一、问题
@@ -3241,14 +3651,14 @@ const open = () => {
 ## 一、开启沉浸式翻译的 Beta 测试特性
 
 在沉浸式翻译的设置界面，左下角的开发者设置中，打开 Beta 测试特性
-![image](./assets/QmdTDxbemACumGjTPQzKqS79EXK3yLDzGZjRKxWpsLL4Xz)
+![image-20250309171329155](./assets/image-20250309171329155.png)
 
 ---
 
 ## 二、开启 DeepLX 翻译服务
 
 在 “翻译服务” 中，开启 DeepLX (Beta) 服务，并点击去修改
-![image](./assets/QmcdrqEUQny7eGpwSuhsJRvuYS3iZDtxC3N2sNPok34giT)
+![image-20250309171428169](./assets/image-20250309171428169.png)
 
 ---
 
@@ -3262,18 +3672,114 @@ const open = () => {
 https://api.deeplx.org/translate,https://deeplx.vercel.app/translate,https://deeplxpro.vercel.app/translate,https://deeplx.llleman.com/translate,https://translates.me/v2/translate,https://deeplx.papercar.top/translate,https://dlx.bitjss.com/translate,https://deeplx.ychinfo.com/translate,https://free-deepl.speedcow.top/translate,https://deeplx.keyrotate.com/translate,https://deepx.dumpit.top/translate,https://deepl.wuyongx.uk/translate,https://ghhosa.zzaning.com/translate,https://deeplx.he-sb.top/translate,https://deepl.aimoyu.tech/translate,https://deepl.tr1ck.cn/translate,https://translate.dftianyi.com/translate,https://deeplx.2077000.xyz:2087/translate
 ```
 
-![image](./assets/QmYvwLMynsQnJ9XsPkWnYEw4nYch1smq2YEKbZU89n2996)
-
 ---
 
 ## 四、测试
 
 点击测试服务，成功即可
-![image](./assets/QmbUWk1kdnCtzPwG9ka9uL4bpbD9jmeYvNvtYBP2KGuuCu)
+![image-20250309171523570](./assets/image-20250309171523570.png)
 
 
 
 ---
+
+# IDEA设置Transparent native-to-ascii conversion和properties文件的中文输出乱码
+
+## 一、Transparent native-to-ascii conversion的位置
+
+IDEA设置Transparent native-to-ascii conversion的位置：File->Settings->Editor->File Encodings->Default encoding for properties files：Transparent native-to-ascii conversion
+![在这里插入图片描述](./assets/33210fbed45d23e651ac51afdc8a1775.png)
+
+---
+
+## 二、勾选/不勾选Transparent native-to-ascii conversion的好坏
+
+- 不勾选IDEA的配置`Transparent native-to-ascii conversion`时，在properties文件里写这种`sms.signName=Wu的Java小站`并用`@Value("${sms.signName}")`读取，会导致读出来的配置中文乱码问题。
+- 勾选IDEA的配置`Transparent native-to-ascii conversion`时，在properties文件里写这种`sms.signName=Wu的Java小站`并用`@Value("${sms.signName}")`读取，就没有中文乱码问题，但是你的properties文件里存的实际上是ASCII编码，你用文本文件打开会看到ASCII码（中文乱码），用IDEA打开会看到中文，而上传到git上的时候，也会上传的是ASCII编码即中文乱码。
+- 如果你的properties文件里有中文（注释、配置），勾选`Transparent native-to-ascii conversion`会导致你原先的中文都变成乱码，即使你取消勾选，这些中文乱码都变不回中文。所以勾选请谨慎。
+
+---
+
+## 三、最终结论-不勾选Transparent native-to-ascii conversion
+
+不勾选IDEA的配置`Transparent native-to-ascii conversion`，可以在properties文件里写中文注释，但不要在配置文件里写这种中文配置`sms.signName=Wu的Java小站`并用`@Value("${sms.signName}")`读取。应该把包含中文的配置直接写在代码里。
+
+
+
+---
+
+# MySQL复合主键
+
+## 一、前言
+
+最近学习一点数据库的基本知识，被一个问题困惑了许久：主键是唯一的索引，那么为何一个表可以创建多个主键呢？
+
+其实“主键是唯一的索引”这话有点歧义的。举个例子，我们在表中创建了一个ID字段，自动增长，并设为主键，这个是没有问题的，因为“主键是唯一的索引”，ID自动增长保证了唯一性，所以可以。
+
+此时，我们再创建一个字段name，类型为varchar，也设置为主键，你会发现，在表的多行中你是可以填写相同的name值的，这岂不是有违“主键是唯一的索引”这句话么？
+
+所以我才说“主键是唯一的索引”是有歧义的。应该是“当表中只有一个主键时，它是唯一的索引；当表中有多个主键时，称为复合主键，复合主键联合保证唯一索引”。
+
+为什么自增长ID已经可以作为唯一标识的主键，为啥还需要复合主键呢。因为，并不是所有的表都要有ID这个字段啊哈哈，比如，我们建一个学生表，没有唯一能标识学生的ID，怎么办呢，学生的名字、年龄、班级都可能重复，无法使用单个字段来唯一标识，这时，我们可以将多个字段设置为主键，形成复合主键，这多个字段联合标识唯一性，其中，某几个主键字段值出现重复是没有问题的，只要不是有多条记录的所有主键值完全一样，就不算重复。
+
+---
+
+## 二、语法
+
+~~~sql
+create table tb_student
+(
+    id       int auto_increment,
+    name     varchar(30) not null,
+    sex      varchar(2),
+    classid  int         not null,
+    birthday date,
+    PRIMARY KEY (id, classid)
+);
+~~~
+
+
+
+---
+
+# 什么时候需要 implements Serializable？
+
+我们都有个惯性思维，就是实体类需要 implements Serializable 以序列化，序列化有两个作用：1、序列化就是将对象属性转变为二进制数据。2、在网络上进行传输。但是我发现有个项目中实体类并没有 implements Serializable，但是依然可以保存数据库，依然可以在网络上传输。于是在网上开始寻找结果，但是看了多个解答依然不能形成知识闭环。有的说是保存对象数据的，不需要实现序列化接口。有的说以非rpc调用的可以不实现序列化接口。貌似没看到我想要的。
+
+直到我把每个属性类型点看看了一遍，破案了。因为Java大部分的数据类型都已经实现了可序列化接口。
+
+所以 **要想存储到数据库必须实现序列化接口、要想网络传输必须实现序列化接口**，这句话是对的，只是有的时候我们没有在类上看到 implements Serializable 也可以完成这两类操作，是因为 这个类的所有属性类型都是 Java的基本类型+引用类型。（基本类型有对应的[包装类](https://so.csdn.net/so/search?q=包装类&spm=1001.2101.3001.7020)）这些类型都在内部实现了已经实现了 可序列化接口。在所有属性都是Java已经实现好可序列化的情况下类上可以不加 implements Serializable。
+
+```java
+class Person {
+  String name; //String类型已经实现好了可序列化接口
+  Integer age;//Integer类型已经实现好了可序列化接口
+  List <Object> list; //List也实现了可序列化接口
+}
+```
+
+好，那么什么情况下就必须要加implements Serializable？才能实现存数据库+网络传输？
+
+　　答：**在一个类拥有自定义类型的情况下。**
+
+　　例如
+
+```java
+class Person implements Serializable{
+  String name;
+  Pet pet; // 宠物
+}
+```
+
+如果这样定义Person类，Pet属性是组合的其他定义类。那么就必须在类上声名implements Serializable才可以实现 数据存储+网络传输。
+
+本项目采取：需要使用implements Serializable再使用。
+
+
+
+---
+
+
 
 
 
