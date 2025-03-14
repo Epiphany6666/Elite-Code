@@ -75,30 +75,109 @@
 
 - [ ] 新增日志模块
 
-- [ ] 整合 SpringSecurity
-
 - [ ] 操作日志
 
 - [x] 分模块开发
 
-  - [ ] （写博客）使用IDEA查看模块之间的依赖关系：https://blog.csdn.net/qq_27579471/article/details/121557639
+  - [x] （写博客）使用IDEA查看模块之间的依赖关系：https://blog.csdn.net/qq_27579471/article/details/121557639
 
-- [ ] SpringSecurity整合JWT
+- [ ] 抽取BaseEntity（参考若依）
+
+- [ ] 分离出 `ec-security` 模块，参考mall项目
+
+- [ ] HttpStates需要更细划分
+
+
+
+---
+
+## 登录
+
+- [ ] 记录登录信息，参考若依
+
+  ~~~java
+  /**
+   * 记录登录信息
+   *
+   * @param userId 用户ID
+   */
+  public void recordLoginInfo(Long userId)
+  {
+      SysUser sysUser = new SysUser();
+      sysUser.setUserId(userId);
+      sysUser.setLoginIp(IpUtils.getIpAddr());
+      sysUser.setLoginDate(DateUtils.getNowDate());
+      userService.updateUserProfile(sysUser);
+  }
+  ~~~
+
+  
+
+
+
+
+
+---
+
+## 用户模块
+
+- [x] 注册
+
+- [x] 登录
+
+- [x] 注销
+
+- [x] 分页获取用户数据
+
+- [x] 新增用户
+
+- [x] 批量删除用户
+
+- [x] 增加逻辑删除（del_flag）
 
 - [x] 更新个人信息接口
+
+- [x] 根据id更新用户信息
+
+- [x] 更新个人信息头像
+
+  若依：/avatar
+
+  微人事：/hr/userface
+
 - [x] 获取个人信息接口
+
+- [x] 使用ThreadLocal记录当前线程的用户id
+
+- [x] 制作个人简历，参考老鱼简历、超级简历
+
+- [ ] 重置密码
+
+  微人事：/hr/pass
+
+  若依：/updatePwd、/resetPwd
+
+- [ ] 忘记密码
+
+- [ ] 将用户表中的角色字段抽取出来，做成用户表，然后新建 `用户-角色关联表`
+
+- [ ] controller层校验全部改为JSR-303校验
+
+
 
 ---
 
 ## 题目表
 
-
+- [ ] 增删改查
 
 
 
 ---
 
 ## 题库表
+
+- [ ] 增删改查
 
 
 
@@ -108,7 +187,7 @@
 
 ## 题目题库关联表
 
-
+- [ ] 增删改查
 
 
 
@@ -123,23 +202,40 @@
 - [ ] 自己写默认样式(@/assets/styles/index.less)
 - [x] 封装axios实例、api
 - [x] 配置axios拦截器
+- [x] 配置axios响应拦截器中的失败回调
 - [ ] 使用**NProgress**搭建轻量级的页面加载进度条（参考若依，在全局路由守卫中）
+- [x] 配置环境变量（`.env.xxx文件`）
+  - axios url
+- [ ] form表单数据一并改为使用ref，此时接口参数可以直接 `...loginRef.value`
+- [ ] 一切await改为 `then…catch…`，方便异常处理
+- [ ] 阅读完“从 Vue 3 的项目模板学习 tsconfig 配置”并附加上官网网址
+- [x] 登录注册页面加上背景
+- [ ] 配置eslint
+- [ ] 配置prettier
+- [ ] 配置stylelint（scss）
+- [ ] 配置husky
+- [ ] 配置commitlint
+- [ ] 配置环境变量
+- [ ] SVG图标设置
 
 ---
 
 ## 登录
 
-- [ ] 
 - [x] 样式编写
+- [x] 表单校验
+- [ ] 重置表单
 - [ ] 表单校验
 - [x] 表单校验
 - [x] 登录成功跳转到主页
 - [ ] 记住密码
-- [ ] 登录按钮增加loading（参考若依）
+- [ ] 登录按钮增加loading：登录、登录中...（参考若依）
 - [ ] 动态加载和管理 SVG 图标
 - [x] 搭建Pnia
 - [x] 获取用户信息放到Pinia
 - [ ] 将获取用户信息放到
+- [ ] 后端、前端抽离出 `登录` 的接口、方法
+- [ ] 按enter可登录
 
 ---
 
@@ -149,12 +245,14 @@
 - [x] 跳转登录页
 - [x] 编写注册api
 - [x] 表单校验
-
+- [ ] 重置表单
+- [ ] 按enter可注册
+- [ ] 注册按钮：注册、注册中...
 ---
 
 ## 布局
 
-- [ ] 样式编写
+- [x] 样式编写
 
 - [ ] 像若依（AppMain.vue）一样加一个过度
 
@@ -206,83 +304,11 @@
 
 
 
-----
-
-# 用户模块
-
-## 【后端】
-
-- [x] 注册
-
-- [x] 登录
-
-- [x] 注销
-
-- [x] 分页获取用户数据
-
-- [x] 新增用户
-
-- [x] 批量删除用户
-
-- [x] 增加逻辑删除（del_flag）
-
-- [ ] 更新个人信息
-
-- [x] 根据id更新用户信息
-
-- [x] 更新个人信息头像
-
-  若依：/avatar
-
-  微人事：/hr/userface
-
-- [ ] 修改
-
-- [ ] 获取个人信息
-
-- [x] 使用ThreadLocal记录当前线程的用户id
-
-- [x] 制作个人简历，参考老鱼简历、超级简历
-
-- [ ] 重置密码
-
-  微人事：/hr/pass
-
-  若依：/updatePwd、/resetPwd
-
-- [ ] 忘记密码
-
-- [ ] 将用户表中的角色字段抽取出来，做成用户表，然后新建 `用户-角色关联表`
-
 ---
 
-## 【前端】
+# 待测试
 
-
-
----
-
-# 题目题库模块
-
-## 【后端】
-
-- [ ] 题目表
-- [ ] 题库表
-- [ ] 题目关联表
-
-
-
-
-
-
-
-
-
----
-
-## 【前端】
-
-
+- [ ] 获取个人信息接口
 
 
 
@@ -296,6 +322,7 @@
 - [x] 网站图标更换
 - [ ] SEO 全方位解决方案：https://juejin.cn/post/7241813423460581435
 - [ ] 学习PS，学会用PS抠图
+- [ ] 学习搭建DNS服务器，并编写博客
 
 
 
@@ -395,6 +422,30 @@
 - [ ] Github-Readme-Stats
 
   GitHub：https://github.com/anuraghazra/github-readme-stats
+  
+- [ ] 申请LICENSE
+
+
+
+---
+
+# README
+
+mall：https://github.com/macrozheng/mall
+
+微人事：https://github.com/lenve/vhr
+
+vue-next-admin：https://github.com/lyt-Top/vue-next-admin
+
+系统架构图、业务架构图：参考mall's README
+
+
+
+---
+
+# 安全
+
+- [ ] 账号、密码不存在改为：账号或密码不存在
 
 - [ ] 整合 SpringSecurity
 
@@ -433,7 +484,7 @@
 
 ----
 
-# 复习类
+# 学习类
 
 - [x] JDBC回顾
 
@@ -449,8 +500,225 @@
 
 - [x] React回顾
 
-- [ ] 学习SpringSecurity
 - [x] 学习SpringSecurity
+
+- [ ] 重学Promise
+
+- [ ] git
+
+  - [x] 复习
+  - [ ] 整理git笔记
+  - [ ] 学习git的游戏：https://learngitbranching.js.org/?locale=zh_CN
+  - [ ] merge、rebase：
+    - [ ] https://www.cnblogs.com/FraserYu/p/11192840.html
+    - [ ] https://blog.csdn.net/the_power/article/details/104651772/
+    - [ ] https://blog.csdn.net/wangdawei_/article/details/131669124
+    - [ ] http://blog.csdn.net/weixin_42310154/article/details/119004977
+    - [ ] IDEA使用rebase：https://blog.csdn.net/weixin_42812986/article/details/109260696
+  - [ ] git diff学习：https://blog.csdn.net/qq_39505245/article/details/119899171
+  - [ ] reflog学习
+  - [ ] cherry-pick学习：https://blog.csdn.net/muzidigbig/article/details/122321393
+  - [ ] HEAD~和HEAD^的作用和区别：https://blog.csdn.net/albertsh/article/details/106448035
+  - [ ] 上传git笔记博客
+  - [ ] fetch和pull的区别：https://zhuanlan.zhihu.com/p/123370920
+  
+- [ ] 学习scss：https://juejin.cn/post/7055101823442485255
+
+- [ ] 学习对象ts写法
+
+- [ ] Maven不同版本有什么区别？
+
+
+
+---
+
+# 官方文档
+
+- [ ] ESLint
+  - [ ] 已弃用配置文件：https://eslint.org/docs/latest/use/configure/configuration-files-deprecated
+  - [ ] 扁平化配置文件：https://eslint.org/docs/latest/use/configure/configuration-files
+  - [ ] 规则严重性：https://eslint.org/docs/latest/use/configure/rules#rule-severity
+
+
+
+---
+
+# 其他
+
+- [ ] Mac安装centos：https://www.jianshu.com/p/5f66c7e5d364
+- [ ] 学会搭建gitlab
+- [ ] macos用户，在外置磁盘中装一个用户，并将微信、QQ安装在此用户下
+- [ ] 环境使用手册
+  - [ ] Maven环境搭建
+  - [ ] Git环境搭建
+  - [ ] WebStorm配置
+  - [ ] NVM安装
+  - [ ] 安装虚拟机软件
+  - [ ] 安装CentOS7
+  - [ ] 安装Docker
+
+
+
+---
+
+# 扩展设计
+
+1）如果要实现会员功能，可以对表进行如下扩展：
+
+1. 给 userRole 字段新增枚举值 `vip`，表示会员用户，可根据该值判断用户权限
+2. 新增会员过期时间字段，可用于记录会员有效期
+3. 新增会员兑换码字段，可用于记录会员的开通方式
+4. 新增会员编号字段，可便于定位用户并提供额外服务，并增加会员归属感
+
+对应的 SQL 如下：
+
+```sql
+vipExpireTime datetime     null comment '会员过期时间',
+vipCode       varchar(128) null comment '会员兑换码',
+vipNumber     bigint       null comment '会员编号'
+```
+
+2）如果要实现用户邀请功能，可以对表进行如下扩展：
+
+1. 新增 shareCode 分享码字段，用于记录每个用户的唯一邀请标识，可拼接到邀请网址后面，比如 https://mianshiya.com/?shareCode=xxx
+2. 新增 inviteUser 字段，用于记录该用户被哪个用户邀请了，可通过这个字段查询某用户邀请的用户列表。
+
+对应的 SQL 如下：
+
+```sql
+shareCode     varchar(20)  DEFAULT NULL COMMENT '分享码',
+inviteUser    bigint       DEFAULT NULL COMMENT '邀请用户 id'
+```
+
+---
+
+1）如果要实现题库审核功能，可以对表进行如下扩展：
+
+1. 新增审核状态字段，用枚举值表示待审核、通过和拒绝
+2. 新增审核信息字段，用于记录未过审的原因等
+3. 新增审核人 id 字段，便于审计操作。比如出现了违规内容过审的情况，可以追责到审核人。
+4. 新增审核时间字段，也是便于审计。
+
+对应的 SQL 如下：
+
+```sql
+reviewStatus  int      default 0  not null comment '状态：0-待审核, 1-通过, 2-拒绝',
+reviewMessage varchar(512)        null comment '审核信息',
+reviewerId    bigint              null comment '审核人 id',
+reviewTime    datetime            null comment '审核时间'
+```
+
+2）如果要实现题库排序功能，可以新增整型的优先级字段，并且根据该字段排序。
+
+该字段还可以用于快速实现题库精选和置顶功能，精选就是优先级比较高的内容，置顶就是优先级最高的内容，比如优先级 = 1000 的题库表示精选，优先级 = 10000 的题库表示置顶。
+
+对应的 SQL 如下：
+
+```sql
+priority  int  default 0  not null comment '优先级'
+```
+
+3）如果要实现题库浏览功能，可以新增题库浏览数字段，每次进入题目详情页时该字段的值 +1，还可以根据该字段对题库进行排序。
+
+对应的 SQL 如下：
+
+```sql
+viewNum  int  default 0  not null comment '浏览量'
+```
+
+如果要实现用户浏览数（同一个用户浏览数最多 +1），还需要额外的题库浏览记录表。
+
+
+
+
+
+----
+
+# 需求文档
+
+| 项目名称                                       | 下载地址                                                     | 标签         |
+| ---------------------------------------------- | ------------------------------------------------------------ | ------------ |
+| 人事管理系统需求文档                           | 链接：https://pan.baidu.com/s/1AFgBrymHhI4BECZHYfWHug 提取码：uzrg | 【ERP】      |
+| 大通ERP系统需求规格说明书V3.0                  | 链接：https://pan.baidu.com/s/1bax2USj7EkXcgL5nmde9Ow 提取码：2hvz | 【ERP】      |
+| ERP需求分析                                    | 链接：https://pan.baidu.com/s/13vu96etHV-ic6WReg_0kOA 提取码：c6ub | 【ERP】      |
+| 通天物流管理项目需求文档                       | 链接：https://pan.baidu.com/s/1a2_3D-GE9PmJmNCeJNubsA 提取码：xztf | 【物流】     |
+| 华润物流配送系统需求文档                       | 链接：https://pan.baidu.com/s/1lsLCU3eqMGwfWLQd7ExaKg 提取码：d1sn | 【物流】     |
+| 中外运物流配送系统需求文档                     | 链接：https://pan.baidu.com/s/1f7pWsGCNHKy3H9gnNB8SCQ 提取码：ly4w | 【物流】     |
+| 闵行国际物流中心仓储管理系统需求文档           | 链接：https://pan.baidu.com/s/1omQANJVKhtZL3TvSFhoefg 提取码：48v7 | 【物流】     |
+| 粤通物流系统设计说明书                         | 链接：https://pan.baidu.com/s/1RvORJTuoAjhjjxAuIKqFGA 提取码：nlas | 【物流】     |
+| 物流指南App项目需求文档                        | 链接：https://pan.baidu.com/s/1Vhpvo2N0BcrFDMFB2KyJhw 提取码：q383 | 【物流】     |
+| 在线考试系统需求说明书                         | 链接：https://pan.baidu.com/s/1P9U29Mbz8u6dOhxCmxzKQA 提取码：ssk8 | 【教育】     |
+| 家校通系统需求文档                             | 链接：https://pan.baidu.com/s/1YyTRL4pZZD987NJfrL7JjA 提取码：odo4 | 【教育】     |
+| 中山大学医院管理系统需求文档                   | 链接：https://pan.baidu.com/s/1BZuLiMjtWpsgrhDQj5tCDA 提取码：8m46 | 【医疗】     |
+| ICU管理系统需求文档                            | 链接：https://pan.baidu.com/s/1jGZw_qKCfZrvzYWFhQxn9w 提取码：j0oz | 【医疗】     |
+| X邦住院医生工作站需求文档                      | 链接：https://pan.baidu.com/s/1S3Nc_-KrpgOERDCWaoT5sQ 提取码：r9tm | 【医疗】     |
+| 楚雄州人民医院信息化建设一体化集成系统需求文档 | 链接：https://pan.baidu.com/s/10cEEEtXIVsVwyKYSooUSiw 提取码：pzqi | 【医疗】     |
+| 佛山区域卫生信息平台与区域电子病历需求文档     | 链接：https://pan.baidu.com/s/1ogpedXfAvWDIxaufppkzfA 提取码：wwup | 【医疗】     |
+| 佛山区域医院信息系统                           | 链接：https://pan.baidu.com/s/13o7HF8XCWvk0YIypCeJSuA 提取码：xk23 | 【医疗】     |
+| 合理用药监测系统需求文档                       | 链接：https://pan.baidu.com/s/12zP7u-LjHTrRCOVc1-J3RQ 提取码：4nd9 | 【医疗】     |
+| 连锁药店进、销、存流程体系                     | 链接：https://pan.baidu.com/s/1iH__CjwW6bhQm9BjppScwg 提取码：7rmj | 【医疗】     |
+| 临床检验信息系统软件需求文档                   | 链接：https://pan.baidu.com/s/1sJ4yFPbkM4Nylg-H_kvXyw 提取码：uds1 | 【医疗】     |
+| 门诊医生工作站软件需求文档                     | 链接：https://pan.baidu.com/s/1FrKZOxq5PsjQpnk0cCfQqQ 提取码：5q2j | 【医疗】     |
+| 统一维护管理平台软件需求文档                   | 链接：https://pan.baidu.com/s/1iac0rRus6QHpmLYhChRKCA 提取码：umbg | 【医疗】     |
+| 医学影像系统PACS、RIS软件需求文档              | 链接：https://pan.baidu.com/s/1v861ilZCkr5Hlszs6ADqwQ 提取码：bbga | 【医疗】     |
+| 医院his系统需求文档                            | 链接：https://pan.baidu.com/s/1CRNCaMSVER5S9u2cf539Cg 提取码：cel5 | 【医疗】     |
+| 医院科研教学管理系统需求文档                   | 链接：https://pan.baidu.com/s/1tw6ax84B4XcdhO8V4POsNg 提取码：ohzo | 【医疗】     |
+| 婴儿防盗系统需求文档                           | 链接：https://pan.baidu.com/s/1To2MyxckIKdqb-oFLoSvsA 提取码：wo2i | 【医疗】     |
+| 预防保健管理系统软件需求文档                   | 链接：https://pan.baidu.com/s/1UN8ya0puygmcRp2MnIrOsw 提取码：5dbw | 【医疗】     |
+| 预约挂号系统设计文档                           | 链接：https://pan.baidu.com/s/1eFSPDZlQvwul3fp4-51GVw 提取码：qh6s | 【医疗】     |
+| 中联医院客户关系管理系统                       | 链接：https://pan.baidu.com/s/1kYhoVOtySZrfjPVNV97jEQ 提取码：6ey6 | 【医疗】     |
+| 住院护士站软件需求文档                         | 链接：https://pan.baidu.com/s/1SE5WZ8594N4nM6Y1GjfzrQ 提取码：sgj9 | 【医疗】     |
+| 住院结算信息系统软件需求文档                   | 链接：https://pan.baidu.com/s/1X_a_lfDtK40e84rh3EGj7w 提取码：5oh2 | 【医疗】     |
+| 锦东地产物业管理系统需求分析                   | 链接：https://pan.baidu.com/s/1ERbJ9kiu3xh-D3FePhnPUQ 提取码：bsdr | 【物业】     |
+| CrmSky客户关系管理系统需求文档                 | 链接：https://pan.baidu.com/s/1W9PaUp09YBNqikDqKRMKyw 提取码：jz6f | 【CRM】      |
+| 江苏淮微CRM系统需求文档                        | 链接：https://pan.baidu.com/s/1aO0oWS2nEd3sV3hXoSJZgw 提取码：esqq | 【CRM】      |
+| 客户关系管理系统需求文档                       | 链接：https://pan.baidu.com/s/17kIfQ4k3zWka6NvERqqlZw 提取码：oa02 | 【CRM】      |
+| MyOffice办公自动化系统需求文档                 | 链接：https://pan.baidu.com/s/1LgeUhfU5UFiAVoT_3OuJCg 提取码：6fs6 | 【OA】       |
+| OA项目需求文档                                 | 链接：https://pan.baidu.com/s/1nebyPiCmdf7Y87RYJFpcbQ 提取码：cu1a | 【OA】       |
+| 展德光电进销存系统需求文档                     | 链接：https://pan.baidu.com/s/1EP1VYXcOhAxHI5vtvzEFqg 提取码：7dab | 【进销存】   |
+| 进销存软件需求说明书（含表设计清单）           | 链接：https://pan.baidu.com/s/12-lMsLp2BECx0IR2KbeMAw 提取码：9p0c | 【进销存】   |
+| CHGM民生银行计费系统需求文档                   | 链接：https://pan.baidu.com/s/1GvXLIKk3zPtyTr13z_ISyg 提取码：qz2o | 【银行】     |
+| 民生银行业务活动管理系统需求文档               | 链接：https://pan.baidu.com/s/1UeD1CWBU_BiPH9zK-LSg7Q 提取码：vma5 | 【银行】     |
+| 制衣业MRP系统需求说明书                        | 链接：https://pan.baidu.com/s/19HQA3Nvsq2CnbwavbdwFkg 提取码：y6yt | 【MRP】      |
+| 差旅管理系统需求文档                           | 链接：https://pan.baidu.com/s/1af0DoCFvOBxTRW1ugD0e3w 提取码：8804 | 【差旅报销】 |
+| 电信客户计费系统需求说明书                     | 链接：https://pan.baidu.com/s/1aGbA6fQivkno0bSUhaBFCg 提取码：5dtv | 【计费系统】 |
+| 房产中介需求规格书                             | 链接：https://pan.baidu.com/s/1P8NPxj8SdptpNHJWfDAG5Q 提取码：y8uf | 【房产】     |
+| 黄金珠宝首饰CS单据管理系统                     | 链接：https://pan.baidu.com/s/1EIuBcUGeKXP-8ffzDYGS7Q 提取码：7mz3 | 【单据】     |
+| 芯片WMS管理系统需求文档                        | 链接：https://pan.baidu.com/s/1RsujMAz80OPh36vkC65Cow 提取码：zkoz | 【WMS】      |
+| 荆艺供应链管理系统需求文档                     | 链接：https://pan.baidu.com/s/1aqksrVN_B_7O0s00FyoxXQ 提取码：j1hk | 【SCM】      |
+| 国家电力检测中心项目需求文档                   | 链接：https://pan.baidu.com/s/1cgZMHVvritbvfZTBNreSJQ 提取码：idzn | 【电力】     |
+| 保险项目系统需求文档                           | 链接：https://pan.baidu.com/s/10p3tkUqp8CwO8_ZlnZvtRQ 提取码：hw9r | 【保险】     |
+| 百威美食尚餐饮管理系统需求文档                 | 链接：https://pan.baidu.com/s/1YTEXycQJjtdWQPuFnqLKiQ 提取码：iyu2 | 【餐饮】     |
+| 智慧社区综合管控系统建设方案                   | 链接：https://pan.baidu.com/s/15bMbHsXks62sB16_CKHMSA 提取码：cym5 | 【其他】     |
+| 生产计划执行系统需求分析说明书                 | 链接：https://pan.baidu.com/s/1AQuPk82RKCofeJy5V6uPfg 提取码：hetj | 【其他】     |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

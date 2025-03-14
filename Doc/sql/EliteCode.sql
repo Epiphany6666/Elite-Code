@@ -26,27 +26,27 @@ create table if not exists `user` (
 -- 初始化-用户信息表数据
 -- ----------------------------
 INSERT INTO `user` (id, username, password, `nick_name`, avatar, profile, roles, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`)
-VALUES (1, 'luoyan', '05356905ea85829918968f841e5a0944', '管理员', 'https://pic.luo-yan.cn/elitecode/avatar.jpg', '系统管理员', '[\"admin\", \"user\"]', '0', 1, '2024-11-22 08:36:41', 1, '2024-11-27 08:36:41');
+VALUES (1, 'luoyan', '$2a$10$QRahICxJnpkrbd9HAQ/hCumW2/F2fVvJYhPpJcWGHMipkKbFwHdI2', '管理员', 'https://pic.luo-yan.cn/elitecode/avatar.jpg', '系统管理员', '[\"admin\", \"user\"]', '0', 1, '2024-11-22 08:36:41', 1, '2024-11-27 08:36:41');
 INSERT INTO `user` (id, username, password, `nick_name`, avatar, profile, roles, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`)
-VALUES (2, 'testuser', '05356905ea85829918968f841e5a0944', '测试用户', 'https://pic.luo-yan.cn/elitecode/avatar.jpg', '测试人员', '[\"user\"]', '0', 1, '2024-11-27 08:36:41', 1, '2024-11-27 08:36:41');
+VALUES (2, 'testuser', '$2a$10$QRahICxJnpkrbd9HAQ/hCumW2/F2fVvJYhPpJcWGHMipkKbFwHdI2', '测试用户', 'https://pic.luo-yan.cn/elitecode/avatar.jpg', '测试人员', '[\"user\"]', '0', 1, '2024-11-27 08:36:41', 1, '2024-11-27 08:36:41');
 INSERT INTO `user` (id, username, password, `nick_name`, avatar, profile, roles, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`)
-VALUES (100, 'luoyantst', '25d55ad283aa400af464c76d713c07ad', 'luoyantst', 'https://pic.luo-yan.cn/elitecode/avatar.jpg', '', '[\"user\"]', '0', 1, '2024-12-06 08:10:43', 1, '2024-12-06 08:10:43');
+VALUES (100, 'luoyantst', '$2a$10$QRahICxJnpkrbd9HAQ/hCumW2/F2fVvJYhPpJcWGHMipkKbFwHdI2', 'luoyantst', 'https://pic.luo-yan.cn/elitecode/avatar.jpg', '', '[\"user\"]', '0', 1, '2024-12-06 08:10:43', 1, '2024-12-06 08:10:43');
 INSERT INTO `user` (id, username, password, `nick_name`, avatar, profile, roles, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`)
-VALUES (101, 'luoyantest', '25d55ad283aa400af464c76d713c07ad', 'luoyantest', 'https://pic.luo-yan.cn/elitecode/avatar.jpg', '', '[\"user\"]', '0', 1, '2024-12-06 16:49:27', 1, '2024-12-06 16:49:27');
+VALUES (101, 'luoyantest', '$2a$10$QRahICxJnpkrbd9HAQ/hCumW2/F2fVvJYhPpJcWGHMipkKbFwHdI2', 'luoyantest', 'https://pic.luo-yan.cn/elitecode/avatar.jpg', '', '[\"user\"]', '0', 1, '2024-12-06 16:49:27', 1, '2024-12-06 16:49:27');
 INSERT INTO `user` (id, username, password, `nick_name`, avatar, profile, roles, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`)
-VALUES (102, 'luoyantest1', '25d55ad283aa400af464c76d713c07ad', 'luoyantest1', 'https://pic.luo-yan.cn/elitecode/avatar.jpg', '', '[\"user\"]', '0', 1, '2024-12-06 17:13:38', 1, '2024-12-06 17:13:38');
+VALUES (102, 'luoyantest1', '$2a$10$QRahICxJnpkrbd9HAQ/hCumW2/F2fVvJYhPpJcWGHMipkKbFwHdI2', 'luoyantest1', 'https://pic.luo-yan.cn/elitecode/avatar.jpg', '', '[\"user\"]', '0', 1, '2024-12-06 17:13:38', 1, '2024-12-06 17:13:38');
 INSERT INTO `user` (id, username, password, `nick_name`, avatar, profile, roles, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`)
-VALUES (103, 'luoyantest2', '25d55ad283aa400af464c76d713c07ad', 'luoyantest2', 'https://pic.luo-yan.cn/elitecode/avatar.jpg', '', '[\"user\"]', '0', 1, '2024-12-06 19:58:42', 1, '2024-12-06 19:58:42');
+VALUES (103, 'luoyantest2', '$2a$10$QRahICxJnpkrbd9HAQ/hCumW2/F2fVvJYhPpJcWGHMipkKbFwHdI2', 'luoyantest2', 'https://pic.luo-yan.cn/elitecode/avatar.jpg', '', '[\"user\"]', '0', 1, '2024-12-06 19:58:42', 1, '2024-12-06 19:58:42');
 INSERT INTO `user` (id, username, password, `nick_name`, avatar, profile, roles, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`)
-VALUES (105, 'luoyantest4', '25d55ad283aa400af464c76d713c07ad', 'luoyantest4', 'https://pic.luo-yan.cn/elitecode/avatar.jpg', '', '[\"user\"]', '0', 1, '2024-12-08 23:12:54', 1, '2024-12-08 23:12:54');
+VALUES (105, 'luoyantest4', '$2a$10$QRahICxJnpkrbd9HAQ/hCumW2/F2fVvJYhPpJcWGHMipkKbFwHdI2', 'luoyantest4', 'https://pic.luo-yan.cn/elitecode/avatar.jpg', '', '[\"user\"]', '0', 1, '2024-12-08 23:12:54', 1, '2024-12-08 23:12:54');
 INSERT INTO `user` (id, username, password, `nick_name`, avatar, profile, roles, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`)
-VALUES (106, 'luoyantest3', '25d55ad283aa400af464c76d713c07ad', 'luoyantest3', 'https://pic.luo-yan.cn/elitecode/avatar.jpg', '', '[\"user\",\"admin\"]', '0', 1, '2024-12-08 23:22:03', 1, '2024-12-08 23:22:03');
+VALUES (106, 'luoyantest3', '$2a$10$QRahICxJnpkrbd9HAQ/hCumW2/F2fVvJYhPpJcWGHMipkKbFwHdI2', 'luoyantest3', 'https://pic.luo-yan.cn/elitecode/avatar.jpg', '', '[\"user\",\"admin\"]', '0', 1, '2024-12-08 23:22:03', 1, '2024-12-08 23:22:03');
 INSERT INTO `user` (id, username, password, `nick_name`, avatar, profile, roles, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`)
-VALUES (107, '2123', 'a7d79193c74129f551b9e6def51b8554', NULL, NULL, NULL, '[\"user\"]', '0', NULL, '2025-01-02 14:04:29', NULL, '2025-01-02 14:04:29');
+VALUES (107, '2123', '$2a$10$QRahICxJnpkrbd9HAQ/hCumW2/F2fVvJYhPpJcWGHMipkKbFwHdI2', NULL, NULL, NULL, '[\"user\"]', '0', NULL, '2025-01-02 14:04:29', NULL, '2025-01-02 14:04:29');
 INSERT INTO `user` (id, username, password, `nick_name`, avatar, profile, roles, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`)
-VALUES (108, '21321312', '19034a0864adffdac1d9648b43009822', NULL, NULL, NULL, '[\"user\"]', '0', NULL, '2025-02-26 09:16:26', NULL, '2025-02-26 09:16:26');
+VALUES (108, '21321312', '$2a$10$QRahICxJnpkrbd9HAQ/hCumW2/F2fVvJYhPpJcWGHMipkKbFwHdI2', NULL, NULL, NULL, '[\"user\"]', '0', NULL, '2025-02-26 09:16:26', NULL, '2025-02-26 09:16:26');
 INSERT INTO `user` (id, username, password, `nick_name`, avatar, profile, roles, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`)
-VALUES (109, '341341', '19034a0864adffdac1d9648b43009822', NULL, NULL, NULL, '[\"user\"]', '0', NULL, '2025-02-26 09:20:45', NULL, '2025-02-26 09:20:45');
+VALUES (109, '341341', '$2a$10$QRahICxJnpkrbd9HAQ/hCumW2/F2fVvJYhPpJcWGHMipkKbFwHdI2', NULL, NULL, NULL, '[\"user\"]', '0', NULL, '2025-02-26 09:20:45', NULL, '2025-02-26 09:20:45');
 
 -- ----------------------------
 -- 题库表

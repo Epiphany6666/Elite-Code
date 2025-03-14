@@ -3820,6 +3820,63 @@ class Person implements Serializable{
 
 ---
 
+# Idea 的shift shift和ctrl shift f有什么区别
+
+在 IntelliJ IDEA 中，`Shift` + `Shift` 和 `Ctrl` + `Shift` + `F` 是两个非常有用但功能[不同的](https://so.csdn.net/so/search?q=不同的&spm=1001.2101.3001.7020)快捷键：
+
+#### 1. `Shift` + `Shift`：搜索 Everywhere
+
+- **功能**：这个快捷键启动了 “Search Everywhere” 功能。它允许你在一个统一的界面中搜索几乎任何东西，包括文件、动作（commands）、类、符号、设置选项等。
+- **用途**：当你不确定某个特定元素的位置，或者想要快速访问项目、文件、工具窗口、菜单命令等时，这个功能非常有用。
+- **搜索范围**：这个搜索功能几乎涵盖了整个 IDE 的内容，包括项目代码、菜单项、工具窗口、设置和更多。
+
+#### 2. `Ctrl` + `Shift` + `F`：Find in Files
+
+- **功能**：这个快捷键触发了 “Find in Files” 功能。它用于在整个项目中或指定的目录、文件中搜索特定的文本或代码片段。
+- **用途**：当你需要查找特定的文本字符串、代码片段或者进行全局搜索替换时，这个功能非常有用。
+- **搜索范围**：这个搜索主要针对项目中的文件内容。你可以指定搜索范围（整个项目、当前目录、指定范围等）和其他搜索条件（如大小写敏感、正则表达式等）。
+
+#### 总结
+
+- **`Shift` + `Shift`（Search Everywhere）**：更广泛的搜索，包括文件、动作、设置等。
+- **`Ctrl` + `Shift` + `F`（Find in Files）**：专注于项目文件内容的文本搜索。
+
+这两个功能都是 IntelliJ IDEA 提供的强大工具，可以极大地提高你的开发效率。根据你的具体需要，你可以灵活使用它们来加快查找和导航的速度。
+
+
+
+---
+
+# IDEA设置everywhere
+
+双击shift--用于全局搜索文件,不是很常用,非常鸡肋.
+
+一般搜索需要的是全局搜索内容,Ctrl + shift + f 键
+
+在进行shift键中英文切换时,总是触发全局搜索文件的框,所以想着把这个快捷键禁用.
+
+在keymap里面把所有快捷键找了一遍,没找到--双击shift
+
+终于查资料看到解决方案了.
+
+## 一、先禁用双击键
+
+在setting-->高级设置-->搜索double
+
+<img src="./assets/495be1abd84d352a1ae506c896d7caea.png" alt="img" style="zoom:40%;" />
+
+
+
+<img src="./assets/1aa69d766abcb161c594954902cdc911.png" alt="img" style="zoom:50%;" />
+
+---
+
+## 二、再修改search everywhere 的快捷键
+
+<img src="./assets/bf0cc223a92ad7c1f3bb159bf42769e9.png" alt="img" style="zoom:50%;" />
+
+即可解决问题!!!!
+
 
 
 ---
