@@ -6,11 +6,6 @@ package cn.elitecode.constant;
 public interface UserConstant {
 
     /**
-     * 盐值
-     */
-    String SALT = "luoyan";
-
-    /**
      * 校验是否唯一的返回标识
      */
     boolean NOT_UNIQUE = false;
@@ -27,5 +22,7 @@ public interface UserConstant {
      */
     int USER_PASSWORD_MIN_LENGTH = 6;
     int USER_PASSWORD_MAX_LENGTH = 20;
+
+    String LOGIN_USER_KEY = "login_username";
 
 }

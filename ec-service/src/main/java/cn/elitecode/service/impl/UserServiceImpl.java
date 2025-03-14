@@ -2,24 +2,35 @@ package cn.elitecode.service.impl;
 
 import cn.elitecode.common.BaseContext;
 import cn.elitecode.common.PageResult;
-import cn.elitecode.common.exception.user.*;
+import cn.elitecode.common.exception.BaseException;
+import cn.elitecode.common.exception.user.AdminNotAllowedException;
+import cn.elitecode.common.exception.user.RegistrationFailedException;
+import cn.elitecode.common.exception.user.UserNotLoggedInException;
+import cn.elitecode.common.properties.JWTProperties;
 import cn.elitecode.constant.HttpStatus;
 import cn.elitecode.constant.UserConstant;
 import cn.elitecode.mapper.UserMapper;
 import cn.elitecode.model.dto.user.UserQueryDTO;
 import cn.elitecode.model.entity.User;
-import cn.elitecode.model.vo.LoginUserVO;
+import cn.elitecode.model.vo.LoginUser;
 import cn.elitecode.model.vo.UserVO;
 import cn.elitecode.service.UserService;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.jwt.JWT;
+import cn.hutool.jwt.signers.JWTSignerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.DigestUtils;
-
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,24 +46,32 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
     @Override
-    public LoginUserVO login(String username, String userPassword, HttpServletRequest request) {
-        // 查询用户是否存在
-        User user = userMapper.selectUserByUsername(username);
-        if (user == null) {
-            throw new UsernameNotFoundException(HttpStatus.PARAMS_ERROR, "账号不存在");
+    public LoginUser login(String username, String userPassword, HttpServletRequest request) {
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, userPassword);
+        // 该方法会去调用UserDetailsServiceImpl.loadUserByUsername，并将返回的UserDetails设置到SecurityContext中
+        Authentication authenticate = authenticationManager.authenticate(authenticationToken);
+        LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
+        if (!loginUser.isEnabled()) {
+            throw new BaseException(HttpStatus.PARAMS_ERROR, "账号已被禁用");
         }
-        String encryptPassword = DigestUtils.md5DigestAsHex((UserConstant.SALT + userPassword).getBytes());
-        if (!encryptPassword.equals(user.getPassword())) {
-            throw new UserPasswordNotMatchException(HttpStatus.PARAMS_ERROR, "密码错误");
-        }
-
-        // 设置登录态
-        request.getSession().setAttribute(USER_LOGIN_STATE, user);
-        BaseContext.setCurrentId(user.getId());
-
-        // 返回用户信息
-        return getLoginUserVO(user);
+        // 生成jwt令牌
+        HashMap<String, Object> claims = new HashMap<>();
+        claims.put(UserConstant.LOGIN_USER_KEY, loginUser.getUsername());
+        String token = JWT.create()
+                .addPayloads(claims)
+                .setSigner(JWTSignerUtil.hs256(JWTProperties.getSecret().getBytes()))
+                // (签发时间)---------(生效时间)---------(当前时间)---------(失效时间)
+                // 签发时间
+                .setIssuedAt(DateUtil.date())
+                // 失效时间
+                .setExpiresAt(DateUtil.offsetSecond(new Date(), JWTProperties.getExpiration()))
+                .sign();
+        loginUser.setToken(token);
+        return loginUser;
     }
 
     @Override
@@ -67,10 +86,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void userLogout(HttpServletRequest request) {
-        if (request.getSession().getAttribute(USER_LOGIN_STATE) == null) {
-            throw new UserNotLoggedInException(500, "用户未登录");
+        if (getLoginUser() == null) {
+            throw new UserNotLoggedInException(HttpStatus.PARAMS_ERROR, "用户未登录");
         }
-        request.getSession().removeAttribute(USER_LOGIN_STATE);
     }
 
     @Override
@@ -92,19 +110,6 @@ public class UserServiceImpl implements UserService {
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(user, userVO);
         return userVO;
-    }
-
-
-    @Override
-    public LoginUserVO getLoginUserVO(User user) {
-        if (user == null) {
-            return null;
-        }
-
-        // 脱敏
-        LoginUserVO loginUserVO = new LoginUserVO();
-        BeanUtils.copyProperties(user, loginUserVO);
-        return loginUserVO;
     }
 
     @Override
@@ -188,6 +193,11 @@ public class UserServiceImpl implements UserService {
         return getUserVO(user);
     }
 
+    public LoginUser getLoginUser() {
+        LoginUser loginUser = (LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return loginUser;
+    }
+
     private void checkUserAllowed(User user) {
         if (ObjectUtil.isNotNull(user.getId()) && isAdmin(user.getId())) {
             throw new AdminNotAllowedException(HttpStatus.ADMIN_NOT_ALLOWED_ERROR, "不允许操作超级管理员用户");
@@ -198,4 +208,5 @@ public class UserServiceImpl implements UserService {
         List<Long> adminUserIds = userMapper.selectAdminIds();
         return adminUserIds.contains(userId);
     }
+
 }

@@ -7,15 +7,14 @@ import cn.elitecode.constant.HttpStatus;
 import cn.elitecode.constant.UserConstant;
 import cn.elitecode.model.dto.user.*;
 import cn.elitecode.model.entity.User;
-import cn.elitecode.model.vo.LoginUserVO;
+import cn.elitecode.model.vo.LoginUser;
 import cn.elitecode.model.vo.UserVO;
 import cn.elitecode.service.UserService;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.crypto.digest.DigestUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.DigestUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
@@ -29,6 +28,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     /**
      * 用户登录
      * @param userLoginDTO
@@ -36,7 +38,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/login")
-    private CommonResult<LoginUserVO> login(@RequestBody UserLoginDTO userLoginDTO, HttpServletRequest request) {
+    private CommonResult<LoginUser> login(@RequestBody UserLoginDTO userLoginDTO, HttpServletRequest request) {
         if (userLoginDTO == null) {
             return CommonResult.error(HttpStatus.PARAMS_ERROR, "登录参数错误");
         }
@@ -102,7 +104,7 @@ public class UserController {
         if (!userService.checkUsernameUnique(user)) {
             return CommonResult.error(HttpStatus.PARAMS_ERROR, "用户注册 '" + user.getUsername() + "' 失败，账号已存在");
         }
-        user.setPassword(DigestUtils.md5DigestAsHex((UserConstant.SALT + userPassword).getBytes()));
+        user.setPassword(passwordEncoder.encode(userPassword));
         Long registerUserId = userService.register(user);
         return CommonResult.success(registerUserId);
     }
@@ -147,7 +149,7 @@ public class UserController {
             return CommonResult.error(HttpStatus.PARAMS_ERROR, "新增用户 '" + user.getUsername() + "' 失败，账号已存在");
         }
         user.setCreateBy(BaseContext.getCurrentId());
-        user.setPassword(DigestUtil.md5Hex((UserConstant.SALT + user.getPassword()).getBytes()));
+        user.setPassword(passwordEncoder.encode(userAddDTO.getPassword()));
         return CommonResult.success(userService.addUser(user));
     }
 
@@ -181,7 +183,8 @@ public class UserController {
         if (updateProfileDto == null) {
             CommonResult.error(HttpStatus.PARAMS_ERROR, "更新个人信息参数错误");
         }
-        User user = new User(BaseContext.getCurrentId());
+        LoginUser loginUser = userService.getLoginUser();
+        User user = new User(loginUser.getUser().getId());
         BeanUtils.copyProperties(updateProfileDto, user);
         userService.updateUser(user);
         return CommonResult.success();
@@ -193,8 +196,8 @@ public class UserController {
      */
     @GetMapping("/profle")
     private CommonResult<UserVO> profile() {
-        Long userId = BaseContext.getCurrentId();
-        UserVO userVO = userService.getUserVOById(userId);
+        LoginUser loginUser = userService.getLoginUser();
+        UserVO userVO = userService.getUserVOById(loginUser.getUser().getId());
         return CommonResult.success(userVO);
     }
 

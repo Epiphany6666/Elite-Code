@@ -3,7 +3,7 @@ package cn.elitecode.service;
 import cn.elitecode.common.PageResult;
 import cn.elitecode.model.dto.user.UserQueryDTO;
 import cn.elitecode.model.entity.User;
-import cn.elitecode.model.vo.LoginUserVO;
+import cn.elitecode.model.vo.LoginUser;
 import cn.elitecode.model.vo.UserVO;
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,7 +20,7 @@ public interface UserService {
      * @param request
      * @return 用户信息
      */
-    LoginUserVO login(String username, String userPassword, HttpServletRequest request);
+    LoginUser login(String username, String userPassword, HttpServletRequest request);
 
     /**
      * 用户注册
@@ -47,13 +47,6 @@ public interface UserService {
      * @return
      */
     UserVO getUserVO(User user);
-
-    /**
-     * 获取脱敏后的用户信息
-     * @param user 未脱敏的用户信息
-     * @return 脱敏后的用户信息
-     */
-    LoginUserVO getLoginUserVO(User user);
 
     /**
      * 根据id更新用户信息
@@ -101,4 +94,10 @@ public interface UserService {
      * @return
      */
     UserVO getUserVOById(Long userId);
+
+    /**
+     * 获取当前登录用户
+     * @return
+     */
+    LoginUser getLoginUser();
 }

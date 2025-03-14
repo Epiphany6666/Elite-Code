@@ -303,7 +303,7 @@
 
 # 框架
 
-- [ ] 使用SpringSecurity改写
+- [x] 使用SpringSecurity改写
 - [ ] 学若依
   - [ ] 手动写字符串格式化类StrFormatter
 
@@ -396,7 +396,38 @@
 
   GitHub：https://github.com/anuraghazra/github-readme-stats
 
+- [ ] 整合 SpringSecurity
 
+  SpringSecurity入门：
+
+  https://mp.weixin.qq.com/s?__biz=MzI1NDY0MTkzNQ==&mid=2247486003&idx=1&sn=7cea98049764fa7d8f7dbe05472d2e02&scene=21#wechat_redirect
+
+  https://zhuanlan.zhihu.com/p/365513384（强推）
+
+  - [x] SpringSecurity整合JWT
+
+  - [x] 了解Bearer Token：https://docs.apifox.com/5734558m0
+
+  - [ ] 认证失败处理类
+
+  - [ ] 添加Logout filter
+
+    ~~~java
+    // 添加CORS filter
+    .addFilterBefore(corsFilter, JwtAuthenticationTokenFilter.class)
+    .addFilterBefore(corsFilter, LogoutFilter.class)
+    ~~~
+
+  - [ ] 封装JwtTokenUtil
+
+
+
+---
+
+# Redis
+
+- [ ] JWT存UserDetails应该改为存token（参考若依项目）
+- [ ] 
 
 
 
@@ -419,6 +450,7 @@
 - [x] React回顾
 
 - [ ] 学习SpringSecurity
+- [x] 学习SpringSecurity
 
 
 

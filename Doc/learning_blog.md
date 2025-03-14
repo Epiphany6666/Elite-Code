@@ -3822,7 +3822,143 @@ class Person implements Serializable{
 
 
 
+---
 
+# OncePerRequestFilter
+
+`OncePerRequestFilter` 实现了 `Filter` 接口，但是两者有什么区别呢？
+
+其实源码中正真的关系是这样的:
+
+```java
+OncePerRequestFilter extends GenericFilterBean implements Filter{}
+```
+
+在使用上方法上：
+
+`MyFilter implement Filter` 的类，要重写 `doFilter(****)` 方法。将所有的业务逻辑都写到里面去。
+
+`OncePerRequestFilter` 实现了 Filter 并且已经重写了 `doFilter(****)`，
+
+```java
+@Override
+public final void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
+    throws ServletException, IOException {
+    // 好几个 if...else if... else 的逻辑判断，这里就省略了。
+
+    //最后调用了这个方法。
+    doFilterInternal(httpRequest, httpResponse, filterChain);
+}
+
+//  这是个抽象方法。
+protected abstract void doFilterInternal(
+HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    throws ServletException, IOException;
+```
+
+所以 `MyFilter extends OncePerRequestFilter` 只需要重写`doFilterInternal(****)`, 将过滤的业务逻辑写到这里面就可以了。
+
+在目的上：
+
+`Filter` 已经可以实现请求过滤了，那为何还要有 `OncePerRequestFilter`？后者比前者先进在哪了，或者有什么特殊之处？
+
+查到的资料上说：
+
+- 请求发向 servlet 时会被 Filter 拦截，如果 servlet 将请求转发给另一个 servlet，请求发向第二个 servlet 时，依旧会被相同的 Filter 拦截。结果就是一个请求被同一个 Filter 拦截了两次。
+
+- `OncePerRequestFilter` 一个请求只被过滤器拦截一次。请求转发不会第二次触发过滤器。
+1234
+
+实际测试结果：
+
+```
+`MyFilter implement Filter` 请求转发不会二次触发过滤器，重定向会触发过滤器。
+`MyFilter extends OncePerRequestFilter` 请求转发不会二次触发过滤器，重定向会触发过滤器。
+```
+
+
+
+---
+
+# 什么是 Bearer Token
+
+Bearer Token 是一种用于身份验证的访问令牌，它授权持有者（Bearer）访问资源的权限。当你向服务器发送请求时，你可以在请求头中携带 `Bearer Token`，服务器会根据这个 Token 来验证你的身份并授权你所请求的操作。
+## 一、Bearer Token 的工作原理
+
+当用户成功登录后，服务器会生成一个`Bearer Token`并返回给客户端，客户端随后在发起请求时，会在 HTTP 头部包含这个 Token。`Bearer Token` 在请求头中以 Bearer 关键字加上令牌本身的形式发送，格式通常为`Authorization: Bearer <token>`。服务器接收到请求后，会检查请求头中的 Authorization 字段，如果它以 Bearer 关键字开头，服务器就会提取出后面的令牌，并使用令牌来验证请求的合法性和授权级别，确认无误后提供请求的资源。
+
+```
++-----------------------------+         +-----------------------------+
+|                             |         |                             |
+|         用户登录             |         |   服务器生成 Bearer Token    |
+|                             |         |                             |
++-----------------------------+         +--------------+--------------+
+             |                                         |
+             v                                         v
++-----------------------------+         +--------------+--------------+
+|                             |         |                             |
+|                             |         |                             |
+|        客户端发起请求        +--------->   Bearer Token 发送给客户端  |
+|                             |         |                             |
+|                             |         |                             |
++-----------------------------+         +--------------+--------------+
+                                                       |
+                                                       v
+                                        +--------------+--------------+
+                                        |                             |
+                                        |                             |
+                                        |     客户端发起请求并携带      |
+                                        |       Bearer Token          |
+                                        |                             |
+                                        |                             |
+                                        +--------------+--------------+
+                                                       |
+                                                       v
+                                        +--------------+--------------+
+                                        |                             |
+                                        |                             |
+                                        |     服务器接收请求并验证      |
+                                        |         Bearer Token        |
+                                        |                             |
+                                        |                             |
+                                        +--------------+--------------+
+                                                       |
+                                                       v
+                                        +--------------+--------------+
+                                        |                             |
+                                        |                             |
+                                        |  服务器返回资源给客户端       |
+                                        |                             |
+                                        |                             |
+                                        +--------------+--------------+
+```
+
+---
+
+## 二、客户端如何使用 Bearer Token？
+
+在发送请求时，将其携带在请求头（Header）的 Authorization 字段中，其字段值为 Bearer 关键字加上令牌本身，以下以 JavaScript 的 Axios 库为例：
+
+```js
+const axios = require('axios')
+
+const url = 'https://api.example.com/data' // 替换为你要访问的 API 地址
+const token = 'your_bearer_token' // 替换为你的 Bearer Token
+
+axios
+  .get(url, {
+    headers: {
+      // highlight-next-line
+      Authorization: 'Bearer ' + token,
+    },
+  })
+  .then(function (response) {
+    console.log('请求成功:', response.data)
+  })
+  .catch(function (error) {
+    console.error('请求失败:', error)
+  })
+```
 
 
 

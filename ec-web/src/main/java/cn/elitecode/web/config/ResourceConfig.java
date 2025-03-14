@@ -17,8 +17,7 @@ public class ResourceConfig implements WebMvcConfigurer {
      * 跨域配置
      */
     @Bean
-    public CorsFilter corsFilter()
-    {
+    public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
         //允许跨越发送cookie
         config.setAllowCredentials(true);

@@ -32,7 +32,7 @@
         from
             user
         where
-            id = #{id} and del_flag = #{delFlag}
+            id = #{id} and del_flag = '0'
     </select>
 
     <select id="selectUserByUsername" resultMap="UserResult">

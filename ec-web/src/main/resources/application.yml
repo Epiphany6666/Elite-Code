@@ -64,3 +64,10 @@ knife4j:
         api-rule: package
         api-rule-resources:
           - cn.elitecode.web.controller
+
+# jwt配置
+jwt:
+  tokenHeader: Authorization # JWT存储的请求头
+  secret: ec-secret # JWT加解密使用的密钥
+  expiration: 604800 # JWT的超期限时间(60*60*24*7) 过期时间七天
+  tokenHead: 'Bearer '  # JWT负载中拿到开头
