@@ -3,7 +3,7 @@ package cn.elitecode.web.filter;
 import cn.elitecode.common.exception.BaseException;
 import cn.elitecode.common.properties.JWTProperties;
 import cn.elitecode.constant.HttpStatus;
-import cn.elitecode.constant.UserConstant;
+import cn.elitecode.constant.JWTConstant;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.ValidateException;
 import cn.hutool.jwt.JWTUtil;
@@ -42,7 +42,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 throw new BaseException(HttpStatus.PARAMS_ERROR, "Token不合法");
             }
             // 将用户信息存入SecurityContext
-            String username = (String) JWTUtil.parseToken(authToken).getPayload(UserConstant.LOGIN_USER_KEY);
+            String username = (String) JWTUtil.parseToken(authToken).getPayload(JWTConstant.CLAIM_KEY_USERNAME);
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);

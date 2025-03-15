@@ -2,17 +2,17 @@ package cn.elitecode.service.impl;
 
 import cn.elitecode.common.BaseContext;
 import cn.elitecode.common.PageResult;
-import cn.elitecode.common.exception.BaseException;
 import cn.elitecode.common.exception.user.AdminNotAllowedException;
 import cn.elitecode.common.exception.user.RegistrationFailedException;
 import cn.elitecode.common.exception.user.UserNotLoggedInException;
 import cn.elitecode.common.properties.JWTProperties;
 import cn.elitecode.constant.HttpStatus;
+import cn.elitecode.constant.JWTConstant;
 import cn.elitecode.constant.UserConstant;
 import cn.elitecode.mapper.UserMapper;
+import cn.elitecode.model.bo.LoginUser;
 import cn.elitecode.model.dto.user.UserQueryDTO;
 import cn.elitecode.model.entity.User;
-import cn.elitecode.model.vo.LoginUser;
 import cn.elitecode.model.vo.UserVO;
 import cn.elitecode.service.UserService;
 import cn.hutool.core.date.DateUtil;
@@ -25,11 +25,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,17 +48,13 @@ public class UserServiceImpl implements UserService {
     private AuthenticationManager authenticationManager;
 
     @Override
-    public LoginUser login(String username, String userPassword, HttpServletRequest request) {
+    public String login(String username, String userPassword, HttpServletRequest request) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, userPassword);
         // 该方法会去调用UserDetailsServiceImpl.loadUserByUsername，并将返回的UserDetails设置到SecurityContext中
-        Authentication authenticate = authenticationManager.authenticate(authenticationToken);
-        LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
-        if (!loginUser.isEnabled()) {
-            throw new BaseException(HttpStatus.PARAMS_ERROR, "账号已被禁用");
-        }
+        authenticationManager.authenticate(authenticationToken);
         // 生成jwt令牌
         HashMap<String, Object> claims = new HashMap<>();
-        claims.put(UserConstant.LOGIN_USER_KEY, loginUser.getUsername());
+        claims.put(JWTConstant.CLAIM_KEY_USERNAME, username);
         String token = JWT.create()
                 .addPayloads(claims)
                 .setSigner(JWTSignerUtil.hs256(JWTProperties.getSecret().getBytes()))
@@ -68,10 +62,9 @@ public class UserServiceImpl implements UserService {
                 // 签发时间
                 .setIssuedAt(DateUtil.date())
                 // 失效时间
-                .setExpiresAt(DateUtil.offsetSecond(new Date(), JWTProperties.getExpiration()))
+                .setExpiresAt(DateUtil.offsetSecond(DateUtil.date(), JWTProperties.getExpiration()))
                 .sign();
-        loginUser.setToken(token);
-        return loginUser;
+        return token;
     }
 
     @Override

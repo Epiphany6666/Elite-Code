@@ -1,4 +1,4 @@
-package cn.elitecode.model.vo;
+package cn.elitecode.model.bo;
 
 import cn.elitecode.model.entity.User;
 import org.springframework.security.core.GrantedAuthority;

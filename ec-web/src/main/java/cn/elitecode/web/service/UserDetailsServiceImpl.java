@@ -4,7 +4,7 @@ import cn.elitecode.common.exception.user.UsernameNotFoundException;
 import cn.elitecode.constant.HttpStatus;
 import cn.elitecode.mapper.UserMapper;
 import cn.elitecode.model.entity.User;
-import cn.elitecode.model.vo.LoginUser;
+import cn.elitecode.model.bo.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

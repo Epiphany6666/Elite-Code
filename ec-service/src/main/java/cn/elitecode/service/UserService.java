@@ -3,7 +3,7 @@ package cn.elitecode.service;
 import cn.elitecode.common.PageResult;
 import cn.elitecode.model.dto.user.UserQueryDTO;
 import cn.elitecode.model.entity.User;
-import cn.elitecode.model.vo.LoginUser;
+import cn.elitecode.model.bo.LoginUser;
 import cn.elitecode.model.vo.UserVO;
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,7 +20,7 @@ public interface UserService {
      * @param request
      * @return 用户信息
      */
-    LoginUser login(String username, String userPassword, HttpServletRequest request);
+    String login(String username, String userPassword, HttpServletRequest request);
 
     /**
      * 用户注册

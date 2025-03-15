@@ -23,6 +23,4 @@ public interface UserConstant {
     int USER_PASSWORD_MIN_LENGTH = 6;
     int USER_PASSWORD_MAX_LENGTH = 20;
 
-    String LOGIN_USER_KEY = "login_username";
-
 }
