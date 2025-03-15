@@ -1,6 +1,5 @@
 <script setup lang="ts" name="login">
 import { reactive, ref } from 'vue'
-import { Lock, User } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/store/modules/user.ts'
 import { login } from '@/api/user.ts'
@@ -60,24 +59,32 @@ const handleLogin = async () => {
       :model="loginForm"
       :rules="loginRules"
       label-width="auto"
-      style="width: 250px"
+      class="login-form"
     >
       <h3 class="title">{{ title }}</h3>
       <el-form-item prop="username">
         <el-input
           v-model="loginForm.username"
           type="text"
+          size="large"
           placeholder="账号"
-          :prefix-icon="User"
-        />
+        >
+          <template #prefix>
+            <svg-icon icon-class="user" class="input-icon" />
+          </template>
+        </el-input>
       </el-form-item>
       <el-form-item prop="password">
         <el-input
           v-model="loginForm.password"
           type="password"
+          size="large"
           placeholder="密码"
-          :prefix-icon="Lock"
-        />
+        >
+          <template #prefix>
+            <svg-icon icon-class="password" class="input_icon" />
+          </template>
+        </el-input>
       </el-form-item>
       <el-form-item>
         <el-button
@@ -97,7 +104,7 @@ const handleLogin = async () => {
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="less">
 .login {
   display: flex;
   justify-content: center;
@@ -106,8 +113,20 @@ const handleLogin = async () => {
   background: url("@/assets/images/login-background.png") center/cover;
 }
 
+.login-form {
+  width: 250px;
+  .input_icon {
+    height: 30px;
+    width: 14px;
+  }
+}
+
 .title {
   text-align: center;
   color: #5b9cf8;
+}
+
+:deep(.el-input--large) .el-input__wrapper {
+  padding: 1px 10px;
 }
 </style>

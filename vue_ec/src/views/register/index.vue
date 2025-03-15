@@ -2,7 +2,6 @@
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { register } from '@/api/user.ts'
-import { Lock, User } from '@element-plus/icons-vue'
 import type { FormRules } from 'element-plus'
 import type { UserRegisterDTO } from '@/types/user'
 
@@ -65,32 +64,44 @@ const handleRegister = () => {
       ref="registerFormRef"
       :model="registerForm"
       :rules="registerRules"
-      style="width: 250px"
+      class="register-form"
     >
       <h3 class="title">注册</h3>
       <el-form-item prop="username">
         <el-input
           type="text"
           v-model="registerForm.username"
+          size="large"
           placeholder="账号"
-          :prefix-icon="User"
-        />
+        >
+          <template #prefix>
+            <svg-icon icon-class="user" class="input_icon" />
+          </template>
+        </el-input>
       </el-form-item>
       <el-form-item prop="password">
         <el-input
           type="password"
           v-model="registerForm.password"
+          size="large"
           placeholder="密码"
-          :prefix-icon="Lock"
-        />
+        >
+          <template #prefix>
+            <svg-icon icon-class="password" class="input_icon" />
+          </template>
+        </el-input>
       </el-form-item>
       <el-form-item prop="checkPassword">
         <el-input
           type="password"
           v-model="registerForm.checkPassword"
+          size="large"
           placeholder="确认密码"
-          :prefix-icon="Lock"
-        />
+        >
+          <template #prefix>
+            <svg-icon icon-class="password" class="input_icon" />
+          </template>
+        </el-input>
       </el-form-item>
 
       <el-form-item>
@@ -119,8 +130,21 @@ const handleRegister = () => {
   height: 100%;
   background: url("@/assets/images/login-background.png") center/cover;
 }
+
 .title {
   text-align: center;
   color: #5b9cf8;
+}
+
+.register-form {
+  width: 250px;
+  .input_icon {
+    height: 30px;
+    width: 14px;
+  }
+}
+
+:deep(.el-input--large) .el-input__wrapper {
+  padding: 1px 10px;
 }
 </style>

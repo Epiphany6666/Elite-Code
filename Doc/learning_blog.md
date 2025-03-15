@@ -4019,4 +4019,52 @@ axios
 
 
 
+---
+
+# Vue中的CSS深度选择器
+
+当 `<style>` 标签有 `scoped` 属性时，它的 CSS 只作用于当前组件中的元素，父组件的样式将不会渗透到子组件。 如果你希望 scoped 样式中的一个选择器能够作用得“更深”，例如影响子组件，你可以使用深度选择器。
+
+深度选择器在整合组件库中的项目十分常用，例如我想修改Elementplus中的Input组件的样式，但由于Input组件是子组件，我们无法修改Elementplus的源码，此时就可以使用深度选择器来修改Elementplus组件的样式！
+
+官网深度选择器介绍：https://vuejs.org/api/sfc-css-features.html#deep-selectors
+
+~~~css
+:deep(.el-input--large) .el-input__wrapper {
+  padding: 1px 10px;
+}
+~~~
+
+
+
+---
+
+# Props名称大小写
+
+官方文档：https://vuejs.org/guide/components/props.html#prop-name-casing
+
+我们使用驼峰式命名法来声明较长的属性名称，因为这样可以避免在将它们用作属性键时使用引号，并且允许我们在模板表达式中直接引用它们，因为它们是有效的 JavaScript 标识符：
+
+~~~js
+defineProps({
+  greetingMessage: String
+})
+~~~
+
+~~~html
+<span>{{ greetingMessage }}</span>
+~~~
+
+从技术上讲，在向子组件传递属性时，你也可以使用驼峰命名法（camelCase）（除了在DOM模板中）。然而，按照惯例，为了与HTML属性保持一致，所有情况下都应使用短横线命名法（kebab-case）。
+
+~~~html
+<MyComponent greeting-message="hello" />
+~~~
+
+我们尽可能在组件标签中使用 PascalCase，因为它通过区分 Vue 组件和原生元素，提高了模板的可读性。然而，在传递 props 时使用 camelCase 并没有太多实际好处，因此我们选择遵循每种语言的惯例。
+
+
+
+
+
 # ----------------
