@@ -8,6 +8,7 @@ import type { LoginUserVO, UserLoginDTO } from '@/types/user'
 import type { FormRules } from 'element-plus'
 
 const title = import.meta.env.VITE_APP_TITLE
+const loading = ref(false)
 const router = useRouter()
 const userStore = useUserStore()
 const loginFormRef = ref()
@@ -34,6 +35,7 @@ const loginRules = reactive<FormRules<UserLoginDTO>>({
 const handleLogin = async () => {
   await loginFormRef.value.validate(valid => {
     if (valid) {
+      loading.value = true
       login(loginForm.username, loginForm.password).then(res => {
         console.log(res)
         const user: LoginUserVO = res.data
@@ -43,6 +45,8 @@ const handleLogin = async () => {
         userStore.roles = user.roles
         // 跳转到主页
         handleGoHome()
+      }).finally(() => {
+        loading.value = false
       })
     }
   })
@@ -78,10 +82,12 @@ const handleLogin = async () => {
       <el-form-item>
         <el-button
           type="primary"
-          @click="handleLogin"
+          @click.prevent="handleLogin"
           style="width: 100%"
+          :loading="loading"
         >
-          登录
+          <span v-if="!loading">登 录</span>
+          <span v-else>登 录 中...</span>
         </el-button>
         <div>
           <router-link to="/register">没有账号？去注册</router-link>

@@ -5,8 +5,9 @@ import { register } from '@/api/user.ts'
 import { Lock, User } from '@element-plus/icons-vue'
 import type { FormRules } from 'element-plus'
 import type { UserRegisterDTO } from '@/types/user'
-const router = useRouter()
 
+const loading = ref(false)
+const router = useRouter()
 const registerFormRef = ref()
 const registerForm = reactive({
   username: '',
@@ -40,6 +41,7 @@ const registerRules = reactive<FormRules<UserRegisterDTO>>({
 const handleRegister = () => {
   registerFormRef.value.validate(valid => {
     if (valid) {
+      loading.value = true
       register(registerForm.username, registerForm.password, registerForm.checkPassword).then(res => {
         ElMessage({
           message: `${registerForm.username} 注册成功，即将跳转登录页...`,
@@ -48,6 +50,8 @@ const handleRegister = () => {
         setTimeout(() => {
           router.push('/login')
         }, 3000)
+      }).finally(() => {
+        loading.value = false
       })
     }
   })
@@ -90,7 +94,15 @@ const handleRegister = () => {
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" @click="handleRegister" style="width: 100%">注册</el-button><br>
+        <el-button
+          type="primary"
+          @click.prevent="handleRegister"
+          style="width: 100%"
+          :loading="loading"
+        >
+          <span v-if="!loading">注 册</span>
+          <span v-else>注 册 中...</span>
+        </el-button>
         <div>
           <router-link to="/login">已有账号？去登录</router-link>
         </div>
