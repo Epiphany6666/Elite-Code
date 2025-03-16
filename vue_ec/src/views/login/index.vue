@@ -1,9 +1,8 @@
 <script setup lang="ts" name="login">
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useUserStore } from '@/store/modules/user.ts'
-import { login } from '@/api/user.ts'
-import type { LoginUserVO, UserLoginDTO } from '@/types/user'
+import useUserStore from '@/store/modules/user'
+import type { UserLoginDTO } from '@/types/user'
 import type { FormRules } from 'element-plus'
 
 const title = import.meta.env.VITE_APP_TITLE
@@ -11,7 +10,7 @@ const loading = ref(false)
 const router = useRouter()
 const userStore = useUserStore()
 const loginFormRef = ref()
-const loginForm = reactive<UserLoginDTO>({
+const loginForm = ref<UserLoginDTO>({
   username: 'luoyan',
   password: '12345678'
 })
@@ -35,13 +34,7 @@ const handleLogin = async () => {
   await loginFormRef.value.validate(valid => {
     if (valid) {
       loading.value = true
-      login(loginForm.username, loginForm.password).then(res => {
-        console.log(res)
-        const user: LoginUserVO = res.data
-        userStore.id = user.id
-        userStore.username = user.username
-        userStore.avatar = user.avatar
-        userStore.roles = user.roles
+      userStore.login(loginForm.value).then(() => {
         // 跳转到主页
         handleGoHome()
       }).finally(() => {
@@ -115,6 +108,7 @@ const handleLogin = async () => {
 
 .login-form {
   width: 250px;
+
   .input_icon {
     height: 30px;
     width: 14px;

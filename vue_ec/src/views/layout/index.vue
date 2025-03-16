@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { CaretBottom, Document, Menu } from '@element-plus/icons-vue'
-import { useUserStore } from '@/store/modules/user.ts'
+import useUserStore from '@/store/modules/user'
 const userStore = useUserStore()
 </script>
 
