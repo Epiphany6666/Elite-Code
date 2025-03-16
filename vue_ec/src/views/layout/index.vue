@@ -2,6 +2,24 @@
 import { CaretBottom, Document, Menu } from '@element-plus/icons-vue'
 import useUserStore from '@/store/modules/user'
 const userStore = useUserStore()
+
+const handleCommand = (command) => {
+  switch (command) {
+    case "logout":
+      logout()
+      break
+    default:
+      break
+  }
+}
+
+const logout = () => {
+  userStore.logOut().then(() => {
+    location.reload() // 为了重新实例化vue-router对象 避免bug，例如缓存
+  })
+}
+
+
 </script>
 
 <template>
@@ -39,7 +57,7 @@ const userStore = useUserStore()
             <el-breadcrumb-item>promotion detail</el-breadcrumb-item>
           </el-breadcrumb>
           <div>
-            <el-dropdown placement="bottom-end" trigger="click">
+            <el-dropdown placement="bottom-end" trigger="click" @command="handleCommand">
               <div class="avatar-wrapper">
                 <el-avatar shape="square" class="user-avatar" :src="userStore.avatar || '/notLoginUser.png'" />
                 <el-icon><CaretBottom /></el-icon>
@@ -47,7 +65,7 @@ const userStore = useUserStore()
               <template #dropdown>
                 <el-dropdown-menu>
                   <el-dropdown-item>个人中心</el-dropdown-item>
-                  <el-dropdown-item divided>退出登录</el-dropdown-item>
+                  <el-dropdown-item divided command="logout">退出登录</el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>

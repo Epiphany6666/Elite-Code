@@ -43,3 +43,11 @@ export function getInfo() {
     method: 'get'
   })
 }
+
+// 退出登录
+export function logout() {
+  return request({
+    url: '/user/logout',
+    method: 'post'
+  })
+}

@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
 import type { UserState } from '@/types/userState.d.ts'
 import type { UserLoginDTO } from '@/types/user'
-import { getInfo, login } from '@/api/user.ts'
-import { getToken, setToken } from '@/utils/auth.ts'
+import { getInfo, login, logout } from '@/api/user.ts'
+import { getToken, removeToken, setToken } from '@/utils/auth.ts'
 
 const useUserStore = defineStore('user', {
   state: () => ({
@@ -39,6 +39,18 @@ const useUserStore = defineStore('user', {
           this.avatar = user.avatar
           this.roles = user.roles
           resolve(res)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    logOut() {
+      return new Promise((resolve, reject) => {
+        logout().then(() => {
+          this.token = ''
+          this.roles = []
+          removeToken()
+          resolve()
         }).catch(error => {
           reject(error)
         })
