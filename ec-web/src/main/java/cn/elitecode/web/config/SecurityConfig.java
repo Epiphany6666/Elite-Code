@@ -14,9 +14,16 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 public class SecurityConfig {
+
+    /**
+     * 跨域过滤器
+     */
+    @Autowired
+    private CorsFilter corsFilter;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -59,7 +66,10 @@ public class SecurityConfig {
                             .anyRequest().authenticated();
                 })
                 // 将 JWTFilter 添加到 UsernamePasswordAuthenticationFilter 前面（校验账号密码之前）
-                .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class).build();
+                .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class)
+                // 添加CORS filter
+                .addFilterBefore(corsFilter, JwtAuthenticationTokenFilter.class)
+                .build();
     }
 
     /**

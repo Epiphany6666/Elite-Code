@@ -1,4 +1,5 @@
 import axios, { type AxiosInstance } from 'axios'
+import useUserStore from '@/store/modules/user.ts'
 
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
 // 创建axios实例
@@ -10,6 +11,7 @@ const request: AxiosInstance = axios.create({
 // request拦截器
 request.interceptors.request.use(function (config) {
   // Do something before request is sent
+  config.headers.set("Authorization", useUserStore().token)
   return config;
 }, function (error) {
   // Do something with request error

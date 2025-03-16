@@ -97,6 +97,7 @@ const handleRegister = () => {
           v-model="registerForm.checkPassword"
           size="large"
           placeholder="确认密码"
+          @keyup.enter="handleRegister"
         >
           <template #prefix>
             <svg-icon icon-class="password" class="input_icon" />

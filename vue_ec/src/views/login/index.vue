@@ -73,6 +73,7 @@ const handleLogin = async () => {
           type="password"
           size="large"
           placeholder="密码"
+          @keyup.enter="handleLogin"
         >
           <template #prefix>
             <svg-icon icon-class="password" class="input_icon" />

@@ -233,10 +233,14 @@
 - [ ] 动态加载和管理 SVG 图标
 - [x] 搭建Pnia
 - [x] 获取用户信息放到Pinia
-- [ ] 将获取用户信息放到
-- [ ] 后端、前端抽离出 `登录` 的接口、方法
-- [ ] 按enter可登录
+- [x] 按enter可登录
+- [x] 登录成功
   - [x] 将login抽取到pinia中的actions中
+  - [x] 编写路由守卫（permission.ts）
+  - [x] 获取用户信息并放到pinia中
+  - [x] axios拦截器：添加header（Authorization）
+
+
 
 ---
 
@@ -246,8 +250,7 @@
 - [x] 跳转登录页
 - [x] 编写注册api
 - [x] 表单校验
-- [ ] 重置表单
-- [ ] 按enter可注册
+- [x] 按enter可注册
 - [x] 注册按钮：注册、注册中...
 ---
 

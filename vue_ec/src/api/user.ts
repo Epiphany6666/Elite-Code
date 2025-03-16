@@ -35,3 +35,11 @@ export function addUser(userAddDTO: UserAddDTO) {
     data: userAddDTO
   })
 }
+
+// 获取用户信息
+export function getInfo() {
+  return request({
+    url: '/user/profle',
+    method: 'get'
+  })
+}
