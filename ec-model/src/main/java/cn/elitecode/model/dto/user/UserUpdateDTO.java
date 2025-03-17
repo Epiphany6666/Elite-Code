@@ -1,32 +1,25 @@
 package cn.elitecode.model.dto.user;
 
+import io.swagger.annotations.ApiModelProperty;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 public class UserUpdateDTO {
 
-    /**
-     * 用户ID
-     */
+    @ApiModelProperty(value = "用户ID", required = true)
+    @NotEmpty(message = "用户ID不能为空")
     private Long id;
 
-    /**
-     * 账号
-     */
+    @ApiModelProperty(value = "账号")
     private String username;
 
-    /**
-     * 用户昵称
-     */
+    @ApiModelProperty(value = "用户昵称")
     private String nickName;
 
-    /**
-     * 用户简介
-     */
+    @ApiModelProperty(value = "用户简介")
     private String profile;
 
-    /**
-     * 用户角色：user/admin/ban
-     */
+    @ApiModelProperty(value = "用户角色：user/admin/ban")
     private List<String> roles;
 
     public UserUpdateDTO() {

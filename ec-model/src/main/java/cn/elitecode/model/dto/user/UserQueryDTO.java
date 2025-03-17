@@ -1,7 +1,7 @@
 package cn.elitecode.model.dto.user;
 
 import cn.elitecode.common.PageRequest;
-
+import io.swagger.annotations.ApiModelProperty;
 import java.util.Date;
 
 /**
@@ -9,44 +9,28 @@ import java.util.Date;
  */
 public class UserQueryDTO extends PageRequest {
 
-    /**
-     * 用户ID
-     */
+    @ApiModelProperty(value = "用户ID")
     private Long id;
 
-    /**
-     * 账号
-     */
+    @ApiModelProperty(value = "账号")
     private String username;
 
-    /**
-     * 用户昵称
-     */
+    @ApiModelProperty(value = "用户昵称")
     private String nickName;
 
-    /**
-     * 用户角色：user/admin/ban
-     */
+    @ApiModelProperty(value = "用户角色：user/admin/ban")
     private String role;
 
-    /**
-     * 创建者
-     */
+    @ApiModelProperty(value = "创建者")
     private String createBy;
 
-    /**
-     * 更新者
-     */
+    @ApiModelProperty(value = "更新者")
     private String updateBy;
 
-    /**
-     * 开始时间
-     */
+    @ApiModelProperty(value = "开始时间")
     private Date startTime;
 
-    /**
-     * 结束时间
-     */
+    @ApiModelProperty(value = "结束时间")
     private Date endTime;
 
     public UserQueryDTO() {

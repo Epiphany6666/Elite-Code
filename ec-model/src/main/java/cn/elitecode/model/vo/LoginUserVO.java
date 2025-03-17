@@ -1,9 +1,13 @@
 package cn.elitecode.model.vo;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class LoginUserVO {
 
+    @ApiModelProperty(value = "token头")
     private String tokenHead;
 
+    @ApiModelProperty(value = "用户唯一标识")
     private String token;
 
     public LoginUserVO() {

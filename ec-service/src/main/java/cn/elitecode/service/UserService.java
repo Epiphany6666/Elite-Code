@@ -1,11 +1,10 @@
 package cn.elitecode.service;
 
 import cn.elitecode.common.PageResult;
+import cn.elitecode.model.bo.LoginUser;
 import cn.elitecode.model.dto.user.UserQueryDTO;
 import cn.elitecode.model.entity.User;
-import cn.elitecode.model.bo.LoginUser;
 import cn.elitecode.model.vo.UserVO;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * 用户 业务层
@@ -17,10 +16,9 @@ public interface UserService {
      * 用户登录
      * @param username 用户账号
      * @param userPassword 用户密码
-     * @param request
      * @return 用户信息
      */
-    String login(String username, String userPassword, HttpServletRequest request);
+    String login(String username, String userPassword);
 
     /**
      * 用户注册
@@ -30,9 +28,8 @@ public interface UserService {
 
     /**
      * 用户注销
-     * @param request
      */
-    void userLogout(HttpServletRequest request);
+    void userLogout();
 
     /**
      * 根据条件分页获取用户脱敏信息

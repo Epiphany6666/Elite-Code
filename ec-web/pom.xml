@@ -29,12 +29,6 @@
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
         </dependency>
-
-        <!-- 整合knife4j -->
-        <dependency>
-            <groupId>com.github.xiaoymin</groupId>
-            <artifactId>knife4j-openapi2-spring-boot-starter</artifactId>
-        </dependency>
     </dependencies>
 
     <!-- SpringBoot应用打包插件-->

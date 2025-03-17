@@ -1,5 +1,6 @@
 package cn.elitecode.common;
 
+import io.swagger.annotations.ApiModelProperty;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
@@ -12,20 +13,13 @@ public class PageRequest implements Serializable {
     @Serial
     private static final long serialVersionUID = 6445240999999115607L;
 
-    /**
-     * 当前页号
-     */
+    @ApiModelProperty(value = "当前页号")
     private Integer current = 1;
 
-    /**
-     * 页面大小
-     */
+    @ApiModelProperty(value = "页面大小")
     private Integer pageSize = 10;
 
-    /**
-     * 排序字段列表，支持多个字段
-     * 格式：字段名 + 排序方向（如 "created_time desc" 或 "id asc"）
-     */
+    @ApiModelProperty(value = "排序字段列表，支持多个字段(格式：字段名 + 排序方向（如 \"created_time desc\" 或 \"id asc\"）)")
     private List<String> sortFieldPair;
 
 

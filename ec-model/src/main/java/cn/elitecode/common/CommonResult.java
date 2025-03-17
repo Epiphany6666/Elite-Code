@@ -1,29 +1,22 @@
 package cn.elitecode.common;
 
 import cn.elitecode.constant.HttpStatus;
-import cn.hutool.core.util.ObjectUtil;
-import java.util.HashMap;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * 通用返回类
  * @param <T>
  */
-public class CommonResult<T> extends HashMap<String, Object> {
+public class CommonResult<T> {
 
-    /**
-     * 状态码
-     */
-    private static final String CODE_TAG = "code";
+    @ApiModelProperty(value = "状态码")
+    private int code;
 
-    /**
-     * 信息
-     */
-    private static final String MSG_TAG = "msg";
+    @ApiModelProperty(value = "信息")
+    private String msg;
 
-    /**
-     * 数据对象
-     */
-    private static final String DATA_TAG = "data";
+    @ApiModelProperty(value = "数据对象")
+    private T data;
 
     /**
      * 初始化一个新创建的 CommonResult 对象，使其表示一个空消息
@@ -47,11 +40,9 @@ public class CommonResult<T> extends HashMap<String, Object> {
      * @param data 数据对象
      */
     public CommonResult(int code, String msg, T data) {
-        super.put(CODE_TAG, code);
-        super.put(MSG_TAG, msg);
-        if (ObjectUtil.isNotEmpty(data)) {
-            super.put(DATA_TAG, data);
-        }
+        this.code = code;
+        this.msg = msg;
+        this.data = data;
     }
 
     /**
@@ -86,8 +77,56 @@ public class CommonResult<T> extends HashMap<String, Object> {
      * @param msg 错误信息
      * @return 错误消息
      */
-    public static <T> CommonResult<T> error(int code, String msg) {
+    public static CommonResult error(int code, String msg) {
         return new CommonResult(code, msg, null);
+    }
+
+    /**
+     * 获取
+     * @return code
+     */
+    public int getCode() {
+        return code;
+    }
+
+    /**
+     * 设置
+     * @param code
+     */
+    public void setCode(int code) {
+        this.code = code;
+    }
+
+    /**
+     * 获取
+     * @return msg
+     */
+    public String getMsg() {
+        return msg;
+    }
+
+    /**
+     * 设置
+     * @param msg
+     */
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    /**
+     * 获取
+     * @return data
+     */
+    public T getData() {
+        return data;
+    }
+
+    /**
+     * 设置
+     * @param data
+     */
+    public void setData(T data) {
+        this.data = data;
     }
 
 }

@@ -1,5 +1,6 @@
 package cn.elitecode.model.entity;
 
+import io.swagger.annotations.ApiModelProperty;
 import java.util.Date;
 import java.util.List;
 
@@ -9,64 +10,40 @@ import java.util.List;
  */
 public class User {
 
-    /**
-     * 用户ID
-     */
+    @ApiModelProperty(value = "用户ID")
     private Long id;
 
-    /**
-     * 账号（唯一）
-     */
+    @ApiModelProperty(value = "账号（唯一）")
     private String username;
 
-    /**
-     * 密码
-     */
+    @ApiModelProperty(value = "密码")
     private String password;
 
-    /**
-     * 用户昵称
-     */
+    @ApiModelProperty(value = "用户昵称")
     private String nickName;
 
-    /**
-     * 用户头像
-     */
+    @ApiModelProperty(value = "用户头像")
     private String avatar;
 
-    /**
-     * 用户简介
-     */
+    @ApiModelProperty(value = "用户简介")
     private String profile;
 
-    /**
-     * 用户角色：user/admin/ban
-     */
+    @ApiModelProperty(value = "用户角色：user/admin/ban")
     private List<String> roles;
 
-    /**
-     * 删除标志（0代表存在，2代表删除）
-     */
+    @ApiModelProperty(value = "删除标志（0代表存在，2代表删除）")
     private String delFlag;
 
-    /**
-     * 创建者
-     */
+    @ApiModelProperty(value = "创建者")
     private Long createBy;
 
-    /**
-     * 创建时间
-     */
+    @ApiModelProperty(value = "创建时间")
     private Date createTime;
 
-    /**
-     * 更新者
-     */
+    @ApiModelProperty(value = "更新者")
     private Long updateBy;
 
-    /**
-     * 编辑时间
-     */
+    @ApiModelProperty(value = "编辑时间")
     private Date updateTime;
 
     public User(Long userId) {

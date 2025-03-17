@@ -38,7 +38,7 @@ export function addUser(userAddDTO: UserAddDTO) {
 // 获取用户信息
 export function getInfo() {
   return request({
-    url: '/user/profle',
+    url: '/user/getInfo',
     method: 'get'
   })
 }

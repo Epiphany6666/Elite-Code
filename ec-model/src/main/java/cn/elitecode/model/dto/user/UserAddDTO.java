@@ -1,37 +1,26 @@
 package cn.elitecode.model.dto.user;
 
+import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 
 public class UserAddDTO {
 
-    /**
-     * 账号
-     */
+    @ApiModelProperty(value = "账号")
     private String username;
 
-    /**
-     * 密码
-     */
+    @ApiModelProperty(value = "密码")
     private String password;
 
-    /**
-     * 用户昵称
-     */
+    @ApiModelProperty(value = "用户昵称")
     private String nickName;
 
-    /**
-     * 用户头像
-     */
+    @ApiModelProperty(value = "用户头像")
     private String avatar;
 
-    /**
-     * 用户简介
-     */
+    @ApiModelProperty(value = "用户简介")
     private String profile;
 
-    /**
-     * 用户角色：user/admin/ban
-     */
+    @ApiModelProperty(value = "用户角色：user/admin/ban")
     private List<String> roles;
 
     public UserAddDTO() {

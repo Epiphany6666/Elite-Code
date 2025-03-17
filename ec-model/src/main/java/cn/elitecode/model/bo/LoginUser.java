@@ -1,27 +1,24 @@
 package cn.elitecode.model.bo;
 
 import cn.elitecode.model.entity.User;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.io.Serial;
 import java.util.Collection;
 
 /**
- * 已登录用户VO
+ * 已登录用户
  */
 public class LoginUser implements UserDetails {
 
     @Serial
     private static final long serialVersionUID = 4453625113463743280L;
 
-    /**
-     * 用户唯一标识
-     */
+    @ApiModelProperty(value = "用户唯一标识")
     private String token;
 
-    /**
-     * 用户信息
-     */
+    @ApiModelProperty(value = "用户信息")
     private User user;
 
     public LoginUser(User user) {

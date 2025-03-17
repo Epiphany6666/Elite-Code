@@ -1,20 +1,16 @@
 package cn.elitecode.model.dto.user;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class UserUpdateProfileDto {
 
-    /**
-     * 账号
-     */
+    @ApiModelProperty(value = "账号")
     private String username;
 
-    /**
-     * 用户昵称
-     */
+    @ApiModelProperty(value = "用户昵称")
     private String nickName;
 
-    /**
-     * 用户简介
-     */
+    @ApiModelProperty(value = "用户简介")
     private String profile;
 
     public UserUpdateProfileDto() {

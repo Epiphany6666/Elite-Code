@@ -64,9 +64,7 @@
 - [ ] 学习Excel数据验证、函数
 
 - [x] 包名从cn.luoyan.elitecode改为cn.elitecode
-
-- [ ] 补充Swagger注解
-
+- [x] 补充Swagger注解
 - [x] 校验规范修改（不为空和查询数据库应该合并成一个方法）
 
 - [ ] 抽取Register、LoginController
@@ -161,7 +159,7 @@
 
 - [ ] 将用户表中的角色字段抽取出来，做成用户表，然后新建 `用户-角色关联表`
 
-- [ ] controller层校验全部改为JSR-303校验
+- [x] controller层校验全部使用JSR-303
 
 
 

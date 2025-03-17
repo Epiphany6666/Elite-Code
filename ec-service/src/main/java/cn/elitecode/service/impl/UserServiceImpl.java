@@ -27,7 +27,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,7 +47,7 @@ public class UserServiceImpl implements UserService {
     private AuthenticationManager authenticationManager;
 
     @Override
-    public String login(String username, String userPassword, HttpServletRequest request) {
+    public String login(String username, String userPassword) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, userPassword);
         // 该方法会去调用UserDetailsServiceImpl.loadUserByUsername，并将返回的UserDetails设置到SecurityContext中
         authenticationManager.authenticate(authenticationToken);
@@ -78,7 +77,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void userLogout(HttpServletRequest request) {
+    public void userLogout() {
         if (getLoginUser() == null) {
             throw new UserNotLoggedInException(HttpStatus.PARAMS_ERROR, "用户未登录");
         }
