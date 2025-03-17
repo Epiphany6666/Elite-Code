@@ -25,6 +25,14 @@ const constantRoutes:Array<RouteRecordRaw> = [
         component: () => import('@/views/about/index.vue')
       }
     ]
+  },
+  {
+    path: '/404',
+    component: () => import('@/views/error/404.vue'),
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/404'
   }
 ]
 
