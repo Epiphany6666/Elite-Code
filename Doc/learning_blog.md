@@ -4065,6 +4065,3024 @@ defineProps({
 
 
 
+---
+
+# Scss使用
+
+## 一、前言
+
+在`JavasScrip`框架满天飞的年代，前端三板斧之一的`CSS`也前前后后涌出`Sass`、`Less` 、`Stylus`等多款`CSS`预处理框架。
+
+今天我们要讲的就是其中的的老大哥`Sass`的升级版`Scss`，`Scss`给我们提供了变量 、循环 、继承 、混入、函数等一系列强大的功能以方便我们开发。
+
+---
+
+## 二、Scss和Sass
+
+`Sass`从第三代开始，放弃了缩进式风格，并且完全向下兼容普通的`CSS`代码，这一代的`Sass`也被称为`Scss`。
+
+----
+
+## 三、文档
+
+单文件编译可以在下面的网站进行操作，多文件编译见下下节，中文文档缺失的东西挺多的，有条件的可以翻看英文文档。
+
+- 中文文档：[www.sass.hk](https://link.juejin.cn?target=https%3A%2F%2Fwww.sass.hk%2F)
+- 英文文档：[sass-lang.com/documentati…](https://link.juejin.cn?target=https%3A%2F%2Fsass-lang.com%2Fdocumentation)
+- `CSS`转`Scss`：[www.sass.hk/css2sass](https://link.juejin.cn?target=https%3A%2F%2Fwww.sass.hk%2Fcss2sass%2F)
+- `Scss`转`CSS`：[www.sassmeister.com](https://link.juejin.cn?target=https%3A%2F%2Fwww.sassmeister.com%2F)
+
+---
+
+## 四、Sass版本
+
+`Sass`有三个版本`Dart Sass`、`libsass`和`Ruby Sass`：
+
+1. `Dart Sass`，用`Dart`语言写的`sass`实现，于2016年11月1日发布`alpha`版本，版本`1.23.0`之后完全支持模块化机制。
+2. `libSass`也就是俗称的`node-sass`，用`c/c++`实现的`sass`版本，使用非常广泛。 `node-sass`是绑定了 `libsass`的`nodejs`库，可以极快的将`.scss` 文件编译为`.css`文件，这个安装过程……，懂的都懂，官方也不推荐再使用了。
+3. `Ruby Sass`，是最初的`Sass`实现，但是2019年3月26日被停止了，以后也不会再支持，使用者需要迁移到别的实现上。
+
+---
+
+## 五、环境配置
+
+中文文档的安装教程是`Ruby Sass`，个人推荐使用`npm`安装`Dart Sass`，这也是官方推荐的方式。
+
+### 1、全局安装
+
+`npm`默认安装的是`Dart Sass`了。
+
+```bash
+bash
+
+ 代码解读
+复制代码npm install -g sass
+```
+
+### 2、项目结构
+
+```json
+json
+
+ 代码解读
+复制代码code
+    --css
+        --index.scss
+    --dist
+```
+
+### 3、监听运行
+
+使用命令行操作，监听文件夹下的`scss`文件并输出为`css`文件，如果是`webpack`项目，则需要使用`sass-loader`。
+
+```bash
+sass --style=expanded  -w css:dist --no-source-map
+```
+
+---
+
+## 六、Live Sass Compiler
+
+如果你使用的`VSCode`的`Live Sass Compiler`插件，可以参考我的配置，这个插件用的 `Sass`版本是`LibSass3.5.4`，对有些指令存在兼容性和不支持的情况。
+
+```json
+json
+
+ 代码解读
+复制代码"liveSassCompile.settings":{
+        "generateMap":false,
+        "formats":[
+            {
+                "format": "expanded",
+                "savePath": "~/css/",
+            }
+        ]
+}
+```
+
+![img](./assets/b187c03a57b14ad583d3a5f816a5f22b~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp)
+
+---
+
+## 七、输出格式
+
+嘿嘿，下面正文术语都同统一改为小写哈。
+ `scss`提供了四种输出格式，在命令行中使用 `--style` 选项进行设置，在`Live Sass Compiler`中配置`format`参数。
+
+**注：**`dart sass`只支持`expanded`和`compressed`。
+
+```bash
+sass --watch style.scss:style.css --style compressed
+```
+
+### :nested
+
+`nested`是 `scss`默认的输出格式，选择器与属性等单独占用一行，缩进量与 `scss`文件中一致，**每行的缩进量反映了其在嵌套规则内的层数**。
+
+```css
+#main {
+  color: #fff;
+  background-color: #000; }
+  #main p {
+    width: 10em; }
+
+.p {
+  font-size: 10em;
+  font-weight: bold;
+  text-decoration: underline; }
+```
+
+### :expanded
+
+`expanded`输出像是我们平常手写的样式，选择器、属性等各占用一行，属性根据选择器缩进，而选择器不做任何缩进。
+
+```css
+#main {
+  color: #fff;
+  background-color: #000;
+}
+#main p {
+  width: 10em;
+}
+
+.p {
+  font-size: 10em;
+  font-weight: bold;
+  text-decoration: underline;
+}
+```
+
+### :compact
+
+`compact`会将每条 `css` 规则归纳为一行。嵌套过的选择器在输出时没有空行，不嵌套的选择器会输出空白行作为分隔符。
+
+```css
+#main { color: #fff; background-color: #000; }
+#main p { width: 10em; }
+
+.p { font-size: 10em; font-weight: bold; text-decoration: underline; }
+```
+
+### :compressed
+
+`compressed`会删除所有无意义的空格、空白行、以及注释，力求将文件体积压缩到最小，同时也会做出其他调整，比如会自动替换占用空间最小的颜色表达方式。
+
+```css
+#main{color:#fff;background-color:#000}#main p{width:10em}.p{font-size:10em;font-weight:bold;text-decoration:underline}
+```
+
+---
+
+## 八、语法嵌套规则
+
+### 1、选择器嵌套
+
+`css`中重复写选择器是非常恼人的。尤其是`html`结构嵌套非常深的时候，`scss`的选择器嵌套可以避免重复输入父选择器，可以有效的提高开发效率，减少样式覆盖可能造成的异常问题。这也是我们最常用的功能。很多人用`scss`就只用了这个功能，然后觉得自己会了🤜🤜。
+
+这个是正常的`css`结构
+
+```css
+.container {
+    width: 1200px;
+    margin: 0 auto;
+}
+.container .header .img {
+    width: 100px;
+    height: 60px;
+}
+```
+
+编译成`scss`的样子，子元素向父元素内部嵌套了。
+
+```css
+.container {
+    width: 1200px;
+    margin: 0 auto;
+    .header {
+        .img {
+            width: 100px;
+            height: 60px;
+        }
+    }
+}
+```
+
+---
+
+### 2、属性嵌套
+
+有些`css`属性遵循相同的命名空间 (相同的开头)，比如`font-family`，`font-size`，`font-weight`都以`font`作为属性的命名空间。为了便于管理这样的属性，也为了避免重复输入。（这个编辑器提示有点不太理想……，不是很好用）。
+
+```css
+.container {
+  font: {
+    family: fantasy;
+    size: 30em;
+    weight: bold;
+  }
+}
+```
+
+编译成`css`
+
+```css
+.container {
+  font-family: fantasy;
+  font-size: 30em;
+  font-weight: bold;
+}
+```
+
+命名空间也可以包含自己的属性值
+
+```css
+.container {
+  color: red {
+    adjust: fantasy;
+  }
+}
+```
+
+编译成`css`
+
+```css
+css
+
+ 代码解读
+复制代码.container {
+  color: red;
+  color-adjust: fantasy;
+}
+```
+
+---
+
+### 3、父选择器&
+
+在嵌套 `css`规则时，有时会需要使用嵌套外层的父选择器，例如，当给某个元素设定 `hover` 样式时，可以用`&` 代表嵌套规则外层的父选择器，`scss`在编译时会把`&`替换成父选择器名。
+
+案例里面的`&`表示的就是父级`a`选择器
+
+```css
+.container {
+    a {
+        color: #333;
+        &:hover {
+             text-decoration: underline;
+             color: #f00;
+        }
+    }
+}
+```
+
+转化成`scss`
+
+```css
+.container a {
+    color:#333;
+}
+.container a:hover {
+    text-decoration:underline;
+    color:#F00;
+}
+```
+
+换个思路，也可以使用`&`进行选择器名称拼接。
+
+```css
+.main {
+    color: black;
+    &-sidebar { border: 1px solid; }
+}
+```
+
+转化成`css`
+
+```css
+css
+
+ 代码解读
+复制代码.main {
+    color: black;
+}
+.main-sidebar {
+    border: 1px solid;
+}
+```
+
+---
+
+## 九、Scss的两种注释
+
+### 1、多行注释`/* ... */`
+
+多行注释会编译到`.css`文件中,`compressed`（压缩）模式下除外， 将 `!`作为多行注释的第一个字符表示在压缩输出模式下也保留这条注释，通常用于添加版权信息。
+
+```css
+css
+
+ 代码解读
+复制代码/*!
+* 我是
+* 多行
+* 注释
+*/
+body { color: black; }
+```
+
+编译成`css`
+
+```css
+css
+
+ 代码解读
+复制代码/*!
+* 我是
+* 多行
+* 注释 
+*/body{color:#000}
+```
+
+---
+
+### 2、单行注释`//`
+
+单行注释不会编译到`.css`文件
+
+```css
+css
+
+ 代码解读
+复制代码// 我是单行注释
+body { color: black; }
+```
+
+编译成`css`
+
+```css
+css
+
+ 代码解读
+复制代码body {
+  color: black;
+}
+```
+
+---
+
+## 十、变量
+
+### 使用
+
+原生`css`中的变量，使用`--变量名:变量值`定义，`var(--变量名)`进行使用。
+
+```css
+css
+
+ 代码解读
+复制代码:root {
+    --color: #F00;
+}
+p {
+    color: var(--color);
+}
+```
+
+`scss`中的变量，以美元符号`$`开头，赋值方法与 `css`属性的写法一样。
+
+```css
+css
+
+ 代码解读
+复制代码$color:#F00;
+p {
+    color: $color;
+}
+```
+
+转行成`css`
+
+```css
+css
+
+ 代码解读
+复制代码p {
+    color: #F00;
+}
+```
+
+---
+
+### 5条变量规则
+
+下文的`mixin`和`function`命名也遵循`1234`条规则：
+
+1. 变量以美元符号`$`开头，后面跟变量名；
+2. 变量名是不以数字开头的可包含字母、数字、下划线、横线（连接符）；
+3. 通过连接符`-`与下划线`_`定义的同名变量为同一变量；
+4. 变量一定要先定义，后使用；
+5. 写法同`css`，即变量名和值之间用冒号`:`分隔；
+
+---
+
+### 2种变量作用域
+
+1. 变量作用域分为 全局变量域 和 局部变量域
+   - 全局变量：声明在最外层的变量，可在任何地方使用；
+   - 局部变量：嵌套规则内定义的变量只能在嵌套规则内使用。
+2. 将局部变量转换为全局变量可以添加`!global` 声明。
+
+```css
+$color: red;
+.container {
+    $height: 500px;
+    $font-size: 16px !global;
+    font-size: $font-size;
+    color: $color;
+    height: $height;
+}
+.footer {
+    /**$font-size使用!global 申明成全局变量了*/
+    font-size: $font-size; 
+    /**
+    * Error: Undefined variable. 
+    * $height是.container下的局部变量，无法在.footer下面编译
+    */
+    height:$height;
+}
+```
+
+编译成`css`
+
+```css
+.container {
+    font-size: 16px;
+    color: red;
+    height: 500px;
+}
+
+.footer {
+     /**$font-size使用!global 申明成全局变量了*/
+    font-size: 16px;
+}
+```
+
+---
+
+### 7种主要的数据类型
+
+`scss`支持`7`种主要的数据类型：
+
+1. 数字，`1rem、2vh、13、 10px`；
+2. 字符串，分有引号字符串与无引号字符串，`"foo"、 'bar'、baz`；
+3. 颜色，`blue, #04a3f9, rgba(255,0,0,0.5)`；
+4. 布尔型，`true`和`false`；
+5. 空值，`null`是其类型的唯一值。表示缺少值，通常由函数返回以表示缺少结果；
+6. 数组 (`list`)，用空格或逗号作分隔符，`1.5em 1em 0 2em,Helvetica,Arial,sans-serif`；
+7. `maps`， 相当于 `JavaScript `的 `object`，`(key1: value1, key2: value2)`；
+
+官网中把`Function`也当作一种类型，[点击原文了解](https://link.juejin.cn?target=https%3A%2F%2Fsass-lang.com%2Fdocumentation%2Fvalues%2Ffunctions)。
+
+```scss
+$layer-index: 10;
+$border-width: 3px;
+
+$font-weight: bold;
+
+$font-base-family: "Open Sans", Helvetica, Sans-Serif;
+$block-base-padding: 6px 10px 6px 10px;
+
+$top-bg-color: rgba(255, 147, 29, 0.6);
+
+$blank-mode: true;
+
+$var: null;
+
+$fonts: (
+  serif: "Helvetica Neue",
+  monospace: "Consolas",
+);
+
+.container {
+  font-family: $font-base-family;
+  font-size: $font-size;
+  padding: $block-base-padding;
+
+  @if $blank-mode {
+    background-color: #000;
+  } @else {
+    background-color: #fff;
+  }
+
+  content: type-of($var);
+  content: length($var);
+  color: $top-bg-color;
+}
+
+// 如果列表中包含空值，则生成的CSS中将忽略该空值。
+.wrap {
+  font: 18px $font-weight map-get($fonts, "sans");
+}
+```
+
+编译成`css`
+
+```scss
+.container {
+  font-family: "Open Sans", Helvetica, Sans-Serif;
+  font-size: 16px;
+  padding: 6px 10px 6px 10px;
+  background-color: #000;
+  content: null;
+  content: 1;
+  color: rgba(255, 147, 29, 0.6);
+}
+
+.wrap {
+  font: 18px bold; // 如果列表中包含空值，则生成的CSS中将忽略该空值。
+}
+```
+
+`scss`属性也支持其他值，比如`Unicode`字符集，或`!important` 声明。但是`scss` 不会特殊对待这些属性值，一律视为无引号字符串。
+
+```css
+$color:red;
+.container {
+    color:$color !important;
+}
+```
+
+编译成`css`
+
+```css
+.container {
+  color: red !important;
+}
+```
+
+---
+
+### !default
+
+可以在变量的结尾添加`!default`来给变量设置默认值，有点类似`Javascript`的逻辑运算符`let content=content || "Second content"`。注意，变量是 `null`时将视为未被`!default`赋值。
+
+```scss
+$content: "First content";
+// 如果$content之前没定义就使用如下的默认值
+$content: "Second content" !default;
+#main {
+    content: $content;
+}
+```
+
+编译成`css`
+
+```css
+码#main {
+  content: "First content";
+}
+```
+
+---
+
+### 圆括号
+
+圆括号`()`可以用来影响运算的顺序，和数学中的效果是一致的。
+
+---
+
+### 运算符
+
+相等运算`==`和不相等运算`!=`。所有数据类型均支持 `==` 和`!=`，另外，每种数据类型也有其各自支持的运算方式。
+
+```scss
+$theme:"blue";
+
+.container {
+    @if $theme=="blue" {
+        background-color: red;
+    }
+    @else {
+        background-color: blue;
+    }
+}
+
+.container {
+    @if $theme !="blue" {
+        background-color: red;
+    }
+    @else {
+        background-color: blue;
+    }
+}
+```
+
+编译为`css`
+
+```css
+.container {
+  background-color: red;
+}
+
+.container {
+  background-color: blue;
+}
+```
+
+---
+
+### 关系运算符
+
+四个关系运算符`< > >= <=`
+
+```css
+$theme:3;
+.container {
+    @if $theme >= 5 {
+        background-color: red;
+    }
+    @else {
+        background-color: blue;
+    }
+}
+```
+
+编译为`css`
+
+```css
+.container {
+    background-color: blue;
+}
+```
+
+---
+
+### 布尔运行符
+
+三个布尔运算符`and or not`
+
+```css
+$width: 100;
+$height: 200;
+$last: false;
+div {
+  @if $width>50 and $height<300 {
+    font-size: 16px;
+  } @else {
+    font-size: 14px;
+  }
+  @if not $last {
+    border-color: red;
+  } @else {
+    border-color: blue;
+  }
+
+  @if $width>500 or $height<300{
+    line-height: 20px;
+  } @else {
+    line-height: 50px;
+  }
+}
+```
+
+编译为`css`
+
+```css
+div {
+    font-size: 16px;
+    border-color: red;
+    line-height: 20px;
+}div {
+    font-size: 16px;
+    border-color: red;
+}
+```
+
+---
+
+### 数字操作符
+
+`+ - * / %`
+
+```scss
+/* 纯数字与百分号或单位运算时会自动转化成相应的百分比与单位值 */
+.container {
+    /* ================== + 运算===================== */
+    width: 50 + 20;
+    width: 50 + 20%;
+    width: 50% + 20%;
+    width: 10pt + 20px;
+    width: 10pt + 20;
+
+    /* ================== - 运算===================== */
+    height: 50 - 20;
+    height: 10 - 20%;
+    height: 50pt - 20px;
+
+    /* ================== * 运算===================== */
+    height: 50 * 30;
+    height: 10 * 30%;
+    height: 50 * 2px;
+    height: 50pt * 4;
+
+    /* ==================/ 运算 (除完后最多只能保留一种单位)===================== */
+    $width: 100px;
+    width: 10/5;
+    width: 10px / 5px;
+    width: 10px / 20;
+    width: ($width/2); // 使用变量与括号
+    height: (500px/2); // 使用了括号
+
+    /* ==================% 求余运算===================== */
+    width: 10 % 3;
+    width: 50px % 7;
+    width: 50% % 7;
+}
+```
+
+编译成`css`
+
+```css
+css
+
+ 代码解读
+复制代码/* 纯数字与百分号或单位运算时会自动转化成相应的百分比与单位值 */
+.container {
+    /* ================== + 运算===================== */
+    width: 70;
+    width: 70%;
+    width: 70%;
+    width: 25pt;
+    width: 30pt;
+    /* ================== - 运算===================== */
+    height: 30;
+    height: -10%;
+    height: 35pt;
+    /* ================== * 运算===================== */
+    height: 1500;
+    height: 300%;
+    height: 100px;
+    height: 200pt;
+    /* ==================/ 运算 (除完后最多只能保留一种单位)===================== */
+    width: 10/5;
+    width: 10px/5px;
+    width: 10px/20;
+    width: 50px;
+    height: 250px;
+    /* ==================% 运算===================== */
+    width: 1;
+    width: 1px;
+    width: 1%;
+}
+```
+
+`/`在`css`中有分隔数字的用途，在`scss`中，以下三种情况会进行除法运算：
+
+1. 如果值或值的一部分，是变量或者函数的返回值；
+2. 如果值被圆括号包裹；
+3. 如果值是算数表达式的一部分。
+
+```scss
+$width: 1000px;
+div {
+    font: 16px/30px Arial, Helvetica, sans-serif; // 不运算
+    width: ($width/2); // 使用变量与括号
+    width: (#{$width}/2); // 使用 #{} 插值语句将变量包裹，避免运算。
+    z-index: round(10)/2; // 使用了函数
+    height: (500px/2); // 使用了括号
+    margin-left: 5px + 8px/2px; // 使用了+表达式
+}
+```
+
+编译成`css`
+
+```css
+div {
+    font: 16px/30px Arial, Helvetica, sans-serif;
+    width: 500px;
+    width: 1000px/2;
+    z-index: 5;
+    height: 250px;
+    margin-left: 9px;
+}
+```
+
+如果需要使用变量，同时又要确保 `/` 不做除法运算而是完整地编译到 `css`文件中，只需要用 `#{}` 插值语句将变量包裹。
+
+---
+
+### 字符串运算
+
+1. `+` 可用于连接字符串；
+2. 如果有引号字符串（位于 + 左侧）连接无引号字符串，运算结果是有引号的；
+3. 无引号字符串（位于 + 左侧）连接有引号字符串，运算结果则没有引号。
+
+```css
+css
+
+ 代码解读
+复制代码.container {
+    content: "Foo " + Bar;
+    font-family: sans- + "serif";
+}
+```
+
+编译为`css`
+
+```css
+css
+
+ 代码解读
+复制代码.container {
+    content: "Foo Bar";
+    font-family: sans-serif;
+}
+```
+
+---
+
+## 十一、插值语句
+
+文章上面有讲到插值语句，这里来解释一下。
+ 通过 `#{}` 插值语句可以在选择器、属性名、注释中使用变量，使用`#{}`插值语句将变量包裹起来即可，和`js`中的模板字符串很像。
+
+```scss
+$font-size: 12px;
+$line-height: 30px;
+$class-name: danger;
+$attr: color;
+$author: "福大命大";
+
+p {
+    font: #{$font-size}/#{$line-height} Arial Helvetica, sans-serif;
+}
+
+/* 
+* 这是文件的说明部分
+* @author: #{$author}
+*/
+
+a.#{$class-name} {
+    border-#{$attr}: #f00;
+}
+```
+
+编译成`css`
+
+```css
+p {
+    font: 12px/30px Arial Helvetica, sans-serif;
+}
+
+/* 
+* 这是文件的说明部分
+* @author: 福大命大
+*/
+a.danger {
+    border-color: #f00;
+}
+```
+
+---
+
+## 十二、流程控制
+
+`sass`中流程控制包含四类，也是我们在`js`中常见的`@if、@for、@each、@while`。
+
+### @if
+
+`@if`语法和`js`类似，基本格式是`@if...@else if...@else`。
+
+#### 使用
+
+```css
+$theme:3;
+.container {
+    @if $theme >= 5 {
+        background-color: red;
+    }
+    @else {
+        background-color: blue;
+    }
+}
+```
+
+编译为`css`
+
+```css
+.container {
+    background-color: blue;
+}
+```
+
+#### 案例
+
+这里已一个利用`mixin`和`if`封装一个三角形生成，`mixin`知识后面又讲到。
+
+![img](./assets/835c64c9011c4da5ae922e757e044e4f~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp)
+
+```scss
+@mixin triangle($direction:top, $size:30px, $border-color:black) {
+  width: 0px;
+  height: 0px;
+  display: inline-block;
+  border-width: $size;
+  border-#{$direction}-width: 0;
+  @if ($direction==top) {
+     border-color: transparent transparent $border-color transparent;
+     border-style: dashed dashed solid dashed;
+  }
+  @else if($direction==right) {
+     border-color: transparent transparent transparent $border-color;
+     border-style: dashed dashed dashed solid;
+  }
+  @else if($direction==bottom) {
+     border-color: $border-color transparent transparent transparent;
+     border-style: solid dashed dashed dashed;
+  }
+  @else if($direction==left) {
+     border-color: transparent $border-color transparent transparent;
+     border-style: dashed solid dashed dashed;
+  }
+}
+.p0 {
+     @include triangle($size:50px);
+}
+
+.p1 {
+     @include triangle(right, 50px, red);
+}
+
+.p2 {
+    @include triangle(bottom, 50px, blue);
+}
+
+.p3 {
+     @include triangle(left, 50px, green);
+}
+```
+
+编译为
+
+```css
+.p0 {
+    width: 0px;
+    height: 0px;
+    display: inline-block;
+    border-width: 50px;
+    border-top-width: 0;
+    border-color: transparent transparent black transparent;
+    border-style: dashed dashed solid dashed;
+}
+
+.p1 {
+    width: 0px;
+    height: 0px;
+    display: inline-block;
+    border-width: 50px;
+    border-right-width: 0;
+    border-color: transparent transparent transparent red;
+    border-style: dashed dashed dashed solid;
+}
+
+.p2 {
+    width: 0px;
+    height: 0px;
+    display: inline-block;
+    border-width: 50px;
+    border-bottom-width: 0;
+    border-color: blue transparent transparent transparent;
+    border-style: solid dashed dashed dashed;
+}
+
+.p3 {
+    width: 0px;
+    height: 0px;
+    display: inline-block;
+    border-width: 50px;
+    border-left-width: 0;
+    border-color: transparent green transparent transparent;
+    border-style: dashed solid dashed dashed;
+}
+```
+
+---
+
+### @for
+
+`for`在条件范围内重复操作，这个指令包含两种格式：
+
+1. `@for $var from <start> through <end>`；
+2. `@for $var from <start> to <end>`。
+
+两者区别在于 `through` 与 `to` 的含义：
+
+1. 使用 `through`时，条件范围包含 `<start>` 与 `<end>`的值；
+2. 使用 `to`时条件范围只包含`<start>`的值不包含`<end>`的值；
+3. `$var` 可以是任何变量，比如`$i`，`<start>` 和 `<end>` 必须是整数值。
+
+```scss
+@for $i from 1 to 3 {
+  #loading span:nth-child(#{$i}) {
+      width: 20 * ($i - 1) + px;
+  }
+}
+```
+
+编译为
+
+```css
+#loading span:nth-child(1) {
+    width: 0px;
+}
+
+#loading span:nth-child(2) {
+    width: 20px;
+}
+```
+
+如果把`to`换成`through`
+
+```css
+#loading span:nth-child(1) {
+    width: 0px;
+}
+
+#loading span:nth-child(2) {
+    width: 20px;
+}
+
+#loading span:nth-child(3) {
+    width: 40px;
+}
+```
+
+---
+
+### @each
+
+`@each`指令的格式是`@each $var in $list` , `$var`可以是任何变量名，比如`$length` 或者`$name`，而`$list`是一连串的值，也就是值列表。
+
+```scss
+$color-list:red green blue turquoise darkmagenta;
+@each $color in $color-list {
+    $index: index($color-list, $color);
+    .p#{$index - 1} {
+        background-color: $color;
+    }
+}
+```
+
+编译为
+
+```css
+.p0 {
+    background-color: red;
+}
+
+.p1 {
+    background-color: green;
+}
+
+.p2 {
+    background-color: blue;
+}
+
+.p3 {
+    background-color: turquoise;
+}
+
+.p4 {
+    background-color: darkmagenta;
+}
+```
+
+---
+
+### @while
+
+`@while` 指令循环输出直到表达式返回结果为 `false`。这样可以实现比`@for` 更复杂的循环。
+
+比如，可以借此生成栅格化布局。
+
+```scss
+$column:12;
+@while $column>0 {
+   .col-sm-#{$column} {
+      width: $column / 12 * 100%;
+   }
+    $column:$column - 1;
+}
+```
+
+编译为
+
+```css
+.col-sm-12 {
+    width: 100%;
+}
+
+.col-sm-11 {
+    width: 91.6666666667%;
+}
+
+.col-sm-10 {
+    width: 83.3333333333%;
+}
+
+.col-sm-9 {
+    width: 75%;
+}
+
+.col-sm-8 {
+    width: 66.6666666667%;
+}
+
+.col-sm-7 {
+    width: 58.3333333333%;
+}
+
+.col-sm-6 {
+    width: 50%;
+}
+
+.col-sm-5 {
+    width: 41.6666666667%;
+}
+
+.col-sm-4 {
+    width: 33.3333333333%;
+}
+
+.col-sm-3 {
+    width: 25%;
+}
+
+.col-sm-2 {
+    width: 16.6666666667%;
+}
+
+.col-sm-1 {
+    width: 8.3333333333%;
+}
+```
+
+---
+
+## 十三、@import
+
+`@import`算是一个比较简易的模块系统。`scss`拓展了`@import` 的功能，允许其导入 `scss`或 `sass`文件。被导入的文件将合并编译到同一个 `css`文件中，被导入的文件中所包含的变量或者混合指令 (`mixin`) 都可以在导入的文件中使用。
+
+### 使用
+
+*common.scss*
+
+```scss
+$color:red;
+```
+
+*index.scss*
+
+```scss
+@import "common.scss";
+.container {
+    border-color: $color;
+}
+```
+
+编译成
+
+```css
+.container {
+  border-color: red;
+}
+```
+
+以下情况下，`@import` 仅作为普通的`css`语句，不会导入`scss`文件：
+
+1. 文件拓展名是` .css`；
+2. 文件名以 `http:// `开头；
+3. 文件名是` url()`；
+4. `@import`包含媒体查询。
+
+```scss
+@import "common.css";
+@import url(common);
+@import "http://xxx.com/xxx";
+@import 'landscape' screen and (orientation:landscape);
+```
+
+`scss`允许同时导入多个文件，例如同时导入 `rounded-corners` 与` text-shadow` 两个文件，不用再单独写个`import`引入。
+
+```css
+@import "rounded-corners", "text-shadow";
+```
+
+导入文件也可以使用 `#{}` 插值语句（下面有讲，这里把它理解成`js`中模板字符串就行）动态导入，但不是通过变量动态导入 `scss`文件，只能作用于 `css`的 `url() `导入方式
+
+```css
+$family: unquote("Droid+Sans");
+@import url("http://fonts.googleapis.com/css?family=#{$family}");
+```
+
+编译为
+
+```css
+@import url("http://fonts.googleapis.com/css?family=Droid+Sans");
+```
+
+---
+
+### @Partials
+
+如果需要导入 `scss`或者 `sass`文件，但又不希望将其编译为 `css`，只需要在文件名前添加下划线，这样会告诉 `scss`不要编译这些文件。 注意：
+
+1. 导入语句中却不需要添加下划线；
+2. 不可以同时存在添加下划线与未添加下划线的同名文件，添加下划线的文件将会被忽略。
+
+***_common.scss***
+
+```css
+$color:red;
+```
+
+***index.scss***
+
+```scss
+@import "common.scss";
+.container {
+    border-color: $color;
+}
+```
+
+编译为
+
+```css
+.container {
+  border-color: red;
+}
+```
+
+`_common.scss`文件不会编译成`_common.css`文件。
+
+<img src="./assets/29f366f5ecd645daa81e6916017d2ef6~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp" alt="img" style="zoom:67%;" />
+
+`Partials`主要是用来定义公共样式的，专门用于被其他的 `scss`文件 `import`进行使用的。
+
+---
+
+### 嵌套@import
+
+大多数情况下，一般在文件的最外层（不在嵌套规则内）使用`@import`，其实，也可以将`@import` 嵌套进内层选择器或者 `@media` 中，与平时的用法效果相同，只是这样导入的样式只能出现在嵌套的层中，存在作用域。
+
+*common.scss*
+
+```scss
+.example {
+    color: red;
+}
+```
+
+*index.scss*
+
+```css
+#main {
+    @import "example";
+}
+```
+
+被编译成
+
+```css
+#main .example {
+    color: red;
+}
+```
+
+注意：`@import`不能嵌套使用在控制指令或混入中（带有`@`符号的叫指令）。
+
+---
+
+## 十四、@media 媒体查询增强
+
+`scss`中，`@media` 指令与 `css`中用法一样，只是增加了一点额外的功能，允许在`css`规则中嵌套。如果`@media` 嵌套在 `css`规则内，编译时，`@media` 将被编译到文件的最外层，包含嵌套的父选择器。这个让 `@media` 方便不少，不需要重复写选择器，也不会打乱 `css`的书写流程。
+
+### 使用
+
+```scss
+.sidebar {
+  width: 300px;
+  @media screen and (orientation: landscape) {
+    width: 500px;
+    .item {
+      height: auto;
+    }
+  }
+}
+```
+
+编译为
+
+```css
+.sidebar {
+    width: 300px;
+}
+@media screen and (orientation: landscape) {
+  .sidebar {
+    width: 500px;
+  }
+  .sidebar .item {
+    height: auto;
+  }
+}
+```
+
+---
+
+### 嵌套
+
+`@media`允许互相嵌套使用，编译时，`scss`自动添加 and
+
+```css
+css
+
+ 代码解读
+复制代码@media screen {
+  .sidebar {
+    @media (orientation: landscape) {
+      width: 500px;
+    }
+  }
+}
+```
+
+编译为
+
+```css
+css
+
+ 代码解读
+复制代码@media screen and (orientation: landscape) {
+  .sidebar {
+    width: 500px;
+  }
+}
+```
+
+### 使用插值
+
+可以使用变量，函数，以及运算符代替条件的名称或者值。
+
+```css
+css
+
+ 代码解读
+复制代码$media: screen;
+$feature: -webkit-min-device-pixel-ratio;
+$value: 1.5;
+
+@media #{$media} and ($feature: $value) {
+  .sidebar {
+    width: 500px;
+  }
+}
+```
+
+编译为
+
+```css
+css
+
+ 代码解读
+复制代码@media screen and (-webkit-min-device-pixel-ratio: 1.5) {
+  .sidebar {
+    width: 500px;
+  }
+}
+```
+
+---
+
+## @mixin
+
+混合指令（`Mixin`）用于定义可重复使用的样式。混合指令可以包含所有的`css`规则，绝大部分 `scss`规则，甚至可以通过参数功能引入变量，输出多样化的样式。
+
+**注意：函数命名和变量命名规则一致。**
+
+### 使用
+
+```scss
+@mixin mixin-name() {
+    /* css 声明 */
+}
+// 使用
+@include mixin-name;
+```
+
+### 标准形式
+
+```css
+css
+
+ 代码解读
+复制代码// 定义一个区块基本的样式
+@mixin block {
+    width: 96%;
+    margin-left: 2%;
+    border-radius: 8px;
+    border: 1px #f6f6f6 solid;
+}
+// 使用混入 
+.container {
+    .block {
+        @include block;
+    }
+}
+```
+
+编译为
+
+```css
+css
+
+ 代码解读
+复制代码.container .block {
+    width: 96%;
+    margin-left: 2%;
+    border-radius: 8px;
+    border: 1px #f6f6f6 solid;
+}
+```
+
+### 嵌入选择器
+
+`@mixin`里面再嵌套一层
+
+```css
+css
+
+ 代码解读
+复制代码@mixin warning-text {
+    font-size: 12px;
+    .warn-text {
+        color: rgb(255, 253, 123);
+        line-height: 180%;
+    }
+}
+
+.container {
+   	@include warning-text;
+}
+```
+
+编译为
+
+```css
+css
+
+ 代码解读
+复制代码.container {
+    font-size: 12px;
+}
+
+.container .warn-text {
+    color: #fffd7b;
+    line-height: 180%;
+}
+```
+
+### 单参数
+
+```css
+css
+
+ 代码解读
+复制代码// 定义flex布局元素纵轴的排列方式
+@mixin flex-align($aitem) {
+    align-items: $aitem;
+}
+
+// 只有一个参数，直接传递参数
+.container {
+    @include flex-align(center);
+}
+```
+
+编译为
+
+```css
+css
+
+ 代码解读
+复制代码.container {
+    align-items: center;
+}
+```
+
+### 多参数
+
+```css
+css
+
+ 代码解读
+复制代码// 定义块元素内边距
+@mixin block-padding($top, $right, $bottom, $left) {
+    padding-top: $top;
+    padding-right: $right;
+    padding-bottom: $bottom;
+    padding-left: $left;
+}
+
+// 按照参数顺序赋值
+.container1 {
+   @include block-padding(10px, 20px, 30px, 40px);
+}
+
+// 可指定参数赋值
+.container2 {
+   @include block-padding($left: 20px, $top: 10px, $bottom: 10px, $right: 30px);
+}
+
+// 可指定参数赋值，但是必须指定4个值，不能缺失
+.container3 {
+   @include block-padding($left: 10px, $top: 10px, $bottom: 0, $right: 0);
+}
+```
+
+编译为
+
+```css
+css
+
+ 代码解读
+复制代码.container1 {
+    padding-top: 10px;
+    padding-right: 20px;
+    padding-bottom: 30px;
+    padding-left: 40px;
+}
+
+.container2 {
+    padding-top: 10px;
+    padding-right: 30px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+}
+
+.container3 {
+    padding-top: 10px;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 10px;
+}
+```
+
+### 指定默认值
+
+```css
+css
+
+ 代码解读
+复制代码// 定义块元素内边距，参数指定默认值
+@mixin block-padding($top:0, $right:0, $bottom:0, $left:0) {
+    padding-top: $top;
+    padding-right: $right;
+    padding-bottom: $bottom;
+    padding-left: $left;
+}
+
+// 可指定参数赋值
+.container {
+    /** 不带参数 */
+    @include block-padding;
+    /** 按顺序指定参数值 */
+    @include block-padding(10px,20px);
+    /** 给指定参数指定值 */
+    @include block-padding($left: 10px, $top: 20px)
+}
+```
+
+编译为
+
+```css
+css
+
+ 代码解读
+复制代码.container {
+    /** 不带参数 */
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    /** 按顺序指定参数值 */
+    padding-top: 10px;
+    padding-right: 20px;
+    padding-bottom: 0;
+    padding-left: 0;
+    /** 给指定参数指定值 */
+    padding-top: 20px;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 10px;
+}
+```
+
+### 可变参数
+
+使用`...`处理参数不固定的情况，类似于`js`中的函数的剩余参数
+
+```css
+css
+
+ 代码解读
+复制代码@mixin linear-gradient($direction, $gradients...) {
+    background-color: nth($gradients, 1);
+    background-image: linear-gradient($direction, $gradients);
+}
+
+.table-data {
+    @include linear-gradient(to right, #F00, orange, yellow);
+}
+```
+
+编译为
+
+```css
+css
+
+ 代码解读
+复制代码.table-data {
+    background-color: #F00;
+    background-image: linear-gradient(to right, #F00, orange, yellow);
+}
+```
+
+### 总结
+
+1. `mixin`是可以重复使用的一组`css`声明，有助于减少重复代码，只需声明一次，就可在文件中引用；
+2. 混合指令可以包含所有的 `css`规则，绝大部分`scss`规则，可以传递参数，输出多样化的样式；
+3. 使用参数时建议加上默认值；
+4. `@import`导入局部模块化样式（类似功能、同一组件）；
+5. `@minix`定义的是可重复使用的样式
+
+## @function
+
+`@function`用于封装复杂的操作，可以很容易地以一种可读的方式抽象出通用公式和行为，函数提供返回值，常用来做计算方面的工作。
+
+### 使用
+
+注意：函数命名和变量命名规则一致。
+
+```css
+css
+
+ 代码解读
+复制代码@function square($base) {
+    @return $base * $base * 1px;
+}
+
+.sidebar {
+    float: left;
+    margin-left: square(4);
+}
+```
+
+编译为
+
+```css
+css
+
+ 代码解读
+复制代码.sidebar {
+    float: left;
+    margin-left: 16px;
+}
+```
+
+### 可选参数
+
+默认值可以是任何表达式，它们甚至可以引用前面的参数！
+
+```css
+css
+
+ 代码解读
+复制代码//change-color和hue是内置方法
+//hue 返回$color的颜色为0到360度之间的一个数字。
+//change-color 用于设置颜色的属性
+@function invert($color, $amount: 100%) {
+    //@error hue($color); 调试 210deg
+    $inverse: change-color($color, $hue: hue($color) + 180);
+    @return mix($inverse, $color, $amount);
+}
+
+$primary-color: #036;
+.header {
+    background-color: invert($primary-color, 80%);
+}
+```
+
+编译为
+
+```css
+css
+
+ 代码解读
+复制代码.header {
+    background-color: #523314;
+}
+```
+
+### 指定参数
+
+```css
+css
+
+ 代码解读
+复制代码$primary-color: #036;
+.banner {
+    //scale-color Fluidly scales one or more properties of .$color
+    background-color: $primary-color;
+    color: scale-color($primary-color, $lightness: +40%);
+}
+```
+
+编译为
+
+```css
+css
+
+ 代码解读
+复制代码.banner {
+    background-color: #036;
+    color: #0a85ff;
+}
+```
+
+### 可变参数
+
+参数列表还可用于采用任意关键字参数，`meta.keywords()`函数采用参数列表
+
+```css
+css
+
+ 代码解读
+复制代码@function sum($numbers...) {
+    $sum: 0;
+    @each $number in $numbers {
+        $sum: $sum + $number;
+    }
+    @return $sum;
+}
+
+$widths: 50px, 30px, 100px;
+.micro {
+    width: sum($widths...);
+}
+```
+
+编译为
+
+```css
+css
+
+ 代码解读
+复制代码.micro {
+    width: 180px;
+}
+```
+
+### @return
+
+`@return`只允许在`@function`内使用，和`js`一样，遇到`return`就会返回。
+
+```css
+css
+
+ 代码解读
+复制代码@function red() {
+    $is: true;
+    @if $is {
+        @return 'is';
+    }
+    @return red;
+}
+.con{
+    color: red();
+}
+```
+
+编译为
+
+```css
+css
+
+ 代码解读
+复制代码.con {
+    color: "is";
+}
+```
+
+总结：
+ `@function`和`@mixin`参数的使用方式没啥区别；
+ `@function`用来计算，`@mixin`用来封装样式，`@import`用来抽离他们为一个模块。
+
+## @extend继承
+
+### 使用
+
+我们以`elementUI`的`el-button`组件为例，可以使用`@extend`继承已经存在的样式，原理是使用逗号选择器。
+
+```css
+css
+
+ 代码解读
+复制代码// # id选择器一样的
+.button {
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: normal;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    border-radius: 4px;
+    user-select: none;
+}
+
+.btn-default {
+    @extend .button;
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+}
+
+.btn-danger {
+    @extend .button;
+    color: #fff;
+    background-color: #d9534f;
+    border-color: #d43f3a;
+}
+```
+
+编译成
+
+```css
+css
+
+ 代码解读
+复制代码.button, .btn-danger, .btn-default {
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: normal;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    border-radius: 4px;
+    user-select: none;
+}
+
+.btn-default {
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+}
+
+.btn-danger {
+    color: #fff;
+    background-color: #d9534f;
+    border-color: #d43f3a;
+}
+```
+
+### 可以使用多个@extend
+
+```css
+css
+
+ 代码解读
+复制代码.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.important {
+    font-weight: bold;
+    font-size: 14px;
+}
+.alert-danger {
+    @extend .alert;
+    @extend .important;
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+```
+
+编译为
+
+```css
+css
+
+ 代码解读
+复制代码.alert, .alert-danger {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.important, .alert-danger {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.alert-danger {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+```
+
+### 多层继承
+
+`@extend`可以多层继承，列如：`.alert-danger`继承自`.important`，`.important`又继承自`.alert`。
+
+```css
+css
+
+ 代码解读
+复制代码.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.important {
+    @extend .alert;
+    font-weight: bold;
+    font-size: 14px;
+}
+.alert-danger {
+    @extend .important;
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+```
+
+编译为
+
+```css
+css
+
+ 代码解读
+复制代码.alert, .important, .alert-danger {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.important, .alert-danger {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.alert-danger {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+```
+
+### 占位符选择器
+
+占位符选择器`%`，与常用的`id` 与 `class`选择器写法相似，只是 `#` 或 `.` 替换成了`%`，占位符选择器必须通过 `@extend` 指令调用。
+ 还是上面的例子，这里使用占位符选择器操作
+
+```css
+css
+
+ 代码解读
+复制代码.button %base {
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: normal;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    border-radius: 4px;
+    user-select: none;
+}
+        
+.btn-default {
+    @extend %base;
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+}
+
+.btn-danger {
+    @extend %base;
+    color: #fff;
+    background-color: #d9534f;
+    border-color: #d43f3a;
+}
+```
+
+效果和上面的类选择器一样，但是，他有个有优点，占位符选择器`%`所属的样式未使用时，不会被编译到`css`文件中，算是一个小优化吧。
+
+```css
+css
+
+ 代码解读
+复制代码.button .btn-danger, .button .btn-default {
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: normal;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    border-radius: 4px;
+    user-select: none;
+}
+
+.btn-default {
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+}
+
+.btn-danger {
+    color: #fff;
+    background-color: #d9534f;
+    border-color: #d43f3a;
+}
+```
+
+## @use
+
+存在兼容性问题，仅在`Dart Sass 1.23.0`以上有效，[官方文档有兼容性介绍](https://link.juejin.cn?target=https%3A%2F%2Fsass-lang.com%2Finstall)。
+
+`scss`真正意义上的模块化，可以从其它 `scss`样式表中加载`mixin`、`function`和`变量`，并将来自多个样式表的 `css`组合在一起。`scss`还提供了很多内置模块，我们可以通过`@use`使用。
+
+### @import缺点
+
+1. 多处导入，存在样式重复加载。
+2. 因为没有命名空间，为了避免撞名，不敢使用简写的 `classname`，因此起名总是需要注意。
+3. 没有私有函数的概念，样式完全暴露在使用`import`的地方，这对`ui`库不够友好。
+
+### 使用
+
+*src/_corners.scss*
+
+```css
+css
+
+ 代码解读
+复制代码$radius: 3px;
+@mixin rounded {
+    border-radius: $radius;
+}
+```
+
+*index.scss*
+
+```css
+css
+
+ 代码解读
+复制代码@use "src/corners";
+.button {
+    @include corners.rounded;
+    padding: 5px + corners.$radius;
+}
+```
+
+### 命名空间
+
+*src/_corners.scss*
+
+```css
+css
+
+ 代码解读
+复制代码$radius: 3px;
+@mixin rounded {
+    border-radius: $radius;
+}
+```
+
+*index.scss*
+
+```css
+css
+
+ 代码解读
+复制代码@use "src/corners" as c;
+.button {
+    @include c.rounded;
+    padding: 5px + c.$radius;
+}
+```
+
+编译为
+
+```css
+css
+
+ 代码解读
+复制代码.button {
+    border-radius: 3px;
+    padding: 8px;
+}
+```
+
+### as*
+
+使用`as*`，那么这一模块就处于全局命名空间。
+
+*src/_corners.scss*
+
+```css
+css
+
+ 代码解读
+复制代码$radius: 3px;
+@mixin rounded {
+    border-radius: $radius;
+}
+```
+
+*index.scss*
+
+```css
+css
+
+ 代码解读
+复制代码@use "src/corners" as *;
+
+.button {
+    @include rounded;
+    padding: 5px + $radius;
+}
+```
+
+编译为
+
+```css
+css
+
+ 代码解读
+复制代码.button {
+    border-radius: 3px;
+    padding: 8px;
+}
+```
+
+### 私有模块
+
+使用`scss`可以轻松地定义私有成员，私有成员命名以`-`或开头。
+
+*src/_corners.scss*
+
+```css
+css
+
+ 代码解读
+复制代码$-radius: 3px;
+
+@mixin rounded {
+    border-radius: $-radius;
+}
+```
+
+*index.scss*
+
+```css
+css
+
+ 代码解读
+复制代码@use "src/corners";
+
+.button {
+    @include corners.rounded;
+    // Error: Private members can't be accessed from outside their modules
+    padding: 5px + corners.$-radius;
+}
+```
+
+## @forward
+
+`@forward`语句可以引入另一个模块的所有变量、`mixins`和函数，将它们直接作为当前模块的`API`暴露出去，不会真的在当前模块增加代码。不同于 `@use`， `@forward`不能给变量添加命名空间。
+
+### 用法
+
+注意，此时生成的`bootstrap.css`文件中，是不包含`functions`、`variables`、`mixins`代码的，也不能直接在`bootstrap.scss`文件中使用这些模块。而是需要在另一个文件中 `@import 'bootstrap'`或者 `@use bootstrap`模块，再去使用这些方法。`bootstrap.scss`文件类似于一个传输中转站，把上下游的成员变量无缝连接起来。
+
+```css
+css
+
+ 代码解读
+复制代码/* bootstrap.scss */
+@forward"functions";
+@forward"variables";
+@forward"mixins";
+```
+
+注意，直接写在上游模块的正常的样式仍然会被` @forward`进来。见下例：
+
+*a.scss*
+
+```css
+css
+
+ 代码解读
+复制代码@mixin rounded {
+    border-radius: 100px;
+}
+footer {
+    height: 1px;
+}
+```
+
+*b.scss*
+
+```css
+css
+
+ 代码解读
+复制代码$radius: 3px;
+```
+
+*c.scss*
+
+```css
+css
+
+ 代码解读
+复制代码@forward "a";
+@forward "b";
+```
+
+*index.scss*
+
+```css
+css
+
+ 代码解读
+复制代码@import "c.scss";
+
+.button {
+    @include rounded;
+    padding: $radius;
+}
+```
+
+编译为
+
+```css
+css
+
+ 代码解读
+复制代码footer {
+    height: 1px;
+}
+
+.button {
+    border-radius: 100px;
+    padding: 3px;
+}
+```
+
+### show/ hide
+
+通过控制 `show`和 `hide`，可以决定模块中的哪些成员对引入后的模板可见。对隐藏的变量，在下游文件中不可以使用，相当于模块私有成员。
+
+*c.scss*
+
+```css
+css
+
+ 代码解读
+复制代码@forward "a" show rounded;
+@forward "b" hide $radius;
+```
+
+*index.css*
+
+```css
+css
+
+ 代码解读
+复制代码@import "c.scss";
+
+.button {
+    @include rounded;
+    padding: $radius;
+}
+// Error: Undefined variable. padding: $radius;
+```
+
+### 使用as *号为子模块添加前缀
+
+大多数情况下，一个样式库会存在一个入口文件`index.scss`，然后在`index.scss`中引入其他的子文件。这种结构类似于一个多合一模块。那么，如果要在某一文件中 `@forward`多个子模块，就可以使用`as <prefix>-*`语句，为子模块下的成员自动带上前缀以区分。
+
+*c.scss*
+
+```css
+css
+
+ 代码解读
+复制代码@forward "a" as mixin-*;
+@forward "b" as var-*;
+```
+
+*index.css*
+
+```css
+css
+
+ 代码解读
+复制代码@import "c.scss";
+
+.button {
+    @include mixin-rounded;
+    padding: $var-radius;
+}
+```
+
+很多内置的方法就是这样使用的，嘿嘿！
+
+## @at-root
+
+`@at-root`用来跳出嵌套，在多级嵌套时比较常用，包含`without`和`with`。
+
+### 用法
+
+```css
+css
+
+ 代码解读
+复制代码//没有跳出
+.parent-1 {
+    color:#f00;
+    .child {
+        width:100px;
+    }
+}
+
+//单个选择器跳出
+.parent-2 {
+    color:#f00;
+    @at-root .child {
+        width:200px;
+    }
+}
+
+//多个选择器跳出
+.parent-3 {
+    background:#f00;
+    @at-root {
+        .child1 {
+            width:300px;
+        }
+        .child2 {
+            width:400px;
+        }
+    }
+}
+```
+
+编译为
+
+```css
+css
+
+ 代码解读
+复制代码.parent-1 {
+    color: #f00;
+}
+.parent-1 .child {
+    width: 100px;
+}
+
+.parent-2 {
+    color: #f00;
+}
+.child {
+    width: 200px;
+}
+
+.parent-3 {
+    background: #f00;
+}
+.child1 {
+    width: 300px;
+}
+
+.child2 {
+    width: 400px;
+}
+```
+
+### @without和with
+
+默认`@at-root`只会跳出选择器嵌套，而不能跳出`@media`或`@support`，如果要跳出这两种，则需使用`@at-root (without: media)`或`@at-root (without: support)`，`@at-root`的关键词有四个：
+
+1. `all `表示所有；
+2. `rule `表示常规`css`选择器；
+3. `media` 表示`media`；
+4. `support`表示`support`（`@support`主要是用于检测浏览器是否支持`css`的某个属性）。
+
+我们默认的`@at-root`是`@at-root (without:rule)`
+
+```css
+css
+
+ 代码解读
+复制代码/*跳出父级元素嵌套*/
+@media print {
+    .parent1{
+        color:#f00;
+        @at-root .child1 {
+            width:200px;
+        }
+    }
+}
+
+/*跳出media嵌套，父级有效*/
+@media print {
+    .parent2{
+        color:#f00;
+        @at-root (without: media) {
+            .child2 {
+                width:200px;
+            }
+        }
+    }
+}
+
+/*跳出media和父级*/
+@media print {
+    .parent3{
+        color:#f00;
+        @at-root (without: all) {
+            .child3 {
+                width:200px;
+            }
+        }
+    }
+}
+```
+
+编译成
+
+```css
+css
+
+ 代码解读
+复制代码/*跳出父级元素嵌套*/
+@media print {
+    .parent1 {
+        color: #f00;
+    }
+    .child1 {
+        width: 200px;
+    }
+}
+/*跳出media嵌套，父级有效*/
+@media print {
+    .parent2 {
+        color: #f00;
+    }
+}
+.parent2 .child2 {
+    width: 200px;
+}
+/*跳出media和父级*/
+@media print {
+    .parent3 {
+        color: #f00;
+    }
+}
+.child3 {
+    width: 200px;
+}
+```
+
+### @at-root与 & 配合使用
+
+```css
+css
+
+ 代码解读
+复制代码.child{
+    @at-root .parent &{
+        color:#f00;
+    }
+}
+```
+
+编译成
+
+```css
+css
+
+ 代码解读
+复制代码.parent .child {
+    color: #f00;
+}
+```
+
+### 应用于@keyframe
+
+```css
+css
+
+ 代码解读
+复制代码.demo {
+    animation: motion 3s infinite;
+    @at-root {
+        @keyframes motion {
+        }
+    }
+}
+```
+
+编译成
+
+```css
+css
+
+ 代码解读
+复制代码.demo {
+    animation: motion 3s infinite;
+}
+@keyframes motion {}
+```
+
+## Scss内置扩展
+
+`scss`内置扩展分为`color list map math meta selector string`等，扩展也就是`scss`内置的一些`function`，每个模块下内容比较多，这里用一些常用的进行举例。
+
+内置函数可以使用`@use`模块化引入，也可以直接使用他提供的全局函数名调用，以下两种方式是一样的。
+
+```css
+css
+
+ 代码解读
+复制代码@use 'sass:list';
+p {
+    color: nth($list: red blue green, $n: 2); // blue
+    color: list.nth($list: red blue green, $n: 2); // blue
+}
+```
+
+### color
+
+`scss`包含很多操作颜色的函数。例如`lighten()`与 `darken()`可用于调亮或调暗颜色，`opacify()`使颜色透明度减少，`transparent()`使颜色透明度增加，`mix()`用来混合两种颜色。
+
+```css
+css
+
+ 代码解读
+复制代码.p1 {
+    // 让颜色变亮
+    color:scale-color(#5c7a29, $lightness: +30%);
+}
+
+.p2 {
+    // 让颜色变暗
+    color:scale-color(#5c7a29, $lightness: -15%);
+}
+
+.p3 {
+    // 降低颜色透明度
+    color:scale-color(#5c7a29, $alpha: -40%);
+}
+```
+
+编译为
+
+```css
+css
+
+ 代码解读
+复制代码.p1 {
+    color: #95c249;
+}
+
+.p2 {
+    color: #4e6823;
+}
+
+.p3 {
+    color: rgba(92, 122, 41, 0.6);
+}
+```
+
+### String
+
+`scss`有许多处理字符串的函数，比如向字符串添加引号的`quote()`、获取字符串长度的`string-length()`和将内容插入字符串给定位置的`string-insert()`。
+
+```css
+css
+
+ 代码解读
+复制代码p {
+    &:after {
+        content: quote(这是里面的内容);
+    }
+    background-color: unquote($string: "#F00");
+    z-index:str-length("scss学习");
+}
+```
+
+编译为
+
+```css
+css
+
+ 代码解读
+复制代码p {
+    background-color: #F00;
+    z-index: 6;
+}
+p:after {
+    content: "这是里面的内容";
+}
+```
+
+### Math
+
+数值函数处理数值计算，例如：`percentage()`将无单元的数值转换为百分比，`round()`将数字四舍五入为最接近的整数，`min()`和`max()`获取几个数字中的最小值或最大值，`random()`返回一个随机数。
+
+```css
+css
+
+ 代码解读
+复制代码p {
+    z-index: abs(-15); // 15
+    z-index: ceil(5.8); //6
+    z-index: max(5, 1, 6, 8, 3); //8
+    opacity: random(); // 随机 0-1
+}
+```
+
+编译为
+
+```css
+css
+
+ 代码解读
+复制代码p {
+    z-index: 15;
+    z-index: 6;
+    z-index: max(5, 1, 6, 8, 3);
+    opacity: 0.8636254167;
+}
+```
+
+### List
+
+`List`函数操作`List`，`length()`返回列表长度，`nth()`返回列表中的特定项，`join()`将两个列表连接在一起，a`ppend()`在列表末尾添加一个值。
+
+```css
+css
+
+ 代码解读
+复制代码p {
+    z-index: length(12px); //1
+    z-index: length(12px 5px 8px); //3
+    z-index: index(a b c d, c); //3
+    padding: append(10px 20px, 30px); // 10px 20px 30px
+    color: nth($list: red blue green, $n: 2); // blue
+}
+```
+
+编译为
+
+```css
+css
+
+ 代码解读
+复制代码p {
+    z-index: 1;
+    z-index: 3;
+    z-index: 3;
+    padding: 10px 20px 30px;
+    color: blue;
+}
+```
+
+### Map
+
+`Map`函数操作`Map`，`map-get()`根据键值获取`map`中的对应值，`map-merge()`来将两个`map`合并成一个新的`map`，`map-values()`映射中的所有值。
+
+```css
+css
+
+ 代码解读
+复制代码$font-sizes: ("small": 12px, "normal": 18px, "large": 24px);
+$padding:(top:10px, right:20px, bottom:10px, left:30px);
+p {
+    font-size: map-get($font-sizes, "normal"); //18px
+    @if map-has-key($padding, "right") {
+        padding-right: map-get($padding, "right");
+    }
+    &:after {
+        content: map-keys($font-sizes) + " "+ map-values($padding) + "";
+    }
+}
+```
+
+编译为
+
+```css
+css
+
+ 代码解读
+复制代码p {
+    font-size: 18px;
+    padding-right: 20px;
+}
+p:after {
+    content: '"small", "normal", "large" 10px, 20px, 10px, 30px';
+}
+```
+
+### selector
+
+选择符相关函数可对选择`css`进行一些相应的操作，例如：`selector-append()`可以把一个选择符附加到另一个选择符，`selector-unify()`将两组选择器合成一个复合选择器。
+
+```css
+css
+
+ 代码解读
+复制代码@use 'sass:selector';
+
+@debug selector.is-superselector("a", "a"); // true
+
+// 可以直接使用@forward下的前缀
+@debug selector-append("a", ".disabled"); // a.disabled
+@debug selector-extend("a.disabled", "a", ".link"); // a.disabled, .link.disabled
+
+.header {
+    content: selector-append(".a", ".b", ".c") + '';
+    content: selector-unify("a", ".disabled") + '';
+}
+```
+
+编译为
+
+```css
+css
+
+ 代码解读
+复制代码.header {
+    content: ".a.b.c";
+    content: "a.disabled";
+}
+```
+
+### meta
+
+`meta`提供一个`mixin`和一些原子级别的`function`，比如使用`meta.calc-args`获取方法的参数，`meta.calc-name`获取方法名。
+
+#### meta.load-css
+
+`meta.load-css($url，$with:())`该`mixin`可以把`$url`中`css`样式全部包含进来。注意，`$url`引入的函数，变量和`mixin`在 `meta.load-css()`后的`scss`中并不能用，它只会返回编译后的`css`代码。它的第二个参数可以修改使用了`!default`的变量。
+
+*src/corners*
+
+```css
+css
+
+ 代码解读
+复制代码$border-contrast: false !default;
+
+code {
+    background-color: #6b717f;
+    color: #d2e1dd;
+    @if $border-contrast {
+        border-color: #dadbdf;
+    }
+}
+```
+
+*index.scss*
+
+```css
+css
+
+ 代码解读
+复制代码@use "sass:meta";
+
+body.dark {
+    @include meta.load-css("src/corners", $with: ("border-contrast": true));
+}
+```
+
+编译为
+
+```css
+css
+
+ 代码解读
+复制代码body.dark code {
+    background-color: #6b717f;
+    color: #d2e1dd;
+    border-color: #dadbdf;
+}
+```
+
+#### function
+
+```css
+css
+
+ 代码解读
+复制代码@use "sass:meta";
+
+@debug meta.calc-args(calc(100px + 10%)); // unquote("100px + 10%")
+@debug meta.calc-args(clamp(50px, var(--width), 1000px)); // 50px, unquote("var(--width)"), 1000px
+
+@debug meta.calc-name(calc(100px + 10%)); // "calc"
+@debug meta.calc-name(clamp(50px, var(--width), 1000px)); // "clamp"
+```
+
+## 调试相关
+
+### @debug
+
+`@debug`打印表达式的值，方便调试。
+
+```css
+css
+
+ 代码解读
+复制代码$font-sizes: 10px + 20px;
+    $style: (
+        color: #bdc3c7
+    );
+.container {
+    @debug $style;
+    @debug $font-sizes;
+}
+```
+
+![img](./assets/c1f84d2d064142239a012529146ca0f4~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp)
+
+### @error
+
+`@error`显示致命错误
+
+```css
+css
+
+ 代码解读
+复制代码$colors: (
+    blue: #c0392b,
+    black: #2980b9
+);
+
+@function style-variation($style) {
+    @error "Invalid color: '#{$style}'.";
+    @if map-has-key($colors, $style) {
+        @return map-get($colors, $style);
+    }
+}
+
+.container {
+    color: style-variation(white);
+}
+```
+
+![img](./assets/84eabcd8aaef48d4a3f87e35bac6a755~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp)
+
+### @warn
+
+`@warn`显示警告性建议，会显示堆栈信息。
+
+```css
+css
+
+ 代码解读
+复制代码$colors: (
+    blue: #c0392b,
+    black: #2980b9
+  );
+
+@function style-variation($style) {
+    @warn "Invalid color: '#{$style}'.";
+    @if map-has-key($colors, $style) {
+        @return map-get($colors, $style);
+    }
+}
+
+.container {
+    color: style-variation(white);
+}
+```
+
+![img](./assets/fc652ad2f4c243faa0f8271b9e26ad94~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp)
+
+### 自检函数
+
+自检相关函数，属于内置扩展`meta`下的方法，`feature-exists()`检查当前`scss`版本是否存在某个特性，`variable-exists()`检查当前作用域中是否存在某个变量，`mixin-exists()`检查某个`mixin`是否存在。自检函数通常用在代码的调试上，返回的是个布尔值。
+
+```css
+css
+
+ 代码解读
+复制代码$color:#F00;
+@mixin padding($left:0, $top:0, $right:0, $bottom:0) {
+    padding: $top $right $bottom $left;
+}
+
+.container {
+    @if variable-exists(color) {
+        color: $color;
+    }
+    @else {
+        content: "$color不存在";
+    }
+    @if mixin-exists(padding) {
+        @include padding($left: 10px, $right: 10px);
+    }
+}
+```
+
+编译为
+
+```css
+css
+
+ 代码解读
+复制代码.container {
+    color: #F00;
+    padding: 0 10px 0 10px;
+}
+```
+
+
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # ----------------

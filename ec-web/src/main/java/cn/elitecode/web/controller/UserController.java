@@ -6,9 +6,10 @@ import cn.elitecode.common.PageResult;
 import cn.elitecode.common.properties.JWTProperties;
 import cn.elitecode.constant.HttpStatus;
 import cn.elitecode.constant.UserConstant;
+import cn.elitecode.model.bo.LoginUser;
 import cn.elitecode.model.dto.user.*;
 import cn.elitecode.model.entity.User;
-import cn.elitecode.model.bo.LoginUser;
+import cn.elitecode.model.vo.LoginUserVO;
 import cn.elitecode.model.vo.UserVO;
 import cn.elitecode.service.UserService;
 import cn.hutool.core.util.ArrayUtil;
@@ -18,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 
 /**
  * 用户控制器
@@ -40,7 +40,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/login")
-    private CommonResult<HashMap> login(@RequestBody UserLoginDTO userLoginDTO, HttpServletRequest request) {
+    private CommonResult<LoginUserVO> login(@RequestBody UserLoginDTO userLoginDTO, HttpServletRequest request) {
         if (userLoginDTO == null) {
             return CommonResult.error(HttpStatus.PARAMS_ERROR, "登录参数错误");
         }
@@ -63,12 +63,10 @@ public class UserController {
             return CommonResult.error(HttpStatus.PARAMS_ERROR, "密码长度必须在6到20个字符之间");
         }
 
-        String token = userService.login(username, userPassword, request);
         String tokenHead = JWTProperties.getTokenHead();
-        HashMap<String, String> tokenMap = new HashMap<>();
-        tokenMap.put("token", token);
-        tokenMap.put("tokenHead", tokenHead);
-        return CommonResult.success(tokenMap);
+        String token = userService.login(username, userPassword, request);
+        LoginUserVO loginUserVO = new LoginUserVO(tokenHead, token);
+        return CommonResult.success(loginUserVO);
     }
 
     /**

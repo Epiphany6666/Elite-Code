@@ -9,7 +9,7 @@ export declare interface UserRegisterDTO {
   checkPassword: string
 }
 
-export declare interface UserLoginDTO {
+export declare interface LoginForm {
   username: string
   password: string
 }

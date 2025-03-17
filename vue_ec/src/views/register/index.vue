@@ -123,29 +123,30 @@ const handleRegister = () => {
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .register {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  height: 100vh;
   background: url("@/assets/images/login-background.png") center/cover;
-}
 
-.title {
-  text-align: center;
-  color: #5b9cf8;
-}
+  .register-form {
+    width: 250px;
 
-.register-form {
-  width: 250px;
-  .input_icon {
-    height: 30px;
-    width: 14px;
+    .title {
+      text-align: center;
+      color: #5b9cf8;
+    }
+
+    .input_icon {
+      height: 30px;
+      width: 14px;
+    }
+
+    :deep(.el-input--large) .el-input__wrapper {
+      padding: 1px 10px;
+    }
   }
-}
-
-:deep(.el-input--large) .el-input__wrapper {
-  padding: 1px 10px;
 }
 </style>

@@ -528,7 +528,7 @@ vue-next-admin：https://github.com/lyt-Top/vue-next-admin
   - [ ] 上传git笔记博客
   - [ ] fetch和pull的区别：https://zhuanlan.zhihu.com/p/123370920
   
-- [ ] 学习scss：https://juejin.cn/post/7055101823442485255
+- [x] 学习scss：https://juejin.cn/post/7055101823442485255
 
 - [ ] 学习对象ts写法
 

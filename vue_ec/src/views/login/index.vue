@@ -2,7 +2,7 @@
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import useUserStore from '@/store/modules/user'
-import type { UserLoginDTO } from '@/types/user'
+import type { LoginForm } from '@/types/user'
 import type { FormRules } from 'element-plus'
 
 const title = import.meta.env.VITE_APP_TITLE
@@ -10,7 +10,7 @@ const loading = ref(false)
 const router = useRouter()
 const userStore = useUserStore()
 const loginFormRef = ref()
-const loginForm = ref<UserLoginDTO>({
+const loginForm = reactive<LoginForm>({
   username: 'luoyan',
   password: '12345678'
 })
@@ -19,7 +19,7 @@ const handleGoHome = () => {
   router.push('/home')
 }
 
-const loginRules = reactive<FormRules<UserLoginDTO>>({
+const loginRules = reactive<FormRules<LoginForm>>({
   username: [
     { type: 'string', required: true, trigger: 'blur', message: '请输入您的账号' },
     { type: 'string', min: 2, max: 20, trigger: 'blur', message: '账号长度必须在2到20个字符之间' }
@@ -31,10 +31,10 @@ const loginRules = reactive<FormRules<UserLoginDTO>>({
 })
 
 const handleLogin = async () => {
-  await loginFormRef.value.validate(valid => {
+  await loginFormRef.value.validate((valid: boolean) => {
     if (valid) {
       loading.value = true
-      userStore.login(loginForm.value).then(() => {
+      userStore.login(loginForm).then(() => {
         // 跳转到主页
         handleGoHome()
       }).finally(() => {
@@ -98,30 +98,30 @@ const handleLogin = async () => {
   </div>
 </template>
 
-<style scoped lang="less">
+<style scoped lang="scss">
 .login {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  height: 100vh;
   background: url("@/assets/images/login-background.png") center/cover;
-}
 
-.login-form {
-  width: 250px;
+  .login-form {
+    width: 250px;
 
-  .input_icon {
-    height: 30px;
-    width: 14px;
+    .input_icon {
+      height: 30px;
+      width: 14px;
+    }
+
+    .title {
+      text-align: center;
+      color: #5b9cf8;
+    }
+
+    :deep(.el-input--large) .el-input__wrapper {
+      padding: 1px 10px;
+    }
   }
-}
-
-.title {
-  text-align: center;
-  color: #5b9cf8;
-}
-
-:deep(.el-input--large) .el-input__wrapper {
-  padding: 1px 10px;
 }
 </style>

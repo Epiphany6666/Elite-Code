@@ -6,7 +6,7 @@ import useUserStore from '@/store/modules/user.ts'
 
 const whiteList = ['/login', '/register'] // 不重定向白名单
 
-router.beforeEach((to, from) => {
+router.beforeEach((to) => {
   NProgress.start()
   if (getToken()) {
     if (to.path === '/login') {
