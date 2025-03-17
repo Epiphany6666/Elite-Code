@@ -1,5 +1,5 @@
 export declare interface UserState {
-  token,
+  token: string,
   id: string
   username: string
   avatar: string

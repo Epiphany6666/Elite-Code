@@ -21,12 +21,12 @@ const handleGoHome = () => {
 
 const loginRules = reactive<FormRules<LoginForm>>({
   username: [
-    { type: 'string', required: true, trigger: 'blur', message: '请输入您的账号' },
-    { type: 'string', min: 2, max: 20, trigger: 'blur', message: '账号长度必须在2到20个字符之间' }
+    { required: true, trigger: 'blur', message: '请输入您的账号' },
+    { trigger: 'blur', message: '账号长度必须在2到20个字符之间' }
   ],
   password: [
-    { type: 'string', required: true, trigger: 'blur', message: '请输入您的密码' },
-    { type: 'string', min: 6, max: 20, trigger: 'blur', message: '密码长度必须在6到20个字符之间' }
+    { required: true, trigger: 'blur', message: '请输入您的密码' },
+    { min: 6, max: 20, trigger: 'blur', message: '密码长度必须在6到20个字符之间' }
   ]
 })
 

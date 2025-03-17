@@ -14,7 +14,7 @@ const registerForm = reactive({
   checkPassword: ''
 })
 
-const equalToPassword = (rule: any, value: any, callback: any) => {
+const equalToPassword = (value: string, callback: (error?: Error) => void) => {
   if (value !== registerForm.password) {
     callback(new Error('两次输入密码不一致'))
   } else {
@@ -24,24 +24,24 @@ const equalToPassword = (rule: any, value: any, callback: any) => {
 
 const registerRules = reactive<FormRules<UserRegisterDTO>>({
   username: [
-    { type: 'string', required: true, trigger: 'blur', message: '请输入您的账号' },
-    { type: 'string', min: 2, max: 20, trigger: 'blur', message: '账号长度必须在2到20个字符之间' }
+    { required: true, trigger: 'blur', message: '请输入您的账号' },
+    { min: 2, max: 20, trigger: 'blur', message: '账号长度必须在2到20个字符之间' }
   ],
   password: [
-    { type: 'string', required: true, trigger: 'blur', message: '请输入您的密码' },
-    { type: 'string', min: 6, max: 20, trigger: 'blur', message: '密码长度必须在6到20个字符之间' }
+    { required: true, trigger: 'blur', message: '请输入您的密码' },
+    { min: 6, max: 20, trigger: 'blur', message: '密码长度必须在6到20个字符之间' }
   ],
   checkPassword: [
-    { type: 'string', required: true, trigger: 'blur', message: '请再次输入您的密码' },
-    { type: 'string', validator: equalToPassword, trigger: 'blur' }
+    { required: true, trigger: 'blur', message: '请再次输入您的密码' },
+    { validator: equalToPassword, trigger: 'blur' }
   ]
 })
 
 const handleRegister = () => {
-  registerFormRef.value.validate(valid => {
+  registerFormRef.value.validate((valid: boolean) => {
     if (valid) {
       loading.value = true
-      register(registerForm.username, registerForm.password, registerForm.checkPassword).then(res => {
+      register(registerForm.username, registerForm.password, registerForm.checkPassword).then(() => {
         ElMessage({
           message: `${registerForm.username} 注册成功，即将跳转登录页...`,
           type: 'success',

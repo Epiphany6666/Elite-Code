@@ -1,4 +1,4 @@
-export declare interface LoginUserVO {
+export declare interface UserLoginVO {
   tokenHead: string
   token: string
 }

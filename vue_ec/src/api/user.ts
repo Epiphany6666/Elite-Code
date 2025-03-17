@@ -1,9 +1,10 @@
 import request from '@/utils/request.ts'
-import type { LoginUserVO, UserAddDTO, UserRegisterDTO } from '@/types/user'
+import type { UserLoginVO, UserAddDTO, UserRegisterDTO } from '@/types/user'
+import type { CommonResult } from '@/types/axios'
 
 // 登录
 export function login(username: string, password: string) {
-  return request<LoginUserVO>({
+  return request<CommonResult<UserLoginVO>>({
     url: '/user/login',
     method: 'post',
     data: {
@@ -15,7 +16,7 @@ export function login(username: string, password: string) {
 
 // 注册
 export function register(username: string, password: string, checkPassword: string) {
-  return request<UserRegisterDTO>({
+  return request<CommonResult<UserRegisterDTO>>({
     url: '/user/register',
     method: 'post',
     data: {
