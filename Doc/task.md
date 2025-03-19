@@ -161,6 +161,12 @@
 
 - [x] controller层校验全部使用JSR-303
 
+- [x] 抽取
+
+  - [x] 抽取LoginControler（login、getInfo、getRouters）
+- [x] 将 `生成BCryptPasswordEncoder密码` 抽取成 `SecurityUtils` 中的 `encryptPassword`
+  - [x] 抽取UserInfoController（个人信息的改查、头像上传）
+- [x] 上面每一步 —— 前端同步（api、ts类型文件抽取）
 
 
 ---
@@ -465,7 +471,7 @@ vue-next-admin：https://github.com/lyt-Top/vue-next-admin
 
   - [ ] 认证失败处理类
 
-  - [ ] 添加Logout filter
+- [x] 将logout请求方法封装到SpringSecurity中
 
     ~~~java
     // 添加CORS filter

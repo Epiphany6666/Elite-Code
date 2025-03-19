@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
 import type { UserState } from '@/store/types'
-import type { LoginForm, UserLoginVO } from '@/types/user'
-import { getInfo, login, logout } from '@/api/user.ts'
+import type { LoginForm } from '@/types/user'
 import { getToken, removeToken, setToken } from '@/utils/auth.ts'
+import { login, logout, getInfo } from '@/api/login.ts'
 
 const useUserStore = defineStore('user', {
   state: () => ({
@@ -18,12 +18,12 @@ const useUserStore = defineStore('user', {
       const username = userInfo.username
       const password = userInfo.password
       return new Promise((resolve, reject) => {
-        login(username, password).then((res: UserLoginVO) => {
+        login(username, password).then(res => {
           const { tokenHead, token } = res.data
           const tokenStr = tokenHead + token
           setToken(tokenStr)
           this.token = tokenStr
-          resolve()
+          resolve(res)
         }).catch(error => {
           reject(error)
         })
@@ -50,7 +50,7 @@ const useUserStore = defineStore('user', {
           this.token = ''
           this.roles = []
           removeToken()
-          resolve()
+          resolve('ok')
         }).catch(error => {
           reject(error)
         })

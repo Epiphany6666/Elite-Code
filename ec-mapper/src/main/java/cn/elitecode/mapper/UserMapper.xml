@@ -72,7 +72,7 @@
         )
     </insert>
 
-    <!--  List<UserVO> selectUserList(User user); -->
+    <!--  List<User> selectUserList(User user); -->
     <select id="getUserByPage" resultMap="UserResult">
         select
         <include refid="selectUserVo"/>
@@ -82,7 +82,7 @@
             <if test="id != null">and id=#{id}</if>
             <if test="username != null and username != ''">and username like "%"#{username}"%"</if>
             <if test="nickName != null and nickName != ''">and nick_name like "%"#{nickName}"%"</if>
-            <if test="userRole != null and userRole != ''">and JSON_CONTAINS(roles, JSON_QUOTE(#{userRole}))</if>
+            <if test="role != null and role != ''">and JSON_CONTAINS(roles, #{userRole})</if>
             <if test="createBy != null and createBy != ''">and create_by like "%"#{createBy}"%"</if>
             <if test="updateBy != null and updateBy != ''">and update_by like "%"#{updateBy}"%"</if>
             <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>
@@ -105,7 +105,7 @@
             <if test="id != null">and id=#{id}</if>
             <if test="username != null and username != ''">and username like "%"#{username}"%"</if>
             <if test="nickName != null and nickName != ''">and nick_name like "%"#{nickName}"%"</if>
-            <if test="userRole != null and userRole != ''">and JSON_CONTAINS(roles, JSON_QUOTE(#{userRole}))</if>
+            <if test="role != null and role != ''">and JSON_CONTAINS(roles, #{userRole})</if>
             <if test="createBy != null and createBy != ''">and create_by like "%"#{createBy}"%"</if>
             <if test="updateBy != null and updateBy != ''">and update_by like "%"#{updateBy}"%"</if>
             <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>
@@ -129,16 +129,18 @@
             id = #{id}
     </update>
 
-    <!-- List<Long> selectAdminUserIds(); -->
+    <!-- List<Long> selectAdminIds(); -->
     <select id="selectAdminIds" resultType="java.lang.Long">
-        select id from user where JSON_CONTAINS(roles, JSON_QUOTE('admin')) and del_flag = '0'
+        select id from user where JSON_CONTAINS(roles, '"admin"') and del_flag = '0'
     </select>
 
+    <!-- int deleteUserByIds(Long[] userIds); -->
     <delete id="deleteUserByIds">
         update user set del_flag = '2' where id in
-        <foreach collection="ids" open="(" separator="," close=")" item="id">
+        <foreach collection="userIds" open="(" separator="," close=")" item="id">
             #{id}
         </foreach>
+        and del_flag = '0'
     </delete>
 
     <!-- int updateUserAvatar(Long id, String avatarUrl); -->

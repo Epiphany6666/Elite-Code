@@ -1,10 +1,8 @@
 package cn.elitecode.service;
 
 import cn.elitecode.common.PageResult;
-import cn.elitecode.model.bo.LoginUser;
 import cn.elitecode.model.dto.user.UserQueryDTO;
 import cn.elitecode.model.entity.User;
-import cn.elitecode.model.vo.UserVO;
 
 /**
  * 用户 业务层
@@ -12,38 +10,14 @@ import cn.elitecode.model.vo.UserVO;
  */
 public interface UserService {
 
-    /**
-     * 用户登录
-     * @param username 用户账号
-     * @param userPassword 用户密码
-     * @return 用户信息
-     */
-    String login(String username, String userPassword);
+
 
     /**
-     * 用户注册
-     * @param user 用户信息
-     */
-    Long register(User user);
-
-    /**
-     * 用户注销
-     */
-    void userLogout();
-
-    /**
-     * 根据条件分页获取用户脱敏信息
+     * 根据条件分页获取用户信息
      * @param userQueryDTO
      * @return
      */
-    PageResult<UserVO> getUserVOPage(UserQueryDTO userQueryDTO);
-
-    /**
-     * 获取用户脱敏信息
-     * @param user
-     * @return
-     */
-    UserVO getUserVO(User user);
+    PageResult<User> getUserPage(UserQueryDTO userQueryDTO);
 
     /**
      * 根据id更新用户信息
@@ -57,13 +31,6 @@ public interface UserService {
      * @return 结果
      */
     boolean checkUsernameUnique(User user);
-
-    /**
-     * 注册用户
-     * @param user 用户信息
-     * @return 结果
-     */
-    boolean registerUser(User user);
 
     /**
      * 新增用户
@@ -85,16 +52,4 @@ public interface UserService {
      */
     boolean updateUserAvatar(Long userId, String avatarUrl);
 
-    /**
-     * 根据id获取用户信息（脱敏）
-     * @param userId
-     * @return
-     */
-    UserVO getUserVOById(Long userId);
-
-    /**
-     * 获取当前登录用户
-     * @return
-     */
-    LoginUser getLoginUser();
 }

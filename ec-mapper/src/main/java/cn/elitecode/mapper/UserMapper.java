@@ -2,6 +2,7 @@ package cn.elitecode.mapper;
 
 import cn.elitecode.model.dto.user.UserQueryDTO;
 import cn.elitecode.model.entity.User;
+import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
@@ -70,7 +71,7 @@ public interface UserMapper {
      * @param userIds 需要删除的id数组
      * @return
      */
-    int deleteUserByIds(Long[] userIds);
+    int deleteUserByIds(@Param("userIds") Long[] userIds);
 
     /**
      * 修改用户头像
