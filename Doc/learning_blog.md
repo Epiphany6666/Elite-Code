@@ -5463,7 +5463,7 @@ css
 
 ---
 
-## @mixin
+## 十五、@mixin
 
 混合指令（`Mixin`）用于定义可重复使用的样式。混合指令可以包含所有的`css`规则，绝大部分 `scss`规则，甚至可以通过参数功能引入变量，输出多样化的样式。
 
@@ -5481,11 +5481,8 @@ css
 
 ### 标准形式
 
-```css
-css
-
- 代码解读
-复制代码// 定义一个区块基本的样式
+```scss
+// 定义一个区块基本的样式
 @mixin block {
     width: 96%;
     margin-left: 2%;
@@ -5503,16 +5500,15 @@ css
 编译为
 
 ```css
-css
-
- 代码解读
-复制代码.container .block {
+.container .block {
     width: 96%;
     margin-left: 2%;
     border-radius: 8px;
     border: 1px #f6f6f6 solid;
 }
 ```
+
+---
 
 ### 嵌入选择器
 
@@ -7086,3 +7082,9 @@ css
 
 
 # ----------------
+
+
+
+# 绝望瞬间
+
+<img src="./assets/image-20250318085340734.png" alt="image-20250318085340734" style="zoom:67%;" />
