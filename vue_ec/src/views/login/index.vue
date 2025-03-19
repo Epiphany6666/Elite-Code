@@ -43,6 +43,17 @@ const handleLogin = async () => {
     }
   })
 }
+
+// 睁眼/闭眼
+const pwdType = ref('password')
+const showPwd = () => {
+  if (pwdType.value === 'password') {
+    pwdType.value = ''
+  } else {
+    pwdType.value = 'password'
+  }
+}
+
 </script>
 
 <template>
@@ -70,13 +81,16 @@ const handleLogin = async () => {
       <el-form-item prop="password">
         <el-input
           v-model="loginForm.password"
-          type="password"
+          :type="pwdType"
           size="large"
           placeholder="密码"
           @keyup.enter="handleLogin"
         >
           <template #prefix>
             <svg-icon icon-class="password" class="input_icon" />
+          </template>
+          <template #suffix>
+            <svg-icon :icon-class="pwdType ? 'closeEye' : 'openEye'" class="input_icon password-icon" @click="showPwd" />
           </template>
         </el-input>
       </el-form-item>
@@ -109,9 +123,15 @@ const handleLogin = async () => {
   .login-form {
     width: 250px;
 
-    .input_icon {
-      height: 30px;
-      width: 14px;
+    .el-input {
+      .input_icon {
+        height: 30px;
+        width: 14px;
+      }
+
+      .password-icon {
+        cursor: pointer;
+      }
     }
 
     .title {

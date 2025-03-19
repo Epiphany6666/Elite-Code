@@ -244,6 +244,22 @@
   - [x] 编写路由守卫（permission.ts）
   - [x] 获取用户信息并放到pinia中
   - [x] axios拦截器：添加header（Authorization）
+  
+- [x] 密码框的小眼睛（text和password类型的切换），参考mall
+
+  ~~~js
+  showPwd() {
+    if (this.pwdType === 'password') {
+      this.pwdType = ''
+    } else {
+      this.pwdType = 'password'
+    }
+  },
+  ~~~
+
+- [ ] 给登录注册页面加一个白色的背景图
+
+- [ ] 登陆成功给用户一个提醒
 
 
 
