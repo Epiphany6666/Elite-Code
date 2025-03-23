@@ -1,44 +1,67 @@
 import { createWebHistory, createRouter, type RouteRecordRaw } from 'vue-router'
-import Index from '@/layout/index.vue'
+import Layout from '@/layout/index.vue'
 
-const constantRoutes:Array<RouteRecordRaw> = [
-  // { path: '/', component: HomeView },
+export const constantRoutes: Array<RouteRecordRaw> = [
   {
     path: '/login',
     component: () => import('@/views/login/index.vue'),
+    meta: {
+      hidden: true
+    }
   },
   {
     path: '/register',
-    component: () => import('@/views/register/index.vue')
+    component: () => import('@/views/register/index.vue'),
+    meta: {
+      hidden: true
+    }
   },
   {
     path: '',
-    component: Index,
+    component: Layout,
     redirect: '/home',
     children: [
       {
         path: 'home',
-        component: () => import('@/views/home/index.vue')
-      },
+        component: () => import('@/views/home/index.vue'),
+        meta: {
+          title: '题库'
+        }
+      }
+    ]
+  },
+  {
+    path: '',
+    component: Layout,
+    children: [
       {
         path: 'about',
-        component: () => import('@/views/about/index.vue')
+        component: () => import('@/views/about/index.vue'),
+        meta: {
+          title: '竞赛'
+        }
       }
     ]
   },
   {
     path: '/404',
     component: () => import('@/views/error/404.vue'),
+    meta: {
+      hidden: true
+    }
   },
   {
     path: '/:pathMatch(.*)*',
-    redirect: '/404'
+    redirect: '/404',
+    meta: {
+      hidden: true
+    }
   }
 ]
 
 const router = createRouter({
   history: createWebHistory(),
-  routes: constantRoutes,
+  routes: constantRoutes
 })
 
 export default router

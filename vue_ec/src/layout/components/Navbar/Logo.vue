@@ -19,7 +19,7 @@
   }
 
   .navbar-title {
-    font-size: 15px;
+    font-size: 16px;
     display: inline-block;
     margin-left: 5px;
   }

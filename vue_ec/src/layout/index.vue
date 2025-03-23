@@ -1,8 +1,13 @@
-<script setup lang="ts">
+<script setup lang="ts" name="Layout">
 import { CaretBottom } from '@element-plus/icons-vue'
 import Logo from '@/layout/components/Navbar/Logo.vue'
 import useUserStore from '@/store/modules/user.ts'
+import NavbarItem from '@/layout/components/Navbar/NavbarItem.vue'
+import usePermissionStore from '@/store/modules/permission.ts'
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
+console.log("@@route/layout", route)
 const userStore = useUserStore()
 const handleCommand = (command: string) => {
   switch (command) {
@@ -19,6 +24,9 @@ const logout = () => {
     location.reload() // 为了重新实例化vue-router对象，避免bug，例如缓存
   })
 }
+
+const permissionStore = usePermissionStore()
+const routes = permissionStore.routes
 </script>
 
 <template>
@@ -26,18 +34,18 @@ const logout = () => {
     <div class="header-container">
       <Logo></Logo>
       <el-menu
-        default-active="/home"
+        :default-active="route.path"
         mode="horizontal"
-        active-text-color="black"
-        router
+        text-color="#737373"
+        active-text-color="#333"
         unique-opened
       >
-        <el-menu-item index="/home">
-          <span>HOME</span>
-        </el-menu-item>
-        <el-menu-item index="/about">
-          <span>ABOUT</span>
-        </el-menu-item>
+        <navbar-item
+          v-for="route in routes"
+          :key="route.path"
+          :route="route"
+          :base-path="route.path"
+        />
       </el-menu>
       <div class="avatar-container">
         <el-dropdown placement="bottom-end" trigger="click" @command="handleCommand">
@@ -100,29 +108,21 @@ const logout = () => {
     margin: 0 5px;
     padding: 0 24px;
     display: flex;
+    position: relative;
 
     .el-menu {
       flex: 1;
       height: 50px;
+      width: 10px;
       margin-left: 22px;
-
-      .el-menu-item {
-        line-height: 50px;
-        padding: 0;
-        margin-right: 20px;
-        color: #737373;
-
-        &:hover {
-          color: black;
-        }
-      }
 
       // 子选项悬浮背景
       --el-menu-hover-bg-color: #fff;
     }
 
+    // 去掉el-menu组件底部的边框线
     .el-menu--horizontal.el-menu {
-      border-bottom: 0 !important;
+      border-bottom: 0;
     }
 
     .avatar-container {
@@ -132,6 +132,16 @@ const logout = () => {
         height: 40px;
         margin-right: 5px;
       }
+    }
+
+    &:after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 1px;
+      background-color: #ebebeb;
     }
   }
 
