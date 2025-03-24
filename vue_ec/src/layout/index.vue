@@ -5,9 +5,9 @@ import useUserStore from '@/store/modules/user.ts'
 import NavbarItem from '@/layout/components/Navbar/NavbarItem.vue'
 import usePermissionStore from '@/store/modules/permission.ts'
 import { useRoute } from 'vue-router'
+import AppMain from '@/layout/components/AppMain.vue'
 
 const route = useRoute()
-console.log("@@route/layout", route)
 const userStore = useUserStore()
 const handleCommand = (command: string) => {
   switch (command) {
@@ -65,7 +65,7 @@ const routes = permissionStore.routes
       </div>
     </div>
     <div class="main-container">
-      <router-view />
+      <app-main />
     </div>
     <div class="footer-container">
       <div class="footer-nav">
@@ -143,11 +143,6 @@ const routes = permissionStore.routes
       height: 1px;
       background-color: #ebebeb;
     }
-  }
-
-  .main-container {
-    margin: 0 5px;
-    padding: 24px;
   }
 
   .footer-container {

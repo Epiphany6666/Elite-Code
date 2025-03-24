@@ -279,17 +279,35 @@
 
 - [x] 样式编写
 
-- [ ] 像若依（AppMain.vue）一样加一个过度
+- [x] 像若依（AppMain.vue）一样加一个过度
 
-  ~~~html
-  <router-view v-slot="{ Component, route }">
-    <transition name="fade-transform" mode="out-in">
-      <keep-alive :include="tagsViewStore.cachedViews">
-        <component v-if="!route.meta.link" :is="Component" :key="route.path"/>
-      </keep-alive>
-    </transition>
-  </router-view>
-  ~~~
+  - [x] 抽取 `<router-view />` 为组件 `AppMain.vue`
+
+  - [x] 添加过渡动画：https://router.vuejs.org/guide/advanced/transitions.html
+
+    ~~~html
+    <router-view v-slot="{ Component, route }">
+      <transition name="fade-transform" mode="out-in">
+        <keep-alive :include="tagsViewStore.cachedViews">
+          <component v-if="!route.meta.link" :is="Component" :key="route.path"/>
+        </keep-alive>
+      </transition>
+    </router-view>
+    ~~~
+
+  - [x] 将过渡动画写成transition.sass，然后在index.sass中引入
+
+    ~~~scss
+    .fade-enter-active,
+    .fade-leave-active {
+      transition: opacity 0.28s;
+    }
+    
+    .fade-enter-to,
+    .fade-leave-from {
+      opacity: 0;
+    }
+    ~~~
 
 - [ ] 使用keepalive缓存router-view
 
