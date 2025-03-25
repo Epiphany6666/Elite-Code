@@ -342,6 +342,10 @@
   - [x] 外链功能
 
 - [ ] 登录 / 注册页面
+- [x] 封装settings仓库
+
+  - [x] 主题色
+  - [x] 动态切换网页标题
 
 - [x] 生产环境和本地环境配置：https://nextjs.org/docs/app/building-your-application/configuring/environment-variables
 

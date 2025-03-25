@@ -101,6 +101,7 @@ const routes = permissionStore.routes
 </template>
 
 <style scoped lang="scss">
+@import '@/assets/styles/variables.scss';
 .app-wrapper {
 
   .header-container {
@@ -117,7 +118,7 @@ const routes = permissionStore.routes
       margin-left: 22px;
 
       // 子选项悬浮背景
-      --el-menu-hover-bg-color: #fff;
+      --el-menu-hover-bg-color: #{$menuHover};
     }
 
     // 去掉el-menu组件底部的边框线

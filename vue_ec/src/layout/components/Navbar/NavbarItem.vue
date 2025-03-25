@@ -81,6 +81,7 @@ const resolvePath = computed(() => {
 </template>
 
 <style scoped lang="scss">
+@import '@/assets/styles/variables.scss';
 a {
   text-decoration: none;
 }
@@ -89,12 +90,12 @@ a {
   height: 50px;
   padding: 0;
   margin-right: 20px;
-  --el-menu-hover-text-color: #333;
+  --el-menu-hover-text-color: #{$menuHoverText};
   font-size: 16px;
   position: relative;
 
   &.is-active {
-    color: #333;
+    color: #{$menuActiveText};
     font-weight: 500;
     box-sizing: border-box;
 
