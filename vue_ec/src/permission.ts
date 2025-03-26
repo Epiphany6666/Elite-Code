@@ -13,7 +13,7 @@ router.beforeEach((to) => {
     useSettingsStore().setTitle(to.meta.title)
   }
   if (getToken()) {
-    if (to.path === '/login') {
+    if (to.path === '/login' || to.path === '/register') {
       return '/'
     } else {
       useUserStore().getInfo().catch(error => {
@@ -21,10 +21,14 @@ router.beforeEach((to) => {
         return '/'
       })
     }
-  } else if (whiteList.includes(to.path)) {
-    return true
   } else {
-    return '/login'
+    // 没有token
+    if (whiteList.includes(to.path)) {
+      // 在免登录白名单，直接进入
+      return true
+    } else {
+      return `/login?redirect=${to.fullPath}` // 否则全部重定向到登录页
+    }
   }
 })
 

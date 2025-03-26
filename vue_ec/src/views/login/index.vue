@@ -1,23 +1,26 @@
 <script setup lang="ts" name="Login">
-import { reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { reactive, ref, watch } from 'vue'
+import { type LocationQueryValue, useRoute, useRouter } from 'vue-router'
 import useUserStore from '@/store/modules/user'
 import type { LoginForm } from '@/types/user'
 import type { FormRules } from 'element-plus'
 
 const title = import.meta.env.VITE_APP_TITLE
 const loading = ref(false)
+const route = useRoute()
 const router = useRouter()
+
+const redirect = ref('')
+watch(route, (newRoute) => {
+  redirect.value = newRoute.query && newRoute.query.redirect as string
+}, { immediate: true })
+
 const userStore = useUserStore()
 const loginFormRef = ref()
 const loginForm = reactive<LoginForm>({
   username: 'luoyan',
   password: '12345678'
 })
-
-const handleGoHome = () => {
-  router.push('/home')
-}
 
 const loginRules = reactive<FormRules<LoginForm>>({
   username: [
@@ -35,8 +38,14 @@ const handleLogin = async () => {
     if (valid) {
       loading.value = true
       userStore.login(loginForm).then(() => {
-        // 跳转到主页
-        handleGoHome()
+        const query = route.query
+        const otherQueryParams = Object.keys(query).reduce((acc, cur) => {
+          if (cur !== 'redirect') {
+            acc[cur] = query[cur]
+          }
+          return acc
+        }, {} as { [key: string]: LocationQueryValue | LocationQueryValue[] })
+        router.push({ path: redirect.value || '/', query: otherQueryParams })
       }).finally(() => {
         loading.value = false
       })
