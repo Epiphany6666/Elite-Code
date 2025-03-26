@@ -1,8 +1,8 @@
 package cn.elitecode.web.controller;
 
 import cn.elitecode.common.BaseContext;
-import cn.elitecode.common.CommonResult;
-import cn.elitecode.common.PageResult;
+import cn.elitecode.common.api.CommonPage;
+import cn.elitecode.common.api.CommonResult;
 import cn.elitecode.common.utils.SecurityUtils;
 import cn.elitecode.constant.HttpStatus;
 import cn.elitecode.model.dto.user.UserAddDTO;
@@ -31,7 +31,7 @@ public class UserController {
 
     @ApiOperation(value = "根据条件分页查询用户脱敏信息")
     @PostMapping("/list/page")
-    private PageResult<User> listUserByPage(@RequestBody UserQueryDTO userQueryDTO) {
+    private CommonResult<CommonPage<User>> listUserByPage(@RequestBody UserQueryDTO userQueryDTO) {
         return userService.getUserPage(userQueryDTO);
     }
 

@@ -1,7 +1,7 @@
-<script setup lang="ts" name="register">
+<script setup lang="ts" name="Register">
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { register } from '@/api/user.ts'
+import { register } from '@/api/login.ts'
 import type { FormRules } from 'element-plus'
 import type { UserRegisterDTO } from '@/types/user'
 

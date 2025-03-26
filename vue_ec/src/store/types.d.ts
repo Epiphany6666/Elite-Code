@@ -1,3 +1,9 @@
+import type { RouteRecordRaw } from 'vue-router'
+
+export declare interface PermissionState {
+  routes: Array<RouteRecordRaw>
+}
+
 export declare interface UserState {
   token: string,
   id: string
@@ -5,3 +11,9 @@ export declare interface UserState {
   avatar: string
   roles: Array<string>
 }
+
+export declare interface SettingsState {
+  title: string,
+  theme: string
+}
+

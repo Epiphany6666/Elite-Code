@@ -1,6 +1,6 @@
 package cn.elitecode.common.exception;
 
-import cn.elitecode.common.CommonResult;
+import cn.elitecode.common.api.CommonResult;
 import cn.elitecode.constant.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

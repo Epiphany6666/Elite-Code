@@ -1,6 +1,6 @@
 package cn.elitecode.web.handler;
 
-import cn.elitecode.common.CommonResult;
+import cn.elitecode.common.api.CommonResult;
 import cn.hutool.json.JSONUtil;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.Authentication;

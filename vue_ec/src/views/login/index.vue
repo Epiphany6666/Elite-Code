@@ -1,4 +1,4 @@
-<script setup lang="ts" name="login">
+<script setup lang="ts" name="Login">
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import useUserStore from '@/store/modules/user'

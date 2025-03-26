@@ -1,6 +1,6 @@
 package cn.elitecode.web.controller;
 
-import cn.elitecode.common.CommonResult;
+import cn.elitecode.common.api.CommonResult;
 import cn.elitecode.common.properties.JWTProperties;
 import cn.elitecode.common.utils.SecurityUtils;
 import cn.elitecode.model.bo.LoginUser;

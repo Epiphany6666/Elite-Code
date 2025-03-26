@@ -1,7 +1,8 @@
 package cn.elitecode.service.impl;
 
 import cn.elitecode.common.BaseContext;
-import cn.elitecode.common.PageResult;
+import cn.elitecode.common.api.CommonPage;
+import cn.elitecode.common.api.CommonResult;
 import cn.elitecode.common.exception.user.AdminNotAllowedException;
 import cn.elitecode.constant.HttpStatus;
 import cn.elitecode.constant.UserConstant;
@@ -28,14 +29,14 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
 
     @Override
-    public PageResult<User> getUserPage(UserQueryDTO userQueryDTO) {
+    public CommonResult<CommonPage<User>> getUserPage(UserQueryDTO userQueryDTO) {
         if (userQueryDTO.getCurrent() != null && userQueryDTO.getPageSize() != null) {
             userQueryDTO.setCurrent((userQueryDTO.getCurrent() - 1) * userQueryDTO.getPageSize());
         }
         List<User> userList = userMapper.getUserByPage(userQueryDTO);
         Long total = userMapper.getTotal(userQueryDTO);
-        PageResult<User> pageResult = new PageResult<>(total, userList);
-        return pageResult;
+        CommonPage<User> page = new CommonPage<>(total, userList);
+        return CommonResult.success(page);
     }
 
     @Override

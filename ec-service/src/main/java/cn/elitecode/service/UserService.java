@@ -1,6 +1,7 @@
 package cn.elitecode.service;
 
-import cn.elitecode.common.PageResult;
+import cn.elitecode.common.api.CommonPage;
+import cn.elitecode.common.api.CommonResult;
 import cn.elitecode.model.dto.user.UserQueryDTO;
 import cn.elitecode.model.entity.User;
 
@@ -17,7 +18,7 @@ public interface UserService {
      * @param userQueryDTO
      * @return
      */
-    PageResult<User> getUserPage(UserQueryDTO userQueryDTO);
+    CommonResult<CommonPage<User>> getUserPage(UserQueryDTO userQueryDTO);
 
     /**
      * 根据id更新用户信息

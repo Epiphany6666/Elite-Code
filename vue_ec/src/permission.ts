@@ -8,7 +8,10 @@ import useSettingsStore from '@/store/modules/settings.ts'
 const whiteList = ['/login', '/register'] // 不重定向白名单
 router.beforeEach((to) => {
   NProgress.start()
-  to.meta.title && useSettingsStore().setTitle(to.meta.title)
+  // 动态设置网页标题
+  if (to.meta.title) {
+    useSettingsStore().setTitle(to.meta.title)
+  }
   if (getToken()) {
     if (to.path === '/login') {
       return '/'

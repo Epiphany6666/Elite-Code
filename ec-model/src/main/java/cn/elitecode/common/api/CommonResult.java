@@ -1,4 +1,4 @@
-package cn.elitecode.common;
+package cn.elitecode.common.api;
 
 import cn.elitecode.constant.HttpStatus;
 import io.swagger.annotations.ApiModelProperty;

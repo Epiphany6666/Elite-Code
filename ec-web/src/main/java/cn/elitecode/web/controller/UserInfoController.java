@@ -1,12 +1,11 @@
 package cn.elitecode.web.controller;
 
 import cn.elitecode.common.BaseContext;
-import cn.elitecode.common.CommonResult;
+import cn.elitecode.common.api.CommonResult;
 import cn.elitecode.common.properties.FileUploadProperties;
 import cn.elitecode.common.utils.SecurityUtils;
 import cn.elitecode.common.utils.file.FileUploadUtils;
 import cn.elitecode.common.utils.file.MimeTypeUtils;
-import cn.elitecode.model.bo.LoginUser;
 import cn.elitecode.model.dto.user.UserUpdateProfileDto;
 import cn.elitecode.model.entity.User;
 import cn.elitecode.service.UserService;
