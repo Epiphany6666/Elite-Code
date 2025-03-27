@@ -4,7 +4,7 @@ import useUserStore from '@/store/modules/user.ts'
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
 // 创建axios实例
 const request: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL, // api的base_url
+  baseURL: import.meta.env.VITE_APP_BASE_API, // api的base_url
   timeout: 10000, // 请求超时时间
 });
 

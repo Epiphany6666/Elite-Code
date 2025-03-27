@@ -34,7 +34,6 @@ const hasOneShowingChildren = (children: RouteRecordRaw[] | undefined, parent: R
   // Show parent if there are no child router to display
   if (showingChildren.length === 0) {
     onlyOneChild.value = { ...parent, path: '' }
-    console.log('@@0onlyOneChild', onlyOneChild)
     return true
   }
   return false
