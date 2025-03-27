@@ -28,7 +28,6 @@ const hasOneShowingChildren = (children: RouteRecordRaw[] | undefined, parent: R
 
   // When there is only one child router, the child router is displayed by default
   if (showingChildren.length === 1) {
-    console.log('@@1onlyOneChild', onlyOneChild)
     return true
   }
 
@@ -79,36 +78,3 @@ const resolvePath = computed(() => {
     </el-sub-menu>
   </template>
 </template>
-
-<style scoped lang="scss">
-@import '@/assets/styles/variables.scss';
-a {
-  text-decoration: none;
-}
-
-.el-menu-item {
-  height: 50px;
-  padding: 0;
-  margin-right: 20px;
-  --el-menu-hover-text-color: #{$menuHoverText};
-  font-size: 16px;
-  position: relative;
-
-  &.is-active {
-    color: #{$menuActiveText};
-    font-weight: 500;
-    box-sizing: border-box;
-
-    &:after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background-color: var(--el-menu-active-color);
-      z-index: 1;
-    }
-  }
-}
-</style>

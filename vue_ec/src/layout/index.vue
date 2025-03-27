@@ -1,13 +1,9 @@
 <script setup lang="ts" name="Layout">
 import { CaretBottom } from '@element-plus/icons-vue'
-import Logo from '@/layout/components/Navbar/Logo.vue'
 import useUserStore from '@/store/modules/user.ts'
-import NavbarItem from '@/layout/components/Navbar/NavbarItem.vue'
-import usePermissionStore from '@/store/modules/permission.ts'
-import { useRoute } from 'vue-router'
 import AppMain from '@/layout/components/AppMain.vue'
+import Navbar from '@/layout/components/Navbar/index.vue'
 
-const route = useRoute()
 const userStore = useUserStore()
 const handleCommand = (command: string) => {
   switch (command) {
@@ -24,36 +20,16 @@ const logout = () => {
     location.reload() // 为了重新实例化vue-router对象，避免bug，例如缓存
   })
 }
-
-const permissionStore = usePermissionStore()
-const routes = permissionStore.routes
 </script>
 
 <template>
   <div class="app-wrapper">
     <div class="header-container">
-      <Logo></Logo>
-      <el-menu
-        :default-active="route.path"
-        mode="horizontal"
-        text-color="#737373"
-        active-text-color="#333"
-        unique-opened
-      >
-        <navbar-item
-          v-for="route in routes"
-          :key="route.path"
-          :route="route"
-          :base-path="route.path"
-        />
-      </el-menu>
+      <navbar />
       <div class="avatar-container">
         <el-dropdown placement="bottom-end" trigger="click" @command="handleCommand">
           <div class="avatar-wrapper">
             <img :src="userStore.avatar || '/notLoginUser.png'" class="user-avatar">
-            <el-icon>
-              <CaretBottom />
-            </el-icon>
           </div>
           <template #dropdown>
             <el-dropdown-menu>
@@ -99,84 +75,3 @@ const routes = permissionStore.routes
     </div>
   </div>
 </template>
-
-<style scoped lang="scss">
-@import '@/assets/styles/variables.scss';
-.app-wrapper {
-
-  .header-container {
-    height: 50px;
-    margin: 0 5px;
-    padding: 0 24px;
-    display: flex;
-    position: relative;
-
-    .el-menu {
-      flex: 1;
-      height: 50px;
-      width: 10px;
-      margin-left: 22px;
-
-      // 子选项悬浮背景
-      --el-menu-hover-bg-color: #{$menuHover};
-    }
-
-    // 去掉el-menu组件底部的边框线
-    .el-menu--horizontal.el-menu {
-      border-bottom: 0;
-    }
-
-    .avatar-container {
-      padding: 10px 0;
-
-      .user-avatar {
-        height: 40px;
-        margin-right: 5px;
-      }
-    }
-
-    &:after {
-      content: '';
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 1px;
-      background-color: #ebebeb;
-    }
-  }
-
-  .footer-container {
-    background-color: black;
-    padding: 0 89px;
-
-    .footer-nav {
-      display: flex;
-      justify-content: space-between;
-
-      .nav-item {
-        display: flex;
-        flex-direction: column;
-        width: 197px;
-        color: #fff;
-
-        .nav-title {
-          font-size: 20px;
-          margin-top: 10px;
-        }
-
-        a {
-          margin-top: 14px;
-          text-decoration: none;
-          color: #babbbf;
-
-          &:hover {
-            color: #fff;
-          }
-        }
-      }
-    }
-  }
-
-}
-</style>

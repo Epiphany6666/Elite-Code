@@ -5880,11 +5880,8 @@ css
 
 我们以`elementUI`的`el-button`组件为例，可以使用`@extend`继承已经存在的样式，原理是使用逗号选择器。
 
-```css
-css
-
- 代码解读
-复制代码// # id选择器一样的
+```scss
+// # id选择器一样的
 .button {
     display: inline-block;
     margin-bottom: 0;
@@ -5920,10 +5917,7 @@ css
 编译成
 
 ```css
-css
-
- 代码解读
-复制代码.button, .btn-danger, .btn-default {
+.button, .btn-danger, .btn-default {
     display: inline-block;
     margin-bottom: 0;
     font-weight: normal;
@@ -5953,13 +5947,12 @@ css
 }
 ```
 
+---
+
 ### 可以使用多个@extend
 
-```css
-css
-
- 代码解读
-复制代码.alert {
+```scss
+.alert {
     padding: 15px;
     margin-bottom: 20px;
     border: 1px solid transparent;
@@ -5983,10 +5976,7 @@ css
 编译为
 
 ```css
-css
-
- 代码解读
-复制代码.alert, .alert-danger {
+.alert, .alert-danger {
     padding: 15px;
     margin-bottom: 20px;
     border: 1px solid transparent;
@@ -6011,10 +6001,7 @@ css
 `@extend`可以多层继承，列如：`.alert-danger`继承自`.important`，`.important`又继承自`.alert`。
 
 ```css
-css
-
- 代码解读
-复制代码.alert {
+.alert {
     padding: 15px;
     margin-bottom: 20px;
     border: 1px solid transparent;
@@ -6038,10 +6025,7 @@ css
 编译为
 
 ```css
-css
-
- 代码解读
-复制代码.alert, .important, .alert-danger {
+.alert, .important, .alert-danger {
     padding: 15px;
     margin-bottom: 20px;
     border: 1px solid transparent;
@@ -6138,6 +6122,8 @@ css
 }
 ```
 
+---
+
 ## @use
 
 存在兼容性问题，仅在`Dart Sass 1.23.0`以上有效，[官方文档有兼容性介绍](https://link.juejin.cn?target=https%3A%2F%2Fsass-lang.com%2Finstall)。
@@ -6155,10 +6141,7 @@ css
 *src/_corners.scss*
 
 ```css
-css
-
- 代码解读
-复制代码$radius: 3px;
+$radius: 3px;
 @mixin rounded {
     border-radius: $radius;
 }
@@ -6167,10 +6150,7 @@ css
 *index.scss*
 
 ```css
-css
-
- 代码解读
-复制代码@use "src/corners";
+@use "src/corners";
 .button {
     @include corners.rounded;
     padding: 5px + corners.$radius;
@@ -6182,10 +6162,7 @@ css
 *src/_corners.scss*
 
 ```css
-css
-
- 代码解读
-复制代码$radius: 3px;
+$radius: 3px;
 @mixin rounded {
     border-radius: $radius;
 }
@@ -6194,10 +6171,7 @@ css
 *index.scss*
 
 ```css
-css
-
- 代码解读
-复制代码@use "src/corners" as c;
+@use "src/corners" as c;
 .button {
     @include c.rounded;
     padding: 5px + c.$radius;
@@ -6207,26 +6181,20 @@ css
 编译为
 
 ```css
-css
-
- 代码解读
-复制代码.button {
+.button {
     border-radius: 3px;
     padding: 8px;
 }
 ```
 
-### as*
+### as *
 
-使用`as*`，那么这一模块就处于全局命名空间。
+使用`as *`，那么这一模块就处于全局命名空间。
 
 *src/_corners.scss*
 
 ```css
-css
-
- 代码解读
-复制代码$radius: 3px;
+$radius: 3px;
 @mixin rounded {
     border-radius: $radius;
 }
@@ -6235,10 +6203,7 @@ css
 *index.scss*
 
 ```css
-css
-
- 代码解读
-复制代码@use "src/corners" as *;
+@use "src/corners" as *;
 
 .button {
     @include rounded;
@@ -6249,10 +6214,7 @@ css
 编译为
 
 ```css
-css
-
- 代码解读
-复制代码.button {
+.button {
     border-radius: 3px;
     padding: 8px;
 }
@@ -6265,10 +6227,7 @@ css
 *src/_corners.scss*
 
 ```css
-css
-
- 代码解读
-复制代码$-radius: 3px;
+$-radius: 3px;
 
 @mixin rounded {
     border-radius: $-radius;
@@ -6278,10 +6237,7 @@ css
 *index.scss*
 
 ```css
-css
-
- 代码解读
-复制代码@use "src/corners";
+@use "src/corners";
 
 .button {
     @include corners.rounded;
@@ -6289,6 +6245,8 @@ css
     padding: 5px + corners.$-radius;
 }
 ```
+
+---
 
 ## @forward
 

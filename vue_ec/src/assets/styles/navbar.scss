@@ -1,0 +1,135 @@
+@use "./variables.scss" as *;
+
+#app {
+  .header-container {
+    height: 50px;
+    margin: 0 5px;
+    padding: 0 24px;
+    display: flex;
+    position: relative;
+
+    .navbar-container {
+      flex: 1;
+      display: flex;
+      a {
+        text-decoration: none;
+      }
+
+      .navbar-logo-container {
+        line-height: 50px;
+
+        .navbar-logo {
+          height: 22px;
+          vertical-align: middle;
+        }
+
+        .navbar-title {
+          font-size: 16px;
+          margin-left: 5px;
+          display: inline-block;
+          vertical-align: middle;
+        }
+      }
+
+      .el-menu {
+        flex: 1;
+        height: 50px;
+        width: 100%;
+        margin-left: 22px;
+
+        // 子选项悬浮背景
+        --el-menu-hover-bg-color: $menuHover;
+
+        // 去掉el-menu组件底部的边框线
+        .el-menu--horizontal.el-menu {
+          border-bottom: 0;
+        }
+
+        .el-menu-item {
+          height: 50px;
+          padding: 0;
+          margin-right: 20px;
+          font-size: 16px;
+          position: relative;
+
+          &:hover {
+            color: $menuHoverText;
+          }
+
+          &.is-active {
+            color: $menuActiveText;
+            font-weight: 500;
+            box-sizing: border-box;
+
+            &:after {
+              content: '';
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              right: 0;
+              height: 2px;
+              background-color: var(--el-menu-active-color);
+              z-index: 1;
+            }
+          }
+        }
+      }
+    }
+
+    .avatar-container {
+      .avatar-wrapper {
+        padding: 5px 0;
+
+        .user-avatar {
+          height: 40px;
+          margin-right: 5px;
+          border-radius: 50%;
+          cursor: pointer;
+        }
+      }
+    }
+
+    // 添加分隔线
+    &:after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 1px;
+      background-color: #ebebeb;
+    }
+  }
+
+  .footer-container {
+    background-color: black;
+    padding: 0 89px;
+
+    .footer-nav {
+      display: flex;
+      justify-content: space-between;
+
+      .nav-item {
+        display: flex;
+        flex-direction: column;
+        width: 197px;
+        color: #fff;
+
+        .nav-title {
+          font-size: 20px;
+          margin-top: 10px;
+        }
+
+        a {
+          margin-top: 14px;
+          text-decoration: none;
+          color: #babbbf;
+
+          &:hover {
+            color: #fff;
+          }
+        }
+      }
+    }
+  }
+}
