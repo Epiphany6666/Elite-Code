@@ -112,7 +112,7 @@ drop table if exists `question_bank_question`;
 create table `question_bank_question` (
   question_id       bigint(20)    not null   comment '题目id',
   question_bank_id  bigint(20)    not null   comment '题库id',
-  primary key (question_id, question_bank_id)
+  primary key (question_bank_id, question_id)
 ) engine = innodb comment '题目与题库关联表';
 
 -- ----------------------------

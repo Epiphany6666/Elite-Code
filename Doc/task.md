@@ -351,15 +351,44 @@
 
   - [x] 外链功能
 
-- [ ] 登录 / 注册页面
+    ~~~html
+    <a v-else-if="child.path.startsWith('http')" v-bind:href="child.path" target="_blank" :key="child.name">
+      <el-menu-item :index="item.path+'/'+child.path">
+        <svg-icon v-if="child.meta&&child.meta.icon" :icon-class="child.meta.icon"></svg-icon>
+        <span v-if="child.meta&&child.meta.title" slot="title">{{child.meta.title}}</span>
+      </el-menu-item>
+    </a>
+    ~~~
+
 - [x] 给头像那块加上小手（pointer）
+
 - [x] 封装settings仓库
 
   - [x] 主题色
   - [x] 动态切换网页标题
 
-- [x] 生产环境和本地环境配置：https://nextjs.org/docs/app/building-your-application/configuring/environment-variables
+- [ ] app-main样式根据Navbar计算
+
+  ~~~css
+  .app-main {
+    /* 50= navbar  50  */
+    min-height: calc(100vh - 50px);
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+  ~~~
+
 - [x] 抽取 navbar 样式
+
+
+
+---
+
+# 菜单权限
+
+- [ ] 给每个路由加上name属性
+- [ ] 
 
   ![image-20241203185346267](./assets/image-20241203185346267.png)
 
