@@ -1,5 +1,6 @@
 import axios, { type AxiosInstance } from 'axios'
 import useUserStore from '@/store/modules/user.ts'
+import { getToken } from '@/utils/auth.ts'
 
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
 // 创建axios实例
@@ -11,7 +12,7 @@ const request: AxiosInstance = axios.create({
 // request拦截器
 request.interceptors.request.use(function (config) {
   // Do something before request is sent
-  config.headers.set("Authorization", useUserStore().token)
+  config.headers.set("Authorization", getToken())
   return config;
 }, function (error) {
   // Do something with request error
@@ -21,15 +22,18 @@ request.interceptors.request.use(function (config) {
 // response拦截器
 request.interceptors.response.use(response => {
   const res = response.data
-  if (res.code !== 200) {
-    console.log("res", res)
+  if (res.code === 401) {
+    useUserStore().logOut().then(() => {
+      location.reload() // 为了重新实例化vue-router对象，避免bug，例如缓存
+    })
+    return Promise.reject('无效的会话，或者会话已过期，请重新登录。')
+  } else if (res.code !== 200) {
     ElMessage.error(res.msg)
     return Promise.reject('error')
-  } {
+  } else {
     return response.data;
   }
 }, error => {
-  console.dir("@@error", error)
   let { message } = error
   if (message == "Network Error") {
     message = "后端接口连接异常"

@@ -16,9 +16,13 @@ router.beforeEach((to) => {
     if (to.path === '/login' || to.path === '/register') {
       return '/'
     } else {
-      useUserStore().getInfo().catch(error => {
-        ElMessage.error(error)
-        return '/'
+      useUserStore().getInfo().then(() => {
+        return true
+      }).catch(error => {
+        useUserStore().logOut().then(() => {
+          ElMessage.error(error || 'Verification failed, please login again')
+          return '/'
+        })
       })
     }
   } else {

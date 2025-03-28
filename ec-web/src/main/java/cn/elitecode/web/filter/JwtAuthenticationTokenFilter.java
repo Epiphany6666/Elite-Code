@@ -1,11 +1,10 @@
 package cn.elitecode.web.filter;
 
-import cn.elitecode.common.exception.BaseException;
+import cn.elitecode.common.api.CommonResult;
 import cn.elitecode.common.properties.JWTProperties;
-import cn.elitecode.constant.HttpStatus;
 import cn.elitecode.constant.JWTConstant;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.exceptions.ValidateException;
+import cn.hutool.json.JSONUtil;
 import cn.hutool.jwt.JWTUtil;
 import cn.hutool.jwt.JWTValidator;
 import cn.hutool.jwt.signers.JWTSignerUtil;
@@ -38,8 +37,11 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 JWTValidator.of(JWTUtil.parseToken(authToken))
                         .validateAlgorithm(JWTSignerUtil.hs256(JWTProperties.getSecret().getBytes()))
                         .validateDate(DateUtil.date());
-            } catch (ValidateException e) {
-                throw new BaseException(HttpStatus.PARAMS_ERROR, "Token不合法");
+            } catch (Exception e) {
+                response.setStatus(200);
+                response.setContentType("application/json;charset=UTF-8");
+                response.getWriter().write(JSONUtil.toJsonStr(CommonResult.error(401, "Token不合法")));
+                return; // 终止后续处理
             }
             // 将用户信息存入SecurityContext
             String username = (String) JWTUtil.parseToken(authToken).getPayload(JWTConstant.CLAIM_KEY_USERNAME);
