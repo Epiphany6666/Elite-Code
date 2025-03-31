@@ -27,9 +27,9 @@ const logout = () => {
     <div class="header-container">
       <navbar />
       <div class="avatar-container">
-        <el-dropdown placement="bottom-end" trigger="click" @command="handleCommand">
+        <el-dropdown v-if="userStore.avatar" placement="bottom-end" trigger="click" @command="handleCommand">
           <div class="avatar-wrapper">
-            <img :src="userStore.avatar || '/notLoginUser.png'" class="user-avatar">
+            <img :src="userStore.avatar" class="user-avatar">
           </div>
           <template #dropdown>
             <el-dropdown-menu>
@@ -38,6 +38,12 @@ const logout = () => {
             </el-dropdown-menu>
           </template>
         </el-dropdown>
+
+        <div v-else class="not-login">
+          <router-link to="/login">登录</router-link>
+          <span style="margin: 0 12px">或</span>
+          <router-link to="/register">注册</router-link>
+        </div>
       </div>
     </div>
     <div class="main-container">

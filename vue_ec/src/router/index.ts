@@ -17,31 +17,18 @@ export const constantRoutes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '',
-    component: Layout,
-    redirect: '/home',
-    children: [
-      {
-        path: 'home',
-        component: () => import('@/views/home/index.vue'),
-        meta: {
-          title: '题库'
-        }
-      }
-    ]
+    path: '/',
+    component: () => import('@/views/home/index.vue'),
+    meta: {
+      title: '题库'
+    }
   },
   {
-    path: '',
-    component: Layout,
-    children: [
-      {
-        path: 'about',
-        component: () => import('@/views/about/index.vue'),
-        meta: {
-          title: '竞赛'
-        }
-      }
-    ]
+    path: '/contest',
+    component: () => import('@/views/about/index.vue'),
+    meta: {
+      title: '竞赛'
+    }
   },
   {
     path: '/404',

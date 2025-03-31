@@ -128,8 +128,6 @@ const handleRegister = () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background: url("@/assets/images/login-background.png") center/cover;
 
   .register-form {
     width: 250px;

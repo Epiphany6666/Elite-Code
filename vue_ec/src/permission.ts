@@ -5,7 +5,7 @@ import { getToken } from '@/utils/auth.js'
 import useUserStore from '@/store/modules/user.ts'
 import useSettingsStore from '@/store/modules/settings.ts'
 
-const whiteList = ['/login', '/register'] // 不重定向白名单
+const whiteList = ['/login', '/register', '/', '/contest'] // 不重定向白名单
 router.beforeEach((to) => {
   NProgress.start()
   // 动态设置网页标题

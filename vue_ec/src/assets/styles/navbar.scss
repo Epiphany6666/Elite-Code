@@ -8,15 +8,17 @@
     display: flex;
     position: relative;
 
+    a {
+      text-decoration: none;
+    }
+
     .navbar-container {
       flex: 1;
       display: flex;
-      a {
-        text-decoration: none;
-      }
 
       .navbar-logo-container {
         line-height: 50px;
+        cursor: pointer;
 
         .navbar-logo {
           height: 22px;
@@ -85,6 +87,20 @@
           margin-right: 5px;
           border-radius: 50%;
           cursor: pointer;
+        }
+      }
+
+      .not-login {
+        height: 100%;
+        display: flex;
+        align-items: center;
+
+        a {
+          color: #737373;
+
+          &:hover {
+            color: $menuHoverText;
+          }
         }
       }
     }
