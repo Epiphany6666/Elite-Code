@@ -1,7 +1,6 @@
 package cn.elitecode.model.dto.user;
 
 import io.swagger.annotations.ApiModelProperty;
-import java.util.List;
 
 public class UserAddDTO {
 
@@ -20,19 +19,15 @@ public class UserAddDTO {
     @ApiModelProperty(value = "用户简介")
     private String profile;
 
-    @ApiModelProperty(value = "用户角色：user/admin/ban")
-    private List<String> roles;
-
     public UserAddDTO() {
     }
 
-    public UserAddDTO(String username, String password, String nickName, String avatar, String profile, List<String> roles) {
+    public UserAddDTO(String username, String password, String nickName, String avatar, String profile) {
         this.username = username;
         this.password = password;
         this.nickName = nickName;
         this.avatar = avatar;
         this.profile = profile;
-        this.roles = roles;
     }
 
     /**
@@ -115,23 +110,7 @@ public class UserAddDTO {
         this.profile = profile;
     }
 
-    /**
-     * 获取
-     * @return roles
-     */
-    public List<String> getRoles() {
-        return roles;
-    }
-
-    /**
-     * 设置
-     * @param roles
-     */
-    public void setRoles(List<String> roles) {
-        this.roles = roles;
-    }
-
     public String toString() {
-        return "UserAddDTO{username = " + username + ", password = " + password + ", nickName = " + nickName + ", avatar = " + avatar + ", profile = " + profile + ", roles = " + roles + "}";
+        return "UserAddDTO{username = " + username + ", password = " + password + ", nickName = " + nickName + ", avatar = " + avatar + ", profile = " + profile + "}";
     }
 }

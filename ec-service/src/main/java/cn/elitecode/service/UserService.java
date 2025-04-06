@@ -6,8 +6,7 @@ import cn.elitecode.model.dto.user.UserQueryDTO;
 import cn.elitecode.model.entity.User;
 
 /**
- * 用户 业务层
- *
+ * 用户表（user） | 业务层
  */
 public interface UserService {
 

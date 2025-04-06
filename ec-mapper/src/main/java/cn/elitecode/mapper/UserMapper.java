@@ -61,12 +61,6 @@ public interface UserMapper {
     User checkUsernameUnique(String username);
 
     /**
-     * 查找所有管理员用户的ID
-     * @return 结果
-     */
-    List<Long> selectAdminIds();
-
-    /**
      * 批量删除用户
      * @param userIds 需要删除的id数组
      * @return

@@ -11,7 +11,6 @@
             <result property="nickName" column="nick_name"/>
             <result property="avatar" column="avatar"/>
             <result property="profile" column="profile"/>
-            <result property="roles" column="roles" typeHandler="cn.elitecode.JSONTypeHandler"/>
             <result property="delFlag" column="del_flag"/>
             <result property="createBy" column="create_by"/>
             <result property="createTime" column="create_time"/>
@@ -22,7 +21,7 @@
     <sql id="selectUserVo">
         id,username,password,
         nick_name,avatar,profile,
-        roles,del_flag,create_by,create_time,
+        del_flag,create_by,create_time,
         update_by,update_time
     </sql>
 
@@ -53,7 +52,6 @@
                 <if test="password != null and password != ''">password,</if>
                 <if test="avatar != null and avatar != ''">avatar,</if>
                 <if test="profile != null and profile != ''">profile,</if>
-                <if test="roles != null and roles.size() > 0">roles,</if>
                 <if test="createBy != null and createBy != ''">create_by,</if>
                 <if test="updateBy != null and updateBy != ''">update_by,</if>
             </trim>
@@ -65,7 +63,6 @@
                 <if test="password != null and password != ''">#{password},</if>
                 <if test="avatar != null and avatar != ''">#{avatar},</if>
                 <if test="profile != null and profile != ''">#{profile},</if>
-                <if test="roles != null and roles.size() > 0">#{roles, typeHandler=cn.elitecode.JSONTypeHandler},</if>
                 <if test="createBy != null and createBy != ''">#{createBy},</if>
                 <if test="updateBy != null and updateBy != ''">#{updateBy},</if>
             </trim>
@@ -82,7 +79,6 @@
             <if test="id != null">and id=#{id}</if>
             <if test="username != null and username != ''">and username like "%"#{username}"%"</if>
             <if test="nickName != null and nickName != ''">and nick_name like "%"#{nickName}"%"</if>
-            <if test="role != null and role != ''">and JSON_CONTAINS(roles, #{userRole})</if>
             <if test="createBy != null and createBy != ''">and create_by like "%"#{createBy}"%"</if>
             <if test="updateBy != null and updateBy != ''">and update_by like "%"#{updateBy}"%"</if>
             <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>
@@ -105,7 +101,6 @@
             <if test="id != null">and id=#{id}</if>
             <if test="username != null and username != ''">and username like "%"#{username}"%"</if>
             <if test="nickName != null and nickName != ''">and nick_name like "%"#{nickName}"%"</if>
-            <if test="role != null and role != ''">and JSON_CONTAINS(roles, #{userRole})</if>
             <if test="createBy != null and createBy != ''">and create_by like "%"#{createBy}"%"</if>
             <if test="updateBy != null and updateBy != ''">and update_by like "%"#{updateBy}"%"</if>
             <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>
@@ -122,17 +117,11 @@
             <if test="username != null and username != ''">username = #{username},</if>
             <if test="nickName != null and nickName != ''">nick_name = #{nickName},</if>
             <if test="profile != null and profile != ''">profile = #{profile},</if>
-            <if test="roles != null and roles.size() > 0">roles = #{roles, typeHandler=cn.elitecode.JSONTypeHandler},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
         </set>
         where
             id = #{id}
     </update>
-
-    <!-- List<Long> selectAdminIds(); -->
-    <select id="selectAdminIds" resultType="java.lang.Long">
-        select id from user where JSON_CONTAINS(roles, '"admin"') and del_flag = '0'
-    </select>
 
     <!-- int deleteUserByIds(Long[] userIds); -->
     <delete id="deleteUserByIds">

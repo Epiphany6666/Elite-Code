@@ -9,6 +9,7 @@ import cn.elitecode.common.utils.file.MimeTypeUtils;
 import cn.elitecode.model.dto.user.UserUpdateProfileDto;
 import cn.elitecode.model.entity.User;
 import cn.elitecode.service.UserService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+@Api(tags = "UserInfoController", description = "个人信息管理")
 @RestController("/user/profile")
 public class UserInfoController {
 

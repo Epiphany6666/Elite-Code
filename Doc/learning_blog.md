@@ -3744,7 +3744,13 @@ create table tb_student
 
 # 什么时候需要 implements Serializable？
 
-我们都有个惯性思维，就是实体类需要 implements Serializable 以序列化，序列化有两个作用：1、序列化就是将对象属性转变为二进制数据。2、在网络上进行传输。但是我发现有个项目中实体类并没有 implements Serializable，但是依然可以保存数据库，依然可以在网络上传输。于是在网上开始寻找结果，但是看了多个解答依然不能形成知识闭环。有的说是保存对象数据的，不需要实现序列化接口。有的说以非rpc调用的可以不实现序列化接口。貌似没看到我想要的。
+我们都有个惯性思维，就是实体类需要 implements Serializable 以序列化，序列化有两个作用：
+
+1、序列化就是将对象属性转变为二进制数据。
+
+2、在网络上进行传输。
+
+但是我发现有个项目中实体类并没有 implements Serializable，但是依然可以保存数据库，依然可以在网络上传输。于是在网上开始寻找结果，但是看了多个解答依然不能形成知识闭环。有的说是保存对象数据的，不需要实现序列化接口。有的说以非rpc调用的可以不实现序列化接口。貌似没看到我想要的。
 
 直到我把每个属性类型点看看了一遍，破案了。因为Java大部分的数据类型都已经实现了可序列化接口。
 
@@ -7006,23 +7012,342 @@ css
 
 ---
 
+# RABC
 
+## 一、库表ER图
 
+### 若依
 
+<img src="./assets/image-20250331172933340.png" alt="image-20250331172933340" style="zoom: 50%;" />
 
+### mall
 
+<img src="./assets/image-20250402185530991.png" alt="image-20250402185530991" style="zoom:50%;" />
 
+### hr
 
+<img src="./assets/image-20250331180254843.png" alt="image-20250331180254843" style="zoom:50%;" />
 
+---
 
+## 二、角色信息表
 
+### 若依
 
+~~~sql
+-- ----------------------------
+-- 4、角色信息表
+-- ----------------------------
+drop table if exists sys_role;
+create table sys_role (
+  role_id              bigint(20)      not null auto_increment    comment '角色ID',
+  role_name            varchar(30)     not null                   comment '角色名称',
+  role_key             varchar(100)    not null                   comment '角色权限字符串',
+  role_sort            int(4)          not null                   comment '显示顺序',
+  data_scope           char(1)         default '1'                comment '数据范围（1：全部数据权限 2：自定数据权限 3：本部门数据权限 4：本部门及以下数据权限）',
+  menu_check_strictly  tinyint(1)      default 1                  comment '菜单树选择项是否关联显示',
+  dept_check_strictly  tinyint(1)      default 1                  comment '部门树选择项是否关联显示',
+  status               char(1)         not null                   comment '角色状态（0正常 1停用）',
+  del_flag             char(1)         default '0'                comment '删除标志（0代表存在 2代表删除）',
+  create_by            varchar(64)     default ''                 comment '创建者',
+  create_time          datetime                                   comment '创建时间',
+  update_by            varchar(64)     default ''                 comment '更新者',
+  update_time          datetime                                   comment '更新时间',
+  remark               varchar(500)    default null               comment '备注',
+  primary key (role_id)
+) engine=innodb auto_increment=100 comment = '角色信息表';
+~~~
 
+---
 
+### hr
 
+~~~sql
+CREATE TABLE `hr_role` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `hrid` int(11) DEFAULT NULL,
+  `rid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `rid` (`rid`),
+  KEY `hr_role_ibfk_1` (`hrid`),
+  CONSTRAINT `hr_role_ibfk_1` FOREIGN KEY (`hrid`) REFERENCES `hr` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `hr_role_ibfk_2` FOREIGN KEY (`rid`) REFERENCES `role` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=75 DEFAULT CHARSET=utf8;
+~~~
 
+---
 
+### mall
 
+~~~sql
+create table ums_role
+(
+   id                   bigint not null auto_increment,
+   name                 varchar(100) comment '名称',
+   description          varchar(500) comment '描述',
+   admin_count          int comment '后台用户数量',
+   create_time          datetime comment '创建时间',
+   status               int(1) default 1 comment '启用状态：0->禁用；1->启用',
+   sort                 int default 0,
+   primary key (id)
+);
+~~~
+
+---
+
+## 三、用户和角色关联表
+
+### 若依
+
+~~~sql
+-- ----------------------------
+-- 6、用户和角色关联表  用户N-1角色
+-- ----------------------------
+drop table if exists sys_user_role;
+create table sys_user_role (
+  user_id   bigint(20) not null comment '用户ID',
+  role_id   bigint(20) not null comment '角色ID',
+  primary key(user_id, role_id)
+) engine=innodb comment = '用户和角色关联表';
+~~~
+
+---
+
+### hr
+
+~~~sql
+CREATE TABLE `hr_role` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `hrid` int(11) DEFAULT NULL,
+  `rid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `rid` (`rid`),
+  KEY `hr_role_ibfk_1` (`hrid`),
+  CONSTRAINT `hr_role_ibfk_1` FOREIGN KEY (`hrid`) REFERENCES `hr` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `hr_role_ibfk_2` FOREIGN KEY (`rid`) REFERENCES `role` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=75 DEFAULT CHARSET=utf8;
+~~~
+
+---
+
+### mall
+
+~~~sql
+create table ums_admin_role_relation
+(
+   id                   bigint not null auto_increment,
+   admin_id             bigint,
+   role_id              bigint,
+   primary key (id)
+);
+~~~
+
+---
+
+## 四、菜单权限表
+
+### 若依
+
+~~~sql
+-- ----------------------------
+-- 5、菜单权限表
+-- ----------------------------
+drop table if exists sys_menu;
+create table sys_menu (
+  menu_id           bigint(20)      not null auto_increment    comment '菜单ID',
+  menu_name         varchar(50)     not null                   comment '菜单名称',
+  parent_id         bigint(20)      default 0                  comment '父菜单ID',
+  order_num         int(4)          default 0                  comment '显示顺序',
+  path              varchar(200)    default ''                 comment '路由地址',
+  component         varchar(255)    default null               comment '组件路径',
+  query             varchar(255)    default null               comment '路由参数',
+  route_name        varchar(50)     default ''                 comment '路由名称',
+  is_frame          int(1)          default 1                  comment '是否为外链（0是 1否）',
+  is_cache          int(1)          default 0                  comment '是否缓存（0缓存 1不缓存）',
+  menu_type         char(1)         default ''                 comment '菜单类型（M目录 C菜单 F按钮）',
+  visible           char(1)         default 0                  comment '菜单状态（0显示 1隐藏）',
+  status            char(1)         default 0                  comment '菜单状态（0正常 1停用）',
+  perms             varchar(100)    default null               comment '权限标识',
+  icon              varchar(100)    default '#'                comment '菜单图标',
+  create_by         varchar(64)     default ''                 comment '创建者',
+  create_time       datetime                                   comment '创建时间',
+  update_by         varchar(64)     default ''                 comment '更新者',
+  update_time       datetime                                   comment '更新时间',
+  remark            varchar(500)    default ''                 comment '备注',
+  primary key (menu_id)
+) engine=innodb auto_increment=2000 comment = '菜单权限表';
+~~~
+
+---
+
+### hr
+
+~~~sql
+CREATE TABLE `menu` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `url` varchar(64) DEFAULT NULL,
+  `path` varchar(64) DEFAULT NULL,
+  `component` varchar(64) DEFAULT NULL,
+  `name` varchar(64) DEFAULT NULL,
+  `iconCls` varchar(64) DEFAULT NULL,
+  `keepAlive` tinyint(1) DEFAULT NULL,
+  `requireAuth` tinyint(1) DEFAULT NULL,
+  `parentId` int(11) DEFAULT NULL,
+  `enabled` tinyint(1) DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `parentId` (`parentId`),
+  CONSTRAINT `menu_ibfk_1` FOREIGN KEY (`parentId`) REFERENCES `menu` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
+~~~
+
+---
+
+### mall
+
+~~~sql
+create table ums_menu
+(
+   id                   bigint not null auto_increment,
+   parent_id            bigint comment '父级ID',
+   create_time          datetime comment '创建时间',
+   title                varchar(100) comment '菜单名称',
+   level                int(4) comment '菜单级数',
+   sort                 int(4) comment '菜单排序',
+   name                 varchar(100) comment '前端名称',
+   icon                 varchar(200) comment '前端图标',
+   hidden               int(1) comment '前端隐藏',
+   primary key (id)
+);
+~~~
+
+---
+
+## 五、角色和菜单关联表
+
+### 若依
+
+~~~sql
+-- ----------------------------
+-- 7、角色和菜单关联表  角色1-N菜单
+-- ----------------------------
+drop table if exists sys_role_menu;
+create table sys_role_menu (
+  role_id   bigint(20) not null comment '角色ID',
+  menu_id   bigint(20) not null comment '菜单ID',
+  primary key(role_id, menu_id)
+) engine=innodb comment = '角色和菜单关联表';
+~~~
+
+---
+
+### hr
+
+~~~sql
+CREATE TABLE `menu_role` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `mid` int(11) DEFAULT NULL,
+  `rid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `mid` (`mid`),
+  KEY `rid` (`rid`),
+  CONSTRAINT `menu_role_ibfk_1` FOREIGN KEY (`mid`) REFERENCES `menu` (`id`),
+  CONSTRAINT `menu_role_ibfk_2` FOREIGN KEY (`rid`) REFERENCES `role` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=283 DEFAULT CHARSET=utf8;
+~~~
+
+---
+
+### mall
+
+~~~sql
+create table ums_role_menu_relation
+(
+   id                   bigint not null auto_increment,
+   role_id              bigint comment '角色ID',
+   menu_id              bigint comment '菜单ID',
+   primary key (id)
+);
+~~~
+
+---
+
+## 六、资源表
+
+mall
+
+~~~sql
+create table ums_menu
+(
+   id                   bigint not null auto_increment,
+   parent_id            bigint comment '父级ID',
+   create_time          datetime comment '创建时间',
+   title                varchar(100) comment '菜单名称',
+   level                int(4) comment '菜单级数',
+   sort                 int(4) comment '菜单排序',
+   name                 varchar(100) comment '前端名称',
+   icon                 varchar(200) comment '前端图标',
+   hidden               int(1) comment '前端隐藏',
+   primary key (id)
+);
+~~~
+
+---
+
+## 七、角色和资源关联表
+
+mall
+
+~~~sql
+create table ums_role_resource_relation
+(
+   id                   bigint not null auto_increment,
+   role_id              bigint comment '角色ID',
+   resource_id          bigint comment '资源ID',
+   primary key (id)
+);
+~~~
+
+---
+
+## 八、系统访问记录
+
+若依
+
+~~~sql
+-- ----------------------------
+-- 14、系统访问记录
+-- ----------------------------
+drop table if exists sys_logininfor;
+create table sys_logininfor (
+  info_id        bigint(20)     not null auto_increment   comment '访问ID',
+  user_name      varchar(50)    default ''                comment '用户账号',
+  ipaddr         varchar(128)   default ''                comment '登录IP地址',
+  login_location varchar(255)   default ''                comment '登录地点',
+  browser        varchar(50)    default ''                comment '浏览器类型',
+  os             varchar(50)    default ''                comment '操作系统',
+  status         char(1)        default '0'               comment '登录状态（0成功 1失败）',
+  msg            varchar(255)   default ''                comment '提示消息',
+  login_time     datetime                                 comment '访问时间',
+  primary key (info_id),
+  key idx_sys_logininfor_s  (status),
+  key idx_sys_logininfor_lt (login_time)
+) engine=innodb auto_increment=100 comment = '系统访问记录';
+~~~
+
+mall
+
+~~~sql
+DROP TABLE IF EXISTS `ums_admin_login_log`;
+CREATE TABLE `ums_admin_login_log`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `admin_id` bigint(20) NULL DEFAULT NULL,
+  `create_time` datetime NULL DEFAULT NULL,
+  `ip` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `address` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `user_agent` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '浏览器登录类型',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 413 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '后台用户登录日志表' ROW_FORMAT = DYNAMIC;
+~~~
 
 
 

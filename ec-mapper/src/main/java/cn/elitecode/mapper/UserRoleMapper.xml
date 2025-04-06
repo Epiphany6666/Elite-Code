@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.elitecode.mapper.UserRoleMapper">
+
+    <resultMap id="BaseResultMap" type="cn.elitecode.model.entity.UserRole">
+            <id property="userId" column="user_id" />
+            <id property="roleId" column="role_id" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        user_id,role_id
+    </sql>
+</mapper>

@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 用户 处理层
+ * 用户表（user） | 业务处理层
  */
 @Service
 public class UserServiceImpl implements UserService {
@@ -92,8 +92,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private boolean isAdmin(Long userId) {
-        List<Long> adminUserIds = userMapper.selectAdminIds();
-        return adminUserIds.contains(userId);
+        return userId != null && 1L == userId;
     }
 
 }
