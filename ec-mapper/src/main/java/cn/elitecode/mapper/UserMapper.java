@@ -36,22 +36,20 @@ public interface UserMapper {
      * @param userQueryDTO
      * @return
      */
-    List<User> getUserByPage(UserQueryDTO userQueryDTO);
+    List<User> selectUserList(UserQueryDTO userQueryDTO);
 
     /**
      * 获取总条数
      * @param userQueryDTO
      * @return
      */
-    Long getTotal(UserQueryDTO userQueryDTO);
+    Long getUserTotal(UserQueryDTO userQueryDTO);
 
     /**
      * 根据主键动态更新用户信息
-     * <p>该方法会根据传入的 Employee 对象中的非空字段进行更新操作，
-     * 只有非空字段才会被更新到数据库对应的表中。</p>
      * @param user
      */
-    void updateByPrimaryKeySelective(User user);
+    void updateUserById(User user);
 
     /**
      * 校验用户账号是否唯一

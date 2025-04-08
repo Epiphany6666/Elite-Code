@@ -174,6 +174,9 @@
 ## 题目表
 
 - [ ] 增删改查
+- [x] 使用MyBatisX插件生成实体类、Service、ServiceImpl、Mapper、XML文件（题目表、题库表、题目题库关联表）
+- [x] 增删改查
+  - [x] 【管理员】批量删除题目
 
 
 

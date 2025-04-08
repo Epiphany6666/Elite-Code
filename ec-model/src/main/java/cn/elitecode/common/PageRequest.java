@@ -1,17 +1,12 @@
 package cn.elitecode.common;
 
 import io.swagger.annotations.ApiModelProperty;
-import java.io.Serial;
-import java.io.Serializable;
 import java.util.List;
 
 /**
  * 分页请求
  */
-public class PageRequest implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 6445240999999115607L;
+public class PageRequest {
 
     @ApiModelProperty(value = "当前页号")
     private Integer current = 1;

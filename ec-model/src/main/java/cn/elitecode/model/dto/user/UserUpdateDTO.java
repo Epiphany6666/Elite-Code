@@ -1,13 +1,13 @@
 package cn.elitecode.model.dto.user;
 
 import io.swagger.annotations.ApiModelProperty;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public class UserUpdateDTO {
 
     @ApiModelProperty(value = "用户ID", required = true)
-    @NotEmpty(message = "用户ID不能为空")
+    @NotNull(message = "用户ID不能为空")
     private Long id;
 
     @ApiModelProperty(value = "账号")

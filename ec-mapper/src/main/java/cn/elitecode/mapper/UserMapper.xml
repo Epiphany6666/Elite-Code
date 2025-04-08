@@ -31,7 +31,7 @@
         from
             user
         where
-            id = #{id} and del_flag = '0'
+            id = #{id}
     </select>
 
     <select id="selectUserByUsername" resultMap="UserResult">
@@ -45,8 +45,8 @@
 
     <!-- int register(String username, String encryptPassword); -->
     <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
-        insert into user(
-            <trim suffixOverrides=",">
+        insert into user
+            <trim prefix="(" suffix=")" suffixOverrides=",">
                 <if test="id != null">id,</if>
                 <if test="username != null and username != ''">username,</if>
                 <if test="password != null and password != ''">password,</if>
@@ -55,55 +55,56 @@
                 <if test="createBy != null and createBy != ''">create_by,</if>
                 <if test="updateBy != null and updateBy != ''">update_by,</if>
             </trim>
-        )
-        values(
-            <trim suffixOverrides=",">
+        values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
                 <if test="id != null">#{id},</if>
                 <if test="username != null and username != ''">#{username},</if>
                 <if test="password != null and password != ''">#{password},</if>
                 <if test="avatar != null and avatar != ''">#{avatar},</if>
                 <if test="profile != null and profile != ''">#{profile},</if>
                 <if test="createBy != null and createBy != ''">#{createBy},</if>
-                <if test="updateBy != null and updateBy != ''">#{updateBy},</if>
             </trim>
-        )
     </insert>
 
     <!--  List<User> selectUserList(User user); -->
-    <select id="getUserByPage" resultMap="UserResult">
+    <select id="selectUserList" resultMap="UserResult">
         select
-        <include refid="selectUserVo"/>
+            <include refid="selectUserVo"/>
         from
-        user
-        where del_flag = '0'
+            user
+        <where>
+            del_flag = '0'
             <if test="id != null">and id=#{id}</if>
             <if test="username != null and username != ''">and username like "%"#{username}"%"</if>
             <if test="nickName != null and nickName != ''">and nick_name like "%"#{nickName}"%"</if>
             <if test="createBy != null and createBy != ''">and create_by like "%"#{createBy}"%"</if>
             <if test="updateBy != null and updateBy != ''">and update_by like "%"#{updateBy}"%"</if>
             <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>
-            <if test="sortFieldPair != null and sortFieldPair.size() > 0">
-                ORDER BY
-                <foreach collection="sortFieldPair" separator="," item="sortField">
-                    ${sortField}
-                </foreach>
-            </if>
+        </where>
+        <if test="sortFieldPair != null and sortFieldPair.size() > 0">
+            ORDER BY
+            <foreach collection="sortFieldPair" separator="," item="sortField">
+                ${sortField}
+            </foreach>
+        </if>
         limit #{current}, #{pageSize}
     </select>
 
     <!-- Long getTotal(UserQueryDTO userQueryDTO); -->
-    <select id="getTotal" resultType="java.lang.Long">
+    <select id="getUserTotal" resultType="java.lang.Long">
         select
             count(*)
         from
             user
-        where del_flag = '0'
+        <where>
+            del_flag = '0'
             <if test="id != null">and id=#{id}</if>
             <if test="username != null and username != ''">and username like "%"#{username}"%"</if>
             <if test="nickName != null and nickName != ''">and nick_name like "%"#{nickName}"%"</if>
             <if test="createBy != null and createBy != ''">and create_by like "%"#{createBy}"%"</if>
             <if test="updateBy != null and updateBy != ''">and update_by like "%"#{updateBy}"%"</if>
             <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>
+        </where>
     </select>
 
     <select id="checkUsernameUnique" resultMap="UserResult">
@@ -111,7 +112,7 @@
     </select>
 
     <!-- void updateByPrimaryKeySelective(User user); -->
-    <update id="updateByPrimaryKeySelective">
+    <update id="updateUserById">
         UPDATE user
         <set>
             <if test="username != null and username != ''">username = #{username},</if>
@@ -125,16 +126,24 @@
 
     <!-- int deleteUserByIds(Long[] userIds); -->
     <delete id="deleteUserByIds">
-        update user set del_flag = '2' where id in
-        <foreach collection="userIds" open="(" separator="," close=")" item="id">
-            #{id}
-        </foreach>
-        and del_flag = '0'
+        update user
+        set
+            del_flag = '2'
+        <where>
+            id in
+            <foreach collection="userIds" open="(" separator="," close=")" item="id">
+                #{id}
+            </foreach>
+        </where>
     </delete>
 
     <!-- int updateUserAvatar(Long id, String avatarUrl); -->
     <update id="updateAvatar">
-        update user set avatar = #{avatarUrl} where id = #{id}
+        update user
+        set
+            avatar = #{avatarUrl}
+        where
+            id = #{id}
     </update>
 
 </mapper>

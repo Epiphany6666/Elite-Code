@@ -29,12 +29,12 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
 
     @Override
-    public CommonResult<CommonPage<User>> getUserPage(UserQueryDTO userQueryDTO) {
+    public CommonResult<CommonPage<User>> selectUserList(UserQueryDTO userQueryDTO) {
         if (userQueryDTO.getCurrent() != null && userQueryDTO.getPageSize() != null) {
             userQueryDTO.setCurrent((userQueryDTO.getCurrent() - 1) * userQueryDTO.getPageSize());
         }
-        List<User> userList = userMapper.getUserByPage(userQueryDTO);
-        Long total = userMapper.getTotal(userQueryDTO);
+        List<User> userList = userMapper.selectUserList(userQueryDTO);
+        Long total = userMapper.getUserTotal(userQueryDTO);
         CommonPage<User> page = new CommonPage<>(total, userList);
         return CommonResult.success(page);
     }
@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUser(User user) {
         user.setUpdateBy(BaseContext.getCurrentId());
-        userMapper.updateByPrimaryKeySelective(user);
+        userMapper.updateUserById(user);
     }
 
     @Override
@@ -83,6 +83,12 @@ public class UserServiceImpl implements UserService {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public User selectUserById(Long userId) {
+        User user = userMapper.selectUserById(userId);
+        return user;
     }
 
     private void checkUserAllowed(User user) {

@@ -7351,6 +7351,12 @@ CREATE TABLE `ums_admin_login_log`  (
 
 
 
+---
+
+# JSR303校验：javax.validation.UnexpectedTypeException: HV000030: No validator could be found for constraint 'javax.validation.constraints.NotEmpty' validating type 'java.lang.Long'. Check configuration for 'id'
+
+这个错误信息表明在验证 `id` 参数时，无法找到合适的[验证器](https://so.csdn.net/so/search?q=验证器&spm=1001.2101.3001.7020)来处理 `@NotEmpty` 注解。具体问题在于：`@NotEmpty` 注解通常用于集合、字符串或数组类型，检查它们是否为空。然而，`parentId` 是 `Long` 类型，而 `@NotEmpty` 不适用于基本数据类型（如 `Long`）。对于 `Long` 类型，你应该使用 `@NotNull` 注解。
+
 
 
 

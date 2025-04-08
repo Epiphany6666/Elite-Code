@@ -16,6 +16,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -29,15 +30,22 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @ApiOperation(value = "根据条件分页查询用户脱敏信息")
-    @PostMapping("/list/page")
-    private CommonResult<CommonPage<User>> listUserByPage(@RequestBody UserQueryDTO userQueryDTO) {
-        return userService.getUserPage(userQueryDTO);
+    @ApiOperation(value = "根据条件分页查询用户信息")
+    @PostMapping("/list")
+    private CommonResult<CommonPage<User>> listUser(@RequestBody UserQueryDTO userQueryDTO) {
+        return userService.selectUserList(userQueryDTO);
+    }
+
+    @ApiOperation(value = "根据id查询用户信息")
+    @GetMapping("/{userId}")
+    private CommonResult<User> getUser(@PathVariable Long userId) {
+        User user = userService.selectUserById(userId);
+        return CommonResult.success(user);
     }
 
     @ApiOperation(value = "新增用户")
     @PostMapping
-    private CommonResult addUser(@RequestBody UserAddDTO userAddDTO) {
+    private CommonResult<Long> addUser(@RequestBody @Validated UserAddDTO userAddDTO) {
         User user = new User();
         BeanUtils.copyProperties(userAddDTO, user);
         if (!userService.checkUsernameUnique(user)) {
@@ -45,7 +53,8 @@ public class UserController {
         }
         user.setCreateBy(BaseContext.getCurrentId());
         user.setPassword(SecurityUtils.encryptPassword(userAddDTO.getPassword()));
-        return CommonResult.success(userService.addUser(user));
+        Long userId = userService.addUser(user);
+        return CommonResult.success(userId);
     }
 
     @ApiOperation(value = "根据id更新用户信息")
@@ -59,7 +68,7 @@ public class UserController {
 
     @ApiOperation(value = "批量删除用户")
     @DeleteMapping("/{userIds}")
-    private CommonResult remove(@ApiParam(value = "需要删除的id数组") @PathVariable Long[] userIds) {
+    private CommonResult remove(@ApiParam("需要删除的id数组") @PathVariable Long[] userIds) {
         Long id = BaseContext.getCurrentId();
         if (ArrayUtil.contains(userIds, id)) {
             return CommonResult.error(HttpStatus.PARAMS_ERROR, "不能删除当前用户");

@@ -17,7 +17,7 @@ public interface UserService {
      * @param userQueryDTO
      * @return
      */
-    CommonResult<CommonPage<User>> getUserPage(UserQueryDTO userQueryDTO);
+    CommonResult<CommonPage<User>> selectUserList(UserQueryDTO userQueryDTO);
 
     /**
      * 根据id更新用户信息
@@ -52,4 +52,10 @@ public interface UserService {
      */
     boolean updateUserAvatar(Long userId, String avatarUrl);
 
+    /**
+     * 根据id查询用户信息
+     * @param userId
+     * @return
+     */
+    User selectUserById(Long userId);
 }

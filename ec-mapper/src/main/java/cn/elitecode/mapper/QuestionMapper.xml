@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.elitecode.mapper.QuestionMapper">
 
-    <resultMap id="BaseResultMap" type="cn.elitecode.model.entity.Question">
+    <resultMap id="QuestionResult" type="Question">
             <id property="id" column="id" />
             <result property="title" column="title" />
             <result property="content" column="content" />
@@ -16,8 +16,94 @@
             <result property="updateTime" column="update_time" />
     </resultMap>
 
-    <sql id="Base_Column_List">
+    <sql id="selectQuestionVO">
         id,title,content,answer,del_flag,
         create_by,create_time,update_by,update_time
     </sql>
+
+    <!-- int insertQuestion(Question question); -->
+    <insert id="insertQuestion" useGeneratedKeys="true" keyProperty="id">
+        insert into question
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="title != null and title != ''">title,</if>
+                <if test="content != null and content != ''">content,</if>
+                <if test="answer != null and answer != ''">answer,</if>
+                <if test="createBy != null and createBy != ''">create_by,</if>
+                <if test="updateBy != null and updateBy != ''">update_by,</if>
+            </trim>
+        values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="title != null and title != ''">#{title},</if>
+                <if test="content != null and content != ''">#{content},</if>
+                <if test="answer != null and answer != ''">#{answer},</if>
+                <if test="createBy != null and createBy != ''">#{createBy},</if>
+            </trim>
+    </insert>
+
+    <!-- void updateQuestionById(Question question); -->
+    <update id="updateQuestionById">
+        update question
+        <set>
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="answer != null and answer != ''">answer = #{answer},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </set>
+        where
+            id = #{id}
+    </update>
+
+    <delete id="deleteByQuestionIds">
+        update question
+        set
+            del_flag = '2'
+        where id in 
+            <foreach collection="questionIds" separator="," open="(" close=")" item="id">
+                #{id}
+            </foreach>
+    </delete>
+
+    <!-- int deleteByQuestionIds(@Param("questionIds") Long[] questionIds); -->
+    <select id="selectQuestionById" resultMap="QuestionResult">
+        select
+            <include refid="selectQuestionVO" />
+        from
+            question
+        where
+            id = #{questionId}
+    </select>
+
+    <!-- List<Question> selectQuestionList(QuestionQueryDTO questionQueryDTO); -->
+    <select id="selectQuestionList" resultMap="QuestionResult">
+        select
+            <include refid="selectQuestionVO" />
+        from
+            question
+        <where>
+            del_flag = '0'
+            <if test="title != null and title != ''">and title like "%"#{title}"%"</if>
+            <if test="content != null and content != ''">and content like "%"#{content}"%"</if>
+        </where>
+        <if test="sortFieldPair != null and sortFieldPair.size() > 0">
+            order by
+                <foreach collection="sortFieldPair" separator="," item="sortField">
+                    ${sortField}
+                </foreach>
+        </if>
+        limit #{current}, #{pageSize}
+    </select>
+
+    <!-- Long getQuestionTotal(QuestionQueryDTO questionQueryDTO); -->
+    <select id="getQuestionTotal" resultType="java.lang.Long">
+        select
+            count(*)
+        from
+            question
+        <where>
+            del_flag = '0'
+            <if test="title != null and title != ''">and title like "%"#{title}"%"</if>
+            <if test="content != null and content != ''">and content like "%"#{content}"%"</if>
+        </where>
+    </select>
+
 </mapper>
