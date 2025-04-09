@@ -11,7 +11,7 @@ import java.util.List;
 public interface QuestionMapper {
 
     /**
-     * 插入题库
+     * 插入题目
      * @param question
      * @return
      */
@@ -50,6 +50,7 @@ public interface QuestionMapper {
      * @return
      */
     Long getQuestionTotal(QuestionQueryDTO questionQueryDTO);
+
 }
 
 

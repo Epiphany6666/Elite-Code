@@ -29,7 +29,6 @@
                 <if test="content != null and content != ''">content,</if>
                 <if test="answer != null and answer != ''">answer,</if>
                 <if test="createBy != null and createBy != ''">create_by,</if>
-                <if test="updateBy != null and updateBy != ''">update_by,</if>
             </trim>
         values
             <trim prefix="(" suffix=")" suffixOverrides=",">
