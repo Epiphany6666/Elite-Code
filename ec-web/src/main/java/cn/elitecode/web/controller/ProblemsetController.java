@@ -5,9 +5,12 @@ import cn.elitecode.common.api.CommonResult;
 import cn.elitecode.common.utils.SecurityUtils;
 import cn.elitecode.model.dto.problemset.ProblemsetAddDTO;
 import cn.elitecode.model.dto.problemset.ProblemsetQueryDTO;
+import cn.elitecode.model.dto.problemset.ProblemsetQueryQuestionDTO;
 import cn.elitecode.model.dto.problemset.ProblemsetUpdateDTO;
 import cn.elitecode.model.entity.Problemset;
+import cn.elitecode.model.entity.Question;
 import cn.elitecode.service.ProblemsetService;
+import cn.elitecode.service.QuestionService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -15,6 +18,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @Api(tags = "ProblemsetController", description = "题库管理")
 @RestController
@@ -23,6 +27,9 @@ public class ProblemsetController {
 
     @Autowired
     private ProblemsetService problemsetService;
+
+    @Autowired
+    private QuestionService questionService;
 
     @ApiOperation(value = "根据分页条件查询题库信息")
     @PostMapping("/list")
@@ -55,6 +62,13 @@ public class ProblemsetController {
     private CommonResult removeProblemsets(@ApiParam("需要删除的id数组") @PathVariable Long[] problemsetIds) {
         problemsetService.removeByProblemsetIds(problemsetIds);
         return CommonResult.success();
+    }
+
+    @ApiOperation(value = "根据分页条件查询所属题库的题目")
+    @PostMapping("/questionList")
+    private CommonResult<List<Question>> getQuestionList(@RequestBody ProblemsetQueryQuestionDTO problemsetQueryQuestionDTO) {
+        List<Question> questionList = questionService.selectProblemsetQuestionList(problemsetQueryQuestionDTO);
+        return CommonResult.success(questionList);
     }
 
 }

@@ -1,10 +1,12 @@
 package cn.elitecode.service;
 
 import cn.elitecode.common.api.CommonPage;
+import cn.elitecode.model.dto.problemset.ProblemsetQueryQuestionDTO;
 import cn.elitecode.model.dto.question.QuestionAddDTO;
 import cn.elitecode.model.dto.question.QuestionQueryDTO;
 import cn.elitecode.model.dto.question.QuestionUpdateDTO;
 import cn.elitecode.model.entity.Question;
+import java.util.List;
 
 /**
 * question(题目题表) | 业务层
@@ -43,4 +45,10 @@ public interface QuestionService {
      */
     CommonPage<Question> selectQuestionList(QuestionQueryDTO questionQueryDTO);
 
+    /**
+     * 根据分页条件查询所在题库的题目信息
+     * @param problemsetQueryQuestionDTO
+     * @return
+     */
+    List<Question> selectProblemsetQuestionList(ProblemsetQueryQuestionDTO problemsetQueryQuestionDTO);
 }

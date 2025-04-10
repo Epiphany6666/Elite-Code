@@ -4,6 +4,7 @@ import cn.elitecode.common.api.CommonPage;
 import cn.elitecode.common.utils.SecurityUtils;
 import cn.elitecode.mapper.ProblemsetQuestionMapper;
 import cn.elitecode.mapper.QuestionMapper;
+import cn.elitecode.model.dto.problemset.ProblemsetQueryQuestionDTO;
 import cn.elitecode.model.dto.question.QuestionAddDTO;
 import cn.elitecode.model.dto.question.QuestionQueryDTO;
 import cn.elitecode.model.dto.question.QuestionUpdateDTO;
@@ -88,6 +89,11 @@ public class QuestionServiceImpl implements QuestionService{
         Long total = questionMapper.getQuestionTotal(questionQueryDTO);
         CommonPage<Question> page = new CommonPage<>(total, questionList);
         return page;
+    }
+
+    @Override
+    public List<Question> selectProblemsetQuestionList(ProblemsetQueryQuestionDTO problemsetQueryQuestionDTO) {
+        return questionMapper.selectProblemsetQuestionList(problemsetQueryQuestionDTO);
     }
 
     /**

@@ -137,4 +137,27 @@
         </where>
     </select>
 
+    <!-- List<Question> selectProblemsetQuestionList(ProblemsetQueryQuestionDTO problemsetQueryQuestionDTO); -->
+    <select id="selectProblemsetQuestionList" resultType="cn.elitecode.model.entity.Question">
+        SELECT
+            q.id,
+            q.title,
+            q.content,
+            q.answer,
+            q.del_flag,
+            q.create_by,
+            q.create_time,
+            q.update_by,
+            q.update_time
+        FROM
+            question q
+            LEFT JOIN problemset_question pq on pq.question_id = q.id
+            LEFT JOIN problemset p on p.id = pq.problemset_id
+        where
+            q.del_flag = '0'
+            and p.id = #{id}
+            <if test="title != null and title != ''">and q.title like concat("%", #{title}, "%")</if>
+            <if test="content != null and content != ''">and q.content like concat("%", #{content}, "%")</if>
+    </select>
+
 </mapper>

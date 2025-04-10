@@ -1,5 +1,6 @@
 package cn.elitecode.mapper;
 
+import cn.elitecode.model.dto.problemset.ProblemsetQueryQuestionDTO;
 import cn.elitecode.model.dto.question.QuestionQueryDTO;
 import cn.elitecode.model.entity.Question;
 import org.apache.ibatis.annotations.Param;
@@ -50,6 +51,13 @@ public interface QuestionMapper {
      * @return
      */
     Long getQuestionTotal(QuestionQueryDTO questionQueryDTO);
+
+    /**
+     * 根据分页条件查询所在题库的题目信息
+     * @param problemsetQueryQuestionDTO
+     * @return
+     */
+    List<Question> selectProblemsetQuestionList(ProblemsetQueryQuestionDTO problemsetQueryQuestionDTO);
 
 }
 
