@@ -5,7 +5,7 @@ import javax.validation.constraints.NotEmpty;
 
 public class ProblemsetAddDTO {
 
-    @ApiModelProperty(value = "标题")
+    @ApiModelProperty(value = "标题", required = true)
     @NotEmpty(message = "标题不能为空")
     private String title;
 

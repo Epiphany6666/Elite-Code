@@ -57,10 +57,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Long addUser(User user) {
-        int result = userMapper.insertUser(user);
-        if (result <= 0) {
-            log.error("用户插入数据库失败：{}", result);
-        }
+        userMapper.insertUser(user);
         return user.getId();
     }
 
@@ -69,19 +66,12 @@ public class UserServiceImpl implements UserService {
         for (Long userId : userIds) {
             checkUserAllowed(new User(userId));
         }
-        int result = userMapper.deleteUserByIds(userIds);
-        if (result <= 0) {
-            log.error("批量删除用户失败：{}", result);
-        }
+        userMapper.deleteUserByIds(userIds);
     }
 
     @Override
     public boolean updateUserAvatar(Long userId, String avatarUrl) {
-        int result = userMapper.updateAvatar(userId, avatarUrl);
-        if (result <= 0) {
-            log.error("修改用户头像失败：{}", result);
-            return false;
-        }
+        userMapper.updateAvatar(userId, avatarUrl);
         return true;
     }
 

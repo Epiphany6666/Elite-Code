@@ -27,7 +27,7 @@ public class RegisterController {
 
     @ApiOperation(value = "用户注册")
     @PostMapping("/register")
-    private CommonResult<Long> register(@RequestBody @Validated UserRegisterDTO userRegisterDTO) {
+    private CommonResult<Long> register(@Validated @RequestBody UserRegisterDTO userRegisterDTO) {
         // 校验
         String userPassword = userRegisterDTO.getPassword();
         String checkPassword = userRegisterDTO.getCheckPassword();

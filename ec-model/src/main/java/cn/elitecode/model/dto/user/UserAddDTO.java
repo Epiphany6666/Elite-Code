@@ -1,13 +1,16 @@
 package cn.elitecode.model.dto.user;
 
 import io.swagger.annotations.ApiModelProperty;
+import javax.validation.constraints.NotEmpty;
 
 public class UserAddDTO {
 
-    @ApiModelProperty(value = "账号")
+    @ApiModelProperty(value = "账号", required = true)
+    @NotEmpty(message = "账号不能为空")
     private String username;
 
-    @ApiModelProperty(value = "密码")
+    @ApiModelProperty(value = "密码", required = true)
+    @NotEmpty(message = "密码不能为空")
     private String password;
 
     @ApiModelProperty(value = "用户昵称")

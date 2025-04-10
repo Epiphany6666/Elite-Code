@@ -6,11 +6,11 @@ import java.util.List;
 
 public class QuestionAddDTO {
 
-    @ApiModelProperty("标题")
+    @ApiModelProperty(value = "标题", required = true)
     @NotEmpty(message = "标题不能为空")
     private String title;
 
-    @ApiModelProperty("内容")
+    @ApiModelProperty(value = "内容", required = true)
     @NotEmpty(message = "内容不能为空")
     private String content;
 

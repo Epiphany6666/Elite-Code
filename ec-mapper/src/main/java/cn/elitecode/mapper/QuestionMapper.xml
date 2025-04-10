@@ -22,11 +22,6 @@
         <result property="title" column="p_title" />
     </resultMap>
 
-    <sql id="selectQuestionVO">
-        id,title,content,answer,del_flag,
-        create_by,create_time,update_by,update_time
-    </sql>
-
     <!-- int insertQuestion(Question question); -->
     <insert id="insertQuestion" useGeneratedKeys="true" keyProperty="id">
         insert into question
@@ -34,14 +29,14 @@
                 <if test="title != null and title != ''">title,</if>
                 <if test="content != null and content != ''">content,</if>
                 <if test="answer != null and answer != ''">answer,</if>
-                <if test="createBy != null and createBy != ''">create_by,</if>
+                <if test="createBy != null and createBy != 0">create_by,</if>
             </trim>
         values
             <trim prefix="(" suffix=")" suffixOverrides=",">
                 <if test="title != null and title != ''">#{title},</if>
                 <if test="content != null and content != ''">#{content},</if>
                 <if test="answer != null and answer != ''">#{answer},</if>
-                <if test="createBy != null and createBy != ''">#{createBy},</if>
+                <if test="createBy != null and createBy != 0">#{createBy},</if>
             </trim>
     </insert>
 
@@ -110,11 +105,13 @@
             question q
             LEFT JOIN problemset_question pq ON pq.question_id = q.id
             LEFT JOIN problemset p ON p.id = pq.problemset_id
-        <where>
+        where
             q.del_flag = '0'
-            <if test="title != null and title != ''">and q.title like "%"#{title}"%"</if>
-            <if test="content != null and content != ''">and q.content like "%"#{content}"%"</if>
-        </where>
+            <if test="title != null and title != ''">and q.title like concat("%", #{title}, "%")</if>
+            <if test="content != null and content != ''">and q.content like concat("%", #{content}, "%")</if>
+            <if test="createBy != null and createBy != 0">and q.create_by = #{createBy}</if>
+            <if test="updateBy != null and updateBy != 0">and q.update_by = #{updateBy}</if>
+            <if test="startTime != null and endTime != null">and q.create_time between #{startTime} and #{endTime}</if>
         <if test="sortFieldPair != null and sortFieldPair.size() > 0">
             order by
                 <foreach collection="sortFieldPair" separator="," item="sortField">
@@ -130,11 +127,10 @@
             count(*)
         from
             question
-        <where>
+        where
             del_flag = '0'
-            <if test="title != null and title != ''">and title like "%"#{title}"%"</if>
-            <if test="content != null and content != ''">and content like "%"#{content}"%"</if>
-        </where>
+            <if test="title != null and title != ''">and title like concat("%", #{title}, "%")</if>
+            <if test="content != null and content != ''">and content like concat("%", #{content}, "%")</if>
     </select>
 
     <!-- List<Question> selectProblemsetQuestionList(ProblemsetQueryQuestionDTO problemsetQueryQuestionDTO); -->

@@ -45,7 +45,7 @@ public class UserController {
 
     @ApiOperation(value = "新增用户")
     @PostMapping
-    private CommonResult<Long> addUser(@RequestBody @Validated UserAddDTO userAddDTO) {
+    private CommonResult<Long> addUser(@Validated @RequestBody UserAddDTO userAddDTO) {
         User user = new User();
         BeanUtils.copyProperties(userAddDTO, user);
         if (!userService.checkUsernameUnique(user)) {
@@ -59,7 +59,7 @@ public class UserController {
 
     @ApiOperation(value = "根据id更新用户信息")
     @PutMapping
-    private CommonResult updateUser(@RequestBody UserUpdateDTO userUpdateDTO) {
+    private CommonResult updateUser(@Validated @RequestBody UserUpdateDTO userUpdateDTO) {
         User user = new User();
         BeanUtils.copyProperties(userUpdateDTO, user);
         userService.updateUser(user);

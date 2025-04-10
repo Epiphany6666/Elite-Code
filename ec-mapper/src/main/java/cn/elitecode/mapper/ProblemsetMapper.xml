@@ -16,24 +16,19 @@
             <result property="updateTime" column="update_time" />
     </resultMap>
 
-    <sql id="ProblemsetVO">
-        id,title,description,picture,del_flag,create_by,
-        create_time,update_by,update_time
-    </sql>
-
     <!-- int insertProblemset(Problemset problemset); -->
     <insert id="insertProblemset" useGeneratedKeys="true" keyProperty="id">
         insert into problemset
             <trim prefix="(" suffix=")" suffixOverrides=",">
                 <if test="title != null and title != ''">title,</if>
                 <if test="description != null and description != ''">description,</if>
-                <if test="createBy != null and createBy != ''">create_by,</if>
+                <if test="createBy != null and createBy != 0">create_by,</if>
             </trim>
         values
             <trim prefix="(" suffix=")" suffixOverrides=",">
                 <if test="title != null and title != ''">#{title},</if>
                 <if test="description != null and description != ''">#{description},</if>
-                <if test="createBy != null and createBy != ''">#{createBy},</if>
+                <if test="createBy != null and createBy != 0">#{createBy},</if>
             </trim>
     </insert>
 
@@ -42,8 +37,8 @@
         update problemset
         <set>
             <if test="title != null and title != ''">title = #{title},</if>
-            <if test="description != null and description != ''">description=#{description},</if>
-            <if test="updateBy != null and updateBy != ''">update_by=#{updateBy,}</if>
+            <if test="description != null and description != ''">description = #{description},</if>
+            <if test="updateBy != null and updateBy != 0">update_by = #{updateBy,}</if>
         </set>
         where
             id = #{id}
@@ -65,13 +60,14 @@
     <!-- List<Problemset> selectProblemsetList(ProblemsetQueryDTO problemsetQueryDTO); -->
     <select id="selectProblemsetList" resultMap="ProblemsetResult">
         select
-            <include refid="ProblemsetVO" />
+            id,title,description,picture,del_flag,create_by,
+            create_time,update_by,update_time
         from
             problemset
         <where>
-            <if test="title != null and title != ''">and title like "%"#{title}"%"</if>
-            <if test="createBy != null and createBy != ''">and create_by=#{createBy}</if>
-            <if test="updateBy != null and updateBy != ''">and update_by=#{updateBy}</if>
+            <if test="title != null and title != ''">and title like concat("%", #{title}, "%")</if>
+            <if test="createBy != null and createBy != 0">and create_by = #{createBy}</if>
+            <if test="updateBy != null and updateBy != 0">and update_by = #{updateBy}</if>
             <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>
         </where>
         <if test="sortFieldPair != null and sortFieldPair.size() > 0">
@@ -90,9 +86,9 @@
         from
             problemset
         <where>
-            <if test="title != null and title != ''">and title like "%"#{title}"%"</if>
-            <if test="createBy != null and createBy != ''">and create_by=#{createBy}</if>
-            <if test="updateBy != null and updateBy != ''">and update_by=#{updateBy}</if>
+            <if test="title != null and title != ''">and title like concat("%", #{title}, "%")</if>
+            <if test="createBy != null and createBy != 0">and create_by = #{createBy}</if>
+            <if test="updateBy != null and updateBy != 0">and update_by = #{updateBy}</if>
             <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>
         </where>
     </select>
@@ -100,7 +96,8 @@
     <!-- List<Problemset> selectProblemsetAll(); -->
     <select id="selectProblemsetAll" resultMap="ProblemsetResult">
         select
-            <include refid="ProblemsetVO" />
+            id,title,description,picture,del_flag,create_by,
+            create_time,update_by,update_time
         from
             problemset
         where

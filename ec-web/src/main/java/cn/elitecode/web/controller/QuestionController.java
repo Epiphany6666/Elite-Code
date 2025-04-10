@@ -37,7 +37,7 @@ public class QuestionController {
 
     @ApiOperation(value = "新增题目")
     @PostMapping
-    private CommonResult<Long> addQuestion(@RequestBody @Validated QuestionAddDTO questionAddDTO) {
+    private CommonResult<Long> addQuestion(@Validated @RequestBody QuestionAddDTO questionAddDTO) {
         Long questionId = questionService.addQuestion(questionAddDTO);
         return CommonResult.success(questionId);
     }
@@ -57,7 +57,7 @@ public class QuestionController {
 
     @ApiOperation(value = "根据id更新题目信息")
     @PutMapping
-    private CommonResult updateQuestion(@RequestBody @Validated QuestionUpdateDTO questionUpdateDTO) {
+    private CommonResult updateQuestion(@Validated @RequestBody QuestionUpdateDTO questionUpdateDTO) {
         questionService.updateQuestion(questionUpdateDTO);
         return CommonResult.success();
     }

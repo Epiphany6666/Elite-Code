@@ -24,27 +24,18 @@ public class ProblemsetServiceImpl implements ProblemsetService{
 
     @Override
     public Long addProblemset(Problemset problemset) {
-        int result = problemsetMapper.insertProblemset(problemset);
-        if (result <= 0) {
-            log.error("新增题库失败：{}", result);
-        }
+        problemsetMapper.insertProblemset(problemset);
         return problemset.getId();
     }
 
     @Override
     public void removeByProblemsetIds(Long[] problemsetIds) {
-        int result = problemsetMapper.deleteProblemsetByIds(problemsetIds);
-        if (result <= 0) {
-            log.error("批量删除题库失败：{}", result);
-        }
+        problemsetMapper.deleteProblemsetByIds(problemsetIds);
     }
 
     @Override
     public void updateProblemset(Problemset problemset) {
-        int result = problemsetMapper.updateProblemsetById(problemset);
-        if (result <= 0) {
-            log.error("根据id修改题库信息失败：{}", result);
-        }
+        problemsetMapper.updateProblemsetById(problemset);
     }
 
     @Override

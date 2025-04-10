@@ -1951,12 +1951,12 @@ limit #{offset}, #{pageSize}
     from
     user
     <where>
-        <if test="userId != null and userId != 0">and id=#{userId}</if>
+        <if test="userId != null and userId != 0">and id = #{userId}</if>
         <if test="userAccount != null and userAccount != ''">and user_account like '%${userAccount}%'</if>
         <if test="nickName != null and nickName != ''">and nick_name like '%#{nickName}%'</if>
         <if test="userRole != null and userRole != ''">and JSON_CONTAINS(roles, JSON_QUOTE(#{userRole}))</if>
-        <if test="createBy != null and createBy != ''">and create_by like '%#{createBy}%'</if>
-        <if test="updateBy != null and updateBy != ''">and update_by like '%#{updateBy}%'</if>
+        <if test="createBy != null and createBy != 0">and create_by like '%#{createBy}%'</if>
+        <if test="updateBy != null and updateBy != 0">and update_by like '%#{updateBy}%'</if>
         <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>
     </where>
     <if test="sortField != null and sortField != ''">

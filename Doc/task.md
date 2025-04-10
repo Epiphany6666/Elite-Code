@@ -214,6 +214,17 @@
 
 
 
+## 其它
+
+- [ ] 所有新增、更新注意标题、内容的长度
+- [x] 不能为空的属性Swagger注解上加上 `required=true`
+- [x] 所有分页查询添加根据创建者、更新者、创建时间区域查询
+- [x] id、createBy、updateBy条件应为 `id != null and id != 0`，并且 `=` 两边加上空格
+- [x] sql有where条件就不要用  `<where>` 了
+- [x] 所有分页查询：去掉根据id查询
+- [x] 模糊查询全部改为用contact连接
+- [x] xml文件不使用include
+- [x] 去掉所有result判断
 
 
 ---

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api(tags = "LoginController", description = "用户注册")
+@Api(tags = "LoginController", description = "用户登录")
 @RestController
 public class LoginController {
 
@@ -26,7 +26,7 @@ public class LoginController {
 
     @ApiOperation(value = "用户登录")
     @PostMapping("/login")
-    private CommonResult<LoginUserVO> login(@RequestBody @Validated UserLoginDTO userLoginDTO) {
+    private CommonResult<LoginUserVO> login(@Validated @RequestBody UserLoginDTO userLoginDTO) {
         String username = userLoginDTO.getUsername();
         String userPassword = userLoginDTO.getPassword();
         String tokenHead = JWTProperties.getTokenHead();

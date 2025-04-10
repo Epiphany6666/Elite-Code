@@ -6,7 +6,7 @@ import java.util.List;
 
 public class QuestionUpdateDTO {
 
-    @ApiModelProperty("用户ID，主键")
+    @ApiModelProperty(value = "用户ID，主键", required = true)
     @NotNull(message = "题目id不能为空")
     private Long id;
 

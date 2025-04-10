@@ -5,7 +5,7 @@ import javax.validation.constraints.NotNull;
 
 public class ProblemsetUpdateDTO {
 
-    @ApiModelProperty("用户ID，主键")
+    @ApiModelProperty(value = "用户ID，主键", required = true)
     @NotNull(message = "id不能为空")
     private Long id;
 

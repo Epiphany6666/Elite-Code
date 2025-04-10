@@ -9,9 +9,6 @@ import java.util.Date;
  */
 public class UserQueryDTO extends PageRequest {
 
-    @ApiModelProperty(value = "用户ID")
-    private Long id;
-
     @ApiModelProperty(value = "账号")
     private String username;
 
@@ -36,8 +33,7 @@ public class UserQueryDTO extends PageRequest {
     public UserQueryDTO() {
     }
 
-    public UserQueryDTO(Long id, String username, String nickName, String role, String createBy, String updateBy, Date startTime, Date endTime) {
-        this.id = id;
+    public UserQueryDTO(String username, String nickName, String role, String createBy, String updateBy, Date startTime, Date endTime) {
         this.username = username;
         this.nickName = nickName;
         this.role = role;
@@ -45,22 +41,6 @@ public class UserQueryDTO extends PageRequest {
         this.updateBy = updateBy;
         this.startTime = startTime;
         this.endTime = endTime;
-    }
-
-    /**
-     * 获取
-     * @return id
-     */
-    public Long getId() {
-        return id;
-    }
-
-    /**
-     * 设置
-     * @param id
-     */
-    public void setId(Long id) {
-        this.id = id;
     }
 
     /**
@@ -176,6 +156,6 @@ public class UserQueryDTO extends PageRequest {
     }
 
     public String toString() {
-        return "UserQueryDTO{id = " + id + ", username = " + username + ", nickName = " + nickName + ", role = " + role + ", createBy = " + createBy + ", updateBy = " + updateBy + ", startTime = " + startTime + ", endTime = " + endTime + "}";
+        return "UserQueryDTO{username = " + username + ", nickName = " + nickName + ", role = " + role + ", createBy = " + createBy + ", updateBy = " + updateBy + ", startTime = " + startTime + ", endTime = " + endTime + "}";
     }
 }
