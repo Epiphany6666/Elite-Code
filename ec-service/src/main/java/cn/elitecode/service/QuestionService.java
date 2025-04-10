@@ -1,7 +1,9 @@
 package cn.elitecode.service;
 
 import cn.elitecode.common.api.CommonPage;
+import cn.elitecode.model.dto.question.QuestionAddDTO;
 import cn.elitecode.model.dto.question.QuestionQueryDTO;
+import cn.elitecode.model.dto.question.QuestionUpdateDTO;
 import cn.elitecode.model.entity.Question;
 
 /**
@@ -11,9 +13,9 @@ public interface QuestionService {
 
     /**
      * 新增题目
-     * @param question
+     * @param questionAddDTO
      */
-    Long addQuestion(Question question);
+    Long addQuestion(QuestionAddDTO questionAddDTO);
 
     /**
      * 批量删除题目
@@ -23,9 +25,9 @@ public interface QuestionService {
 
     /**
      * 根据id更新题目信息
-     * @param question
+     * @param questionUpdateDTO
      */
-    void updateQuestion(Question question);
+    void updateQuestion(QuestionUpdateDTO questionUpdateDTO);
 
     /**
      * 根据id查询题目信息

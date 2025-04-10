@@ -3,6 +3,7 @@ package cn.elitecode.service;
 import cn.elitecode.common.api.CommonPage;
 import cn.elitecode.model.dto.problemset.ProblemsetQueryDTO;
 import cn.elitecode.model.entity.Problemset;
+import java.util.List;
 
 /**
 * problemset(题库表) | 业务层
@@ -34,5 +35,11 @@ public interface ProblemsetService {
      * @return
      */
     CommonPage<Problemset> selectProblemsetList(ProblemsetQueryDTO problemsetQueryDTO);
+
+    /**
+     * 查询所有题库
+     * @return
+     */
+    List<Problemset> selectProblemsetAll();
 
 }

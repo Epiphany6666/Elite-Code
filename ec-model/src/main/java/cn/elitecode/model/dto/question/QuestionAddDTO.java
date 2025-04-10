@@ -2,6 +2,7 @@ package cn.elitecode.model.dto.question;
 
 import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.NotEmpty;
+import java.util.List;
 
 public class QuestionAddDTO {
 
@@ -16,13 +17,17 @@ public class QuestionAddDTO {
     @ApiModelProperty("推荐答案")
     private String answer;
 
+    @ApiModelProperty("题库id列表")
+    private List<Long> problemsetIds;
+
     public QuestionAddDTO() {
     }
 
-    public QuestionAddDTO(String title, String content, String answer) {
+    public QuestionAddDTO(String title, String content, String answer, List<Long> problemsetIds) {
         this.title = title;
         this.content = content;
         this.answer = answer;
+        this.problemsetIds = problemsetIds;
     }
 
     /**
@@ -73,7 +78,23 @@ public class QuestionAddDTO {
         this.answer = answer;
     }
 
+    /**
+     * 获取
+     * @return problemsetIds
+     */
+    public List<Long> getProblemsetIds() {
+        return problemsetIds;
+    }
+
+    /**
+     * 设置
+     * @param problemsetIds
+     */
+    public void setProblemsetIds(List<Long> problemsetIds) {
+        this.problemsetIds = problemsetIds;
+    }
+
     public String toString() {
-        return "QuestionAddDTO{title = " + title + ", content = " + content + ", answer = " + answer + "}";
+        return "QuestionAddDTO{title = " + title + ", content = " + content + ", answer = " + answer + ", problemsetIds = " + problemsetIds + "}";
     }
 }

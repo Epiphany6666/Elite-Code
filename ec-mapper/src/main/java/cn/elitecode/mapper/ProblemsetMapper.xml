@@ -97,4 +97,14 @@
         </where>
     </select>
 
+    <!-- List<Problemset> selectProblemsetAll(); -->
+    <select id="selectProblemsetAll" resultMap="ProblemsetResult">
+        select
+            <include refid="ProblemsetVO" />
+        from
+            problemset
+        where
+            del_flag = '0'
+    </select>
+
 </mapper>

@@ -12,4 +12,36 @@
     <sql id="Base_Column_List">
         problemset_id,question_id
     </sql>
+
+    <!-- void batchProblemsetQuestion(@Param("problemsetQuestionList") List<ProblemsetQuestion> problemsetQuestionList); -->
+    <insert id="batchProblemsetQuestion">
+        insert into
+            problemset_question(problemset_id, question_id)
+        values
+            <foreach collection="problemsetQuestionList" separator="," item="problemsetQuestion">
+                (#{problemsetQuestion.problemsetId}, #{problemsetQuestion.questionId})
+            </foreach>
+    </insert>
+
+    <!-- void deleteProblemsetQuestionByQuestionId(Long questionId); -->
+    <delete id="deleteProblemsetQuestionByQuestionId">
+        delete
+        from
+            problemset_question
+        where
+            question_id = #{questionId}
+    </delete>
+
+    <!-- void deleteProblemsetQuestionByQuestionIds(@Param("questionIds") Long[] questionIds); -->
+    <delete id="deleteProblemsetQuestionByQuestionIds">
+        delete
+        from
+            problemset_question
+        where
+            question_id in
+                <foreach collection="questionIds" open="(" separator="," close=")" item="questionId">
+                    #{questionId}
+                </foreach>
+    </delete>
+
 </mapper>

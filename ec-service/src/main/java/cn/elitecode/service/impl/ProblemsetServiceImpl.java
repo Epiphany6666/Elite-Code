@@ -58,6 +58,11 @@ public class ProblemsetServiceImpl implements ProblemsetService{
         return page;
     }
 
+    @Override
+    public List<Problemset> selectProblemsetAll() {
+        return problemsetMapper.selectProblemsetAll();
+    }
+
 }
 
 

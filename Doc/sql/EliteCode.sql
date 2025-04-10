@@ -228,8 +228,8 @@ VALUES (102, '统计订单数量', '编写SQL查询，返回每个客户的订�
 -- ----------------------------
 drop table if exists `problemset_question`;
 create table if not exists `problemset_question` (
-    question_id    bigint(20)    not null   comment '题目id',
     problemset_id  bigint(20)    not null   comment '题库id',
+    question_id    bigint(20)    not null   comment '题目id',
     primary key (problemset_id, question_id)
 ) engine = innodb comment '题目与题库关联表';
 

@@ -44,6 +44,13 @@ public interface ProblemsetMapper {
      * @return
      */
     Long getTotal(ProblemsetQueryDTO problemsetQueryDTO);
+
+    /**
+     * 查询所有题库
+     * @return
+     */
+    List<Problemset> selectProblemsetAll();
+
 }
 
 
