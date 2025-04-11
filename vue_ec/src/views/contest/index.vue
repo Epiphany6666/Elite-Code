@@ -2,7 +2,7 @@
 </script>
 
 <template>
-  <h3>I'm about</h3>
+  <span>I'm contest</span>
 </template>
 
 <style scoped>

@@ -6,7 +6,6 @@ import cn.elitecode.model.dto.question.QuestionAddDTO;
 import cn.elitecode.model.dto.question.QuestionQueryDTO;
 import cn.elitecode.model.dto.question.QuestionUpdateDTO;
 import cn.elitecode.model.entity.Question;
-import java.util.List;
 
 /**
 * question(题目题表) | 业务层
@@ -50,5 +49,5 @@ public interface QuestionService {
      * @param problemsetQueryQuestionDTO
      * @return
      */
-    List<Question> selectProblemsetQuestionList(ProblemsetQueryQuestionDTO problemsetQueryQuestionDTO);
+    CommonPage<Question> selectProblemsetQuestionList(ProblemsetQueryQuestionDTO problemsetQueryQuestionDTO);
 }

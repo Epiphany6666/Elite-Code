@@ -151,9 +151,24 @@
             LEFT JOIN problemset p on p.id = pq.problemset_id
         where
             q.del_flag = '0'
-            and p.id = #{id}
-            <if test="title != null and title != ''">and q.title like concat("%", #{title}, "%")</if>
-            <if test="content != null and content != ''">and q.content like concat("%", #{content}, "%")</if>
+            and p.id = #{problemsetId}
+            <if test="problemsetTitle != null and problemsetTitle != ''">and q.title like concat("%", #{problemsetTitle}, "%")</if>
+            <if test="problemsetContent != null and problemsetContent != ''">and q.content like concat("%", #{problemsetContent}, "%")</if>
+    </select>
+
+    <!-- Long selectProblemsetQuestionTotal(ProblemsetQueryQuestionDTO problemsetQueryQuestionDTO); -->
+    <select id="selectProblemsetQuestionTotal" resultType="java.lang.Long">
+        SELECT
+            count(*)
+        FROM
+            question q
+            LEFT JOIN problemset_question pq on pq.question_id = q.id
+            LEFT JOIN problemset p on p.id = pq.problemset_id
+        where
+            q.del_flag = '0'
+            and p.id = #{problemsetId}
+            <if test="problemsetTitle != null and problemsetTitle != ''">and q.title like concat("%", #{problemsetTitle}, "%")</if>
+            <if test="problemsetContent != null and problemsetContent != ''">and q.content like concat("%", #{problemsetContent}, "%")</if>
     </select>
 
 </mapper>

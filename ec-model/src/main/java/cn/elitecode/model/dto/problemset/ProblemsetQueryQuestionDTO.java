@@ -5,73 +5,73 @@ import io.swagger.annotations.ApiModelProperty;
 
 public class ProblemsetQueryQuestionDTO extends PageRequest {
 
-    @ApiModelProperty("题目id")
-    private Long id;
+    @ApiModelProperty("题库id")
+    private Long problemsetId;
 
-    @ApiModelProperty("题目标题")
-    private String title;
+    @ApiModelProperty("题库标题")
+    private String problemsetTitle;
 
-    @ApiModelProperty("题目内容")
-    private String content;
+    @ApiModelProperty("题库内容")
+    private String problemsetContent;
 
     public ProblemsetQueryQuestionDTO() {
     }
 
-    public ProblemsetQueryQuestionDTO(Long id, String title, String content) {
-        this.id = id;
-        this.title = title;
-        this.content = content;
+    public ProblemsetQueryQuestionDTO(Long problemsetId, String problemsetTitle, String problemsetContent) {
+        this.problemsetId = problemsetId;
+        this.problemsetTitle = problemsetTitle;
+        this.problemsetContent = problemsetContent;
     }
 
     /**
      * 获取
-     * @return id
+     * @return problemsetId
      */
-    public Long getId() {
-        return id;
+    public Long getProblemsetId() {
+        return problemsetId;
     }
 
     /**
      * 设置
-     * @param id
+     * @param problemsetId
      */
-    public void setId(Long id) {
-        this.id = id;
+    public void setProblemsetId(Long problemsetId) {
+        this.problemsetId = problemsetId;
     }
 
     /**
      * 获取
-     * @return title
+     * @return problemsetTitle
      */
-    public String getTitle() {
-        return title;
+    public String getProblemsetTitle() {
+        return problemsetTitle;
     }
 
     /**
      * 设置
-     * @param title
+     * @param problemsetTitle
      */
-    public void setTitle(String title) {
-        this.title = title;
+    public void setProblemsetTitle(String problemsetTitle) {
+        this.problemsetTitle = problemsetTitle;
     }
 
     /**
      * 获取
-     * @return content
+     * @return problemsetContent
      */
-    public String getContent() {
-        return content;
+    public String getProblemsetContent() {
+        return problemsetContent;
     }
 
     /**
      * 设置
-     * @param content
+     * @param problemsetContent
      */
-    public void setContent(String content) {
-        this.content = content;
+    public void setProblemsetContent(String problemsetContent) {
+        this.problemsetContent = problemsetContent;
     }
 
     public String toString() {
-        return "ProblemsetQueryQuestionDTO{id = " + id + ", title = " + title + ", content = " + content + "}";
+        return "ProblemsetQueryQuestionDTO{problemsetId = " + problemsetId + ", problemsetTitle = " + problemsetTitle + ", problemsetContent = " + problemsetContent + "}";
     }
 }

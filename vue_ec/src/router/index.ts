@@ -18,14 +18,30 @@ export const constantRoutes: Array<RouteRecordRaw> = [
   },
   {
     path: '/',
-    component: () => import('@/views/home/index.vue'),
+    component: () => import('@/views/problemset/index.vue'),
     meta: {
       title: '题库'
     }
   },
   {
+    path: '/problemset/:id',
+    component: () => import('@/views/question/index.vue'),
+    meta: {
+      title: '题目',
+      hidden: true
+    }
+  },
+  {
+    path: '/question/:id',
+    component: () => import("@/views/questionDetail/index.vue"),
+    meta: {
+      title: '题目详情',
+      hidden: true
+    }
+  },
+  {
     path: '/contest',
-    component: () => import('@/views/about/index.vue'),
+    component: () => import('@/views/contest/index.vue'),
     meta: {
       title: '竞赛'
     }

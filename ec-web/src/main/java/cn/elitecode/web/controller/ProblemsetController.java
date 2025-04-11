@@ -18,7 +18,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @Api(tags = "ProblemsetController", description = "题库管理")
 @RestController
@@ -33,8 +32,9 @@ public class ProblemsetController {
 
     @ApiOperation(value = "根据分页条件查询题库信息")
     @PostMapping("/list")
-    private CommonPage<Problemset> listProblemset(@RequestBody ProblemsetQueryDTO problemsetQueryDTO) {
-        return problemsetService.selectProblemsetList(problemsetQueryDTO);
+    private CommonResult<CommonPage<Problemset>> listProblemset(@RequestBody ProblemsetQueryDTO problemsetQueryDTO) {
+        CommonPage<Problemset> pageResult = problemsetService.selectProblemsetList(problemsetQueryDTO);
+        return CommonResult.success(pageResult);
     }
 
     @ApiOperation(value = "新增题库")
@@ -66,9 +66,9 @@ public class ProblemsetController {
 
     @ApiOperation(value = "根据分页条件查询所属题库的题目")
     @PostMapping("/questionList")
-    private CommonResult<List<Question>> getQuestionList(@RequestBody ProblemsetQueryQuestionDTO problemsetQueryQuestionDTO) {
-        List<Question> questionList = questionService.selectProblemsetQuestionList(problemsetQueryQuestionDTO);
-        return CommonResult.success(questionList);
+    private CommonResult<CommonPage<Question>> getQuestionList(@RequestBody ProblemsetQueryQuestionDTO problemsetQueryQuestionDTO) {
+        CommonPage<Question> pageResult = questionService.selectProblemsetQuestionList(problemsetQueryQuestionDTO);
+        return CommonResult.success(pageResult);
     }
 
 }

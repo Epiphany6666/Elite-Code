@@ -7359,6 +7359,34 @@ CREATE TABLE `ums_admin_login_log`  (
 
 
 
+---
+
+# ＜router-view＞中key属性的作用
+
+1. **不设置`router-view`的`key`属性**
+
+   由于`Vue`会复用相同组件，即`/page/a => /page/b`或者`/page?id=a => /page?id=b`这类链接跳转时，将不再执行`created`，`mounted`之类的钩子，这时候你需要在路由组件中，添加`beforeRouteUpdate`钩子来执行相关方法拉取数据
+
+   相关钩子加载顺序为：`beforeRouteUpdate`
+
+2. **设置`router-view`的`key`属性值为`$route.path`**
+
+   从`/page/a => /page/b`，由于这两个路由的`$route.path`并不一样，所以组件被强制不复用，相关钩子加载顺序为`beforeRouteUpdate => created => mounted`
+
+   从`/page?id=a => /page?id=b`，由于这两个路由的`$route.path`一样，所以和没设置`key`属性一样，会复用组件，相关钩子加载顺序为：`beforeRouteUpdate`
+
+3. **设置`router-view`的`key`属性值为`$route.fullPath`**
+
+   从`/page/a => /page/a`，由于这两个路由的`$route.fullPath`并不一样，所以组件被强制不复用，相关钩子加载顺序为`beforeRouteUpdate => created => mounted`
+
+4. 从`/page?id=a => /page?id=b`，由于这两个路由的`$route.fullPath`并不一样，所以组件被强制不复用，相关钩子加载顺序为`beforeRouteUpdate => created => mounted`
+
+
+
+---
+
+
+
 
 
 # ----------------

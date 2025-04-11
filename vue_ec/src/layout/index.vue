@@ -1,5 +1,4 @@
 <script setup lang="ts" name="Layout">
-import { CaretBottom } from '@element-plus/icons-vue'
 import useUserStore from '@/store/modules/user.ts'
 import AppMain from '@/layout/components/AppMain.vue'
 import Navbar from '@/layout/components/Navbar/index.vue'

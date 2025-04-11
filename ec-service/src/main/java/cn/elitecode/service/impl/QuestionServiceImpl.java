@@ -92,8 +92,11 @@ public class QuestionServiceImpl implements QuestionService{
     }
 
     @Override
-    public List<Question> selectProblemsetQuestionList(ProblemsetQueryQuestionDTO problemsetQueryQuestionDTO) {
-        return questionMapper.selectProblemsetQuestionList(problemsetQueryQuestionDTO);
+    public CommonPage<Question> selectProblemsetQuestionList(ProblemsetQueryQuestionDTO problemsetQueryQuestionDTO) {
+        List<Question> questionList = questionMapper.selectProblemsetQuestionList(problemsetQueryQuestionDTO);
+        Long total = questionMapper.selectProblemsetQuestionTotal(problemsetQueryQuestionDTO);
+        CommonPage<Question> page = new CommonPage<>(total, questionList);
+        return page;
     }
 
     /**

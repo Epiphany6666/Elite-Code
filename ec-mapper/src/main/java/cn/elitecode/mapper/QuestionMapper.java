@@ -59,6 +59,12 @@ public interface QuestionMapper {
      */
     List<Question> selectProblemsetQuestionList(ProblemsetQueryQuestionDTO problemsetQueryQuestionDTO);
 
+    /**
+     * 根据分页条件查询所在题库的题目总数
+     * @param problemsetQueryQuestionDTO
+     * @return
+     */
+    Long selectProblemsetQuestionTotal(ProblemsetQueryQuestionDTO problemsetQueryQuestionDTO);
 }
 
 
