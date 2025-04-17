@@ -14,6 +14,14 @@ public class TagQuestion {
     @ApiModelProperty("标签ID（外键，关联标签表ID）")
     private Long tagId;
 
+    public TagQuestion() {
+    }
+
+    public TagQuestion(Long questionId, Long tagId) {
+        this.questionId = questionId;
+        this.tagId = tagId;
+    }
+
     /**
     * 题目ID（外键，关联题目表ID）
     */
@@ -43,4 +51,7 @@ public class TagQuestion {
     return this.tagId;
     }
 
+    public String toString() {
+        return "TagQuestion{questionId = " + questionId + ", tagId = " + tagId + "}";
+    }
 }

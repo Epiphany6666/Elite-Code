@@ -9,7 +9,34 @@
             <result property="tagId" column="tag_id" />
     </resultMap>
 
-    <sql id="Base_Column_List">
-        question_id,tag_id
-    </sql>
+    <!-- void batchTagQuestion(List<TagQuestion> tagQuestionsList); -->
+    <insert id="batchTagQuestion">
+        insert into
+            tag_question(question_id, tag_id)
+        values
+            <foreach collection="tagQuestionsList" separator="," item="tagQuestion">
+                (#{tagQuestion.questionId},#{tagQuestion.tagId})
+            </foreach>
+    </insert>
+
+    <!-- void deleteTagQuestionByQuestionId(Long id); -->
+    <delete id="deleteTagQuestionByQuestionId">
+        delete
+        from
+            tag_question
+        where
+            question_id = #{questionId}
+    </delete>
+
+    <!-- void deleteTagQuestionByQuestionIds(Long[] questionIds); -->
+    <delete id="deleteTagQuestionByQuestionIds">
+        delete
+        from
+            tag_question
+        where
+            question_id in
+            <foreach collection="questionIds" open="(" separator="," close=")" item="questionId">
+                #{questionId}
+            </foreach>
+    </delete>
 </mapper>

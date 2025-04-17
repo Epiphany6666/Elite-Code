@@ -9,10 +9,6 @@
             <id property="questionId" column="question_id" />
     </resultMap>
 
-    <sql id="Base_Column_List">
-        problemset_id,question_id
-    </sql>
-
     <!-- void batchProblemsetQuestion(@Param("problemsetQuestionList") List<ProblemsetQuestion> problemsetQuestionList); -->
     <insert id="batchProblemsetQuestion">
         insert into

@@ -7,8 +7,10 @@ import cn.elitecode.model.dto.question.QuestionQueryDTO;
 import cn.elitecode.model.dto.question.QuestionUpdateDTO;
 import cn.elitecode.model.entity.Problemset;
 import cn.elitecode.model.entity.Question;
+import cn.elitecode.model.entity.Tag;
 import cn.elitecode.service.ProblemsetService;
 import cn.elitecode.service.QuestionService;
+import cn.elitecode.service.TagService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -25,9 +27,10 @@ public class QuestionController {
 
     @Autowired
     private QuestionService questionService;
-
     @Autowired
     private ProblemsetService problemsetService;
+    @Autowired
+    private TagService tagService;
 
     @ApiOperation(value = "根据分页条件查询题目信息")
     @PostMapping("/list")
@@ -45,13 +48,17 @@ public class QuestionController {
     @ApiOperation(value = "根据id查询题目信息")
     @GetMapping("/{questionId}")
     private CommonResult<HashMap> getQuestion(@PathVariable Long questionId) {
-        Question question = questionService.selectQuestionById(questionId);
-        List<Long> problemsetIds = question.getProblemsets().stream().map(Problemset::getId).toList();
-        List<Problemset> problemsetAll = problemsetService.selectProblemsetAll();
         HashMap<String, Object> result = new HashMap<>();
+        Question question = questionService.selectQuestionById(questionId);
         result.put("question", question);
+        List<Long> problemsetIds = question.getProblemsetList().stream().map(Problemset::getId).toList();
+        List<Problemset> problemsetAll = problemsetService.selectProblemsetAll();
         result.put("problemsetIds", problemsetIds);
         result.put("problemsetAll", problemsetAll);
+        List<Long> tagIds = question.getTagList().stream().map(Tag::getId).toList();
+        List<Tag> tagAll = tagService.selectTagAll();
+        result.put("tagIds", tagIds);
+        result.put("tagAll", tagAll);
         return CommonResult.success(result);
     }
 

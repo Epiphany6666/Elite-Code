@@ -79,7 +79,7 @@
             del_flag = '0'
             <if test="username != null and username != ''">and username like concat("%", #{username}, "%")</if>
             <if test="nickName != null and nickName != ''">and nick_name like concat("%", #{nickName}, "%")</if>
-            <if test="createBy != null and createBy != 0">and create_by like concat("%", #{createBy}, "%")</if>
+            <if test="createBy != null and createBy != 0">and create_by = #{createBy}</if>
             <if test="updateBy != null and updateBy != 0">and update_by = #{updateBy}</if>
             <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>
         <if test="sortFieldPair != null and sortFieldPair.size() > 0">

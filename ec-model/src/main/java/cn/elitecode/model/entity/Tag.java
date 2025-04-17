@@ -6,7 +6,7 @@ import java.util.Date;
 /**
 * question_tag(题目标签表) | 实体类
 */
-public class QuestionTag {
+public class Tag {
 
     @ApiModelProperty("标签ID，主键")
     private Long id;
@@ -29,10 +29,10 @@ public class QuestionTag {
     @ApiModelProperty("编辑时间")
     private Date updateTime;
 
-    public QuestionTag() {
+    public Tag() {
     }
 
-    public QuestionTag(Long id, String name, String delFlag, Long createBy, Date createTime, Long updateBy, Date updateTime) {
+    public Tag(Long id, String name, String delFlag, Long createBy, Date createTime, Long updateBy, Date updateTime) {
         this.id = id;
         this.name = name;
         this.delFlag = delFlag;
@@ -142,7 +142,7 @@ public class QuestionTag {
     }
 
     public String toString() {
-        return "QuestionTag{id = " + id + ", name = " + name + ", delFlag = " + delFlag + ", createBy = " + createBy + ", createTime = " + createTime + ", updateBy = " + updateBy + ", updateTime = " + updateTime + "}";
+        return "Tag{id = " + id + ", name = " + name + ", delFlag = " + delFlag + ", createBy = " + createBy + ", createTime = " + createTime + ", updateBy = " + updateBy + ", updateTime = " + updateTime + "}";
     }
 
 }

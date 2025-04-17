@@ -68,7 +68,7 @@ public class UserController {
 
     @ApiOperation(value = "批量删除用户")
     @DeleteMapping("/{userIds}")
-    private CommonResult remove(@ApiParam("需要删除的id数组") @PathVariable Long[] userIds) {
+    private CommonResult removeUsers(@ApiParam("需要删除的id数组") @PathVariable Long[] userIds) {
         Long id = BaseContext.getCurrentId();
         if (ArrayUtil.contains(userIds, id)) {
             return CommonResult.error(HttpStatus.PARAMS_ERROR, "不能删除当前用户");

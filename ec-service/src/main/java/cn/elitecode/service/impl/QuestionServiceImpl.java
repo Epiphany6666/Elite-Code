@@ -4,12 +4,14 @@ import cn.elitecode.common.api.CommonPage;
 import cn.elitecode.common.utils.SecurityUtils;
 import cn.elitecode.mapper.ProblemsetQuestionMapper;
 import cn.elitecode.mapper.QuestionMapper;
+import cn.elitecode.mapper.TagQuestionMapper;
 import cn.elitecode.model.dto.problemset.ProblemsetQueryQuestionDTO;
 import cn.elitecode.model.dto.question.QuestionAddDTO;
 import cn.elitecode.model.dto.question.QuestionQueryDTO;
 import cn.elitecode.model.dto.question.QuestionUpdateDTO;
 import cn.elitecode.model.entity.ProblemsetQuestion;
 import cn.elitecode.model.entity.Question;
+import cn.elitecode.model.entity.TagQuestion;
 import cn.elitecode.service.QuestionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,9 +32,10 @@ public class QuestionServiceImpl implements QuestionService{
 
     @Autowired
     private QuestionMapper questionMapper;
-
     @Autowired
     private ProblemsetQuestionMapper problemsetQuestionMapper;
+    @Autowired
+    private TagQuestionMapper tagQuestionMapper;
 
     @Override
     @Transactional
@@ -55,7 +58,8 @@ public class QuestionServiceImpl implements QuestionService{
         questionMapper.deleteByQuestionIds(questionIds);
         // 删除题库题目关联
         problemsetQuestionMapper.deleteProblemsetQuestionByQuestionIds(questionIds);
-
+        // 删除标签题目关联
+        tagQuestionMapper.deleteTagQuestionByQuestionIds(questionIds);
     }
 
     @Override
@@ -69,9 +73,13 @@ public class QuestionServiceImpl implements QuestionService{
 
         // 删除题目与题库关联
         problemsetQuestionMapper.deleteProblemsetQuestionByQuestionId(questionUpdateDTO.getId());
-
         // 新增题目与题库关联
         insertProblemsetQuestion(questionUpdateDTO.getId(), questionUpdateDTO.getProblemsetIds());
+
+        // 删除题目与标签关联
+        tagQuestionMapper.deleteTagQuestionByQuestionId(questionUpdateDTO.getId());
+        // 新增题目与标签关联
+        insertTagQuestion(questionUpdateDTO.getId(), questionUpdateDTO.getTagIds());
     }
 
     @Override
@@ -110,6 +118,20 @@ public class QuestionServiceImpl implements QuestionService{
             problemsetQuestionList.add(new ProblemsetQuestion(problemsetId, questionId));
         }
         problemsetQuestionMapper.batchProblemsetQuestion(problemsetQuestionList);
+    }
+
+
+    /**
+     * 新增标签题目关联
+     * @param questionId
+     * @param tagIds
+     */
+    private void insertTagQuestion(Long questionId, List<Long> tagIds) {
+        List<TagQuestion> tagQuestionsList = new ArrayList<>();
+        for (Long tagId : tagIds) {
+            tagQuestionsList.add(new TagQuestion(questionId, tagId));
+        }
+        tagQuestionMapper.batchTagQuestion(tagQuestionsList);
     }
 
 }

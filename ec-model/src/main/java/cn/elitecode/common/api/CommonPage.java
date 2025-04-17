@@ -3,6 +3,10 @@ package cn.elitecode.common.api;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 
+/**
+ * 通用分页数据封装类
+ * @param <T> 分页数据泛型
+ */
 public class CommonPage<T> {
 
     @ApiModelProperty(value = "总记录数")

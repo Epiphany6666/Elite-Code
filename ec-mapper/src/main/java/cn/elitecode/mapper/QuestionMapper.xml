@@ -14,12 +14,18 @@
         <result property="createTime" column="create_time"/>
         <result property="updateBy" column="update_by"/>
         <result property="updateTime" column="update_time"/>
-        <collection property="problemsets" resultMap="ProblemsetResult"/>
+        <collection property="problemsetList" resultMap="ProblemsetResult"/>
+        <collection property="tagList" resultMap="TagResult"/>
     </resultMap>
 
     <resultMap id="ProblemsetResult" type="problemset">
         <id property="id" column="p_id" />
         <result property="title" column="p_title" />
+    </resultMap>
+
+    <resultMap id="TagResult" type="tag">
+        <id property="id" column="t_id" />
+        <result property="name" column="t_name"/>
     </resultMap>
 
     <!-- int insertQuestion(Question question); -->
@@ -75,13 +81,16 @@
             q.create_time,
             q.update_by,
             q.update_time,
-            p.id as `p_id`,
-            p.title as `p_title`,
-            p.description
+            p.id as p_id,
+            p.title as p_title,
+            t.id as t_id,
+            t.name as t_name
         from
             question q
-            LEFT JOIN problemset_question pq ON pq.question_id = q.id
-            LEFT JOIN problemset p ON p.id = pq.problemset_id
+            LEFT JOIN problemset_question pq on pq.question_id = q.id
+            LEFT JOIN problemset p on p.id = pq.problemset_id
+            left join question_tag qt on qt.question_id = q.id
+            left join tag t on t.id = qt.tag_id
         where
             q.id = #{questionId}
     </select>
@@ -98,13 +107,16 @@
             q.create_time,
             q.update_by,
             q.update_time,
-            p.id as `p_id`,
-            p.title as `p_title`,
-            p.description
+            p.id as p_id,
+            p.title as p_title,
+            t.id as t_id,
+            t.name as t_name
         from
             question q
-            LEFT JOIN problemset_question pq ON pq.question_id = q.id
-            LEFT JOIN problemset p ON p.id = pq.problemset_id
+            LEFT JOIN problemset_question pq on pq.question_id = q.id
+            LEFT JOIN problemset p on p.id = pq.problemset_id
+            left join question_tag qt on qt.question_id = q.id
+            left join tag t on t.id = tag_id
         where
             q.del_flag = '0'
             <if test="title != null and title != ''">and q.title like concat("%", #{title}, "%")</if>

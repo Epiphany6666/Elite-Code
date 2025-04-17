@@ -37,12 +37,15 @@ public class Question {
     private Date updateTime;
 
     @ApiModelProperty("题库对象列表")
-    List<Problemset> problemsets;
+    List<Problemset> problemsetList;
+
+    @ApiModelProperty("标签对象列表")
+    List<Tag> tagList;
 
     public Question() {
     }
 
-    public Question(Long id, String title, String content, String answer, String delFlag, Long createBy, Date createTime, Long updateBy, Date updateTime, List<Problemset> problemsets) {
+    public Question(Long id, String title, String content, String answer, String delFlag, Long createBy, Date createTime, Long updateBy, Date updateTime, List<Problemset> problemsetList, List<Tag> tagList) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -52,7 +55,8 @@ public class Question {
         this.createTime = createTime;
         this.updateBy = updateBy;
         this.updateTime = updateTime;
-        this.problemsets = problemsets;
+        this.problemsetList = problemsetList;
+        this.tagList = tagList;
     }
 
     /**
@@ -201,22 +205,37 @@ public class Question {
 
     /**
      * 获取
-     * @return problemsets
+     * @return problemsetList
      */
-    public List<Problemset> getProblemsets() {
-        return problemsets;
+    public List<Problemset> getProblemsetList() {
+        return problemsetList;
     }
 
     /**
      * 设置
-     * @param problemsets
+     * @param problemsetList
      */
-    public void setProblemsets(List<Problemset> problemsets) {
-        this.problemsets = problemsets;
+    public void setProblemsetList(List<Problemset> problemsetList) {
+        this.problemsetList = problemsetList;
+    }
+
+    /**
+     * 获取
+     * @return tags
+     */
+    public List<Tag> getTagList() {
+        return tagList;
+    }
+
+    /**
+     * 设置
+     * @param tagList
+     */
+    public void setTagList(List<Tag> tagList) {
+        this.tagList = tagList;
     }
 
     public String toString() {
-        return "Question{id = " + id + ", title = " + title + ", content = " + content + ", answer = " + answer + ", delFlag = " + delFlag + ", createBy = " + createBy + ", createTime = " + createTime + ", updateBy = " + updateBy + ", updateTime = " + updateTime + ", problemsets = " + problemsets + "}";
+        return "Question{id = " + id + ", title = " + title + ", content = " + content + ", answer = " + answer + ", delFlag = " + delFlag + ", createBy = " + createBy + ", createTime = " + createTime + ", updateBy = " + updateBy + ", updateTime = " + updateTime + ", problemsetList = " + problemsetList + ", tags = " + tagList + "}";
     }
-
 }

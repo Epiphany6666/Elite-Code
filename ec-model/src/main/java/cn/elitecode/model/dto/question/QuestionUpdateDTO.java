@@ -22,15 +22,19 @@ public class QuestionUpdateDTO {
     @ApiModelProperty("题库id列表")
     private List<Long> problemsetIds;
 
+    @ApiModelProperty("标签id列表")
+    private List<Long> tagIds;
+
     public QuestionUpdateDTO() {
     }
 
-    public QuestionUpdateDTO(Long id, String title, String content, String answer, List<Long> problemsetIds) {
+    public QuestionUpdateDTO(Long id, String title, String content, String answer, List<Long> problemsetIds, List<Long> tagIds) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.answer = answer;
         this.problemsetIds = problemsetIds;
+        this.tagIds = tagIds;
     }
 
     /**
@@ -113,7 +117,23 @@ public class QuestionUpdateDTO {
         this.problemsetIds = problemsetIds;
     }
 
+    /**
+     * 获取
+     * @return tagIds
+     */
+    public List<Long> getTagIds() {
+        return tagIds;
+    }
+
+    /**
+     * 设置
+     * @param tagIds
+     */
+    public void setTagIds(List<Long> tagIds) {
+        this.tagIds = tagIds;
+    }
+
     public String toString() {
-        return "QuestionUpdateDTO{id = " + id + ", title = " + title + ", content = " + content + ", answer = " + answer + ", problemsetIds = " + problemsetIds + "}";
+        return "QuestionUpdateDTO{id = " + id + ", title = " + title + ", content = " + content + ", answer = " + answer + ", problemsetIds = " + problemsetIds + ", tagIds = " + tagIds + "}";
     }
 }

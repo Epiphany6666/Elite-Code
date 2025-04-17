@@ -20,14 +20,18 @@ public class QuestionAddDTO {
     @ApiModelProperty("题库id列表")
     private List<Long> problemsetIds;
 
+    @ApiModelProperty("标签id列表")
+    private List<Long> tagIds;
+
     public QuestionAddDTO() {
     }
 
-    public QuestionAddDTO(String title, String content, String answer, List<Long> problemsetIds) {
+    public QuestionAddDTO(String title, String content, String answer, List<Long> problemsetIds, List<Long> tagIds) {
         this.title = title;
         this.content = content;
         this.answer = answer;
         this.problemsetIds = problemsetIds;
+        this.tagIds = tagIds;
     }
 
     /**
@@ -94,7 +98,23 @@ public class QuestionAddDTO {
         this.problemsetIds = problemsetIds;
     }
 
+    /**
+     * 获取
+     * @return tagIds
+     */
+    public List<Long> getTagIds() {
+        return tagIds;
+    }
+
+    /**
+     * 设置
+     * @param tagIds
+     */
+    public void setTagIds(List<Long> tagIds) {
+        this.tagIds = tagIds;
+    }
+
     public String toString() {
-        return "QuestionAddDTO{title = " + title + ", content = " + content + ", answer = " + answer + ", problemsetIds = " + problemsetIds + "}";
+        return "QuestionAddDTO{title = " + title + ", content = " + content + ", answer = " + answer + ", problemsetIds = " + problemsetIds + ", tagIds = " + tagIds + "}";
     }
 }

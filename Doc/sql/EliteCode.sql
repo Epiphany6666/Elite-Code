@@ -243,7 +243,7 @@ INSERT INTO `problemset_question` (`question_id`, `problemset_id`) VALUES (102, 
 -- ----------------------------
 -- 题目标签
 -- ----------------------------
-drop table if exists `question_tag`;
+drop table if exists tag;
 create table if not exists `question_tag` (
     id          bigint(20)   not null auto_increment  comment '标签ID，主键',
     name        varchar(50)  not null                 comment '标签名',
@@ -259,29 +259,29 @@ create table if not exists `question_tag` (
 -- ----------------------------
 -- 初始化-题目标签表数据
 -- ----------------------------
-INSERT INTO question_tag (id, name, del_flag, create_by, create_time, update_by, update_time)
+INSERT INTO tag (id, name, del_flag, create_by, create_time, update_by, update_time)
 VALUES (100, '数组', '0', 1, '2024-11-22 08:36:41', NULL, '2024-11-22 08:36:41');
 
-INSERT INTO question_tag (id, name, del_flag, create_by, create_time, update_by, update_time)
+INSERT INTO tag (id, name, del_flag, create_by, create_time, update_by, update_time)
 VALUES (101, '哈希表', '0', 1, '2024-11-22 08:36:41', NULL, '2024-11-22 08:36:41');
 
-INSERT INTO question_tag (id, name, del_flag, create_by, create_time, update_by, update_time)
+INSERT INTO tag (id, name, del_flag, create_by, create_time, update_by, update_time)
 VALUES (102, '链表', '0', 1, '2024-11-22 08:36:41', NULL, '2024-11-22 08:36:41');
 
-INSERT INTO question_tag (id, name, del_flag, create_by, create_time, update_by, update_time)
+INSERT INTO tag (id, name, del_flag, create_by, create_time, update_by, update_time)
 VALUES (103, '递归', '0', 1, '2024-11-22 08:36:41', NULL, '2024-11-22 08:36:41');
 
-INSERT INTO question_tag (id, name, del_flag, create_by, create_time, update_by, update_time)
+INSERT INTO tag (id, name, del_flag, create_by, create_time, update_by, update_time)
 VALUES (104, 'SQL', '0', 1, '2024-11-22 08:36:41', NULL, '2024-11-22 08:36:41');
 
-INSERT INTO question_tag (id, name, del_flag, create_by, create_time, update_by, update_time)
+INSERT INTO tag (id, name, del_flag, create_by, create_time, update_by, update_time)
 VALUES (105, '聚合', '0', 1, '2024-11-22 08:36:41', NULL, '2024-11-22 08:36:41');
 
 
 -- ----------------------------
 -- 题目和标签关联表
 -- ----------------------------
-drop table if exists `tag_question`;
+drop table if exists tag_question;
 create table if not exists `tag_question` (
     question_id  bigint(20)  not null  comment '题目ID（外键，关联题目表ID）',
     tag_id       bigint(20)  not null  comment '标签ID（外键，关联标签表ID）'

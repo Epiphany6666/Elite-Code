@@ -1517,7 +1517,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -7385,7 +7384,9 @@ CREATE TABLE `ums_admin_login_log`  (
 
 ---
 
+# VO，BO，PO，DO，DTO
 
+![img](./assets/v2-24e3ed681c02b6434681719753c53b40_1440w.jpg)
 
 
 

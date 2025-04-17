@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.elitecode.mapper.TagMapper">
+
+    <resultMap id="tagResult" type="cn.elitecode.model.entity.Tag">
+            <id property="id" column="id" />
+            <result property="name" column="name" />
+            <result property="delFlag" column="del_flag" />
+            <result property="createBy" column="create_by" />
+            <result property="createTime" column="create_time" />
+            <result property="updateBy" column="update_by" />
+            <result property="updateTime" column="update_time" />
+    </resultMap>
+
+    <!-- void insert(Tag tag); -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into tag
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="name != null and name != ''">name,</if>
+                <if test="createBy != null and createBy != 0">create_by,</if>
+            </trim>
+        values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="name != null and name != ''">#{name},</if>
+                <if test="createBy != null and createBy != 0">#{createBy},</if>
+            </trim>
+    </insert>
+
+    <!-- void updateTagById(Tag tag); -->
+    <update id="updateTagById">
+        update tag
+        <set>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="updateBy != null and updateBy != 0">update_by = #{updateBy},</if>
+        </set>
+        where
+            id = #{id}
+    </update>
+
+    <!-- void deleteTagByIds(Long[] tagIds); -->
+    <delete id="deleteTagByIds">
+        update tag
+        set
+            del_flag = '2'
+        <where>
+            id in
+            <foreach collection="tagIds" open="(" separator="," close=")" item="tagId">
+                #{tagId}
+            </foreach>
+        </where>
+    </delete>
+
+    <!-- List<Tag> selectTagList(TagQueryDTO tagQueryDTO); -->
+    <select id="selectTagList" resultMap="tagResult">
+        select
+            id,name,del_flag,create_by,create_time,update_by,update_time
+        from
+            tag
+        where
+            del_flag = '0'
+            <if test="name != null and name != ''">and name like contact("%", #{name}, "%")</if>
+            <if test="createBy != null and createBy != 0">and create_by = #{createBy}</if>
+            <if test="updateBy != null and updateBy != 0">and update_by = #{updateBy}</if>
+            <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>
+        <if test="sortFieldPair != null and sortFieldPair.size() > 0">
+            order by
+                <foreach collection="sortFieldPair" separator="," item="sortField">
+                    ${sortField}
+                </foreach>
+        </if>
+        limit #{current}, #{pageSize}
+    </select>
+
+    <!-- Long getTotal(TagQueryDTO tagQueryDTO); -->
+    <select id="getTotal" resultType="java.lang.Long">
+        select
+            count(*)
+        from
+            tag
+        where
+            del_flag = '0'
+            <if test="name != null and name != ''">and name like contact("%", #{name}, "%")</if>
+            <if test="createBy != null and createBy != 0">and create_by = #{createBy}</if>
+            <if test="updateBy != null and updateBy != 0">and update_by = #{updateBy}</if>
+            <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>
+    </select>
+
+    <!-- List<Tag> selectTagAll(); -->
+    <select id="selectTagAll" resultMap="tagResult">
+        select
+            id,name,del_flag,create_by,create_time,update_by,update_time
+        from
+            tag
+        where
+            del_flag = '0'
+    </select>
+</mapper>
