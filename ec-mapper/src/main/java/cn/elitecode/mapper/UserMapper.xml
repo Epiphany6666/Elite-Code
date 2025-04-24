@@ -160,6 +160,7 @@
         <set>
             <if test="username != null and username != ''">username = #{username},</if>
             <if test="nickName != null and nickName != ''">nick_name = #{nickName},</if>
+            <if test="avatar != null and avatar != ''">avatar = #{avatar},</if>
             <if test="profile != null and profile != ''">profile = #{profile},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
         </set>

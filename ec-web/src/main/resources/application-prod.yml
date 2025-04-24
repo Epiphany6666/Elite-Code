@@ -12,3 +12,10 @@ knife4j:
     enable: true
     username: root
     password: 123456
+
+# Minio对象存储相关配置
+minio:
+  endpoint: http://192.168.88.130:9090 # Minio服务所在地址
+  bucketName: elitecode # 存储桶名称
+  accessKey: minioadmin # 访问的key
+  secretKey: minioadmin # 访问的秘钥

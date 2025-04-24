@@ -238,6 +238,8 @@
 - [x] xml文件不使用include
 - [x] 去掉所有result判断
 
+## 文件管理
+- [x] 使用Minio实现文件上传
 
 ---
 
@@ -684,6 +686,7 @@ vue-next-admin：https://github.com/lyt-Top/vue-next-admin
 
 - [ ] Maven不同版本有什么区别？
 
+- [x] 学习minio
 
 
 ---

@@ -10,15 +10,19 @@ public class UserUpdateProfileDto {
     @ApiModelProperty(value = "用户昵称")
     private String nickName;
 
+    @ApiModelProperty(value = "用户头像")
+    private String avatar;
+
     @ApiModelProperty(value = "用户简介")
     private String profile;
 
     public UserUpdateProfileDto() {
     }
 
-    public UserUpdateProfileDto(String username, String nickName, String profile) {
+    public UserUpdateProfileDto(String username, String nickName, String avatar, String profile) {
         this.username = username;
         this.nickName = nickName;
+        this.avatar = avatar;
         this.profile = profile;
     }
 
@@ -56,6 +60,22 @@ public class UserUpdateProfileDto {
 
     /**
      * 获取
+     * @return avatar
+     */
+    public String getAvatar() {
+        return avatar;
+    }
+
+    /**
+     * 设置
+     * @param avatar
+     */
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    /**
+     * 获取
      * @return profile
      */
     public String getProfile() {
@@ -71,7 +91,6 @@ public class UserUpdateProfileDto {
     }
 
     public String toString() {
-        return "UserUpdateProfileDto{username = " + username + ", nickName = " + nickName + ", profile = " + profile + "}";
+        return "UserUpdateProfileDto{username = " + username + ", nickName = " + nickName + ", avatar = " + avatar + ", profile = " + profile + "}";
     }
-
 }

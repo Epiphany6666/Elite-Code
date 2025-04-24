@@ -16,6 +16,9 @@ public class UserUpdateDTO {
     @ApiModelProperty(value = "用户昵称")
     private String nickName;
 
+    @ApiModelProperty(value = "用户头像")
+    private String avatar;
+
     @ApiModelProperty(value = "用户简介")
     private String profile;
 
@@ -25,10 +28,11 @@ public class UserUpdateDTO {
     public UserUpdateDTO() {
     }
 
-    public UserUpdateDTO(Long id, String username, String nickName, String profile, List<Long> roleIds) {
+    public UserUpdateDTO(Long id, String username, String nickName, String avatar, String profile, List<Long> roleIds) {
         this.id = id;
         this.username = username;
         this.nickName = nickName;
+        this.avatar = avatar;
         this.profile = profile;
         this.roleIds = roleIds;
     }
@@ -83,6 +87,22 @@ public class UserUpdateDTO {
 
     /**
      * 获取
+     * @return avatar
+     */
+    public String getAvatar() {
+        return avatar;
+    }
+
+    /**
+     * 设置
+     * @param avatar
+     */
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    /**
+     * 获取
      * @return profile
      */
     public String getProfile() {
@@ -114,6 +134,6 @@ public class UserUpdateDTO {
     }
 
     public String toString() {
-        return "UserUpdateDTO{id = " + id + ", username = " + username + ", nickName = " + nickName + ", profile = " + profile + ", roleIds = " + roleIds + "}";
+        return "UserUpdateDTO{id = " + id + ", username = " + username + ", nickName = " + nickName + ", avatar = " + avatar + ", profile = " + profile + ", roleIds = " + roleIds + "}";
     }
 }
