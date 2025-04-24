@@ -5,7 +5,7 @@
 <mapper namespace="cn.elitecode.mapper.UserMapper">
 
     <resultMap id="UserResult" type="User">
-            <id property="id" column="id"/>
+            <id property="id" column="u_id"/>
             <result property="username" column="username"/>
             <result property="password" column="password"/>
             <result property="nickName" column="nick_name"/>
@@ -16,31 +16,63 @@
             <result property="createTime" column="create_time"/>
             <result property="updateBy" column="update_by"/>
             <result property="updateTime" column="update_time"/>
+            <collection property="roleList" resultMap="RoleResult" />
     </resultMap>
 
+    <resultMap id="RoleResult" type="Role">
+        <id property="id" column="r_id" />
+        <result property="name" column="r_name" />
+        <result property="sort" column="r_sort" />
+    </resultMap>
+
+    <!-- public User selectUserById(Long userId); -->
     <select id="selectUserById" resultMap="UserResult" parameterType="Long">
         select
-            id,username,password,
-            nick_name,avatar,profile,
-            del_flag,create_by,create_time,
-            update_by,update_time
+            u.id as u_id,
+            u.username,
+            u.password,
+            u.nick_name,
+            u.avatar,
+            u.profile,
+            u.del_flag,
+            u.create_by,
+            u.create_time,
+            u.update_by,
+            u.update_time,
+            r.id as r_id,
+            r.name as r_name,
+            r.sort as r_sort
         from
-            user
+            user u
+            left join user_role ur on ur.user_id = u.id
+            left join role r on r.id = ur.role_id
         where
-            id = #{id}
+            u.id = #{userId}
     </select>
 
     <select id="selectUserByUsername" resultMap="UserResult">
         select
-            id,username,password,
-            nick_name,avatar,profile,
-            del_flag,create_by,create_time,
-            update_by,update_time
+            u.id as u_id,
+            u.username,
+            u.password,
+            u.nick_name,
+            u.avatar,
+            u.profile,
+            u.del_flag,
+            u.create_by,
+            u.create_time,
+            u.update_by,
+            u.update_time,
+            r.id as r_id,
+            r.name as r_name,
+            r.sort as r_sort
         from
-            user
+            user u
+            left join user_role ur on ur.user_id = u.id
+            left join role r on r.id = ur.role_id
         where
-            del_flag = '0'
-            and username = #{username}
+            u.del_flag = '0'
+            and u.username = #{username}
     </select>
 
     <!-- int register(String username, String encryptPassword); -->
@@ -69,19 +101,31 @@
     <!--  List<User> selectUserList(User user); -->
     <select id="selectUserList" resultMap="UserResult">
         select
-            id,username,password,
-            nick_name,avatar,profile,
-            del_flag,create_by,create_time,
-            update_by,update_time
+            u.id as u_id,
+            u.username,
+            u.password,
+            u.nick_name,
+            u.avatar,
+            u.profile,
+            u.del_flag,
+            u.create_by,
+            u.create_time,
+            u.update_by,
+            u.update_time,
+            r.id as r_id,
+            r.name as r_name,
+            r.sort as r_sort
         from
-            user
+            user u
+            left join user_role ur on ur.user_id = u.id
+            left join role r on r.id = ur.role_id
         where
-            del_flag = '0'
-            <if test="username != null and username != ''">and username like concat("%", #{username}, "%")</if>
-            <if test="nickName != null and nickName != ''">and nick_name like concat("%", #{nickName}, "%")</if>
-            <if test="createBy != null and createBy != 0">and create_by = #{createBy}</if>
-            <if test="updateBy != null and updateBy != 0">and update_by = #{updateBy}</if>
-            <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>
+            u.del_flag = '0'
+            <if test="username != null and username != ''">and u.username like concat("%", #{username}, "%")</if>
+            <if test="nickName != null and nickName != ''">and u.nick_name like concat("%", #{nickName}, "%")</if>
+            <if test="createBy != null and createBy != 0">and u.create_by = #{createBy}</if>
+            <if test="updateBy != null and updateBy != 0">and u.update_by = #{updateBy}</if>
+            <if test="startTime != null and endTime != null">and u.create_time between #{startTime} and #{endTime}</if>
         <if test="sortFieldPair != null and sortFieldPair.size() > 0">
             ORDER BY
             <foreach collection="sortFieldPair" separator="," item="sortField">
@@ -128,12 +172,11 @@
         update user
         set
             del_flag = '2'
-        <where>
+        where
             id in
             <foreach collection="userIds" open="(" separator="," close=")" item="id">
                 #{id}
             </foreach>
-        </where>
     </delete>
 
     <!-- int updateUserAvatar(Long id, String avatarUrl); -->

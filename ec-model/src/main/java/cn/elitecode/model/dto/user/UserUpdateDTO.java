@@ -19,18 +19,18 @@ public class UserUpdateDTO {
     @ApiModelProperty(value = "用户简介")
     private String profile;
 
-    @ApiModelProperty(value = "用户角色：user/admin/ban")
-    private List<String> roles;
+    @ApiModelProperty(value = "用户角色id列表")
+    private List<Long> roleIds;
 
     public UserUpdateDTO() {
     }
 
-    public UserUpdateDTO(Long id, String username, String nickName, String profile, List<String> roles) {
+    public UserUpdateDTO(Long id, String username, String nickName, String profile, List<Long> roleIds) {
         this.id = id;
         this.username = username;
         this.nickName = nickName;
         this.profile = profile;
-        this.roles = roles;
+        this.roleIds = roleIds;
     }
 
     /**
@@ -99,22 +99,21 @@ public class UserUpdateDTO {
 
     /**
      * 获取
-     * @return roles
+     * @return roleIds
      */
-    public List<String> getRoles() {
-        return roles;
+    public List<Long> getRoleIds() {
+        return roleIds;
     }
 
     /**
      * 设置
-     * @param roles
+     * @param roleIds
      */
-    public void setRoles(List<String> roles) {
-        this.roles = roles;
+    public void setRoleIds(List<Long> roleIds) {
+        this.roleIds = roleIds;
     }
 
     public String toString() {
-        return "UserUpdateDTO{id = " + id + ", username = " + username + ", nickName = " + nickName + ", profile = " + profile + ", roles = " + roles + "}";
+        return "UserUpdateDTO{id = " + id + ", username = " + username + ", nickName = " + nickName + ", profile = " + profile + ", roleIds = " + roleIds + "}";
     }
-
 }

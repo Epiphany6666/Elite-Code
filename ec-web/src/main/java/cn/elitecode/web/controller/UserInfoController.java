@@ -3,11 +3,10 @@ package cn.elitecode.web.controller;
 import cn.elitecode.common.BaseContext;
 import cn.elitecode.common.api.CommonResult;
 import cn.elitecode.common.properties.FileUploadProperties;
-import cn.elitecode.common.utils.SecurityUtils;
 import cn.elitecode.common.utils.file.FileUploadUtils;
 import cn.elitecode.common.utils.file.MimeTypeUtils;
+import cn.elitecode.model.dto.user.UserUpdateDTO;
 import cn.elitecode.model.dto.user.UserUpdateProfileDto;
-import cn.elitecode.model.entity.User;
 import cn.elitecode.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,10 +27,10 @@ public class UserInfoController {
 
     @ApiOperation(value = "更新个人信息")
     @PutMapping
-    private CommonResult updateProfile(@RequestBody UserUpdateProfileDto updateProfileDto) {
-        User user = new User(SecurityUtils.getUserId());
-        BeanUtils.copyProperties(updateProfileDto, user);
-        userService.updateUser(user);
+    private CommonResult updateProfile(@RequestBody UserUpdateProfileDto userUpdateProfileDto) {
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
+        BeanUtils.copyProperties(userUpdateProfileDto, userUpdateDTO);
+        userService.updateUser(userUpdateDTO);
         return CommonResult.success();
     }
 

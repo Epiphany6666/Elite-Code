@@ -3,21 +3,24 @@ package cn.elitecode.web.controller;
 import cn.elitecode.common.BaseContext;
 import cn.elitecode.common.api.CommonPage;
 import cn.elitecode.common.api.CommonResult;
-import cn.elitecode.common.utils.SecurityUtils;
 import cn.elitecode.constant.HttpStatus;
 import cn.elitecode.model.dto.user.UserAddDTO;
 import cn.elitecode.model.dto.user.UserQueryDTO;
 import cn.elitecode.model.dto.user.UserUpdateDTO;
+import cn.elitecode.model.entity.Role;
 import cn.elitecode.model.entity.User;
+import cn.elitecode.service.RoleService;
 import cn.elitecode.service.UserService;
 import cn.hutool.core.util.ArrayUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 用户控制器
@@ -29,40 +32,40 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private RoleService roleService;
 
     @ApiOperation(value = "根据条件分页查询用户信息")
     @PostMapping("/list")
     private CommonResult<CommonPage<User>> listUser(@RequestBody UserQueryDTO userQueryDTO) {
-        return userService.selectUserList(userQueryDTO);
+        CommonPage<User> page = userService.selectUserList(userQueryDTO);
+        return CommonResult.success(page);
     }
 
     @ApiOperation(value = "根据id查询用户信息")
     @GetMapping("/{userId}")
-    private CommonResult<User> getUser(@PathVariable Long userId) {
+    private CommonResult<Map<String, Object>> getUser(@PathVariable Long userId) {
+        Map<String, Object> result = new HashMap<>();
         User user = userService.selectUserById(userId);
-        return CommonResult.success(user);
+        result.put("user", user);
+        List<Long> roleIds = user.getRoleList().stream().map(Role::getId).toList();
+        result.put("roleIds", roleIds);
+        List<Role> roleAll = roleService.selectRoleListAll();
+        result.put("roleAll", roleAll);
+        return CommonResult.success(result);
     }
 
     @ApiOperation(value = "新增用户")
     @PostMapping
     private CommonResult<Long> addUser(@Validated @RequestBody UserAddDTO userAddDTO) {
-        User user = new User();
-        BeanUtils.copyProperties(userAddDTO, user);
-        if (!userService.checkUsernameUnique(user)) {
-            return CommonResult.error(HttpStatus.PARAMS_ERROR, "新增用户 '" + user.getUsername() + "' 失败，账号已存在");
-        }
-        user.setCreateBy(BaseContext.getCurrentId());
-        user.setPassword(SecurityUtils.encryptPassword(userAddDTO.getPassword()));
-        Long userId = userService.addUser(user);
+        Long userId = userService.addUser(userAddDTO);
         return CommonResult.success(userId);
     }
 
     @ApiOperation(value = "根据id更新用户信息")
     @PutMapping
     private CommonResult updateUser(@Validated @RequestBody UserUpdateDTO userUpdateDTO) {
-        User user = new User();
-        BeanUtils.copyProperties(userUpdateDTO, user);
-        userService.updateUser(user);
+        userService.updateUser(userUpdateDTO);
         return CommonResult.success();
     }
 

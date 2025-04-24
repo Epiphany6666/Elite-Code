@@ -49,12 +49,11 @@
         update problemset
         set
             del_flag = '2'
-        <where>
+        where
             id in
             <foreach collection="problemsetIds" open="(" separator="," close=")" item="id">
                 #{id}
             </foreach>
-        </where>
     </delete>
 
     <!-- List<Problemset> selectProblemsetList(ProblemsetQueryDTO problemsetQueryDTO); -->

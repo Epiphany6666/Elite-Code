@@ -9,7 +9,44 @@
             <id property="roleId" column="role_id" />
     </resultMap>
 
-    <sql id="Base_Column_List">
-        user_id,role_id
-    </sql>
+    <!-- void batchUserRole(@Param("userRoleList") List<UserRole> userRoleList); -->
+    <insert id="batchUserRole">
+        insert into
+            user_role(user_id, role_id)
+        values
+            <foreach collection="userRoleList" separator="," item="userRole">
+                (#{userRole.userId}, #{userRole.roleId})
+            </foreach>
+    </insert>
+
+    <!-- void deleteUserRoleByUserId(Long userId); -->
+    <delete id="deleteUserRoleByUserId">
+        delete
+        from
+            user_role
+        where
+            user_id = #{userId}
+    </delete>
+
+    <!-- void deleteUserRoleByUserIds(@Param("userIds") Long[] userIds); -->
+    <delete id="deleteUserRoleByUserIds">
+        delete
+        from
+            user_role
+        where
+            user_id in
+            <foreach collection="userIds" open="(" separator="," close=")" item="userId">
+                #{userId}
+            </foreach>
+    </delete>
+
+    <!-- int countUserRoleByRoleId(Long roleId); -->
+    <select id="countUserRoleByRoleId" resultType="java.lang.Integer">
+        select
+            count(1)
+        from
+            user_role
+        where
+            role_id = #{roleId}
+    </select>
 </mapper>

@@ -1,8 +1,9 @@
 package cn.elitecode.service;
 
 import cn.elitecode.common.api.CommonPage;
-import cn.elitecode.common.api.CommonResult;
+import cn.elitecode.model.dto.user.UserAddDTO;
 import cn.elitecode.model.dto.user.UserQueryDTO;
+import cn.elitecode.model.dto.user.UserUpdateDTO;
 import cn.elitecode.model.entity.User;
 
 /**
@@ -17,13 +18,13 @@ public interface UserService {
      * @param userQueryDTO
      * @return
      */
-    CommonResult<CommonPage<User>> selectUserList(UserQueryDTO userQueryDTO);
+    CommonPage<User> selectUserList(UserQueryDTO userQueryDTO);
 
     /**
      * 根据id更新用户信息
-     * @param user
+     * @param userUpdateDTO
      */
-    void updateUser(User user);
+    void updateUser(UserUpdateDTO userUpdateDTO);
 
     /**
      * 校验用户账号是否唯一
@@ -34,10 +35,10 @@ public interface UserService {
 
     /**
      * 新增用户
-     * @param user 用户信息
+     * @param userAddDTO 用户信息
      * @return 结果
      */
-    Long addUser(User user);
+    Long addUser(UserAddDTO userAddDTO);
 
     /**
      * 批量删除用户

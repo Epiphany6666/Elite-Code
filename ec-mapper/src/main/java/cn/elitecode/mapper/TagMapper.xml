@@ -44,12 +44,11 @@
         update tag
         set
             del_flag = '2'
-        <where>
+        where
             id in
             <foreach collection="tagIds" open="(" separator="," close=")" item="tagId">
                 #{tagId}
             </foreach>
-        </where>
     </delete>
 
     <!-- List<Tag> selectTagList(TagQueryDTO tagQueryDTO); -->
