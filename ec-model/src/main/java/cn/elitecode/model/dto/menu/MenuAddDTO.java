@@ -1,17 +1,12 @@
-package cn.elitecode.model.entity;
+package cn.elitecode.model.dto.menu;
 
 import io.swagger.annotations.ApiModelProperty;
-import java.util.Date;
+import javax.validation.constraints.NotEmpty;
 
-/**
-* menu(菜单权限表) | 实体类
-*/
-public class Menu {
+public class MenuAddDTO {
 
-    @ApiModelProperty("菜单id，主键")
-    private Long id;
-
-    @ApiModelProperty("菜单标题")
+    @ApiModelProperty(value = "菜单标题", required = true)
+    @NotEmpty(message = "菜单标题不能为空")
     private String title;
 
     @ApiModelProperty("父菜单ID")
@@ -35,23 +30,10 @@ public class Menu {
     @ApiModelProperty("菜单状态 (0正常 1停用)")
     private String status;
 
-    @ApiModelProperty("创建者")
-    private Long createBy;
-
-    @ApiModelProperty("创建时间")
-    private Date createTime;
-
-    @ApiModelProperty("更新者")
-    private Long updateBy;
-
-    @ApiModelProperty("编辑时间")
-    private Date updateTime;
-
-    public Menu() {
+    public MenuAddDTO() {
     }
 
-    public Menu(Long id, String title, Long parentId, Integer sort, String component, Integer ifFrame, String type, String visible, String status, Long createBy, Date createTime, Long updateBy, Date updateTime) {
-        this.id = id;
+    public MenuAddDTO(String title, Long parentId, Integer sort, String component, Integer ifFrame, String type, String visible, String status) {
         this.title = title;
         this.parentId = parentId;
         this.sort = sort;
@@ -60,26 +42,6 @@ public class Menu {
         this.type = type;
         this.visible = visible;
         this.status = status;
-        this.createBy = createBy;
-        this.createTime = createTime;
-        this.updateBy = updateBy;
-        this.updateTime = updateTime;
-    }
-
-    /**
-     * 获取
-     * @return id
-     */
-    public Long getId() {
-        return id;
-    }
-
-    /**
-     * 设置
-     * @param id
-     */
-    public void setId(Long id) {
-        this.id = id;
     }
 
     /**
@@ -210,71 +172,7 @@ public class Menu {
         this.status = status;
     }
 
-    /**
-     * 获取
-     * @return createBy
-     */
-    public Long getCreateBy() {
-        return createBy;
-    }
-
-    /**
-     * 设置
-     * @param createBy
-     */
-    public void setCreateBy(Long createBy) {
-        this.createBy = createBy;
-    }
-
-    /**
-     * 获取
-     * @return createTime
-     */
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    /**
-     * 设置
-     * @param createTime
-     */
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    /**
-     * 获取
-     * @return updateBy
-     */
-    public Long getUpdateBy() {
-        return updateBy;
-    }
-
-    /**
-     * 设置
-     * @param updateBy
-     */
-    public void setUpdateBy(Long updateBy) {
-        this.updateBy = updateBy;
-    }
-
-    /**
-     * 获取
-     * @return updateTime
-     */
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    /**
-     * 设置
-     * @param updateTime
-     */
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
     public String toString() {
-        return "Menu{id = " + id + ", title = " + title + ", parentId = " + parentId + ", sort = " + sort + ", component = " + component + ", ifFrame = " + ifFrame + ", type = " + type + ", visible = " + visible + ", status = " + status + ", createBy = " + createBy + ", createTime = " + createTime + ", updateBy = " + updateBy + ", updateTime = " + updateTime + "}";
+        return "MenuAddDTO{title = " + title + ", parentId = " + parentId + ", sort = " + sort + ", component = " + component + ", ifFrame = " + ifFrame + ", type = " + type + ", visible = " + visible + ", status = " + status + "}";
     }
 }

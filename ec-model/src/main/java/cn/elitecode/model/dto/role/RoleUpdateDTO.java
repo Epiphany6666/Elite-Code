@@ -2,6 +2,7 @@ package cn.elitecode.model.dto.role;
 
 import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 public class RoleUpdateDTO {
 
@@ -15,13 +16,17 @@ public class RoleUpdateDTO {
     @ApiModelProperty("显示顺序")
     private Integer sort;
 
+    @ApiModelProperty("菜单id列表")
+    private List<Long> menuIds;
+
     public RoleUpdateDTO() {
     }
 
-    public RoleUpdateDTO(Long id, String name, Integer sort) {
+    public RoleUpdateDTO(Long id, String name, Integer sort, List<Long> menuIds) {
         this.id = id;
         this.name = name;
         this.sort = sort;
+        this.menuIds = menuIds;
     }
 
     /**
@@ -72,7 +77,23 @@ public class RoleUpdateDTO {
         this.sort = sort;
     }
 
+    /**
+     * 获取
+     * @return menuId
+     */
+    public List<Long> getMenuIds() {
+        return menuIds;
+    }
+
+    /**
+     * 设置
+     * @param menuIds
+     */
+    public void setMenuIds(List<Long> menuIds) {
+        this.menuIds = menuIds;
+    }
+
     public String toString() {
-        return "RoleUpdateDTO{id = " + id + ", name = " + name + ", sort = " + sort + "}";
+        return "RoleUpdateDTO{id = " + id + ", name = " + name + ", sort = " + sort + ", menuId = " + menuIds + "}";
     }
 }

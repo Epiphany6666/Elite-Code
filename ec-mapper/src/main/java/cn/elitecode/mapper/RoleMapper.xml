@@ -16,7 +16,7 @@
     </resultMap>
 
     <!-- void insertRole(Role role); -->
-    <insert id="insertRole">
+    <insert id="insertRole" useGeneratedKeys="true" keyProperty="id">
         insert into role
             <trim prefix="(" suffix=")" suffixOverrides=",">
                 <if test="name != null and name != ''">name,</if>
@@ -64,7 +64,7 @@
             role
         where
             del_flag = '0'
-            <if test="name != null and name != ''">and name like concat("%", #{name}, "%"})</if>
+            <if test="name != null and name != ''">and name like concat("%", #{name}, "%")</if>
             <if test="createBy != null and createBy != ''">and create_by = #{createBy}</if>
             <if test="updateBy != null and updateBy != ''">and update_by = #{updateBy}</if>
             <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>

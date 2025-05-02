@@ -5,15 +5,19 @@ import cn.elitecode.common.exception.role.RoleAlreadyAssignException;
 import cn.elitecode.common.utils.SecurityUtils;
 import cn.elitecode.constant.HttpStatus;
 import cn.elitecode.mapper.RoleMapper;
+import cn.elitecode.mapper.RoleMenuMapper;
 import cn.elitecode.mapper.UserRoleMapper;
 import cn.elitecode.model.dto.role.RoleAddDTO;
 import cn.elitecode.model.dto.role.RoleQueryDTO;
 import cn.elitecode.model.dto.role.RoleUpdateDTO;
 import cn.elitecode.model.entity.Role;
+import cn.elitecode.model.entity.RoleMenu;
 import cn.elitecode.service.RoleService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,17 +30,24 @@ public class RoleServiceImpl implements RoleService{
     private RoleMapper roleMapper;
     @Autowired
     private UserRoleMapper userRoleMapper;
+    @Autowired
+    private RoleMenuMapper roleMenuMapper;
 
     @Override
+    @Transactional
     public Long addRole(RoleAddDTO roleAddDTO) {
+        // 新增角色
         Role role = new Role();
         BeanUtils.copyProperties(roleAddDTO, role);
         role.setCreateBy(SecurityUtils.getUserId());
         roleMapper.insertRole(role);
+        // 新增角色菜单关联
+        insertRoleMenu(role.getId(), roleAddDTO.getMenuIds());
         return role.getId();
     }
 
     @Override
+    @Transactional
     public void removeRoleByIds(Long[] roleIds) {
         for (Long roleId : roleIds) {
             Role role = roleMapper.selectRoleById(roleId);
@@ -45,15 +56,24 @@ public class RoleServiceImpl implements RoleService{
                 throw new RoleAlreadyAssignException(HttpStatus.PARAMS_ERROR, role.getName() + "已分配，不能删除");
             }
         }
+        // 删除角色表信息
         roleMapper.removeRoleByIds(roleIds);
+        // 删除角色菜单关联
+        roleMenuMapper.deleteRoleMenuByIds(roleIds);
     }
 
     @Override
+    @Transactional
     public void updateRole(RoleUpdateDTO roleUpdateDTO) {
+        // 更新角色信息
         Role role = new Role();
         BeanUtils.copyProperties(roleUpdateDTO, role);
         role.setUpdateBy(SecurityUtils.getUserId());
         roleMapper.updateRoleById(role);
+        // 删除角色菜单关联
+        roleMenuMapper.deleteRoleMenuById(roleUpdateDTO.getId());
+        // 新增角色菜单关联
+        insertRoleMenu(roleUpdateDTO.getId(), roleUpdateDTO.getMenuIds());
     }
 
     @Override
@@ -77,6 +97,19 @@ public class RoleServiceImpl implements RoleService{
     public Role selectRoleById(Long roleId) {
         Role role = roleMapper.selectRoleById(roleId);
         return role;
+    }
+
+    /**
+     * 批量新增角色菜单联系
+     * @param roleId
+     * @param menuIds
+     */
+    private void insertRoleMenu(Long roleId, List<Long> menuIds) {
+        List<RoleMenu> roleMenuList = new ArrayList<>();
+        for (Long menuId : menuIds) {
+            roleMenuList.add(new RoleMenu(roleId, menuId));
+        }
+        roleMenuMapper.batchRoleMenu(roleMenuList);
     }
 }
 

@@ -97,7 +97,8 @@ create table if not exists `role` (
     update_by     bigint(20)    default null                comment '更新者',
     update_time   datetime      default current_timestamp   comment '编辑时间',
     primary key (id)
-) engine = innodb comment '角色信息表';
+) engine = innodb
+  auto_increment = 100 comment '角色信息表';
 
 -- ----------------------------
 -- 初始化-角色信息表数据
@@ -129,11 +130,13 @@ INSERT INTO `user_role` (user_id, role_id) VALUES (2, 2);
 drop table if exists `menu`;
 create table if not exists `menu` (
   id            bigint(20)    not null auto_increment     comment '菜单id，主键',
-  title         int(50)       not null                    comment '菜单标题',
+  title         varchar(50)       not null                    comment '菜单标题',
   parent_id     bigint(20)    default 0                   comment '父菜单ID',
   sort          int(4)        not null                    comment '显示顺序',
   component     varchar(255)  default null                comment '组件路径',
   if_frame      int(1)        default 1                   comment '是否为外链 (0是 1否)',
+  type          char(1)       default ''                  comment '菜单类型（M目录 C菜单 F按钮）',
+  visible       char(1)       default ''                  comment '菜单状态（0显示 1隐藏）',
   status        char(1)       default '0'                 comment '菜单状态 (0正常 1停用)',
   create_by     bigint(20)    default null                comment '创建者',
   create_time   datetime      default current_timestamp   comment '创建时间',
@@ -146,10 +149,10 @@ create table if not exists `menu` (
 -- ----------------------------
 -- 初始化-菜单权限表数据
 -- ----------------------------
-INSERT INTO `menu` (id, title, parent_id, sort, component, if_frame, status, create_by, create_time, update_by, update_time)
-VALUES (100, 10001, 0, 1, '/system', 1, '0', 1, '2024-11-22 08:36:41', 1, '2024-11-27 08:36:41');
-INSERT INTO `menu` (id, title, parent_id, sort, component, if_frame, status, create_by, create_time, update_by, update_time)
-VALUES (101, 10002, 100, 2, '/user', 1, '0', 1, '2024-11-22 08:36:41', 1, '2024-11-27 08:36:41');
+INSERT INTO `menu` (id, title, parent_id, sort, component, if_frame, type, visible, status, create_by, create_time, update_by, update_time)
+VALUES (100, '系统', 0, 1, '/system', 1, 'C', 0, '0', 1, '2024-11-22 08:36:41', 1, '2024-11-27 08:36:41');
+INSERT INTO `menu` (id, title, parent_id, sort, component, if_frame, type, visible, status, create_by, create_time, update_by, update_time)
+VALUES (101, '用户', 100, 2, '/user', 1, 'C', 0, '0', 1, '2024-11-22 08:36:41', 1, '2024-11-27 08:36:41');
 
 -- ----------------------------
 -- 角色和菜单关联表
