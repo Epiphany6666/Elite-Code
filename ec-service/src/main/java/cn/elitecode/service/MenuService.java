@@ -1,10 +1,12 @@
 package cn.elitecode.service;
 
 import cn.elitecode.common.api.CommonPage;
+import cn.elitecode.model.bo.TreeSelect;
 import cn.elitecode.model.dto.menu.MenuAddDTO;
 import cn.elitecode.model.dto.menu.MenuQueryDTO;
 import cn.elitecode.model.dto.menu.MenuUpdateDTO;
 import cn.elitecode.model.entity.Menu;
+import java.util.List;
 
 /**
 * menu(菜单权限表) | 业务层
@@ -43,4 +45,25 @@ public interface MenuService {
      * @return
      */
     Menu getMenuById(Long menuId);
+
+    /**
+     * 根据用户id查询菜单列表
+     * @param userId
+     * @return
+     */
+    List<Menu> selectMenuListByUserId(Long userId);
+
+    /**
+     * 根据角色id查询菜单信息
+     * @param roleId 角色id
+     * @return 选中菜单列表
+     */
+    List<Long> selectMenuListByRoleId(Long roleId);
+
+    /**
+     * 构建前端所需要的下拉树结构
+     * @param menuList 菜单列表
+     * @return 下拉树结构列表
+     */
+    List<TreeSelect> buildMenuTreeSelect(List<Menu> menuList);
 }

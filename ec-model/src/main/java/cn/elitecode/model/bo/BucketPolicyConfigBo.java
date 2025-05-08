@@ -28,8 +28,12 @@ public class BucketPolicyConfigBo {
         this.Version = Version;
     }
 
-    public String toString() {
-        return "BucketPolicyConfigBo{Version = " + Version + ", Statement = " + Statement + "}";
+    /**
+     * 获取
+     * @return Statement
+     */
+    public List<Statement> getStatement() {
+        return Statement;
     }
 
     public static class Statement {
@@ -45,8 +49,36 @@ public class BucketPolicyConfigBo {
             this.Resource = Resource;
         }
 
-        public String toString() {
-            return "Statement{Effect = " + Effect + ", Principal = " + Principal + ", Action = " + Action + ", Resource = " + Resource + "}";
+        /**
+         * 获取
+         * @return Effect
+         */
+        public String getEffect() {
+            return Effect;
+        }
+
+        /**
+         * 获取
+         * @return Principal
+         */
+        public String getPrincipal() {
+            return Principal;
+        }
+
+        /**
+         * 获取
+         * @return Action
+         */
+        public String getAction() {
+            return Action;
+        }
+
+        /**
+         * 获取
+         * @return Resource
+         */
+        public String getResource() {
+            return Resource;
         }
     }
 }

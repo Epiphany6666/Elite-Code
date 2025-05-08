@@ -88,14 +88,15 @@ VALUES (104, 'luoyantest3', '192.168.1.105', '杭州', 'Chrome', 'Android', '1',
 -- ----------------------------
 drop table if exists `role`;
 create table if not exists `role` (
-    id            bigint(20)    not null auto_increment     comment '角色ID，主键',
-    name          varchar(30)   not null                    comment '角色名称',
-    sort          int(4)        not null                    comment '显示顺序',
-    del_flag      char(1)       default '0'                 comment '删除标志（0代表存在，2代表删除）',
-    create_by     bigint(20)    default null                comment '创建者',
-    create_time   datetime      default current_timestamp   comment '创建时间',
-    update_by     bigint(20)    default null                comment '更新者',
-    update_time   datetime      default current_timestamp   comment '编辑时间',
+    id                      bigint(20)    not null auto_increment     comment '角色ID，主键',
+    name                    varchar(30)   not null                    comment '角色名称',
+    sort                    int(4)        not null                    comment '显示顺序',
+    menu_check_strictly     tinyint(1)    default 1                   comment '菜单树选择项是否关联显示（ 0：父子不互相关联显示 1：父子互相关联显示）',
+    del_flag                char(1)       default '0'                 comment '删除标志（0代表存在，2代表删除）',
+    create_by               bigint(20)    default null                comment '创建者',
+    create_time             datetime      default current_timestamp   comment '创建时间',
+    update_by               bigint(20)    default null                comment '更新者',
+    update_time             datetime      default current_timestamp   comment '编辑时间',
     primary key (id)
 ) engine = innodb
   auto_increment = 100 comment '角色信息表';
@@ -103,10 +104,10 @@ create table if not exists `role` (
 -- ----------------------------
 -- 初始化-角色信息表数据
 -- ----------------------------
-INSERT INTO `role` (id, name, sort, del_flag, create_by, create_time, update_by, update_time)
-VALUES (1, 'admin', 1, '0', 1, '2024-11-22 08:36:41', 1, '2024-11-27 08:36:41');
-INSERT INTO `role` (id, name, sort, del_flag, create_by, create_time, update_by, update_time)
-VALUES (2, 'user', 2, '0', 1, '2024-11-22 08:36:41', 1, '2024-11-27 08:36:41');
+INSERT INTO `role` (id, name, sort, del_flag, role.menu_check_strictly, create_by, create_time, update_by, update_time)
+VALUES (1, 'admin', 1, '0', 1, 1, '2024-11-22 08:36:41', 1, '2024-11-27 08:36:41');
+INSERT INTO `role` (id, name, sort, menu_check_strictly, del_flag, create_by, create_time, update_by, update_time)
+VALUES (2, 'user', 2, 1, '0', 1, '2024-11-22 08:36:41', 1, '2024-11-27 08:36:41');
 
 -- ----------------------------
 -- 用户和角色关联表

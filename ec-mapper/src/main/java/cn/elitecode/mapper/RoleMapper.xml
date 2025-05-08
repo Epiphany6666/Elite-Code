@@ -8,6 +8,7 @@
             <id property="id" column="id" />
             <result property="name" column="name" />
             <result property="sort" column="sort" />
+            <result property="menuCheckStrictly" column="menu_check_strictly" />
             <result property="delFlag" column="del_flag" />
             <result property="createBy" column="create_by" />
             <result property="createTime" column="create_time" />
@@ -21,12 +22,14 @@
             <trim prefix="(" suffix=")" suffixOverrides=",">
                 <if test="name != null and name != ''">name,</if>
                 <if test="sort != null">sort,</if>
+                <if test="menuCheckStrictly != null">menu_check_strictly,</if>
                 <if test="createBy != null and createBy != 0">create_by,</if>
             </trim>
         values
             <trim prefix="(" suffix=")" suffixOverrides=",">
                 <if test="name != null and name != ''">#{name},</if>
                 <if test="sort != null">#{sort},</if>
+                <if test="menuCheckStrictly != null">#{menuCheckStrictly},</if>
                 <if test="createBy != null and createBy != 0">#{createBy},</if>
             </trim>
     </insert>
@@ -37,6 +40,7 @@
         <set>
             <if test="name != null and name != ''">name = #{name},</if>
             <if test="sort != null">sort = #{sort},</if>
+            <if test="menuCheckStrictly != null">menu_check_strictly = #{menuCheckStrictly},</if>
             <if test="updateBy != null and updateBy != 0">update_by = #{updateBy},</if>
         </set>
         where
@@ -58,7 +62,7 @@
     <!-- List<Role> selectRoleListByPage(RoleQueryDTO roleQueryDTO); -->
     <select id="selectRoleListByPage" resultMap="RoleResult">
         select
-            id,name,sort,del_flag,create_by,create_time,
+            id,name,sort,menu_check_strictly, del_flag,create_by,create_time,
             update_by,update_time
         from
             role
@@ -94,7 +98,7 @@
     <!-- List<Role> selectRoleListAll(); -->
     <select id="selectRoleListAll" resultMap="RoleResult">
         select
-            id,name,sort,del_flag,create_by,create_time,
+            id,name,sort,menu_check_strictly, del_flag,create_by,create_time,
             update_by,update_time
         from
             role
@@ -105,7 +109,7 @@
     <!-- Role selectRoleById(Long roleId); -->
     <select id="selectRoleById" resultMap="RoleResult">
         select
-            id,name,sort,del_flag,create_by,create_time,
+            id,name,sort,menu_check_strictly, del_flag,create_by,create_time,
             update_by,update_time
         from
             role

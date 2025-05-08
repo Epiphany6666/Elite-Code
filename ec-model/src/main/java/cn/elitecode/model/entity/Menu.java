@@ -2,6 +2,7 @@ package cn.elitecode.model.entity;
 
 import io.swagger.annotations.ApiModelProperty;
 import java.util.Date;
+import java.util.List;
 
 /**
 * menu(菜单权限表) | 实体类
@@ -47,24 +48,8 @@ public class Menu {
     @ApiModelProperty("编辑时间")
     private Date updateTime;
 
-    public Menu() {
-    }
-
-    public Menu(Long id, String title, Long parentId, Integer sort, String component, Integer ifFrame, String type, String visible, String status, Long createBy, Date createTime, Long updateBy, Date updateTime) {
-        this.id = id;
-        this.title = title;
-        this.parentId = parentId;
-        this.sort = sort;
-        this.component = component;
-        this.ifFrame = ifFrame;
-        this.type = type;
-        this.visible = visible;
-        this.status = status;
-        this.createBy = createBy;
-        this.createTime = createTime;
-        this.updateBy = updateBy;
-        this.updateTime = updateTime;
-    }
+    @ApiModelProperty("子菜单")
+    private List<Menu> children;
 
     /**
      * 获取
@@ -274,7 +259,23 @@ public class Menu {
         this.updateTime = updateTime;
     }
 
+    /**
+     * 获取
+     * @return children
+     */
+    public List<Menu> getChildren() {
+        return children;
+    }
+
+    /**
+     * 设置
+     * @param children
+     */
+    public void setChildren(List<Menu> children) {
+        this.children = children;
+    }
+
     public String toString() {
-        return "Menu{id = " + id + ", title = " + title + ", parentId = " + parentId + ", sort = " + sort + ", component = " + component + ", ifFrame = " + ifFrame + ", type = " + type + ", visible = " + visible + ", status = " + status + ", createBy = " + createBy + ", createTime = " + createTime + ", updateBy = " + updateBy + ", updateTime = " + updateTime + "}";
+        return "Menu{id = " + id + ", title = " + title + ", parentId = " + parentId + ", sort = " + sort + ", component = " + component + ", ifFrame = " + ifFrame + ", type = " + type + ", visible = " + visible + ", status = " + status + ", createBy = " + createBy + ", createTime = " + createTime + ", updateBy = " + updateBy + ", updateTime = " + updateTime + ", children = " + children + "}";
     }
 }

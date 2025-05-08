@@ -2,6 +2,7 @@ package cn.elitecode.web.controller;
 
 import cn.elitecode.common.api.CommonPage;
 import cn.elitecode.common.api.CommonResult;
+import cn.elitecode.common.utils.SecurityUtils;
 import cn.elitecode.model.dto.menu.MenuAddDTO;
 import cn.elitecode.model.dto.menu.MenuQueryDTO;
 import cn.elitecode.model.dto.menu.MenuUpdateDTO;
@@ -12,6 +13,9 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Api(tags = "MenuController", description = "菜单管理")
 @RestController
@@ -54,5 +58,15 @@ public class MenuController {
     private CommonResult removeMenu(@PathVariable Long[] menuIds) {
         menuService.removeMenu(menuIds);
         return CommonResult.success();
+    }
+
+    @ApiOperation(value = "加载对应角色菜单树")
+    @GetMapping("/roleMenuTreeselect/{roleId}")
+    private CommonResult<Map> roleMenuTreeselect(@PathVariable Long roleId) {
+        Map<String, Object> result = new HashMap<>();
+        List<Menu> menuList = menuService.selectMenuListByUserId(SecurityUtils.getUserId());
+        result.put("checkedKeys", menuService.selectMenuListByRoleId(roleId));
+        result.put("menus", menuService.buildMenuTreeSelect(menuList));
+        return CommonResult.success(result);
     }
 }

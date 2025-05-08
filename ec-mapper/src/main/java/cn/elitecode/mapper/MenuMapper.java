@@ -48,6 +48,21 @@ public interface MenuMapper {
      * @return
      */
     Menu selectMenuById(Long menuId);
+
+    /**
+     * 根据用户id查询菜单列表
+     * @param userId
+     * @return
+     */
+    List<Menu> selectMenuListByUserId(Long userId);
+
+    /**
+     * 根据角色id查询菜单列表
+     * @param roleId
+     * @param menuCheckStrictly
+     * @return 选中菜单列表
+     */
+    List<Long> selectMenuListByRoleId(@Param("roleId") Long roleId, @Param("menuCheckStrictly") boolean menuCheckStrictly);
 }
 
 

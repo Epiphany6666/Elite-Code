@@ -15,15 +15,19 @@ public class RoleAddDTO {
     @NotNull(message = "显示顺序不能为空")
     private Integer sort;
 
+    @ApiModelProperty("菜单树选择项是否关联显示（ 0：父子不互相关联显示 1：父子互相关联显示）")
+    private boolean menuCheckStrictly;
+
     @ApiModelProperty("菜单id列表")
     private List<Long> menuIds;
 
     public RoleAddDTO() {
     }
 
-    public RoleAddDTO(String name, Integer sort, List<Long> menuIds) {
+    public RoleAddDTO(String name, Integer sort, boolean menuCheckStrictly, List<Long> menuIds) {
         this.name = name;
         this.sort = sort;
+        this.menuCheckStrictly = menuCheckStrictly;
         this.menuIds = menuIds;
     }
 
@@ -61,7 +65,23 @@ public class RoleAddDTO {
 
     /**
      * 获取
-     * @return menuId
+     * @return menuCheckStrictly
+     */
+    public Boolean getMenuCheckStrictly() {
+        return menuCheckStrictly;
+    }
+
+    /**
+     * 设置
+     * @param menuCheckStrictly
+     */
+    public void setMenuCheckStrictly(boolean menuCheckStrictly) {
+        this.menuCheckStrictly = menuCheckStrictly;
+    }
+
+    /**
+     * 获取
+     * @return menuIds
      */
     public List<Long> getMenuIds() {
         return menuIds;
@@ -76,6 +96,6 @@ public class RoleAddDTO {
     }
 
     public String toString() {
-        return "RoleAddDTO{name = " + name + ", sort = " + sort + ", menuId = " + menuIds + "}";
+        return "RoleAddDTO{name = " + name + ", sort = " + sort + ", menuCheckStrictly = " + menuCheckStrictly + ", menuIds = " + menuIds + "}";
     }
 }

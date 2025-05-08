@@ -457,7 +457,18 @@
 - [x] 新增角色时应选择绑定的菜单
   - [x] 新增/更新角色DTO新增字段 `List<Long> menuIds`
   - [x] 新增角色菜单关联
-- [ ] 树状菜单 `/menu/roleMenuTreeselect/100`，返回 `menuList`
+
+- [x] 树状菜单 `/menu/roleMenuTreeselect/{roleId}`，返回 `menuList`
+
+  - [x] Role实体类新增字段（mapper `selectMenuListByRoleId` 实现父子联动）
+
+    ~~~java
+    /** 菜单树选择项是否关联显示（ 0：父子不互相关联显示 1：父子互相关联显示） */
+    private boolean menuCheckStrictly;
+    ~~~
+
+  - [x] Menu实体类新增 `private List<SysMenu> children = new ArrayList<SysMenu>();`
+
 - [x] 更新角色
   - [x] 选择菜单：先删除角色与菜单关联、再新增角色与菜单关联
 - [x] 删除角色时
