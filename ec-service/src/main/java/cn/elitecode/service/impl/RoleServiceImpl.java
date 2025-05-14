@@ -4,12 +4,14 @@ import cn.elitecode.common.api.CommonPage;
 import cn.elitecode.common.exception.role.RoleAlreadyAssignException;
 import cn.elitecode.common.utils.SecurityUtils;
 import cn.elitecode.constant.HttpStatus;
+import cn.elitecode.mapper.ResourceMapper;
 import cn.elitecode.mapper.RoleMapper;
 import cn.elitecode.mapper.RoleMenuMapper;
 import cn.elitecode.mapper.UserRoleMapper;
 import cn.elitecode.model.dto.role.RoleAddDTO;
 import cn.elitecode.model.dto.role.RoleQueryDTO;
 import cn.elitecode.model.dto.role.RoleUpdateDTO;
+import cn.elitecode.model.entity.Resource;
 import cn.elitecode.model.entity.Role;
 import cn.elitecode.model.entity.RoleMenu;
 import cn.elitecode.service.RoleService;
@@ -32,6 +34,8 @@ public class RoleServiceImpl implements RoleService{
     private UserRoleMapper userRoleMapper;
     @Autowired
     private RoleMenuMapper roleMenuMapper;
+    @Autowired
+    private ResourceMapper resourceMapper;
 
     @Override
     @Transactional
@@ -97,6 +101,12 @@ public class RoleServiceImpl implements RoleService{
     public Role selectRoleById(Long roleId) {
         Role role = roleMapper.selectRoleById(roleId);
         return role;
+    }
+
+    @Override
+    public List<Resource> listResourceByRoleId(Long roleId) {
+        List<Resource> resourceList = resourceMapper.listResourceByRoleId(roleId);
+        return resourceList;
     }
 
     /**

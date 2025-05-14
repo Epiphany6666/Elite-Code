@@ -126,7 +126,7 @@ INSERT INTO `user_role` (user_id, role_id) VALUES (1, 1);
 INSERT INTO `user_role` (user_id, role_id) VALUES (2, 2);
 
 -- ----------------------------
--- 菜单权限表
+-- 菜单表
 -- ----------------------------
 drop table if exists `menu`;
 create table if not exists `menu` (
@@ -148,7 +148,7 @@ create table if not exists `menu` (
   auto_increment = 100 comment '菜单权限表';
 
 -- ----------------------------
--- 初始化-菜单权限表数据
+-- 初始化-菜单表数据
 -- ----------------------------
 INSERT INTO `menu` (id, title, parent_id, sort, component, if_frame, type, visible, status, create_by, create_time, update_by, update_time)
 VALUES (100, '系统', 0, 1, '/system', 1, 'C', 0, '0', 1, '2024-11-22 08:36:41', 1, '2024-11-27 08:36:41');
@@ -170,6 +170,146 @@ create table if not exists `role_menu` (
 -- ----------------------------
 INSERT INTO `role_menu` (role_id, menu_id) VALUES (1, 100);
 INSERT INTO `role_menu` (role_id, menu_id) VALUES (1, 101);
+
+-- ----------------------------
+-- 后台资源表
+-- 用于控制后台用户可以访问的接口，使用了Ant路径的匹配规则，可以使用通配符定义一系列接口的权限
+-- ----------------------------
+drop table if exists `resource`;
+create table if not exists `resource` (
+    id              bigint(20)      not null auto_increment     comment '资源ID',
+    name            varchar(50)     not null                    comment '资源名称',
+    url             varchar(200)    not null                    comment '资源URL',
+    category_id     bigint(20)      not null                    comment '分类ID',
+    create_by       bigint(20)      default null                comment '创建者',
+    create_time     datetime        default current_timestamp   comment '创建时间',
+    update_by       bigint(20)      default null                comment '更新者',
+    update_time     datetime        default current_timestamp   comment '编辑时间',
+    primary key (id)
+) engine = innodb
+  auto_increment = 100 comment '后台资源表';
+
+-- ----------------------------
+-- 初始化-后台资源表数据
+-- ----------------------------
+INSERT INTO `resource` (`id`, `name`, `url`, `category_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (1, '商品品牌管理', '/brand/**', 1, NULL, '2020-02-04 17:04:55', NULL, '2020-02-04 17:04:55');
+INSERT INTO `resource` (`id`, `name`, `url`, `category_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (2, '商品属性分类管理', '/productAttribute/category/**', 1, NULL, '2020-02-04 17:05:35', NULL, '2020-02-04 17:05:35');
+INSERT INTO `resource` (`id`, `name`, `url`, `category_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (3, '商品属性管理', '/productAttribute/**', 1, NULL, '2020-02-04 17:06:13', NULL, '2020-02-04 17:06:13');
+INSERT INTO `resource` (`id`, `name`, `url`, `category_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (4, '商品分类管理', '/productCategory/**', 1, NULL, '2020-02-04 17:07:15', NULL, '2020-02-04 17:07:15');
+INSERT INTO `resource` (`id`, `name`, `url`, `category_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (5, '商品管理', '/product/**', 1, NULL, '2020-02-04 17:09:16', NULL, '2020-02-04 17:09:16');
+INSERT INTO `resource` (`id`, `name`, `url`, `category_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (6, '商品库存管理', '/sku/**', 1, NULL, '2020-02-04 17:09:53', NULL, '2020-02-04 17:09:53');
+INSERT INTO `resource` (`id`, `name`, `url`, `category_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (8, '订单管理', '/order/**', 2, NULL, '2020-02-05 14:43:37', NULL, '2020-02-05 14:43:37');
+INSERT INTO `resource` (`id`, `name`, `url`, `category_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (9, '订单退货申请管理', '/returnApply/**', 2, NULL, '2020-02-05 14:44:22', NULL, '2020-02-05 14:44:22');
+INSERT INTO `resource` (`id`, `name`, `url`, `category_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (10, '退货原因管理', '/returnReason/**', 2, NULL, '2020-02-05 14:45:08', NULL, '2020-02-05 14:45:08');
+INSERT INTO `resource` (`id`, `name`, `url`, `category_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (11, '订单设置管理', '/orderSetting/**', 2, NULL, '2020-02-05 14:45:43', NULL, '2020-02-05 14:45:43');
+INSERT INTO `resource` (`id`, `name`, `url`, `category_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (12, '收货地址管理', '/companyAddress/**', 2, NULL, '2020-02-05 14:46:23', NULL, '2020-02-05 14:46:23');
+INSERT INTO `resource` (`id`, `name`, `url`, `category_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (13, '优惠券管理', '/coupon/**', 3, NULL, '2020-02-07 16:37:22', NULL, '2020-02-07 16:37:22');
+INSERT INTO `resource` (`id`, `name`, `url`, `category_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (14, '优惠券领取记录管理', '/couponHistory/**', 3, NULL, '2020-02-07 16:37:59', NULL, '2020-02-07 16:37:59');
+INSERT INTO `resource` (`id`, `name`, `url`, `category_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (15, '限时购活动管理', '/flash/**', 3, NULL, '2020-02-07 16:38:28', NULL, '2020-02-07 16:38:28');
+INSERT INTO `resource` (`id`, `name`, `url`, `category_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (16, '限时购商品关系管理', '/flashProductRelation/**', 3, NULL, '2020-02-07 16:38:59', NULL, '2020-02-07 16:38:59');
+INSERT INTO `resource` (`id`, `name`, `url`, `category_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (17, '限时购场次管理', '/flashSession/**', 3, NULL, '2020-02-07 16:39:22', NULL, '2020-02-07 16:39:22');
+INSERT INTO `resource` (`id`, `name`, `url`, `category_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (18, '首页轮播广告管理', '/home/advertise/**', 3, NULL, '2020-02-07 16:40:07', NULL, '2020-02-07 16:40:07');
+INSERT INTO `resource` (`id`, `name`, `url`, `category_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (19, '首页品牌管理', '/home/brand/**', 3, NULL, '2020-02-07 16:40:34', NULL, '2020-02-07 16:40:34');
+INSERT INTO `resource` (`id`, `name`, `url`, `category_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (20, '首页新品管理', '/home/newProduct/**', 3, NULL, '2020-02-07 16:41:06', NULL, '2020-02-07 16:41:06');
+INSERT INTO `resource` (`id`, `name`, `url`, `category_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (21, '首页人气推荐管理', '/home/recommendProduct/**', 3, NULL, '2020-02-07 16:42:16', NULL, '2020-02-07 16:42:16');
+INSERT INTO `resource` (`id`, `name`, `url`, `category_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (22, '首页专题推荐管理', '/home/recommendSubject/**', 3, NULL, '2020-02-07 16:42:48', NULL, '2020-02-07 16:42:48');
+INSERT INTO `resource` (`id`, `name`, `url`, `category_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (23, '商品优选管理', '/prefrenceArea/**', 5, NULL, '2020-02-07 16:44:56', NULL, '2020-02-07 16:44:56');
+INSERT INTO `resource` (`id`, `name`, `url`, `category_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (24, '商品专题管理', '/subject/**', 5, NULL, '2020-02-07 16:45:39', NULL, '2020-02-07 16:45:39');
+INSERT INTO `resource` (`id`, `name`, `url`, `category_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (25, '后台用户管理', '/admin/**', 4, NULL, '2020-02-07 16:47:34', NULL, '2020-02-07 16:47:34');
+INSERT INTO `resource` (`id`, `name`, `url`, `category_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (26, '后台用户角色管理', '/role/**', 4, NULL, '2020-02-07 16:48:24', NULL, '2020-02-07 16:48:24');
+INSERT INTO `resource` (`id`, `name`, `url`, `category_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (27, '后台菜单管理', '/menu/**', 4, NULL, '2020-02-07 16:48:48', NULL, '2020-02-07 16:48:48');
+INSERT INTO `resource` (`id`, `name`, `url`, `category_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (28, '后台资源分类管理', '/resourceCategory/**', 4, NULL, '2020-02-07 16:49:18', NULL, '2020-02-07 16:49:18');
+INSERT INTO `resource` (`id`, `name`, `url`, `category_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (29, '后台资源管理', '/resource/**', 4, NULL, '2020-02-07 16:49:45', NULL, '2020-02-07 16:49:45');
+INSERT INTO `resource` (`id`, `name`, `url`, `category_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (30, '会员等级管理', '/memberLevel/**', 7, NULL, '2020-09-19 15:47:57', NULL, '2020-09-19 15:47:57');
+INSERT INTO `resource` (`id`, `name`, `url`, `category_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (31, '获取登录用户信息', '/admin/info', 4, NULL, '2020-09-19 15:51:29', NULL, '2020-09-19 15:51:29');
+INSERT INTO `resource` (`id`, `name`, `url`, `category_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (32, '用户登出', '/admin/logout', 4, NULL, '2020-09-19 15:53:34', NULL, '2020-09-19 15:53:34');
+
+-- ----------------------------
+-- 后台资源分类表
+-- 在细粒度权限控制时，可能资源会比较多，所以设计了个资源分类的概念，便于给角色分配资源
+-- ----------------------------
+drop table if exists `resource_category`;
+create table if not exists `resource_category` (
+    id              bigint(20)      not null auto_increment     comment '分类ID',
+    name            varchar(50)     not null                    comment '分类名称',
+    sort            int(4)          not null                    comment '排序',
+    create_by       bigint(20)      default null                comment '创建者',
+    create_time     datetime        default current_timestamp   comment '创建时间',
+    update_by       bigint(20)      default null                comment '更新者',
+    update_time     datetime        default current_timestamp   comment '编辑时间',
+    primary key (id)
+) engine = innodb
+  auto_increment = 100 comment '后台资源分类表';
+
+-- ----------------------------
+-- 初始化-后台资源分类表数据
+-- ----------------------------
+INSERT INTO `resource_category` (`id`, `name`, `sort`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (1, '商品模块', 0, NULL, '2020-02-05 10:21:44', NULL, '2020-02-05 10:21:44');
+INSERT INTO `resource_category` (`id`, `name`, `sort`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (2, '订单模块', 0, NULL, '2020-02-05 10:22:34', NULL, '2020-02-05 10:22:34');
+INSERT INTO `resource_category` (`id`, `name`, `sort`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (3, '营销模块', 0, NULL, '2020-02-05 10:22:48', NULL, '2020-02-05 10:22:48');
+INSERT INTO `resource_category` (`id`, `name`, `sort`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (4, '权限模块', 0, NULL, '2020-02-05 10:23:04', NULL, '2020-02-05 10:23:04');
+INSERT INTO `resource_category` (`id`, `name`, `sort`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (5, '内容模块', 0, NULL, '2020-02-07 16:34:27', NULL, '2020-02-07 16:34:27');
+INSERT INTO `resource_category` (`id`, `name`, `sort`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (7, '其他模块', 0, NULL, '2020-09-19 15:49:08', NULL, '2020-09-19 15:49:08');
+
+-- ----------------------------
+-- 角色资源关系表
+-- ----------------------------
+drop table if exists `role_resource`;
+create table if not exists `role_resource` (
+    role_id         bigint(20)      not null        comment '角色ID',
+    resource_id     bigint(20)      not null        comment '资源ID',
+    primary key (role_id, resource_id)
+) engine = innodb comment '角色资源关联表';
+
+-- ----------------------------
+-- 初始化-角色资源关系表数据
+-- ----------------------------
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (5, 1);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (5, 2);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (5, 3);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (5, 4);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (5, 5);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (5, 6);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (5, 8);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (5, 9);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (5, 10);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (5, 11);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (5, 12);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (5, 13);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (5, 14);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (5, 15);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (5, 16);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (5, 17);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (5, 18);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (5, 19);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (5, 20);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (5, 21);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (5, 22);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (5, 23);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (5, 24);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (5, 25);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (5, 26);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (5, 27);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (5, 28);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (5, 29);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (5, 30);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (2, 8);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (2, 9);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (2, 10);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (2, 11);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (2, 12);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (2, 31);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (2, 32);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (1, 1);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (1, 2);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (1, 3);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (1, 4);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (1, 5);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (1, 6);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (1, 23);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (1, 24);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (1, 31);
+INSERT INTO `role_resource` (`role_id`, `resource_id`) VALUES (1, 32);
 
 -- ----------------------------
 -- 题库表

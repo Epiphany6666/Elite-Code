@@ -5,13 +5,16 @@ import cn.elitecode.common.api.CommonResult;
 import cn.elitecode.model.dto.role.RoleAddDTO;
 import cn.elitecode.model.dto.role.RoleQueryDTO;
 import cn.elitecode.model.dto.role.RoleUpdateDTO;
+import cn.elitecode.model.entity.Resource;
 import cn.elitecode.model.entity.Role;
+import cn.elitecode.service.ResourceService;
 import cn.elitecode.service.RoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @Api(tags = "RoleController", description = "角色管理")
 @RestController
@@ -20,6 +23,8 @@ public class RoleController {
 
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private ResourceService resourceService;
 
     @ApiOperation(value = "根据分页条件查询角色信息")
     @PostMapping("/list")
@@ -56,4 +61,17 @@ public class RoleController {
         return CommonResult.success(role);
     }
 
+    @ApiOperation(value = "获取角色相关后台资源")
+    @GetMapping("/listResource/{roleId}")
+    private CommonResult<List<Resource>> listResourceByRoleId(@PathVariable Long roleId) {
+        List<Resource> resourceList = roleService.listResourceByRoleId(roleId);
+        return CommonResult.success(resourceList);
+    }
+
+    @ApiOperation(value = "给角色分配后台资源")
+    @PostMapping("/allocateResource")
+    private CommonResult allocateResource(Long roleId, Long[] resourceIds) {
+        resourceService.allocateResource(roleId, resourceIds);
+        return CommonResult.success();
+    }
 }

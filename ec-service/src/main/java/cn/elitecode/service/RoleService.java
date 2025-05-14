@@ -4,6 +4,7 @@ import cn.elitecode.common.api.CommonPage;
 import cn.elitecode.model.dto.role.RoleAddDTO;
 import cn.elitecode.model.dto.role.RoleQueryDTO;
 import cn.elitecode.model.dto.role.RoleUpdateDTO;
+import cn.elitecode.model.entity.Resource;
 import cn.elitecode.model.entity.Role;
 import java.util.List;
 
@@ -50,4 +51,11 @@ public interface RoleService {
      * @return
      */
     Role selectRoleById(Long roleId);
+
+    /**
+     * 获取角色相关后台资源
+     * @param roleId
+     * @return
+     */
+    List<Resource> listResourceByRoleId(Long roleId);
 }

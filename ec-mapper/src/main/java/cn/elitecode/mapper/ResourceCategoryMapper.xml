@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.elitecode.mapper.ResourceCategoryMapper">
+
+    <resultMap id="ResourceCategoryMap" type="cn.elitecode.model.entity.ResourceCategory">
+            <result property="id" column="id" />
+            <result property="name" column="name" />
+            <result property="sort" column="sort" />
+            <result property="createBy" column="create_by" />
+            <result property="createTime" column="create_time" />
+            <result property="updateBy" column="update_by" />
+            <result property="updateTime" column="update_time" />
+    </resultMap>
+
+    <!-- void insertResourceCategory(ResourceCategory resourceCategory); -->
+    <insert id="insertResourceCategory" useGeneratedKeys="true" keyProperty="id">
+        insert into resource_category
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="name != null and name != ''">name,</if>
+                <if test="sort != null">sort,</if>
+                <if test="createBy != null and createBy != 0">create_by,</if>
+            </trim>
+        values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="name != null and name != ''">#{name},</if>
+                <if test="sort != null">#{sort},</if>
+                <if test="createBy != null and createBy != 0">#{createBy},</if>
+            </trim>
+    </insert>
+
+    <!-- void updateResourceCategoryById(ResourceCategory resourceCategory); -->
+    <update id="updateResourceCategoryById">
+        update resource_category
+        <set>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="updateBy != null and updateBy != 0">update_by = #{updateBy},</if>
+        </set>
+        where
+            id = #{id}
+    </update>
+
+    <!-- void deleteResourceCategoryByIds(@Param("resourceCategoryIds") Long[] resourceCategoryIds); -->
+    <delete id="deleteResourceCategoryByIds">
+        delete from resource_category
+        where
+            id in
+            <foreach collection="resourceCategoryIds" open="(" separator="," close=")" item="resourceCategoryId">
+                #{resourceCategoryId}
+            </foreach>
+    </delete>
+
+    <!-- List<ResourceCategory> selectResourceCategoryListAll(); -->
+    <select id="selectResourceCategoryListAll" resultMap="ResourceCategoryMap">
+        select
+            id,name,sort,create_by,create_time,update_by,
+            update_time
+        from
+            resource_category
+    </select>
+</mapper>

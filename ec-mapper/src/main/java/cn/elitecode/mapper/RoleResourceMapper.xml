@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.elitecode.mapper.RoleResourceMapper">
+
+    <resultMap id="RoleResource" type="cn.elitecode.model.entity.RoleResource">
+            <result property="roleId" column="role_id" />
+            <result property="resourceId" column="resource_id" />
+    </resultMap>
+
+    <!-- void batchRoleResource(@Param("roleResourceList") List<RoleResource> roleResourceList); -->
+    <insert id="batchRoleResource">
+        insert into
+            role_resource(role_id, resource_id)
+        values
+            <foreach collection="roleResourceList" separator="," item="roleResource">
+                (#{roleResource.roleId}, #{roleResource.resourceId})
+            </foreach>
+    </insert>
+
+    <!-- void deleteRoleResourceByRoleId(Long roleId); -->
+    <delete id="deleteRoleResourceByRoleId">
+        delete
+        from
+            role_resource
+        where
+            role_id = #{roleId}
+    </delete>
+</mapper>

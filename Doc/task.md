@@ -474,6 +474,173 @@
 - [x] 删除角色时
   - [x] 删除角色与菜单关联
 - [x] 增、删、改添加 `@Transition` 事务注解
+
+---
+
+## 角色菜单关联表
+
+- [x] 增删改查
+
+---
+
+## 资源管理
+
+- [x] 编写 `resource`、`reource_category`、`role_resource` 表结构
+
+- [x] 使用MyBatisX插件生成实体类、Service、Mapper
+
+- [ ] 编写 `resource`、`reource_category`、`role_resource` 对应的增删改查接口
+
+  resource
+
+  - [x] 新增后台资源
+  - [x] 批量删除后台资源
+  - [x] 修改后台资源
+  - [x] 根据分页条件查询后台资源
+  - [x] 根据id查询后台资源
+  - [x] 查询所有后台资源
+
+  reource_category
+
+  - [x] 新增后台资源分类
+  - [x] 删除后台资源分类
+  - [x] 修改后台资源分类
+  - [x] 查询所有后台资源分类
+
+  role_resource
+
+  - [ ] 前端页面单写一个 `分配权限` 按钮
+
+    ![image-20250514180409068](./assets/image-20250514180409068.png)
+
+  - [x] RoleController新增
+
+    - [x] 获取角色相关资源（`/listResource/{releId}`，get）
+    - [x] 给角色分配资源 （`/alocateResource`，post）
+
+- [ ] 创建一个DynamicAuthorizationManager类来实现动态权限逻辑；
+
+  ~~~java
+  /**
+   * 动态鉴权管理器，用于判断是否有资源的访问权限
+   * Created by macro on 2023/11/3.
+   */
+  public class DynamicAuthorizationManager implements AuthorizationManager<RequestAuthorizationContext> {
+  
+      @Autowired
+      private DynamicSecurityMetadataSource securityDataSource;
+      @Autowired
+      private IgnoreUrlsConfig ignoreUrlsConfig;
+  
+      @Override
+      public void verify(Supplier<Authentication> authentication, RequestAuthorizationContext object) {
+          AuthorizationManager.super.verify(authentication, object);
+      }
+  
+      @Override
+      public AuthorizationDecision check(Supplier<Authentication> authentication, RequestAuthorizationContext requestAuthorizationContext) {
+          HttpServletRequest request = requestAuthorizationContext.getRequest();
+          String path = request.getRequestURI();
+          PathMatcher pathMatcher = new AntPathMatcher();
+          //白名单路径直接放行
+          List<String> ignoreUrls = ignoreUrlsConfig.getUrls();
+          for (String ignoreUrl : ignoreUrls) {
+              if (pathMatcher.match(ignoreUrl, path)) {
+                  return new AuthorizationDecision(true);
+              }
+          }
+          //对应跨域的预检请求直接放行
+          if(request.getMethod().equals(HttpMethod.OPTIONS.name())){
+              return new AuthorizationDecision(true);
+          }
+          //权限校验逻辑
+          List<ConfigAttribute> configAttributeList = securityDataSource.getConfigAttributesWithPath(path);
+          List<String> needAuthorities = configAttributeList.stream()
+                  .map(ConfigAttribute::getAttribute)
+                  .collect(Collectors.toList());
+          Authentication currentAuth = authentication.get();
+          //判定是否已经实现登录认证
+          if(currentAuth.isAuthenticated()){
+              Collection<? extends GrantedAuthority> grantedAuthorities = currentAuth.getAuthorities();
+              List<? extends GrantedAuthority> hasAuth = grantedAuthorities.stream()
+                      .filter(item -> needAuthorities.contains(item.getAuthority()))
+                      .collect(Collectors.toList());
+              if(CollUtil.isNotEmpty(hasAuth)){
+                  return new AuthorizationDecision(true);
+              }else{
+                  return new AuthorizationDecision(false);
+              }
+          }else{
+              return new AuthorizationDecision(false);
+          }
+      }
+  }
+  ~~~
+
+- [ ] 然后在SecurityConfig中使用函数式编程来配置SecurityFilterChain，使用的方法和类和之前基本一致，只是成了函数式编程的方式而已。
+
+  ~~~java
+  /**
+   * SpringSecurity相关配置，仅用于配置SecurityFilterChain
+   * Created by macro on 2019/11/5.
+   */
+  @Configuration
+  @EnableWebSecurity
+  public class SecurityConfig {
+  
+      @Autowired
+      private IgnoreUrlsConfig ignoreUrlsConfig;
+      @Autowired
+      private RestfulAccessDeniedHandler restfulAccessDeniedHandler;
+      @Autowired
+      private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+      @Autowired
+      private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+      @Autowired(required = false)
+      private DynamicAuthorizationManager dynamicAuthorizationManager;
+  
+      @Bean
+      SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+          httpSecurity.authorizeHttpRequests(registry -> {
+              //不需要保护的资源路径允许访问
+              for (String url : ignoreUrlsConfig.getUrls()) {
+                  registry.requestMatchers(url).permitAll();
+              }
+              //允许跨域请求的OPTIONS请求
+              registry.requestMatchers(HttpMethod.OPTIONS).permitAll();
+              //任何请求需要身份认证
+          })
+          //任何请求需要身份认证
+          .authorizeHttpRequests(registry-> registry.anyRequest()
+              //有动态权限配置时添加动态权限管理器
+              .access(dynamicAuthorizationManager==null? AuthenticatedAuthorizationManager.authenticated():dynamicAuthorizationManager)
+          )
+          //关闭跨站请求防护
+          .csrf(AbstractHttpConfigurer::disable)
+          //修改Session生成策略为无状态会话
+          .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+          //自定义权限拒绝处理类
+          .exceptionHandling(configurer -> configurer.accessDeniedHandler(restfulAccessDeniedHandler).authenticationEntryPoint(restAuthenticationEntryPoint))
+          //自定义权限拦截器JWT过滤器
+          .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+          return httpSecurity.build();
+      }
+  
+  }
+  ~~~
+
+
+
+---
+
+# 按钮的显示与隐藏
+
+- 若依：`v-hasPer`、`v-hasRole`
+
+
+
+---
+
 # 菜单权限
 
 - [ ] 给每个路由加上name属性
