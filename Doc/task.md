@@ -518,7 +518,11 @@
     - [x] 获取角色相关资源（`/listResource/{releId}`，get）
     - [x] 给角色分配资源 （`/alocateResource`，post）
 
-- [ ] 创建一个DynamicAuthorizationManager类来实现动态权限逻辑；
+- [x] 将 安全路径白名单 配置到yml文件中
+
+- [x] 创建一个DynamicAuthorizationManager类来实现动态权限逻辑；
+
+  PS：`AuthorizationManager` 导的是 `authorization` 包下的
 
   ~~~java
   /**
@@ -577,7 +581,172 @@
   }
   ~~~
 
-- [ ] 然后在SecurityConfig中使用函数式编程来配置SecurityFilterChain，使用的方法和类和之前基本一致，只是成了函数式编程的方式而已。
+- [x] DynamicSecurityMetadataSource
+
+  ~~~java
+  package com.macro.mall.security.component;
+  
+  import cn.hutool.core.util.URLUtil;
+  import org.springframework.beans.factory.annotation.Autowired;
+  import org.springframework.security.access.ConfigAttribute;
+  import org.springframework.security.web.FilterInvocation;
+  import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
+  import org.springframework.util.AntPathMatcher;
+  import org.springframework.util.PathMatcher;
+  
+  import jakarta.annotation.PostConstruct;
+  import java.util.*;
+  
+  /**
+   * 动态权限数据源，用于获取动态权限规则
+   * Created by macro on 2020/2/7.
+   */
+  public class DynamicSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
+  
+      private static Map<String, ConfigAttribute> configAttributeMap = null;
+      @Autowired
+      private DynamicSecurityService dynamicSecurityService;
+  
+      @PostConstruct
+      public void loadDataSource() {
+          configAttributeMap = dynamicSecurityService.loadDataSource();
+      }
+  
+      public void clearDataSource() {
+          configAttributeMap.clear();
+          configAttributeMap = null;
+      }
+  
+      @Override
+      public Collection<ConfigAttribute> getAttributes(Object o) throws IllegalArgumentException {
+          //获取当前访问的路径
+          String url = ((FilterInvocation) o).getRequestUrl();
+          String path = URLUtil.getPath(url);
+          return getConfigAttributesWithPath(path);
+      }
+  
+      //根据当前访问的路径获取对应权限
+      public List<ConfigAttribute> getConfigAttributesWithPath(String path) {
+          if (configAttributeMap == null) this.loadDataSource();
+          List<ConfigAttribute>  configAttributes = new ArrayList<>();
+          PathMatcher pathMatcher = new AntPathMatcher();
+          Iterator<String> iterator = configAttributeMap.keySet().iterator();
+          //获取访问该路径所需资源
+          while (iterator.hasNext()) {
+              String pattern = iterator.next();
+              if (pathMatcher.match(pattern, path)) {
+                  configAttributes.add(configAttributeMap.get(pattern));
+              }
+          }
+          // 未设置操作请求权限，返回空集合
+          return configAttributes;
+      }
+  
+      @Override
+      public Collection<ConfigAttribute> getAllConfigAttributes() {
+          return null;
+      }
+  
+      @Override
+      public boolean supports(Class<?> aClass) {
+          return true;
+      }
+  
+  }
+  ~~~
+
+- [x] DynamicSecurityService
+
+  ~~~java
+  package com.macro.mall.security.component;
+  
+  import org.springframework.security.access.ConfigAttribute;
+  
+  import java.util.Map;
+  
+  /**
+   * 动态权限相关业务接口
+   * Created by macro on 2020/2/7.
+   */
+  public interface DynamicSecurityService {
+      /**
+       * 加载资源ANT通配符和资源对应MAP
+       */
+      Map<String, ConfigAttribute> loadDataSource();
+  }
+  ~~~
+
+- [x] SecurityConfig
+
+  ~~~java
+  package com.macro.mall.config;
+  
+  import com.macro.mall.model.UmsResource;
+  import com.macro.mall.security.component.DynamicSecurityService;
+  import com.macro.mall.service.UmsAdminService;
+  import com.macro.mall.service.UmsResourceService;
+  import org.springframework.beans.factory.annotation.Autowired;
+  import org.springframework.context.annotation.Bean;
+  import org.springframework.context.annotation.Configuration;
+  import org.springframework.security.access.ConfigAttribute;
+  import org.springframework.security.core.userdetails.UserDetailsService;
+  
+  import java.util.List;
+  import java.util.Map;
+  import java.util.concurrent.ConcurrentHashMap;
+  
+  /**
+   * mall-security模块相关配置
+   * Created by macro on 2019/11/9.
+   */
+  @Configuration
+  public class MallSecurityConfig {
+  
+      @Autowired
+      private UmsAdminService adminService;
+      @Autowired
+      private UmsResourceService resourceService;
+  
+      @Bean
+      public UserDetailsService userDetailsService() {
+          //获取登录用户信息
+          return username -> adminService.loadUserByUsername(username);
+      }
+  
+      @Bean
+      public DynamicSecurityService dynamicSecurityService() {
+          return new DynamicSecurityService() {
+              @Override
+              public Map<String, ConfigAttribute> loadDataSource() {
+                  Map<String, ConfigAttribute> map = new ConcurrentHashMap<>();
+                  List<UmsResource> resourceList = resourceService.listAll();
+                  for (UmsResource resource : resourceList) {
+                      map.put(resource.getUrl(), new org.springframework.security.access.SecurityConfig(resource.getId() + ":" + resource.getName()));
+                  }
+                  return map;
+              }
+          };
+      }
+  }
+  ~~~
+
+- [x] SecurityConfig
+
+  ~~~java
+  @ConditionalOnBean(name = "dynamicSecurityService")
+  @Bean
+  public DynamicSecurityMetadataSource dynamicSecurityMetadataSource() {
+      return new DynamicSecurityMetadataSource();
+  }
+  
+  @ConditionalOnBean(name = "dynamicSecurityService")
+  @Bean
+  public DynamicAuthorizationManager dynamicAuthorizationManager() {
+      return new DynamicAuthorizationManager();
+  }
+  ~~~
+
+- [x] 然后在SecurityConfig中使用函数式编程来配置SecurityFilterChain，使用的方法和类和之前基本一致，只是成了函数式编程的方式而已。
 
   ~~~java
   /**

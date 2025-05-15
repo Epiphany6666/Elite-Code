@@ -55,6 +55,19 @@ public interface ResourceMapper {
      * @return
      */
     List<Resource> listResourceByRoleId(Long roleId);
+
+    /**
+     * 查询所有后台资源信息
+     * @return
+     */
+    List<Resource> selectResourceAll();
+
+    /**
+     * 根据用户id查询后台资源信息
+     * @param userId
+     * @return
+     */
+    List<Resource> selectResourceByUserId(Long userId);
 }
 
 

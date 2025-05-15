@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @Api(tags = "ResourceController", description = "后台资源管理")
 @RestController
@@ -54,5 +55,12 @@ public class ResourceController {
     private CommonResult<Resource> getResource(@PathVariable Long resourceId) {
         Resource resource = resourceService.getResourceById(resourceId);
         return CommonResult.success(resource);
+    }
+
+    @ApiOperation(value = "查询所有后台资源")
+    @GetMapping("/listAll")
+    private CommonResult<List<Resource>> listResourceAll() {
+        List<Resource> resourceList = resourceService.listResourceAll();
+        return CommonResult.success(resourceList);
     }
 }

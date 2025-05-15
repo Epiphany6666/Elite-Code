@@ -5,6 +5,7 @@ import cn.elitecode.model.dto.resource.ResourceAddDTO;
 import cn.elitecode.model.dto.resource.ResourceQueryDTO;
 import cn.elitecode.model.dto.resource.ResourceUpdateDTO;
 import cn.elitecode.model.entity.Resource;
+import java.util.List;
 
 /**
 * resource(后台资源表)|业务层
@@ -50,4 +51,10 @@ public interface ResourceService {
      * @param resourceIds
      */
     void allocateResource(Long roleId, Long[] resourceIds);
+
+    /**
+     * 查询所有后台资源
+     * @return
+     */
+    List<Resource> listResourceAll();
 }

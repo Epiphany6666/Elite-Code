@@ -13,6 +13,7 @@ import cn.elitecode.service.ResourceService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,11 +70,18 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
+    @Transactional
     public void allocateResource(Long roleId, Long[] resourceIds) {
         // 删除角色资源关联
         roleResourceMapper.deleteRoleResourceByRoleId(roleId);
         // 新增角色资源关联
         insertRoleResource(roleId, resourceIds);
+    }
+
+    @Override
+    public List<Resource> listResourceAll() {
+        List<Resource> resourceList = resourceMapper.selectResourceAll();
+        return resourceList;
     }
 
     /**

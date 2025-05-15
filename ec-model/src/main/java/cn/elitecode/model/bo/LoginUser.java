@@ -1,11 +1,15 @@
 package cn.elitecode.model.bo;
 
+import cn.elitecode.model.entity.Resource;
 import cn.elitecode.model.entity.User;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.io.Serial;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 已登录用户
@@ -17,15 +21,14 @@ public class LoginUser implements UserDetails {
 
     @ApiModelProperty(value = "用户唯一标识")
     private String token;
-
     @ApiModelProperty(value = "用户信息")
     private User user;
+    @ApiModelProperty(value = "拥有的资源列表")
+    private List<Resource> resourceList;
 
-    public LoginUser(User user) {
+    public LoginUser(User user, List<Resource> resourceList) {
         this.user = user;
-    }
-
-    public LoginUser() {
+        this.resourceList = resourceList;
     }
 
     public LoginUser(String token, User user) {
@@ -35,7 +38,9 @@ public class LoginUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return resourceList.stream()
+                .map(resource -> new SimpleGrantedAuthority(resource.getId() + ":" + resource.getName()))
+                .collect(Collectors.toList());
     }
 
     @Override

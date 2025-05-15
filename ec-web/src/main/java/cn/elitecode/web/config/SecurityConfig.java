@@ -1,14 +1,17 @@
 package cn.elitecode.web.config;
 
+import cn.elitecode.common.properties.IgnoreUrlConfig;
+import cn.elitecode.service.ResourceService;
 import cn.elitecode.web.filter.JwtAuthenticationTokenFilter;
+import cn.elitecode.web.handler.DynamicAuthorizationManager;
 import cn.elitecode.web.handler.LogoutSuccessHandlerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.authorization.AuthenticatedAuthorizationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -26,21 +29,25 @@ public class SecurityConfig {
      */
     @Autowired
     private CorsFilter corsFilter;
-
     @Autowired
     private UserDetailsService userDetailsService;
-
     /**
      * 退出处理类
      */
     @Autowired
     private LogoutSuccessHandlerImpl logoutSuccessHandler;
-
     @Autowired
     private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+    @Autowired
+    private IgnoreUrlConfig ignoreUrlConfig;
+    @Autowired
+    private ResourceService resourceService;
+    @Autowired
+    private DynamicAuthorizationManager dynamicAuthorizationManager;
 
     /**
      * 身份验证实现
+     *
      * @return
      */
     @Bean
@@ -53,6 +60,7 @@ public class SecurityConfig {
 
     /**
      * SpringSecurity配置
+     *
      * @param httpSecurity
      * @return
      * @throws Exception
@@ -66,13 +74,14 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // 注解标记允许匿名访问的url
                 .authorizeHttpRequests((requests) -> {
-                    // 对于登录login 注册register 允许匿名访问
-                    requests.antMatchers("/login", "/register").permitAll()
-                            // 静态资源，可匿名访问
-                            .antMatchers(HttpMethod.GET, "/", "/*.html", "/**/*.html", "/**/*.css", "/**/*.js", "/profile/**").permitAll().antMatchers("/swagger-ui.html", "/swagger-resources/**", "/webjars/**", "/*/api-docs", "/druid/**").permitAll()
-                            // 除上面外的所有请求全部需要鉴权认证
-                            .anyRequest().authenticated();
+                    //  允许匿名访问
+                    requests.antMatchers(ignoreUrlConfig.getUrls()).permitAll();
                 })
+                // 除上面外的所有请求全部需要鉴权认证
+                .authorizeHttpRequests(registry ->
+                        registry.anyRequest()
+                                .access(dynamicAuthorizationManager == null ? AuthenticatedAuthorizationManager.authenticated() : dynamicAuthorizationManager)
+                )
                 .logout(logout -> logout.logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler))
                 // 将 JWTFilter 添加到 UsernamePasswordAuthenticationFilter 前面（校验账号密码之前）
                 .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class)

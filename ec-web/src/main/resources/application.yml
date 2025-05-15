@@ -62,3 +62,20 @@ jwt:
   secret: ec-secret # JWT加解密使用的密钥
   expiration: 604800 # JWT的超期限时间(60*60*24*7) 过期时间七天
   tokenHead: 'Bearer '  # JWT负载中拿到开头
+
+secure:
+  ignored:
+    urls:
+      # 静态资源
+      - "/swagger-ui.html"
+      - "/swagger-resources/**"
+      - "/webjars/**"
+      - "/*/api-docs"
+      - "/*.html"
+      - "/**/*.html"
+      - "/**/*.css"
+      - "/**/*.js"
+      - "/druid/**"
+      # 对于登录login 注册register
+      - "/login"
+      - "/register"

@@ -5,8 +5,8 @@
 <mapper namespace="cn.elitecode.mapper.ResourceMapper">
 
     <resultMap id="ResourceResult" type="cn.elitecode.model.entity.Resource">
-            <result property="id" column="id" />
-            <result property="name" column="name" />
+            <result property="id" column="r_id" />
+            <result property="name" column="r_name" />
             <result property="url" column="url" />
             <result property="categoryId" column="category_id" />
             <result property="createBy" column="create_by" />
@@ -59,8 +59,14 @@
     <!-- List<Resource> selectResourceListByPage(ResourceQueryDTO resourceQueryDTO); -->
     <select id="selectResourceListByPage" resultMap="ResourceResult">
         select
-            id,name,url,category_id,create_by,create_time,
-            update_by,update_time
+            id as r_id,
+            name as r_name,
+            url,
+            category_id,
+            create_by,
+            create_time,
+            update_by,
+            update_time
         from
             resource
         <where>
@@ -92,8 +98,14 @@
     <!-- Resource getResourceById(Long resourceId); -->
     <select id="getResourceById" resultMap="ResourceResult">
         select
-            id,name,url,category_id,create_by,create_time,
-            update_by,update_time
+            id as r_id,
+            name as r_name,
+            url,
+            category_id,
+            create_by,
+            create_time,
+            update_by,
+            update_time
         from
             resource
         where
@@ -116,5 +128,39 @@
             left join role_resource rr on rr.resource_id = r.id
         where
             rr.role_id = #{roleId}
+    </select>
+
+    <!-- List<Resource> selectResourceAll(); -->
+    <select id="selectResourceAll" resultMap="ResourceResult">
+        select
+            id as r_id,
+            name as r_name,
+            url,
+            category_id,
+            create_by,
+            create_time,
+            update_by,
+            update_time
+        from
+            resource
+    </select>
+
+    <!-- List<Resource> selectResourceByUserId(Long userId) -->
+    <select id="selectResourceByUserId" resultMap="ResourceResult">
+        select
+            r.id as r_id,
+            r.name as r_name,
+            r.url,
+            r.category_id,
+            r.create_by,
+            r.create_time,
+            r.update_by,
+            r.update_time
+        from
+            resource r
+            left join role_resource rr on rr.resource_id = r.id
+            left join user_role ur on ur.role_id = rr.role_id
+        where
+            ur.user_id = #{userId}
     </select>
 </mapper>
