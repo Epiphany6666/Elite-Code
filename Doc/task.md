@@ -798,6 +798,8 @@
   }
   ~~~
 
+- [x] 新增 `ECSecurityConfig` 类，将 `UserDetailsServiceImpl`、`DynamicSecurityServiceImpl`、`DynamicAuthenticationManager`、`DynamicSecurityMetadataSource`全部封装到此处
+
 
 
 ---
