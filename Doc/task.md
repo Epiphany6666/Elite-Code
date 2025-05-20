@@ -111,6 +111,616 @@
 
 - [x] 优化登录接口，返回tokenHead、token
 
+- [ ] LoginController：获取路由信息
+
+  - [ ] RouterVO
+
+    ~~~java
+    package com.ruoyi.system.domain.vo;
+    
+    import com.fasterxml.jackson.annotation.JsonInclude;
+    import java.util.List;
+    
+    /**
+     * 路由配置信息
+     * 
+     * @author ruoyi
+     */
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    public class RouterVo
+    {
+        /**
+         * 路由名字
+         */
+        private String name;
+    
+        /**
+         * 路由地址
+         */
+        private String path;
+    
+        /**
+         * 是否隐藏路由，当设置 true 的时候该路由不会再侧边栏出现
+         */
+        private boolean hidden;
+    
+        /**
+         * 重定向地址，当设置 noRedirect 的时候该路由在面包屑导航中不可被点击
+         */
+        private String redirect;
+    
+        /**
+         * 组件地址
+         */
+        private String component;
+    
+        /**
+         * 路由参数：如 {"id": 1, "name": "ry"}
+         */
+        private String query;
+    
+        /**
+         * 当你一个路由下面的 children 声明的路由大于1个时，自动会变成嵌套的模式--如组件页面
+         */
+        private Boolean alwaysShow;
+    
+        /**
+         * 其他元素
+         */
+        private MetaVo meta;
+    
+        /**
+         * 子路由
+         */
+        private List<RouterVo> children;
+    }
+    ~~~
+
+  - [ ] MetaVo
+
+    ~~~java
+    package com.ruoyi.system.domain.vo;
+    
+    import com.ruoyi.common.utils.StringUtils;
+    
+    /**
+     * 路由显示信息
+     * 
+     * @author ruoyi
+     */
+    public class MetaVo
+    {
+        /**
+         * 设置该路由在侧边栏和面包屑中展示的名字
+         */
+        private String title;
+    
+        /**
+         * 设置该路由的图标，对应路径src/assets/icons/svg
+         */
+        private String icon;
+    
+        /**
+         * 设置为true，则不会被 <keep-alive>缓存
+         */
+        private boolean noCache;
+    
+        /**
+         * 内链地址（http(s)://开头）
+         */
+        private String link;
+    }
+    ~~~
+
+  - [ ] LoiginController
+
+    ~~~java
+    /**
+     * 获取路由信息
+     * 
+     * @return 路由信息
+     */
+    @GetMapping("getRouters")
+    public AjaxResult getRouters()
+    {
+        Long userId = SecurityUtils.getUserId();
+        List<SysMenu> menus = menuService.selectMenuTreeByUserId(userId);
+        return AjaxResult.success(menuService.buildMenus(menus));
+    }
+    ~~~
+
+  - [ ] MenuService
+
+    ~~~java
+    /**
+     * 构建前端路由所需要的菜单
+     * 
+     * @param menus 菜单列表
+     * @return 路由列表
+     */
+    public List<RouterVo> buildMenus(List<SysMenu> menus);
+    ~~~
+
+  - [ ] MenuServiceImpl
+
+    ~~~java
+    /**
+     * 构建前端路由所需要的菜单
+     * 
+     * @param menus 菜单列表
+     * @return 路由列表
+     */
+    @Override
+    public List<RouterVo> buildMenus(List<SysMenu> menus)
+    {
+        List<RouterVo> routers = new LinkedList<RouterVo>();
+        for (SysMenu menu : menus)
+        {
+            RouterVo router = new RouterVo();
+            router.setHidden("1".equals(menu.getVisible()));
+            router.setName(getRouteName(menu));
+            router.setPath(getRouterPath(menu));
+            router.setComponent(getComponent(menu));
+            router.setQuery(menu.getQuery());
+            router.setMeta(new MetaVo(menu.getMenuName(), menu.getIcon(), StringUtils.equals("1", menu.getIsCache()), menu.getPath()));
+            List<SysMenu> cMenus = menu.getChildren();
+            if (StringUtils.isNotEmpty(cMenus) && UserConstants.TYPE_DIR.equals(menu.getMenuType()))
+            {
+                router.setAlwaysShow(true);
+                router.setRedirect("noRedirect");
+                router.setChildren(buildMenus(cMenus));
+            }
+            else if (isMenuFrame(menu))
+            {
+                router.setMeta(null);
+                List<RouterVo> childrenList = new ArrayList<RouterVo>();
+                RouterVo children = new RouterVo();
+                children.setPath(menu.getPath());
+                children.setComponent(menu.getComponent());
+                children.setName(getRouteName(menu.getRouteName(), menu.getPath()));
+                children.setMeta(new MetaVo(menu.getMenuName(), menu.getIcon(), StringUtils.equals("1", menu.getIsCache()), menu.getPath()));
+                children.setQuery(menu.getQuery());
+                childrenList.add(children);
+                router.setChildren(childrenList);
+            }
+            else if (menu.getParentId().intValue() == 0 && isInnerLink(menu))
+            {
+                router.setMeta(new MetaVo(menu.getMenuName(), menu.getIcon()));
+                router.setPath("/");
+                List<RouterVo> childrenList = new ArrayList<RouterVo>();
+                RouterVo children = new RouterVo();
+                String routerPath = innerLinkReplaceEach(menu.getPath());
+                children.setPath(routerPath);
+                children.setComponent(UserConstants.INNER_LINK);
+                children.setName(getRouteName(menu.getRouteName(), routerPath));
+                children.setMeta(new MetaVo(menu.getMenuName(), menu.getIcon(), menu.getPath()));
+                childrenList.add(children);
+                router.setChildren(childrenList);
+            }
+            routers.add(router);
+        }
+        return routers;
+    }
+    ~~~
+
+  - [ ] 获取路由名称
+
+    ~~~java
+    /**
+     * 获取路由名称
+     * 
+     * @param menu 菜单信息
+     * @return 路由名称
+     */
+    public String getRouteName(SysMenu menu)
+    {
+        // 非外链并且是一级目录（类型为目录）
+        if (isMenuFrame(menu))
+        {
+            return StringUtils.EMPTY;
+        }
+        return getRouteName(menu.getRouteName(), menu.getPath());
+    }
+    /**
+     * 获取路由名称，如没有配置路由名称则取路由地址
+     * 
+     * @param routerName 路由名称
+     * @param path 路由地址
+     * @return 路由名称（驼峰格式）
+     */
+    public String getRouteName(String name, String path)
+    {
+        String routerName = StringUtils.isNotEmpty(name) ? name : path;
+        return StringUtils.capitalize(routerName);
+    }
+    ~~~
+
+  - [ ] 获取路由地址
+
+    ~~~java
+    /**
+     * 获取路由地址
+     * 
+     * @param menu 菜单信息
+     * @return 路由地址
+     */
+    public String getRouterPath(SysMenu menu)
+    {
+        String routerPath = menu.getPath();
+        // 内链打开外网方式
+        if (menu.getParentId().intValue() != 0 && isInnerLink(menu))
+        {
+            routerPath = innerLinkReplaceEach(routerPath);
+        }
+        // 非外链并且是一级目录（类型为目录）
+        if (0 == menu.getParentId().intValue() && UserConstants.TYPE_DIR.equals(menu.getMenuType())
+                && UserConstants.NO_FRAME.equals(menu.getIsFrame()))
+        {
+            routerPath = "/" + menu.getPath();
+        }
+        // 非外链并且是一级目录（类型为菜单）
+        else if (isMenuFrame(menu))
+        {
+            routerPath = "/";
+        }
+        return routerPath;
+    }
+    
+    /**
+     * 是否为内链组件
+     * 
+     * @param menu 菜单信息
+     * @return 结果
+     */
+    public boolean isInnerLink(SysMenu menu)
+    {
+        return menu.getIsFrame().equals(UserConstants.NO_FRAME) && StringUtils.ishttp(menu.getPath());
+    }
+    
+    /**
+     * 内链域名特殊字符替换
+     * 
+     * @return 替换后的内链域名
+     */
+    public String innerLinkReplaceEach(String path)
+    {
+        return StringUtils.replaceEach(path, new String[] { Constants.HTTP, Constants.HTTPS, Constants.WWW, ".", ":" },
+                new String[] { "", "", "", "/", "/" });
+    }
+    
+    /**
+     * 是否为菜单内部跳转
+     * 
+     * @param menu 菜单信息
+     * @return 结果
+     */
+    public boolean isMenuFrame(SysMenu menu)
+    {
+        return menu.getParentId().intValue() == 0 && UserConstants.TYPE_MENU.equals(menu.getMenuType())
+                && menu.getIsFrame().equals(UserConstants.NO_FRAME);
+    }
+    ~~~
+
+    
+
+  - [ ] 前端
+
+    - [ ] src/permission.ts
+
+      ~~~ts
+      import router from './router'
+      import { ElMessage } from 'element-plus'
+      import NProgress from 'nprogress'
+      import 'nprogress/nprogress.css'
+      import { getToken } from '@/utils/auth'
+      import { isHttp, isPathMatch } from '@/utils/validate'
+      import { isRelogin } from '@/utils/request'
+      import useUserStore from '@/store/modules/user'
+      import useSettingsStore from '@/store/modules/settings'
+      import usePermissionStore from '@/store/modules/permission'
+      
+      NProgress.configure({ showSpinner: false })
+      
+      const whiteList = ['/login', '/register']
+      
+      const isWhiteList = (path) => {
+        return whiteList.some(pattern => isPathMatch(pattern, path))
+      }
+      
+      router.beforeEach((to, from, next) => {
+        NProgress.start()
+        if (getToken()) {
+          // 1、设置标题的语句放到验证权限后的里面
+          to.meta.title && useSettingsStore().setTitle(to.meta.title)
+          /* has token*/
+          if (to.path === '/login') {
+            next({ path: '/' })
+            // 2、if current page is dashboard will not trigger	afterEach hook, so manually handle it
+            NProgress.done()
+          } else if (isWhiteList(to.path)) {
+            next()
+          } else {
+            // 3、若权限没有拉取完毕，才需要重新获取用户信息
+            if (useUserStore().roles.length === 0) {
+              isRelogin.show = true
+              // 判断当前用户是否已拉取完user_info信息
+              useUserStore().getInfo().then(() => {
+                isRelogin.show = false
+                usePermissionStore().generateRoutes().then(accessRoutes => {
+                  // 根据roles权限生成可访问的路由表
+                  accessRoutes.forEach(route => {
+                    if (!isHttp(route.path)) {
+                      router.addRoute(route) // 动态添加可访问路由表
+                    }
+                  })
+                  next({ ...to, replace: true }) // hack方法 确保addRoutes已完成
+                })
+              }).catch(err => {
+                useUserStore().logOut().then(() => {
+                  ElMessage.error(err)
+                  next({ path: '/' })
+                })
+              })
+            } else {
+              next()
+            }
+          }
+        } else {
+          // 没有token
+          if (isWhiteList(to.path)) {
+            // 在免登录白名单，直接进入
+            next()
+          } else {
+            next(`/login?redirect=${to.fullPath}`) // 否则全部重定向到登录页
+            NProgress.done()
+          }
+        }
+      })
+      
+      router.afterEach(() => {
+        NProgress.done()
+      })
+      ~~~
+
+    - [ ] layout/components/AppMain.vue
+
+      ~~~vue
+      <template>
+        <section class="app-main">
+          <router-view v-slot="{ Component, route }">
+            <transition name="fade-transform" mode="out-in">
+              <!-- 1、添加keep-alive缓存 -->
+              <keep-alive :include="tagsViewStore.cachedViews">
+      		  <!-- 2、在没有link的时候才进行组件渲染 -->
+                <component v-if="!route.meta.link" :is="Component" :key="route.path"/>
+              </keep-alive>
+            </transition>
+          </router-view>
+          <!-- 3、有link直接进行iframe展示 -->
+          <iframe-toggle />
+        </section>
+      </template>
+      
+      <script setup>
+      import iframeToggle from "./IframeToggle/index"
+      import useTagsViewStore from '@/store/modules/tagsView'
+      
+      const route = useRoute()
+      const tagsViewStore = useTagsViewStore()
+      
+      onMounted(() => {
+        addIframe()
+      })
+      
+      watch((route) => {
+        addIframe()
+      })
+      
+      function addIframe() {
+        if (route.meta.link) {
+          useTagsViewStore().addIframeView(route)
+        }
+      }
+      </script>
+      ~~~
+
+    - [ ] layout/compoennts/IframeToggle/index.vue
+
+      ~~~vue
+      <template>
+        <inner-link
+          v-for="(item, index) in tagsViewStore.iframeViews"
+          :key="item.path"
+          :iframeId="'iframe' + index"
+          v-show="route.path === item.path"
+          :src="iframeUrl(item.meta.link, item.query)"
+        ></inner-link>
+      </template>
+      
+      <script setup>
+      import InnerLink from "../InnerLink/index";
+      import useTagsViewStore from "@/store/modules/tagsView";
+      
+      const route = useRoute();
+      const tagsViewStore = useTagsViewStore();
+      
+      function iframeUrl(url, query) {
+        if (Object.keys(query).length > 0) {
+          let params = Object.keys(query).map((key) => key + "=" + query[key]).join("&");
+          return url + "?" + params;
+        }
+        return url;
+      }
+      </script>
+      ~~~
+
+    - [ ] layout/components/InnerLink/index.vue
+
+      ~~~vue
+      <template>
+        <div :style="'height:' + height">
+          <iframe
+            :id="iframeId"
+            style="width: 100%; height: 100%"
+            :src="src"
+            frameborder="no"
+          ></iframe>
+        </div>
+      </template>
+      
+      <script setup>
+      const props = defineProps({
+        src: {
+          type: String,
+          default: "/"
+        },
+        iframeId: {
+          type: String
+        }
+      });
+      
+      const height = ref(document.documentElement.clientHeight - 94.5 + "px");
+      </script>
+      ~~~
+
+    - [ ] layout/components/Sidebar/index.vue
+
+      ~~~vue
+      <template>
+        <div :class="{ 'has-logo': showLogo }" class="sidebar-container">
+          <logo v-if="showLogo" :collapse="isCollapse" />
+          <el-scrollbar wrap-class="scrollbar-wrapper">
+            <el-menu
+              :default-active="activeMenu"
+              :collapse="isCollapse"
+              :background-color="getMenuBackground"
+              :text-color="getMenuTextColor"
+              :unique-opened="true"
+              :active-text-color="theme"
+              :collapse-transition="false"
+              mode="vertical"
+              :class="sideTheme"
+            >
+              <sidebar-item
+                v-for="(route, index) in sidebarRouters"
+                :key="route.path + index"
+                :item="route"
+                :base-path="route.path"
+              />
+            </el-menu>
+          </el-scrollbar>
+        </div>
+      </template>
+      ~~~
+
+    - [ ] layout/Sidebar/SidebarItem.vue
+
+      ~~~vue
+      <template>
+        <div v-if="!item.hidden">
+          <template v-if="hasOneShowingChild(item.children, item) && (!onlyOneChild.children || onlyOneChild.noShowingChildren) && !item.alwaysShow">
+            <app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path, onlyOneChild.query)">
+              <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{ 'submenu-title-noDropdown': !isNest }">
+                <svg-icon :icon-class="onlyOneChild.meta.icon || (item.meta && item.meta.icon)"/>
+                <template #title><span class="menu-title" :title="hasTitle(onlyOneChild.meta.title)">{{ onlyOneChild.meta.title }}</span></template>
+              </el-menu-item>
+            </app-link>
+          </template>
+      
+          <el-sub-menu v-else ref="subMenu" :index="resolvePath(item.path)" teleported>
+            <template v-if="item.meta" #title>
+              <svg-icon :icon-class="item.meta && item.meta.icon" />
+              <span class="menu-title" :title="hasTitle(item.meta.title)">{{ item.meta.title }}</span>
+            </template>
+      
+            <sidebar-item
+              v-for="(child, index) in item.children"
+              :key="child.path + index"
+              :is-nest="true"
+              :item="child"
+              :base-path="resolvePath(child.path)"
+              class="nest-menu"
+            />
+          </el-sub-menu>
+        </div>
+      </template>
+      
+      <script setup>
+      import {isExternal} from '@/utils/validate'
+      import AppLink from './Link'
+      import {getNormalPath} from '@/utils/ruoyi'
+      
+      const props = defineProps({
+        // route object
+        item: {
+          type: Object,
+          required: true
+        },
+        isNest: {
+          type: Boolean,
+          default: false
+        },
+        basePath: {
+          type: String,
+          default: ''
+        }
+      })
+      
+      const onlyOneChild = ref({});
+      
+      function hasOneShowingChild(children = [], parent) {
+        if (!children) {
+          children = [];
+        }
+        const showingChildren = children.filter(item => {
+          if (item.hidden) {
+            return false
+          }
+          onlyOneChild.value = item
+          return true
+        })
+      
+        // When there is only one child router, the child router is displayed by default
+        if (showingChildren.length === 1) {
+          return true
+        }
+      
+        // Show parent if there are no child router to display
+        if (showingChildren.length === 0) {
+          onlyOneChild.value = { ...parent, path: '', noShowingChildren: true }
+          return true
+        }
+      
+        return false
+      };
+      
+      function resolvePath(routePath, routeQuery) {getNormalPath(props.basePath + '/' + routePath))
+        debugger
+        if (isExternal(routePath)) {
+          return routePath
+        }
+        if (isExternal(props.basePath)) {
+          return props.basePath
+        }
+        if (routeQuery) {
+          let query = JSON.parse(routeQuery);
+          return { path: getNormalPath(props.basePath + '/' + routePath), query: query }
+        }
+        return getNormalPath(props.basePath + '/' + routePath)
+      }
+      
+      function hasTitle(title){
+        if (title.length > 5) {
+          return title;
+        } else {
+          return "";
+        }
+      }
+      </script>
+      ~~~
+
+      
+
 
 
 
