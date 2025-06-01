@@ -60,4 +60,15 @@
         from
             resource_category
     </select>
+
+    <!-- ResourceCategory selectResourceCategoryById(Long resourceCategoryId); -->
+    <select id="selectResourceCategoryById" resultMap="ResourceCategoryMap">
+        select
+            id,name,sort,create_by,create_time,update_by,
+            update_time
+        from
+            resource_category
+        where
+            id = #{resourceCategoryId}
+    </select>
 </mapper>

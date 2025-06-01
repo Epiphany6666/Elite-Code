@@ -49,4 +49,11 @@ public class TagController {
         return CommonResult.success();
     }
 
+    @ApiOperation(value = "根据id查询标签")
+    @GetMapping("/{tagId}")
+    private CommonResult<Tag> getTag(@PathVariable Long tagId) {
+        Tag tag = tagService.selectTagById(tagId);
+        return CommonResult.success(tag);
+    }
+
 }

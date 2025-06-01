@@ -34,4 +34,11 @@ public interface ResourceCategoryService {
      * @return
      */
     List<ResourceCategory> selectResourceCategoryAll();
+
+    /**
+     * 根据id查找资源
+     * @param resourceCategoryId
+     * @return
+     */
+    ResourceCategory selectResourceCategoryById(Long resourceCategoryId);
 }

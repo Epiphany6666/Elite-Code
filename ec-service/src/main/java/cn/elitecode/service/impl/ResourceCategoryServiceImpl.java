@@ -44,6 +44,12 @@ public class ResourceCategoryServiceImpl implements ResourceCategoryService {
         List<ResourceCategory> resourceCategoryList = resourceCategoryMapper.selectResourceCategoryListAll();
         return resourceCategoryList;
     }
+
+    @Override
+    public ResourceCategory selectResourceCategoryById(Long resourceCategoryId) {
+        ResourceCategory resourceCategory = resourceCategoryMapper.selectResourceCategoryById(resourceCategoryId);
+        return resourceCategory;
+    }
 }
 
 

@@ -37,6 +37,13 @@ public class ProblemsetController {
         return CommonResult.success(pageResult);
     }
 
+    @ApiOperation(value = "根据id查询题库信息")
+    @GetMapping("/{problemsetId}")
+    private CommonResult<Problemset> getProblemset(@PathVariable Long problemsetId) {
+        Problemset problemset = problemsetService.selectProblemsetId(problemsetId);
+        return CommonResult.success(problemset);
+    }
+
     @ApiOperation(value = "新增题库")
     @PostMapping
     private CommonResult<Long> addProblemset(@Validated @RequestBody ProblemsetAddDTO problemsetAddDTO) {

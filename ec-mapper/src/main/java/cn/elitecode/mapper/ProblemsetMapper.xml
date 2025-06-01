@@ -103,4 +103,15 @@
             del_flag = '0'
     </select>
 
+    <!-- Problemset selectProblemsetById(Long problemsetId); -->
+    <select id="selectProblemsetById" resultMap="ProblemsetResult">
+        select
+            id,title,description,picture,del_flag,create_by,
+            create_time,update_by,update_time
+        from
+            problemset
+        where
+            id = #{probelmsetId}
+    </select>
+
 </mapper>

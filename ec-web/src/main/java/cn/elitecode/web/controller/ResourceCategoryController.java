@@ -47,4 +47,11 @@ public class ResourceCategoryController {
         List<ResourceCategory> resourceCategoryList = resourceCategoryService.selectResourceCategoryAll();
         return CommonResult.success(resourceCategoryList);
     }
+
+    @ApiOperation(value = "根据id查询后台资源分类")
+    @GetMapping("/{resourceCategoryId}")
+    private CommonResult<ResourceCategory> getResourceCategory(@PathVariable Long resourceCategoryId) {
+        ResourceCategory resourceCategory = resourceCategoryService.selectResourceCategoryById(resourceCategoryId);
+        return CommonResult.success(resourceCategory);
+    }
 }

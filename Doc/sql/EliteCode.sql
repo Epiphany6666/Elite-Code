@@ -136,7 +136,7 @@ create table if not exists `menu` (
   sort          int(4)        not null                    comment '显示顺序',
   component     varchar(255)  default null                comment '组件路径',
   if_frame      int(1)        default 1                   comment '是否为外链 (0是 1否)',
-  type          char(1)       default ''                  comment '菜单类型（M目录 C菜单 F按钮）',
+  type          char(1)       default ''                  comment '菜单类型（M目录 C菜单）',
   visible       char(1)       default ''                  comment '菜单状态（0显示 1隐藏）',
   status        char(1)       default '0'                 comment '菜单状态 (0正常 1停用)',
   create_by     bigint(20)    default null                comment '创建者',

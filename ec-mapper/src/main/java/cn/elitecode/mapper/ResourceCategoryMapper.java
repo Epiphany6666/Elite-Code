@@ -32,6 +32,13 @@ public interface ResourceCategoryMapper {
      * @return
      */
     List<ResourceCategory> selectResourceCategoryListAll();
+
+    /**
+     * 根据id查询后台资源分类信息
+     * @param resourceCategoryId
+     * @return
+     */
+    ResourceCategory selectResourceCategoryById(Long resourceCategoryId);
 }
 
 

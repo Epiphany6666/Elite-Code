@@ -42,4 +42,10 @@ public interface ProblemsetService {
      */
     List<Problemset> selectProblemsetAll();
 
+    /**
+     * 根据id查询题库
+     * @param problemsetId
+     * @return
+     */
+    Problemset selectProblemsetId(Long problemsetId);
 }

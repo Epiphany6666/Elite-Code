@@ -43,4 +43,11 @@ public interface TagService {
      * @return
      */
     List<Tag> selectTagAll();
+
+    /**
+     * 根据id查询标签信息
+     * @param tagId
+     * @return
+     */
+    Tag selectTagById(Long tagId);
 }

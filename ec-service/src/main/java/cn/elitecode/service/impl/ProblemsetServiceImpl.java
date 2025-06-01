@@ -54,6 +54,12 @@ public class ProblemsetServiceImpl implements ProblemsetService{
         return problemsetMapper.selectProblemsetAll();
     }
 
+    @Override
+    public Problemset selectProblemsetId(Long problemsetId) {
+        Problemset problemset = problemsetMapper.selectProblemsetById(problemsetId);
+        return problemset;
+    }
+
 }
 
 

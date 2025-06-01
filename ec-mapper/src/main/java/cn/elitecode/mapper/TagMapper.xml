@@ -95,4 +95,14 @@
         where
             del_flag = '0'
     </select>
+
+    <!-- Tag selectTagById(Long tagId); -->
+    <select id="selectTagById" resultMap="tagResult">
+        select
+            id,name,del_flag,create_by,create_time,update_by,update_time
+        from
+            tag
+        where
+            id = #{tagId}
+    </select>
 </mapper>

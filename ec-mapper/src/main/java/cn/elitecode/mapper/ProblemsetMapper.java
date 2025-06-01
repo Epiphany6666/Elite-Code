@@ -51,6 +51,12 @@ public interface ProblemsetMapper {
      */
     List<Problemset> selectProblemsetAll();
 
+    /**
+     * 根据id查询题库信息
+     * @param problemsetId
+     * @return
+     */
+    Problemset selectProblemsetById(Long problemsetId);
 }
 
 
