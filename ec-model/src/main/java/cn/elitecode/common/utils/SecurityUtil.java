@@ -4,7 +4,7 @@ import cn.elitecode.model.bo.LoginUser;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-public class SecurityUtils {
+public class SecurityUtil {
 
     /**
      * 获取当前登录用户id

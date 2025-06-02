@@ -2,7 +2,7 @@ package cn.elitecode.web.controller;
 
 import cn.elitecode.common.api.CommonPage;
 import cn.elitecode.common.api.CommonResult;
-import cn.elitecode.common.utils.SecurityUtils;
+import cn.elitecode.common.utils.SecurityUtil;
 import cn.elitecode.model.dto.problemset.ProblemsetAddDTO;
 import cn.elitecode.model.dto.problemset.ProblemsetQueryDTO;
 import cn.elitecode.model.dto.problemset.ProblemsetQueryQuestionDTO;
@@ -49,7 +49,7 @@ public class ProblemsetController {
     private CommonResult<Long> addProblemset(@Validated @RequestBody ProblemsetAddDTO problemsetAddDTO) {
         Problemset problemset = new Problemset();
         BeanUtils.copyProperties(problemsetAddDTO, problemset);
-        problemset.setCreateBy(SecurityUtils.getUserId());
+        problemset.setCreateBy(SecurityUtil.getUserId());
         Long problemsetId = problemsetService.addProblemset(problemset);
         return CommonResult.success(problemsetId);
     }
@@ -59,7 +59,7 @@ public class ProblemsetController {
     private CommonResult updateProblemset(@Validated @RequestBody ProblemsetUpdateDTO problemsetUpdateDTO) {
         Problemset problemset = new Problemset();
         BeanUtils.copyProperties(problemsetUpdateDTO, problemset);
-        problemset.setUpdateBy(SecurityUtils.getUserId());
+        problemset.setUpdateBy(SecurityUtil.getUserId());
         problemsetService.updateProblemset(problemset);
         return CommonResult.success();
     }

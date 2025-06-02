@@ -1,7 +1,7 @@
 package cn.elitecode.service.impl;
 
 import cn.elitecode.common.api.CommonPage;
-import cn.elitecode.common.utils.SecurityUtils;
+import cn.elitecode.common.utils.SecurityUtil;
 import cn.elitecode.mapper.MenuMapper;
 import cn.elitecode.mapper.RoleMapper;
 import cn.elitecode.model.bo.TreeSelect;
@@ -32,7 +32,7 @@ public class MenuServiceImpl implements MenuService{
     public Long addMenu(MenuAddDTO menuAddDTO) {
         Menu menu = new Menu();
         BeanUtils.copyProperties(menuAddDTO, menu);
-        menu.setCreateBy(SecurityUtils.getUserId());
+        menu.setCreateBy(SecurityUtil.getUserId());
         menuMapper.insertMenu(menu);
         return menu.getId();
     }
@@ -46,7 +46,7 @@ public class MenuServiceImpl implements MenuService{
     public void updateMenu(MenuUpdateDTO menuUpdateDTO) {
         Menu menu = new Menu();
         BeanUtils.copyProperties(menuUpdateDTO, menu);
-        menu.setUpdateBy(SecurityUtils.getUserId());
+        menu.setUpdateBy(SecurityUtil.getUserId());
         menuMapper.updateMenuById(menu);
     }
 

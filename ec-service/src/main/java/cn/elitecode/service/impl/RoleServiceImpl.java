@@ -2,7 +2,7 @@ package cn.elitecode.service.impl;
 
 import cn.elitecode.common.api.CommonPage;
 import cn.elitecode.common.exception.role.RoleAlreadyAssignException;
-import cn.elitecode.common.utils.SecurityUtils;
+import cn.elitecode.common.utils.SecurityUtil;
 import cn.elitecode.constant.HttpStatus;
 import cn.elitecode.mapper.ResourceMapper;
 import cn.elitecode.mapper.RoleMapper;
@@ -43,7 +43,7 @@ public class RoleServiceImpl implements RoleService{
         // 新增角色
         Role role = new Role();
         BeanUtils.copyProperties(roleAddDTO, role);
-        role.setCreateBy(SecurityUtils.getUserId());
+        role.setCreateBy(SecurityUtil.getUserId());
         roleMapper.insertRole(role);
         // 新增角色菜单关联
         insertRoleMenu(role.getId(), roleAddDTO.getMenuIds());
@@ -72,7 +72,7 @@ public class RoleServiceImpl implements RoleService{
         // 更新角色信息
         Role role = new Role();
         BeanUtils.copyProperties(roleUpdateDTO, role);
-        role.setUpdateBy(SecurityUtils.getUserId());
+        role.setUpdateBy(SecurityUtil.getUserId());
         roleMapper.updateRoleById(role);
         // 删除角色菜单关联
         roleMenuMapper.deleteRoleMenuById(roleUpdateDTO.getId());

@@ -1,6 +1,6 @@
 package cn.elitecode.service.impl;
 
-import cn.elitecode.common.utils.SecurityUtils;
+import cn.elitecode.common.utils.SecurityUtil;
 import cn.elitecode.mapper.ResourceCategoryMapper;
 import cn.elitecode.model.dto.resourcecategory.ResourceCategoryAddDTO;
 import cn.elitecode.model.dto.resourcecategory.ResourceCategoryUpdateDTO;
@@ -21,7 +21,7 @@ public class ResourceCategoryServiceImpl implements ResourceCategoryService {
     public Long addResourceCategory(ResourceCategoryAddDTO resourceCategoryAddDTO) {
         ResourceCategory resourceCategory = new ResourceCategory();
         BeanUtils.copyProperties(resourceCategoryAddDTO, resourceCategory);
-        resourceCategory.setCreateBy(SecurityUtils.getUserId());
+        resourceCategory.setCreateBy(SecurityUtil.getUserId());
         resourceCategoryMapper.insertResourceCategory(resourceCategory);
         return resourceCategory.getId();
     }
@@ -35,7 +35,7 @@ public class ResourceCategoryServiceImpl implements ResourceCategoryService {
     public void updateResourceCategoryById(ResourceCategoryUpdateDTO resourceCategoryUpdateDTO) {
         ResourceCategory resourceCategory = new ResourceCategory();
         BeanUtils.copyProperties(resourceCategoryUpdateDTO, resourceCategory);
-        resourceCategory.setUpdateBy(SecurityUtils.getUserId());
+        resourceCategory.setUpdateBy(SecurityUtil.getUserId());
         resourceCategoryMapper.updateResourceCategoryById(resourceCategory);
     }
 

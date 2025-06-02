@@ -4,7 +4,7 @@ import cn.elitecode.common.BaseContext;
 import cn.elitecode.common.api.CommonPage;
 import cn.elitecode.common.exception.user.AdminNotAllowedException;
 import cn.elitecode.common.exception.user.UsernameAlreadyExistsException;
-import cn.elitecode.common.utils.SecurityUtils;
+import cn.elitecode.common.utils.SecurityUtil;
 import cn.elitecode.constant.HttpStatus;
 import cn.elitecode.constant.UserConstant;
 import cn.elitecode.mapper.UserMapper;
@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
             throw new UsernameAlreadyExistsException(HttpStatus.PARAMS_ERROR, "新增用户 '" + user.getUsername() + "' 失败，账号已存在");
         }
         user.setCreateBy(BaseContext.getCurrentId());
-        user.setPassword(SecurityUtils.encryptPassword(userAddDTO.getPassword()));
+        user.setPassword(SecurityUtil.encryptPassword(userAddDTO.getPassword()));
         userMapper.insertUser(user);
 
         // 新增用户角色关联

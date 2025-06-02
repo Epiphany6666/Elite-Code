@@ -2,6 +2,9 @@ package cn.elitecode.constant;
 
 public interface JWTConstant {
 
-    String CLAIM_KEY_USERNAME = "login_username";
+    /**
+     * 存放用户的令牌key
+     */
+    String LOGIN_USER_KEY = "login_user_key";
 
 }

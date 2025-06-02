@@ -1,7 +1,7 @@
 package cn.elitecode.service.impl;
 
 import cn.elitecode.common.api.CommonPage;
-import cn.elitecode.common.utils.SecurityUtils;
+import cn.elitecode.common.utils.SecurityUtil;
 import cn.elitecode.mapper.ResourceMapper;
 import cn.elitecode.mapper.RoleResourceMapper;
 import cn.elitecode.model.dto.resource.ResourceAddDTO;
@@ -34,7 +34,7 @@ public class ResourceServiceImpl implements ResourceService {
     public Long addResource(ResourceAddDTO resourceAddDTO) {
         Resource resource = new Resource();
         BeanUtils.copyProperties(resourceAddDTO, resource);
-        resource.setCreateBy(SecurityUtils.getUserId());
+        resource.setCreateBy(SecurityUtil.getUserId());
         resourceMapper.insertResource(resource);
         return resource.getId();
     }
@@ -48,7 +48,7 @@ public class ResourceServiceImpl implements ResourceService {
     public void updateResourceById(ResourceUpdateDTO resourceUpdateDTO) {
         Resource resource = new Resource();
         BeanUtils.copyProperties(resourceUpdateDTO, resource);
-        resource.setUpdateBy(SecurityUtils.getUserId());
+        resource.setUpdateBy(SecurityUtil.getUserId());
         resourceMapper.updateResourceById(resource);
     }
 

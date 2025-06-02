@@ -60,7 +60,8 @@ knife4j:
 jwt:
   tokenHeader: Authorization # JWT存储的请求头
   secret: ec-secret # JWT加解密使用的密钥
-  expiration: 604800 # JWT的超期限时间(60*60*24*7) 过期时间七天
+  expiration: 604800000 # JWT的超期限时间（1000*60*60*24*7） 过期时间七天
+  autoRefreshTime: 1200000 # 低于20min（1000*60*20）自动刷新
   tokenHead: 'Bearer '  # JWT负载中拿到开头
 
 secure:

@@ -1,7 +1,7 @@
 package cn.elitecode.service.impl;
 
 import cn.elitecode.common.api.CommonPage;
-import cn.elitecode.common.utils.SecurityUtils;
+import cn.elitecode.common.utils.SecurityUtil;
 import cn.elitecode.mapper.TagMapper;
 import cn.elitecode.model.dto.tag.TagAddDTO;
 import cn.elitecode.model.dto.tag.TagQueryDTO;
@@ -26,7 +26,7 @@ public class TagServiceImpl implements TagService {
     public Long addTag(TagAddDTO tagAddDTO) {
         Tag tag = new Tag();
         BeanUtils.copyProperties(tagAddDTO, tag);
-        tag.setCreateBy(SecurityUtils.getUserId());
+        tag.setCreateBy(SecurityUtil.getUserId());
         tagMapper.insert(tag);
         return tag.getId();
     }
@@ -40,7 +40,7 @@ public class TagServiceImpl implements TagService {
     public void updateTag(TagUpdateDTO tagUpdateDTO) {
         Tag tag = new Tag();
         BeanUtils.copyProperties(tagUpdateDTO, tag);
-        tag.setUpdateBy(SecurityUtils.getUserId());
+        tag.setUpdateBy(SecurityUtil.getUserId());
         tagMapper.updateTagById(tag);
     }
 

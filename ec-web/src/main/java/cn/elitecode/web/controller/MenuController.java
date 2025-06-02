@@ -2,7 +2,7 @@ package cn.elitecode.web.controller;
 
 import cn.elitecode.common.api.CommonPage;
 import cn.elitecode.common.api.CommonResult;
-import cn.elitecode.common.utils.SecurityUtils;
+import cn.elitecode.common.utils.SecurityUtil;
 import cn.elitecode.model.dto.menu.MenuAddDTO;
 import cn.elitecode.model.dto.menu.MenuQueryDTO;
 import cn.elitecode.model.dto.menu.MenuUpdateDTO;
@@ -64,7 +64,7 @@ public class MenuController {
     @GetMapping("/roleMenuTreeselect/{roleId}")
     private CommonResult<Map> roleMenuTreeselect(@PathVariable Long roleId) {
         Map<String, Object> result = new HashMap<>();
-        List<Menu> menuList = menuService.selectMenuListByUserId(SecurityUtils.getUserId());
+        List<Menu> menuList = menuService.selectMenuListByUserId(SecurityUtil.getUserId());
         result.put("checkedKeys", menuService.selectMenuListByRoleId(roleId));
         result.put("menus", menuService.buildMenuTreeSelect(menuList));
         return CommonResult.success(result);

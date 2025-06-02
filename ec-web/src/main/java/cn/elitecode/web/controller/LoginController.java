@@ -2,7 +2,7 @@ package cn.elitecode.web.controller;
 
 import cn.elitecode.common.api.CommonResult;
 import cn.elitecode.common.properties.JWTProperties;
-import cn.elitecode.common.utils.SecurityUtils;
+import cn.elitecode.common.utils.SecurityUtil;
 import cn.elitecode.model.bo.LoginUser;
 import cn.elitecode.model.dto.user.UserLoginDTO;
 import cn.elitecode.model.entity.User;
@@ -27,10 +27,8 @@ public class LoginController {
     @ApiOperation(value = "用户登录")
     @PostMapping("/login")
     private CommonResult<LoginUserVO> login(@Validated @RequestBody UserLoginDTO userLoginDTO) {
-        String username = userLoginDTO.getUsername();
-        String userPassword = userLoginDTO.getPassword();
         String tokenHead = JWTProperties.getTokenHead();
-        String token = loginService.login(username, userPassword);
+        String token = loginService.login(userLoginDTO.getUsername(), userLoginDTO.getPassword());
         LoginUserVO loginUserVO = new LoginUserVO(tokenHead, token);
         return CommonResult.success(loginUserVO);
     }
@@ -38,7 +36,7 @@ public class LoginController {
     @ApiOperation(value = "获取用户信息")
     @GetMapping("/getInfo")
     private CommonResult<User> getInfo() {
-        LoginUser loginUser = SecurityUtils.getLoginUser();
+        LoginUser loginUser = SecurityUtil.getLoginUser();
         User user = loginUser.getUser();
         return CommonResult.success(user);
     }

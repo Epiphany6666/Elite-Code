@@ -1,7 +1,7 @@
 package cn.elitecode.web.controller;
 
 import cn.elitecode.common.api.CommonResult;
-import cn.elitecode.common.utils.SecurityUtils;
+import cn.elitecode.common.utils.SecurityUtil;
 import cn.elitecode.constant.HttpStatus;
 import cn.elitecode.model.dto.user.UserRegisterDTO;
 import cn.elitecode.model.entity.User;
@@ -40,7 +40,7 @@ public class RegisterController {
         if (!userService.checkUsernameUnique(user)) {
             return CommonResult.error(HttpStatus.PARAMS_ERROR, "用户注册 '" + user.getUsername() + "' 失败，账号已存在");
         }
-        user.setPassword(SecurityUtils.encryptPassword(userPassword));
+        user.setPassword(SecurityUtil.encryptPassword(userPassword));
         Long registerUserId = registerService.register(user);
         return CommonResult.success(registerUserId);
     }

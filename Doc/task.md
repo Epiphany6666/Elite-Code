@@ -851,6 +851,389 @@
 ## 文件管理
 - [x] 使用Minio实现文件上传
 
+# Redis
+
+- [x] 整合Redis
+
+  在pom.xml中新增Redis相关依赖
+
+  ```xml
+  <!--redis依赖配置-->
+  <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-redis</artifactId>
+  </dependency>
+  ```
+
+  (application-dev)在spring节点下添加Redis的配置
+
+  ```yaml
+  redis:
+      host: localhost # Redis服务器地址
+      database: 0 # Redis数据库索引（默认为0）
+      port: 6379 # Redis服务器连接端口
+      password: 12345678 # Redis服务器连接密码（默认为空）
+      lettuce:
+        pool:
+          max-active: 8 # 连接池最大连接数（使用负值表示没有限制）
+          max-wait: -1ms # 连接池最大阻塞等待时间（使用负值表示没有限制）
+          max-idle: 8 # 连接池中的最大空闲连接
+          min-idle: 0 # 连接池中的最小空闲连接
+      timeout: 3000ms # 连接超时时间（毫秒）
+  ```
+
+  RedisConfig
+
+  ~~~java
+  package cn.elitecode.common.config;
+  
+  import org.springframework.context.annotation.Bean;
+  import org.springframework.context.annotation.Configuration;
+  import org.springframework.data.redis.connection.RedisConnectionFactory;
+  import org.springframework.data.redis.core.RedisTemplate;
+  import org.springframework.data.redis.serializer.StringRedisSerializer;
+  
+  /**
+   * redis配置
+   */
+  @Configuration
+  public class RedisConfig {
+  
+      @Bean
+      public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+          RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+          redisTemplate.setConnectionFactory(redisConnectionFactory);
+  
+          // 使用StringRedisSerializer序列化和反序列化redis的key值
+          redisTemplate.setKeySerializer(new StringRedisSerializer());
+          // 使用自定义的JsonRedisSerializer序列化和反序列化redis的value值
+          redisTemplate.setValueSerializer(new JsonRedisSerializer<Object>(Object.class));
+          return redisTemplate;
+      }
+  
+  }
+  
+  ~~~
+
+  JsonRedisSerializer
+
+  ~~~java
+  package cn.elitecode.common.config;
+  
+  import cn.hutool.json.JSONUtil;
+  import org.springframework.data.redis.serializer.RedisSerializer;
+  import org.springframework.data.redis.serializer.SerializationException;
+  
+  /**
+   * redis使用hutool中的工具序列化
+   * @param <T>
+   */
+  public class JsonRedisSerializer<T> implements RedisSerializer<T> {
+  
+      private Class<T> clazz;
+  
+      public JsonRedisSerializer(Class<T> clazz) {
+          this.clazz = clazz;
+      }
+  
+      @Override
+      public byte[] serialize(T o) throws SerializationException {
+          if (o == null) {
+              return new byte[0];
+          }
+          return JSONUtil.toJsonStr(o).getBytes();
+      }
+  
+      @Override
+      public T deserialize(byte[] bytes) throws SerializationException {
+          if (bytes == null || bytes.length == 0) {
+              return null;
+          }
+          return JSONUtil.toBean(new String(bytes), clazz);
+      }
+  }
+  
+  ~~~
+
+- [x] JWT存UserDetails应该改为存token（参考若依项目）
+
+  LoginUser新增1个字段
+
+  ~~~java
+  /**
+   * 过期时间
+   */
+  private Long expireTime;
+  ~~~
+
+  LoginController#login
+
+  ~~~java
+  @ApiOperation(value = "用户登录")
+  @PostMapping("/login")
+  private CommonResult<LoginUserVO> login(@Validated @RequestBody UserLoginDTO userLoginDTO) {
+      String tokenHead = JWTProperties.getTokenHead();
+      String token = loginService.login(userLoginDTO.getUsername(), userLoginDTO.getPassword());
+      LoginUserVO loginUserVO = new LoginUserVO(tokenHead, token);
+      return CommonResult.success(loginUserVO);
+  }
+  ~~~
+
+  LoginServiceImpl
+
+  ~~~java
+  package cn.elitecode.service.impl;
+  
+  import cn.elitecode.common.exception.user.UserPasswordNotMatchException;
+  import cn.elitecode.common.utils.JwtTokenUtil;
+  import cn.elitecode.constant.HttpStatus;
+  import cn.elitecode.model.bo.LoginUser;
+  import cn.elitecode.service.LoginService;
+  import org.springframework.beans.factory.annotation.Autowired;
+  import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+  import org.springframework.security.core.context.SecurityContextHolder;
+  import org.springframework.security.core.userdetails.UserDetailsService;
+  import org.springframework.security.crypto.password.PasswordEncoder;
+  import org.springframework.stereotype.Service;
+  
+  @Service
+  public class LoginServiceImpl implements LoginService {
+  
+      @Autowired
+      private PasswordEncoder passwordEncoder;
+      @Autowired
+      private UserDetailsService userDetailsService;
+      @Autowired
+      private JwtTokenUtil jwtTokenUtil;
+  
+      @Override
+      public String login(String username, String userPassword) {
+          LoginUser loginUser = (LoginUser) userDetailsService.loadUserByUsername(username);
+          if (!passwordEncoder.matches(userPassword, loginUser.getPassword())) {
+              throw new UserPasswordNotMatchException(HttpStatus.PARAMS_ERROR, "账号或密码错误");
+          }
+          UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
+          SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+          String token = jwtTokenUtil.createToken(loginUser);
+          return token;
+      }
+  
+  }
+  
+  ~~~
+
+  JwtAuthenticationTokenFilter
+
+  ~~~java
+  package com.ruoyi.framework.security.filter;
+  
+  import java.io.IOException;
+  import javax.servlet.FilterChain;
+  import javax.servlet.ServletException;
+  import javax.servlet.http.HttpServletRequest;
+  import javax.servlet.http.HttpServletResponse;
+  import org.springframework.beans.factory.annotation.Autowired;
+  import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+  import org.springframework.security.core.context.SecurityContextHolder;
+  import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+  import org.springframework.stereotype.Component;
+  import org.springframework.web.filter.OncePerRequestFilter;
+  import com.ruoyi.common.core.domain.model.LoginUser;
+  import com.ruoyi.common.utils.SecurityUtils;
+  import com.ruoyi.common.utils.StringUtils;
+  import com.ruoyi.framework.web.service.TokenService;
+  
+  /**
+   * token过滤器 验证token有效性
+   * 
+   * @author ruoyi
+   */
+  @Component
+  public class JwtAuthenticationTokenFilter extends OncePerRequestFilter
+  {
+      @Autowired
+      private TokenService tokenService;
+  
+      @Override
+      protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+              throws ServletException, IOException
+      {
+          LoginUser loginUser = tokenService.getLoginUser(request);
+          if (StringUtils.isNotNull(loginUser) && StringUtils.isNull(SecurityUtils.getAuthentication()))
+          {
+              tokenService.verifyToken(loginUser);
+              UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
+              authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+              SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+          }
+          chain.doFilter(request, response);
+      }
+  }
+  ~~~
+
+  TokenService
+
+  ~~~java
+  protected static final long MILLIS_SECOND = 1000;
+  
+      protected static final long MILLIS_MINUTE = 60 * MILLIS_SECOND;
+  
+      private static final Long MILLIS_MINUTE_TEN = 20 * 60 * 1000L;
+  
+      @Autowired
+      private RedisCache redisCache;
+  
+      /**
+       * 获取用户身份信息
+       *
+       * @return 用户信息
+       */
+      public LoginUser getLoginUser(HttpServletRequest request)
+      {
+          // 获取请求携带的令牌
+          String token = getToken(request);
+          if (StringUtils.isNotEmpty(token))
+          {
+              try
+              {
+                  Claims claims = parseToken(token);
+                  // 解析对应的权限以及用户信息
+                  String uuid = (String) claims.get(Constants.LOGIN_USER_KEY);
+                  String userKey = getTokenKey(uuid);
+                  LoginUser user = redisCache.getCacheObject(userKey);
+                  return user;
+              }
+              catch (Exception e)
+              {
+                  log.error("获取用户信息异常'{}'", e.getMessage());
+              }
+          }
+          return null;
+      }
+  
+      /**
+       * 验证令牌有效期，相差不足20分钟，自动刷新缓存
+       *
+       * @param loginUser
+       * @return 令牌
+       */
+      public void verifyToken(LoginUser loginUser)
+      {
+          long expireTime = loginUser.getExpireTime();
+          long currentTime = System.currentTimeMillis();
+          if (expireTime - currentTime <= MILLIS_MINUTE_TEN)
+          {
+              refreshToken(loginUser);
+          }
+      }
+  
+      /**
+       * 刷新令牌有效期
+       *
+       * @param loginUser 登录信息
+       */
+      public void refreshToken(LoginUser loginUser)
+      {
+          loginUser.setLoginTime(System.currentTimeMillis());
+          loginUser.setExpireTime(loginUser.getLoginTime() + expireTime * MILLIS_MINUTE);
+          // 根据uuid将loginUser缓存
+          String userKey = getTokenKey(loginUser.getToken());
+          redisCache.setCacheObject(userKey, loginUser, expireTime, TimeUnit.MINUTES);
+      }
+  
+  
+  ~~~
+
+- [x] SpringSecurity配置类中：`.logout(logout -> logout.logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler))`，LogoutSuccessHandlerImpl实现类需要清空redis缓存数据
+
+  ~~~java
+  package com.ruoyi.framework.security.handle;
+  
+  import java.io.IOException;
+  import javax.servlet.ServletException;
+  import javax.servlet.http.HttpServletRequest;
+  import javax.servlet.http.HttpServletResponse;
+  import org.springframework.beans.factory.annotation.Autowired;
+  import org.springframework.context.annotation.Configuration;
+  import org.springframework.security.core.Authentication;
+  import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+  import com.alibaba.fastjson2.JSON;
+  import com.ruoyi.common.constant.Constants;
+  import com.ruoyi.common.core.domain.AjaxResult;
+  import com.ruoyi.common.core.domain.model.LoginUser;
+  import com.ruoyi.common.utils.MessageUtils;
+  import com.ruoyi.common.utils.ServletUtils;
+  import com.ruoyi.common.utils.StringUtils;
+  import com.ruoyi.framework.manager.AsyncManager;
+  import com.ruoyi.framework.manager.factory.AsyncFactory;
+  import com.ruoyi.framework.web.service.TokenService;
+  
+  /**
+   * 自定义退出处理类 返回成功
+   * 
+   * @author ruoyi
+   */
+  @Configuration
+  public class LogoutSuccessHandlerImpl implements LogoutSuccessHandler
+  {
+      @Autowired
+      private TokenService tokenService;
+  
+      /**
+       * 退出处理
+       * 
+       * @return
+       */
+      @Override
+      public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
+              throws IOException, ServletException
+      {
+          LoginUser loginUser = tokenService.getLoginUser(request);
+          if (StringUtils.isNotNull(loginUser))
+          {
+              String userName = loginUser.getUsername();
+              // 删除用户缓存记录
+              tokenService.delLoginUser(loginUser.getToken());
+              // 记录用户退出日志
+              AsyncManager.me().execute(AsyncFactory.recordLogininfor(userName, Constants.LOGOUT, MessageUtils.message("user.logout.success")));
+          }
+          ServletUtils.renderString(response, JSON.toJSONString(AjaxResult.success(MessageUtils.message("user.logout.success"))));
+      }
+  }
+  
+  ~~~
+
+- [ ] 限流脚本
+
+  RedisConfig
+
+  ~~~java
+  @Bean
+  @SuppressWarnings(value = { "unchecked", "rawtypes" })
+  public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory connectionFactory)
+  {
+      RedisTemplate<Object, Object> template = new RedisTemplate<>();
+      template.setConnectionFactory(connectionFactory);
+  
+      FastJson2JsonRedisSerializer serializer = new FastJson2JsonRedisSerializer(Object.class);
+  
+      // 使用StringRedisSerializer来序列化和反序列化redis的key值
+      template.setKeySerializer(new StringRedisSerializer());
+      template.setValueSerializer(serializer);
+  
+      // Hash的key也采用StringRedisSerializer的序列化方式
+      template.setHashKeySerializer(new StringRedisSerializer());
+      template.setHashValueSerializer(serializer);
+  
+      template.afterPropertiesSet();
+      return template;
+  }
+  ~~~
+
+- [ ] 
+
+
+
 ---
 
 # 项目搭建（前端）

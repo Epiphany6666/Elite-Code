@@ -1,7 +1,7 @@
 package cn.elitecode.service.impl;
 
 import cn.elitecode.common.api.CommonPage;
-import cn.elitecode.common.utils.SecurityUtils;
+import cn.elitecode.common.utils.SecurityUtil;
 import cn.elitecode.mapper.ProblemsetQuestionMapper;
 import cn.elitecode.mapper.QuestionMapper;
 import cn.elitecode.mapper.TagQuestionMapper;
@@ -43,7 +43,7 @@ public class QuestionServiceImpl implements QuestionService{
         // 新增题目信息
         Question question = new Question();
         BeanUtils.copyProperties(questionAddDTO, question);
-        question.setCreateBy(SecurityUtils.getUserId());
+        question.setCreateBy(SecurityUtil.getUserId());
         questionMapper.insertQuestion(question);
 
         // 新增题库题目关联
@@ -68,7 +68,7 @@ public class QuestionServiceImpl implements QuestionService{
         // 修改题目信息
         Question question = new Question();
         BeanUtils.copyProperties(questionUpdateDTO, question);
-        question.setUpdateBy(SecurityUtils.getUserId());
+        question.setUpdateBy(SecurityUtil.getUserId());
         questionMapper.updateQuestionById(question);
 
         // 删除题目与题库关联

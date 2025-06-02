@@ -1,6 +1,7 @@
 package cn.elitecode.web.config;
 
 import cn.elitecode.common.exception.user.UsernameNotFoundException;
+import cn.elitecode.common.utils.JwtTokenUtil;
 import cn.elitecode.constant.HttpStatus;
 import cn.elitecode.mapper.ResourceMapper;
 import cn.elitecode.mapper.UserMapper;
@@ -77,4 +78,10 @@ public class ECSecurityConfig {
     public DynamicSecurityMetadataSource dynamicSecurityMetadataSource() {
         return new DynamicSecurityMetadataSource();
     }
+
+    @Bean
+    public JwtTokenUtil jwtTokenUtil() {
+        return new JwtTokenUtil();
+    }
+
 }

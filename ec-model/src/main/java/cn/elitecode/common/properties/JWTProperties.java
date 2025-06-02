@@ -11,72 +11,49 @@ public class JWTProperties {
 
     private static String secret;
 
-    private static int expiration;
+    private static long expiration;
 
     private static String tokenHead;
 
-    /**
-     * 获取
-     * @return tokenHeader
-     */
+    private static long autoRefreshTime;
+
     public static String getTokenHeader() {
         return tokenHeader;
     }
 
-    /**
-     * 设置
-     * @param tokenHeader
-     */
     public void setTokenHeader(String tokenHeader) {
         JWTProperties.tokenHeader = tokenHeader;
     }
 
-    /**
-     * 获取
-     * @return secret
-     */
     public static String getSecret() {
         return secret;
     }
 
-    /**
-     * 设置
-     * @param secret
-     */
     public void setSecret(String secret) {
         JWTProperties.secret = secret;
     }
 
-    /**
-     * 获取
-     * @return expiration
-     */
-    public static int getExpiration() {
+    public static long getExpiration() {
         return expiration;
     }
 
-    /**
-     * 设置
-     * @param expiration
-     */
-    public void setExpiration(int expiration) {
+    public void setExpiration(long expiration) {
         JWTProperties.expiration = expiration;
     }
 
-    /**
-     * 获取
-     * @return tokenHead
-     */
     public static String getTokenHead() {
         return tokenHead;
     }
 
-    /**
-     * 设置
-     * @param tokenHead
-     */
     public void setTokenHead(String tokenHead) {
         JWTProperties.tokenHead = tokenHead;
     }
 
+    public static long getAutoRefreshTime() {
+        return autoRefreshTime;
+    }
+
+    public void setAutoRefreshTime(long refreshTime) {
+        JWTProperties.autoRefreshTime = refreshTime;
+    }
 }

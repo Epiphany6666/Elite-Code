@@ -2,11 +2,11 @@ package cn.elitecode.model.bo;
 
 import cn.elitecode.model.entity.Resource;
 import cn.elitecode.model.entity.User;
+import com.alibaba.fastjson2.annotation.JSONField;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import java.io.Serial;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,27 +16,90 @@ import java.util.stream.Collectors;
  */
 public class LoginUser implements UserDetails {
 
-    @Serial
-    private static final long serialVersionUID = 4453625113463743280L;
-
     @ApiModelProperty(value = "用户唯一标识")
     private String token;
     @ApiModelProperty(value = "用户信息")
     private User user;
     @ApiModelProperty(value = "拥有的资源列表")
     private List<Resource> resourceList;
+    @ApiModelProperty(value = "过期时间")
+    private Long expireTime;
 
     public LoginUser(User user, List<Resource> resourceList) {
         this.user = user;
         this.resourceList = resourceList;
     }
 
-    public LoginUser(String token, User user) {
+    /**
+     * 获取
+     * @return token
+     */
+    public String getToken() {
+        return token;
+    }
+
+    /**
+     * 设置
+     * @param token
+     */
+    public void setToken(String token) {
         this.token = token;
+    }
+
+    /**
+     * 获取
+     * @return user
+     */
+    public User getUser() {
+        return user;
+    }
+
+    /**
+     * 设置
+     * @param user
+     */
+    public void setUser(User user) {
         this.user = user;
     }
 
+    /**
+     * 获取
+     * @return resourceList
+     */
+    public List<Resource> getResourceList() {
+        return resourceList;
+    }
+
+    /**
+     * 设置
+     * @param resourceList
+     */
+    public void setResourceList(List<Resource> resourceList) {
+        this.resourceList = resourceList;
+    }
+
+    /**
+     * 获取
+     * @return loginTime
+     */
+    public Long getExpireTime() {
+        return expireTime;
+    }
+
+    /**
+     * 设置
+     * @param expireTime
+     */
+    public void setExpireTime(Long expireTime) {
+        this.expireTime = expireTime;
+    }
+
+    public String toString() {
+        return "LoginUser{token = " + token + ", user = " + user + ", resourceList = " + resourceList + ", loginTime = " + expireTime + "}";
+    }
+
     @Override
+    @JSONField(serialize = false, deserialize = false)
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return resourceList.stream()
                 .map(resource -> new SimpleGrantedAuthority(resource.getId() + ":" + resource.getName()))
@@ -45,7 +108,7 @@ public class LoginUser implements UserDetails {
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return this.user.getPassword();
     }
 
     @Override
@@ -87,41 +150,5 @@ public class LoginUser implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    /**
-     * 获取
-     * @return token
-     */
-    public String getToken() {
-        return token;
-    }
-
-    /**
-     * 设置
-     * @param token
-     */
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    /**
-     * 获取
-     * @return user
-     */
-    public User getUser() {
-        return user;
-    }
-
-    /**
-     * 设置
-     * @param user
-     */
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public String toString() {
-        return "LoginUser{token = " + token + ", user = " + user + "}";
     }
 }
