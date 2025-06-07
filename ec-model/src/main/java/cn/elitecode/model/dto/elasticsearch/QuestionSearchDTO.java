@@ -1,41 +1,55 @@
-package cn.elitecode.model.entity;
+package cn.elitecode.model.dto.elasticsearch;
 
+import cn.elitecode.model.entity.Problemset;
+import cn.elitecode.model.entity.Tag;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 import java.util.Date;
 import java.util.List;
 
 /**
-* question(题目表) | 实体类
-*/
-public class Question {
+ * question(题目表) | 实体类
+ */
+@Document(indexName = "question")
+public class QuestionSearchDTO {
 
     @ApiModelProperty("用户ID，主键")
+    @Id
     private Long id;
 
     @ApiModelProperty("标题")
+    @Field(analyzer = "ik_max_word", type = FieldType.Text)
     private String title;
 
     @ApiModelProperty("内容")
+    @Field(analyzer = "ik_max_word", type = FieldType.Text)
     private String content;
 
     @ApiModelProperty("推荐答案")
+    @Field(analyzer = "ik_max_word", type = FieldType.Text)
     private String answer;
 
     @ApiModelProperty("删除标志（0代表存在，2代表删除）")
+    @Field(type = FieldType.Keyword)
     private String delFlag;
 
     @ApiModelProperty("创建者")
+    @Field(type = FieldType.Long)
     private Long createBy;
 
     @ApiModelProperty("创建时间")
+    @Field(type = FieldType.Date)
     private Date createTime;
 
     @ApiModelProperty("更新者")
+    @Field(type = FieldType.Long)
     private Long updateBy;
 
     @ApiModelProperty("编辑时间")
+    @Field(type = FieldType.Date)
     private Date updateTime;
 
     @ApiModelProperty("题库对象列表")
@@ -46,10 +60,10 @@ public class Question {
     @Field(type = FieldType.Nested)
     List<Tag> tagList;
 
-    public Question() {
+    public QuestionSearchDTO() {
     }
 
-    public Question(Long id, String title, String content, String answer, String delFlag, Long createBy, Date createTime, Long updateBy, Date updateTime, List<Problemset> problemsetList, List<Tag> tagList) {
+    public QuestionSearchDTO(Long id, String title, String content, String answer, String delFlag, Long createBy, Date createTime, Long updateBy, Date updateTime, List<Problemset> problemsetList, List<Tag> tagList) {
         this.id = id;
         this.title = title;
         this.content = content;

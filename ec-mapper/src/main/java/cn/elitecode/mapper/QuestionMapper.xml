@@ -89,7 +89,7 @@
             question q
             LEFT JOIN problemset_question pq on pq.question_id = q.id
             LEFT JOIN problemset p on p.id = pq.problemset_id
-            left join question_tag qt on qt.question_id = q.id
+            left join tag_question qt on qt.question_id = q.id
             left join tag t on t.id = qt.tag_id
         where
             q.id = #{questionId}
@@ -115,7 +115,7 @@
             question q
             LEFT JOIN problemset_question pq on pq.question_id = q.id
             LEFT JOIN problemset p on p.id = pq.problemset_id
-            left join question_tag qt on qt.question_id = q.id
+            left join tag_question qt on qt.question_id = q.id
             left join tag t on t.id = tag_id
         where
             q.del_flag = '0'
@@ -181,6 +181,32 @@
             and p.id = #{problemsetId}
             <if test="problemsetTitle != null and problemsetTitle != ''">and q.title like concat("%", #{problemsetTitle}, "%")</if>
             <if test="problemsetContent != null and problemsetContent != ''">and q.content like concat("%", #{problemsetContent}, "%")</if>
+    </select>
+
+    <!-- List<Question> getAllQuestionList(); -->
+    <select id="getAllQuestionList" resultMap="QuestionResult">
+        SELECT
+            q.id,
+            q.title,
+            q.content,
+            q.answer,
+            q.del_flag,
+            q.create_by,
+            q.create_time,
+            q.update_by,
+            q.update_time,
+            p.id as p_id,
+            p.title as p_title,
+            t.id as t_id,
+            t.name as t_name
+        FROM
+            question q
+            LEFT JOIN problemset_question pq on pq.question_id = q.id
+            LEFT JOIN problemset p on p.id = pq.problemset_id
+            left join tag_question qt on qt.question_id = q.id
+            left join tag t on t.id = tag_id
+        where
+            q.del_flag = '0'
     </select>
 
 </mapper>

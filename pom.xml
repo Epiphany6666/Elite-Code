@@ -25,6 +25,7 @@
         <knife4j.version>4.4.0</knife4j.version>
         <hutool.version>5.8.16</hutool.version>
         <fastjson.version>2.0.53</fastjson.version>
+        <elasticsearch.version>7.12.1</elasticsearch.version>
     </properties>
 
     <dependencies>

@@ -7,14 +7,11 @@ import cn.elitecode.mapper.QuestionMapper;
 import cn.elitecode.mapper.TagQuestionMapper;
 import cn.elitecode.model.dto.problemset.ProblemsetQueryQuestionDTO;
 import cn.elitecode.model.dto.question.QuestionAddDTO;
-import cn.elitecode.model.dto.question.QuestionQueryDTO;
 import cn.elitecode.model.dto.question.QuestionUpdateDTO;
 import cn.elitecode.model.entity.ProblemsetQuestion;
 import cn.elitecode.model.entity.Question;
 import cn.elitecode.model.entity.TagQuestion;
 import cn.elitecode.service.QuestionService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,9 +23,7 @@ import java.util.List;
 * question(题目题表) | 业务处理层
 */
 @Service
-public class QuestionServiceImpl implements QuestionService{
-
-    private static final Logger log = LoggerFactory.getLogger(QuestionServiceImpl.class);
+public class QuestionServiceImpl implements QuestionService {
 
     @Autowired
     private QuestionMapper questionMapper;
@@ -86,17 +81,6 @@ public class QuestionServiceImpl implements QuestionService{
     public Question selectQuestionById(Long questionId) {
         Question question = questionMapper.selectQuestionById(questionId);
         return question;
-    }
-
-    @Override
-    public CommonPage<Question> selectQuestionList(QuestionQueryDTO questionQueryDTO) {
-        if (questionQueryDTO.getCurrent() != null && questionQueryDTO.getPageSize() != null) {
-            questionQueryDTO.setCurrent((questionQueryDTO.getCurrent() - 1) * questionQueryDTO.getPageSize());
-        }
-        List<Question> questionList = questionMapper.selectQuestionList(questionQueryDTO);
-        Long total = questionMapper.getQuestionTotal(questionQueryDTO);
-        CommonPage<Question> page = new CommonPage<>(total, questionList);
-        return page;
     }
 
     @Override

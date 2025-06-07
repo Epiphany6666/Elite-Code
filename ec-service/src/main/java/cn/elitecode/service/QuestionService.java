@@ -3,7 +3,6 @@ package cn.elitecode.service;
 import cn.elitecode.common.api.CommonPage;
 import cn.elitecode.model.dto.problemset.ProblemsetQueryQuestionDTO;
 import cn.elitecode.model.dto.question.QuestionAddDTO;
-import cn.elitecode.model.dto.question.QuestionQueryDTO;
 import cn.elitecode.model.dto.question.QuestionUpdateDTO;
 import cn.elitecode.model.entity.Question;
 
@@ -36,13 +35,6 @@ public interface QuestionService {
      * @return
      */
     Question selectQuestionById(Long questionId);
-
-    /**
-     * 根据分页条件获取题目信息
-     * @param questionQueryDTO
-     * @return
-     */
-    CommonPage<Question> selectQuestionList(QuestionQueryDTO questionQueryDTO);
 
     /**
      * 根据分页条件查询所在题库的题目信息

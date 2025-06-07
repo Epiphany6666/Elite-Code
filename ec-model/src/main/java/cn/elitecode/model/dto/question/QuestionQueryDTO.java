@@ -12,9 +12,6 @@ public class QuestionQueryDTO extends PageRequest {
     @ApiModelProperty(value = "标题")
     private String title;
 
-    @ApiModelProperty(value = "内容")
-    private String content;
-
     @ApiModelProperty(value = "创建者")
     private Long createBy;
 
@@ -30,9 +27,8 @@ public class QuestionQueryDTO extends PageRequest {
     public QuestionQueryDTO() {
     }
 
-    public QuestionQueryDTO(String title, String content, Long createBy, Long updateBy, Date startTime, Date endTime) {
+    public QuestionQueryDTO(String title, Long createBy, Long updateBy, Date startTime, Date endTime) {
         this.title = title;
-        this.content = content;
         this.createBy = createBy;
         this.updateBy = updateBy;
         this.startTime = startTime;
@@ -53,22 +49,6 @@ public class QuestionQueryDTO extends PageRequest {
      */
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    /**
-     * 获取
-     * @return content
-     */
-    public String getContent() {
-        return content;
-    }
-
-    /**
-     * 设置
-     * @param content
-     */
-    public void setContent(String content) {
-        this.content = content;
     }
 
     /**
@@ -136,6 +116,6 @@ public class QuestionQueryDTO extends PageRequest {
     }
 
     public String toString() {
-        return "QuestionQueryDTO{title = " + title + ", content = " + content + ", createBy = " + createBy + ", updateBy = " + updateBy + ", startTime = " + startTime + ", endTime = " + endTime + "}";
+        return "QuestionQueryDTO{title = " + title + ", createBy = " + createBy + ", updateBy = " + updateBy + ", startTime = " + startTime + ", endTime = " + endTime + "}";
     }
 }

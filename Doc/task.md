@@ -1231,6 +1231,1563 @@
   ~~~
 
 - [ ] 
+---
+
+## Elasticsearch
+
+### 一、实现
+
+- [x] 整合Elasticsearch
+
+  在pom.xml中添加相关依赖
+
+  ~~~xml
+  <!--Elasticsearch相关依赖-->
+  <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-elasticsearch</artifactId>artifactId>
+  </dependency>
+  ~~~
+
+  修改application.yml文件，在spring节点下添加Elasticsearch相关配置
+
+  ~~~yaml
+  data:
+    elasticsearch:
+      repositories:
+        enabled: true
+  elasticsearch:
+    uris: http://localhost:9200
+  ~~~
+
+- [x] 实现题目搜索
+
+  添加题目文档对象QuestionSearchDTO
+
+  不需要中文分词的字段设置成 `@Field(type = FieldType.Keyword)` 类型，需要中文分词的设置成 `@Field(analyzer = "ik_max_word",type = FieldType.Text)` 类型。
+
+  ~~~java
+  package cn.elitecode.model.dto.elasticsearch;
+  
+  import cn.elitecode.model.entity.Problemset;
+  import cn.elitecode.model.entity.Tag;
+  import io.swagger.annotations.ApiModelProperty;
+  import org.springframework.data.annotation.Id;
+  import org.springframework.data.elasticsearch.annotations.Document;
+  import org.springframework.data.elasticsearch.annotations.Field;
+  import org.springframework.data.elasticsearch.annotations.FieldType;
+  import java.util.Date;
+  import java.util.List;
+  
+  /**
+   * question(题目表) | 实体类
+   */
+  @Document(indexName = "question")
+  public class QuestionSearchDTO {
+  
+      @ApiModelProperty("用户ID，主键")
+      @Id
+      private Long id;
+  
+      @ApiModelProperty("标题")
+      @Field(analyzer = "ik_max_word", type = FieldType.Text)
+      private String title;
+  
+      @ApiModelProperty("内容")
+      @Field(analyzer = "ik_max_word", type = FieldType.Text)
+      private String content;
+  
+      @ApiModelProperty("推荐答案")
+      @Field(analyzer = "ik_max_word", type = FieldType.Text)
+      private String answer;
+  
+      @ApiModelProperty("删除标志（0代表存在，2代表删除）")
+      @Field(type = FieldType.Keyword)
+      private String delFlag;
+  
+      @ApiModelProperty("创建者")
+      @Field(type = FieldType.Long)
+      private Long createBy;
+  
+      @ApiModelProperty("创建时间")
+      @Field(type = FieldType.Date)
+      private Date createTime;
+  
+      @ApiModelProperty("更新者")
+      @Field(type = FieldType.Long)
+      private Long updateBy;
+  
+      @ApiModelProperty("编辑时间")
+      @Field(type = FieldType.Date)
+      private Date updateTime;
+  
+      @ApiModelProperty("题库对象列表")
+      @Field(type = FieldType.Nested)
+      List<Problemset> problemsetList;
+  
+      @ApiModelProperty("标签对象列表")
+      @Field(type = FieldType.Nested)
+      List<Tag> tagList;
+  
+      public QuestionSearchDTO() {
+      }
+  
+      public QuestionSearchDTO(Long id, String title, String content, String answer, String delFlag, Long createBy, Date createTime, Long updateBy, Date updateTime, List<Problemset> problemsetList, List<Tag> tagList) {
+          this.id = id;
+          this.title = title;
+          this.content = content;
+          this.answer = answer;
+          this.delFlag = delFlag;
+          this.createBy = createBy;
+          this.createTime = createTime;
+          this.updateBy = updateBy;
+          this.updateTime = updateTime;
+          this.problemsetList = problemsetList;
+          this.tagList = tagList;
+      }
+  
+      /**
+       * 获取
+       * @return id
+       */
+      public Long getId() {
+          return id;
+      }
+  
+      /**
+       * 设置
+       * @param id
+       */
+      public void setId(Long id) {
+          this.id = id;
+      }
+  
+      /**
+       * 获取
+       * @return title
+       */
+      public String getTitle() {
+          return title;
+      }
+  
+      /**
+       * 设置
+       * @param title
+       */
+      public void setTitle(String title) {
+          this.title = title;
+      }
+  
+      /**
+       * 获取
+       * @return content
+       */
+      public String getContent() {
+          return content;
+      }
+  
+      /**
+       * 设置
+       * @param content
+       */
+      public void setContent(String content) {
+          this.content = content;
+      }
+  
+      /**
+       * 获取
+       * @return answer
+       */
+      public String getAnswer() {
+          return answer;
+      }
+  
+      /**
+       * 设置
+       * @param answer
+       */
+      public void setAnswer(String answer) {
+          this.answer = answer;
+      }
+  
+      /**
+       * 获取
+       * @return delFlag
+       */
+      public String getDelFlag() {
+          return delFlag;
+      }
+  
+      /**
+       * 设置
+       * @param delFlag
+       */
+      public void setDelFlag(String delFlag) {
+          this.delFlag = delFlag;
+      }
+  
+      /**
+       * 获取
+       * @return createBy
+       */
+      public Long getCreateBy() {
+          return createBy;
+      }
+  
+      /**
+       * 设置
+       * @param createBy
+       */
+      public void setCreateBy(Long createBy) {
+          this.createBy = createBy;
+      }
+  
+      /**
+       * 获取
+       * @return createTime
+       */
+      public Date getCreateTime() {
+          return createTime;
+      }
+  
+      /**
+       * 设置
+       * @param createTime
+       */
+      public void setCreateTime(Date createTime) {
+          this.createTime = createTime;
+      }
+  
+      /**
+       * 获取
+       * @return updateBy
+       */
+      public Long getUpdateBy() {
+          return updateBy;
+      }
+  
+      /**
+       * 设置
+       * @param updateBy
+       */
+      public void setUpdateBy(Long updateBy) {
+          this.updateBy = updateBy;
+      }
+  
+      /**
+       * 获取
+       * @return updateTime
+       */
+      public Date getUpdateTime() {
+          return updateTime;
+      }
+  
+      /**
+       * 设置
+       * @param updateTime
+       */
+      public void setUpdateTime(Date updateTime) {
+          this.updateTime = updateTime;
+      }
+  
+      /**
+       * 获取
+       * @return problemsetList
+       */
+      public List<Problemset> getProblemsetList() {
+          return problemsetList;
+      }
+  
+      /**
+       * 设置
+       * @param problemsetList
+       */
+      public void setProblemsetList(List<Problemset> problemsetList) {
+          this.problemsetList = problemsetList;
+      }
+  
+      /**
+       * 获取
+       * @return tags
+       */
+      public List<Tag> getTagList() {
+          return tagList;
+      }
+  
+      /**
+       * 设置
+       * @param tagList
+       */
+      public void setTagList(List<Tag> tagList) {
+          this.tagList = tagList;
+      }
+  
+      public String toString() {
+          return "Question{id = " + id + ", title = " + title + ", content = " + content + ", answer = " + answer + ", delFlag = " + delFlag + ", createBy = " + createBy + ", createTime = " + createTime + ", updateBy = " + updateBy + ", updateTime = " + updateTime + ", problemsetList = " + problemsetList + ", tags = " + tagList + "}";
+      }
+  }
+  ~~~
+
+  继承ElasticsearchRepository接口，这样就拥有了一些基本的Elasticsearch数据操作方法，同时定义了一个衍生查询方法
+
+  ~~~java
+  package cn.elitecode.mapper;
+  
+  import cn.elitecode.model.dto.elasticsearch.QuestionSearchDTO;
+  import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
+  
+  public interface EsQuestionMapper extends ElasticsearchRepository<QuestionSearchDTO, String> {
+  }
+  ~~~
+
+  导入单元测试依赖
+
+  ~~~xml
+  <!-- 单元测试 -->
+  <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+  </dependency>
+  ~~~
+
+  添加测试类
+
+  ~~~java
+  package cn.elitecode;
+  
+  import cn.elitecode.mapper.EsQuestionMapper;
+  import cn.elitecode.mapper.QuestionMapper;
+  import cn.elitecode.model.dto.elasticsearch.QuestionSearchDTO;
+  import cn.elitecode.model.entity.Question;
+  import org.junit.jupiter.api.Test;
+  import org.springframework.beans.BeanUtils;
+  import org.springframework.beans.factory.annotation.Autowired;
+  import org.springframework.boot.test.context.SpringBootTest;
+  import java.util.List;
+  import java.util.stream.Collectors;
+  
+  @SpringBootTest
+  public class EliteCodeApplicationTests {
+  
+      @Autowired
+      private QuestionMapper questionMapper;
+      @Autowired
+      private EsQuestionMapper esQuestionMapper;
+  
+      /**
+       * 将MySql中的数据全部存入ES
+       */
+      @Test
+      public void testImportAllMySqlToES() {
+          List<Question> allQuestionList = questionMapper.getAllQuestionList();
+          esQuestionMapper.saveAll(allQuestionList.stream().map(item -> {
+              QuestionSearchDTO questionSearchDTO = new QuestionSearchDTO();
+              BeanUtils.copyProperties(item, questionSearchDTO);
+              return questionSearchDTO;
+          }).collect(Collectors.toList()));
+      }
+  }
+  ~~~
+
+  application-dev.yml
+
+  ~~~yaml
+  elitecode:
+    search:
+      mode: elasticsearch
+  ~~~
+
+  SearchModeEnum.java
+
+  ~~~java
+  package cn.elitecode.enums;
+  
+  /**
+   * 搜索模式枚举类
+   */
+  public enum SearchModeEnum {
+      MYSQL("mysql", "questionServiceImpl"),
+      ELASTICSEARCH("elasticsearch", "esQuestionServiceImpl");
+  
+      private SearchModeEnum(String mode, String strategy) {
+          this.mode = mode;
+          this.strategy = strategy;
+      }
+  
+      private final String mode;
+      private final String strategy;
+  
+      public static String getStrategy(String mode) {
+          for (SearchModeEnum searchModeEnum : SearchModeEnum.values()) {
+              if (searchModeEnum.mode.equals(mode)) {
+                  return searchModeEnum.strategy;
+              }
+          }
+          return null;
+      }
+  }
+  ~~~
+
+  SearchStrategyContext.java
+
+  ~~~java
+  package cn.elitecode.strategy.context;
+  
+  import cn.elitecode.common.api.CommonPage;
+  import cn.elitecode.enums.SearchModeEnum;
+  import cn.elitecode.model.dto.question.QuestionQueryDTO;
+  import cn.elitecode.model.dto.elasticsearch.QuestionSearchDTO;
+  import cn.elitecode.strategy.SearchStrategy;
+  import org.springframework.beans.factory.annotation.Autowired;
+  import org.springframework.beans.factory.annotation.Value;
+  import org.springframework.stereotype.Service;
+  import java.util.Map;
+  
+  @Service
+  public class SearchStrategyContext {
+  
+      @Value("${elitecode.search.mode}")
+      private String mode;
+  
+      @Autowired
+      private Map<String, SearchStrategy> searchStrategyMap;
+  
+      public CommonPage<QuestionSearchDTO> executeSearchStrategy(QuestionQueryDTO questionQueryDTO) {
+          return searchStrategyMap.get(SearchModeEnum.getStrategy(mode)).selectQuestionList(questionQueryDTO);
+      }
+  }
+  
+  ~~~
+
+  使用多态实现mysql、elasticsearch搜索模式切换
+
+  ~~~java
+  package cn.elitecode.strategy;
+  
+  import cn.elitecode.common.api.CommonPage;
+  import cn.elitecode.model.dto.question.QuestionQueryDTO;
+  import cn.elitecode.model.dto.elasticsearch.QuestionSearchDTO;
+  
+  public interface SearchStrategy {
+  
+      /**
+       * 根据分页条件获取题目信息
+       * @param questionQueryDTO
+       * @return
+       */
+      CommonPage<QuestionSearchDTO> selectQuestionList(QuestionQueryDTO questionQueryDTO);
+  }
+  ~~~
+
+  删除QuestionService中的selectQuestionList方法，并定义MySqlSearchStrategyImpl.java
+
+  ~~~java
+  package cn.elitecode.service.impl;
+  
+  import cn.elitecode.common.api.CommonPage;
+  import cn.elitecode.mapper.QuestionMapper;
+  import cn.elitecode.model.dto.question.QuestionQueryDTO;
+  import cn.elitecode.model.entity.Question;
+  import cn.elitecode.model.dto.elasticsearch.QuestionSearchDTO;
+  import cn.elitecode.strategy.SearchStrategy;
+  import org.springframework.beans.BeanUtils;
+  import org.springframework.beans.factory.annotation.Autowired;
+  import org.springframework.stereotype.Service;
+  import java.util.List;
+  
+  @Service
+  public class MySqlSearchStrategyImpl implements SearchStrategy {
+  
+      @Autowired
+      private QuestionMapper questionMapper;
+  
+      @Override
+      public CommonPage<QuestionSearchDTO> selectQuestionList(QuestionQueryDTO questionQueryDTO) {
+          if (questionQueryDTO.getCurrent() != null && questionQueryDTO.getPageSize() != null) {
+              questionQueryDTO.setCurrent((questionQueryDTO.getCurrent() - 1) * questionQueryDTO.getPageSize());
+          }
+          List<Question> questionList = questionMapper.selectQuestionList(questionQueryDTO);
+          Long total = questionMapper.getQuestionTotal(questionQueryDTO);
+          List<QuestionSearchDTO> result = questionList.stream().map(item -> {
+              QuestionSearchDTO questionSearchDTO = new QuestionSearchDTO();
+              BeanUtils.copyProperties(item, questionSearchDTO);
+              return questionSearchDTO;
+          }).toList();
+          CommonPage<QuestionSearchDTO> page = new CommonPage<>(total, result);
+          return page;
+      }
+  
+  }
+  ~~~
+
+  EsQuestionServiceImpl.java
+
+  ~~~java
+  package cn.elitecode.service.impl;
+  
+  import cn.elitecode.common.api.CommonPage;
+  import cn.elitecode.model.dto.question.QuestionQueryDTO;
+  import cn.elitecode.model.dto.elasticsearch.QuestionSearchDTO;
+  import cn.elitecode.strategy.SearchStrategy;
+  import cn.hutool.core.util.StrUtil;
+  import org.elasticsearch.index.query.BoolQueryBuilder;
+  import org.elasticsearch.index.query.QueryBuilders;
+  import org.springframework.beans.factory.annotation.Autowired;
+  import org.springframework.data.domain.PageRequest;
+  import org.springframework.data.domain.Sort;
+  import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
+  import org.springframework.data.elasticsearch.core.SearchHits;
+  import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+  import org.springframework.stereotype.Service;
+  import java.util.ArrayList;
+  import java.util.List;
+  import java.util.stream.Collectors;
+  
+  @Service
+  public class EsQuestionServiceImpl implements SearchStrategy {
+  
+      @Autowired
+      private ElasticsearchRestTemplate elasticsearchRestTemplate;
+  
+      @Override
+      public CommonPage<QuestionSearchDTO> selectQuestionList(QuestionQueryDTO questionQueryDTO) {
+          PageRequest pageRequest = getPageRequest(questionQueryDTO);
+          String title = questionQueryDTO.getTitle();
+          CommonPage<QuestionSearchDTO> questionCommonPage = search(buildQuery(title, pageRequest));
+          return questionCommonPage;
+      }
+  
+      /**
+       * 构建查询条件
+       * @param title
+       * @param pageRequest
+       * @return
+       */
+      private NativeSearchQueryBuilder buildQuery(String title, PageRequest pageRequest) {
+          NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
+          BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+          if (StrUtil.isNotEmpty(title)) {
+              boolQueryBuilder.must(QueryBuilders.matchQuery("title", title));
+          }
+          boolQueryBuilder.must(QueryBuilders.matchQuery("delFlag", 0));
+          nativeSearchQueryBuilder.withQuery(boolQueryBuilder);
+          nativeSearchQueryBuilder.withPageable(pageRequest);
+          return nativeSearchQueryBuilder;
+      }
+  
+      /**
+       * 查询并处理查询结果
+       * @param nativeSearchQueryBuilder
+       * @return
+       */
+      private CommonPage<QuestionSearchDTO> search(NativeSearchQueryBuilder nativeSearchQueryBuilder) {
+          SearchHits<QuestionSearchDTO> search = elasticsearchRestTemplate.search(nativeSearchQueryBuilder.build(), QuestionSearchDTO.class);
+          List<QuestionSearchDTO> questionList = search.getSearchHits().stream().map(item -> item.getContent()).collect(Collectors.toList());
+          long total = search.getTotalHits();
+          CommonPage<QuestionSearchDTO> questionCommonPage = new CommonPage<>(total, questionList);
+          return questionCommonPage;
+      }
+  
+      /**
+       * 自定义的PageRequest转换成Spring的PageRequest
+       * @param questionQueryDTO
+       * @return
+       */
+      private PageRequest getPageRequest(QuestionQueryDTO questionQueryDTO) {
+          int current = questionQueryDTO.getCurrent() - 1;
+          int pageSize = questionQueryDTO.getPageSize();
+          List<String> sortFieldPair = questionQueryDTO.getSortFieldPair();
+          List<Sort.Order> orders = new ArrayList<>();
+          if (sortFieldPair != null && sortFieldPair.size() > 0) {
+              for (String sortField : sortFieldPair) {
+                  String[] split = sortField.split("\\s");
+                  if (split.length == 2) {
+                      Sort.Direction direction = Sort.Direction.DESC;
+                      if ("asc".equalsIgnoreCase(split[1])) {
+                          direction = Sort.Direction.ASC;
+                      }
+                      orders.add(new Sort.Order(direction, split[0]));
+                  }
+              }
+          }
+          PageRequest pageRequest = PageRequest.of(current, pageSize, Sort.by(orders));
+          return pageRequest;
+      }
+  }
+  ~~~
+
+---
+
+### 二、参考项目
+
+#### xboot
+
+application.yml
+
+~~~yml
+xboot:
+  logRecord:
+  es: false
+~~~
+
+EsLog
+
+~~~java
+package cn.exrick.xboot.core.entity.elasticsearch;
+
+import cn.exrick.xboot.core.common.constant.CommonConstant;
+import cn.exrick.xboot.core.common.utils.ObjectUtil;
+import cn.exrick.xboot.core.common.utils.SnowFlakeUtil;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import org.springframework.data.elasticsearch.annotations.DateFormat;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+
+import javax.persistence.Id;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.Map;
+
+
+/**
+ * Elasticsearch文档实体类
+ * @author Exrickx
+ */
+@Data
+@Document(indexName = "log", replicas = 0, refreshInterval = "1m")
+public class EsLog implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @ApiModelProperty(value = "唯一标识")
+    private String id = SnowFlakeUtil.nextId().toString();
+
+    @ApiModelProperty(value = "创建者")
+    private String createBy;
+
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    @ApiModelProperty(value = "创建时间")
+    @Field(type = FieldType.Date, index = false, format = DateFormat.custom, pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date createTime = new Date();
+
+    @ApiModelProperty(value = "时间戳 查询时间范围时使用")
+    private Long timeMillis = System.currentTimeMillis();
+
+    @ApiModelProperty(value = "更新者")
+    private String updateBy;
+
+    @ApiModelProperty(value = "删除标志 默认0")
+    private Integer delFlag = CommonConstant.STATUS_NORMAL;
+
+    @ApiModelProperty(value = "方法操作名称")
+    private String name;
+
+    @ApiModelProperty(value = "日志类型 0登陆日志 1操作日志")
+    private Integer logType;
+
+    @ApiModelProperty(value = "请求路径")
+    private String requestUrl;
+
+    @ApiModelProperty(value = "请求类型")
+    private String requestType;
+
+    @ApiModelProperty(value = "请求参数")
+    private String requestParam;
+
+    @ApiModelProperty(value = "请求用户")
+    private String username;
+
+    @ApiModelProperty(value = "ip")
+    private String ip;
+
+    @ApiModelProperty(value = "ip信息")
+    private String ipInfo;
+
+    @ApiModelProperty(value = "设备信息")
+    private String device;
+
+    @ApiModelProperty(value = "花费时间")
+    private Integer costTime;
+
+    /**
+     * 转换请求参数为Json
+     * @param paramMap
+     */
+    public void setMapToParams(Map<String, String[]> paramMap) {
+
+        this.requestParam = ObjectUtil.mapToString(paramMap);
+    }
+}
+~~~
+
+LogController
+
+~~~java
+package cn.exrick.xboot.base.controller.manage;
+
+import cn.exrick.xboot.core.common.utils.PageUtil;
+import cn.exrick.xboot.core.common.utils.ResultUtil;
+import cn.exrick.xboot.core.common.vo.PageVo;
+import cn.exrick.xboot.core.common.vo.Result;
+import cn.exrick.xboot.core.common.vo.SearchVo;
+import cn.exrick.xboot.core.entity.Log;
+import cn.exrick.xboot.core.entity.elasticsearch.EsLog;
+import cn.exrick.xboot.core.service.LogService;
+import cn.exrick.xboot.core.service.elasticsearch.EsLogService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+
+/**
+ * @author Exrickx
+ */
+@Slf4j
+@RestController
+@Api(tags = "日志管理接口")
+@RequestMapping("/xboot/log")
+@Transactional
+public class LogController {
+
+    @Value("${xboot.logRecord.es:false}")
+    private Boolean esRecord;
+
+    @Autowired
+    private EsLogService esLogService;
+
+    @Autowired
+    private LogService logService;
+
+    @RequestMapping(value = "/getAllByPage", method = RequestMethod.GET)
+    @ApiOperation(value = "分页获取全部")
+    public Result<Object> getAllByPage(@RequestParam(required = false) Integer type,
+                                       @RequestParam String key,
+                                       SearchVo searchVo,
+                                       PageVo pageVo) {
+
+        if (esRecord) {
+            // 支持排序的字段
+            if (!"costTime".equals(pageVo.getSort())) {
+                pageVo.setSort("timeMillis");
+            }
+            Page<EsLog> es = esLogService.findByCondition(type, key, searchVo, PageUtil.initPage(pageVo));
+            return ResultUtil.data(es);
+        } else {
+            Page<Log> log = logService.findByConfition(type, key, searchVo, PageUtil.initPage(pageVo));
+            return ResultUtil.data(log);
+        }
+    }
+
+    @RequestMapping(value = "/delByIds", method = RequestMethod.POST)
+    @ApiOperation(value = "批量删除")
+    public Result<Object> delByIds(@RequestParam String[] ids) {
+
+        for (String id : ids) {
+            if (esRecord) {
+                esLogService.deleteLog(id);
+            } else {
+                logService.delete(id);
+            }
+        }
+        return ResultUtil.success("删除成功");
+    }
+
+    @RequestMapping(value = "/delAll", method = RequestMethod.POST)
+    @ApiOperation(value = "全部删除")
+    public Result<Object> delAll() {
+
+        if (esRecord) {
+            esLogService.deleteAll();
+        } else {
+            logService.deleteAll();
+        }
+        return ResultUtil.success("删除成功");
+    }
+}
+~~~
+
+EsLogDao
+
+~~~java
+package cn.exrick.xboot.core.dao.elasticsearch;
+
+import cn.exrick.xboot.core.entity.elasticsearch.EsLog;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
+
+
+/**
+ * @author Exrickx
+ */
+public interface EsLogDao extends ElasticsearchRepository<EsLog, String> {
+
+    /**
+     * 通过类型获取
+     * @param type
+     * @param pageable
+     * @return
+     */
+    Page<EsLog> findByLogType(Integer type, Pageable pageable);
+}
+~~~
+
+LogServiceImpl
+
+~~~java
+package cn.exrick.xboot.core.serviceimpl;
+
+import cn.exrick.xboot.core.common.vo.SearchVo;
+import cn.exrick.xboot.core.dao.LogDao;
+import cn.exrick.xboot.core.entity.Log;
+import cn.exrick.xboot.core.service.LogService;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.criteria.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+/**
+ * 日志接口实现
+ * @author Exrickx
+ */
+@Slf4j
+@Service
+@Transactional
+public class LogServiceImpl implements LogService {
+
+    @Autowired
+    private LogDao logDao;
+
+    @Override
+    public LogDao getRepository() {
+        return logDao;
+    }
+
+    @Override
+    public Page<Log> findByConfition(Integer type, String key, SearchVo searchVo, Pageable pageable) {
+
+        return logDao.findAll(new Specification<Log>() {
+            @Nullable
+            @Override
+            public Predicate toPredicate(Root<Log> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
+
+                Path<String> nameField = root.get("name");
+                Path<String> requestUrlField = root.get("requestUrl");
+                Path<String> requestTypeField = root.get("requestType");
+                Path<String> requestParamField = root.get("requestParam");
+                Path<String> usernameField = root.get("username");
+                Path<String> ipField = root.get("ip");
+                Path<String> ipInfoField = root.get("ipInfo");
+                Path<String> deviceField = root.get("device");
+                Path<Integer> logTypeField = root.get("logType");
+                Path<Date> createTimeField = root.get("createTime");
+
+                List<Predicate> list = new ArrayList<Predicate>();
+
+                // 类型
+                if (type != null) {
+                    list.add(cb.equal(logTypeField, type));
+                }
+
+                // 模糊搜素
+                if (StrUtil.isNotBlank(key)) {
+                    Predicate p1 = cb.like(requestUrlField, '%' + key + '%');
+                    Predicate p2 = cb.like(requestTypeField, '%' + key + '%');
+                    Predicate p3 = cb.like(requestParamField, '%' + key + '%');
+                    Predicate p4 = cb.like(usernameField, '%' + key + '%');
+                    Predicate p5 = cb.like(ipField, '%' + key + '%');
+                    Predicate p6 = cb.like(ipInfoField, '%' + key + '%');
+                    Predicate p7 = cb.like(nameField, '%' + key + '%');
+                    Predicate p8 = cb.like(deviceField, '%' + key + '%');
+                    list.add(cb.or(p1, p2, p3, p4, p5, p6, p7, p8));
+                }
+
+                // 创建时间
+                if (StrUtil.isNotBlank(searchVo.getStartDate()) && StrUtil.isNotBlank(searchVo.getEndDate())) {
+                    Date start = DateUtil.parse(searchVo.getStartDate());
+                    Date end = DateUtil.parse(searchVo.getEndDate());
+                    list.add(cb.between(createTimeField, start, DateUtil.endOfDay(end)));
+                }
+
+                Predicate[] arr = new Predicate[list.size()];
+                cq.where(list.toArray(arr));
+                return null;
+            }
+        }, pageable);
+    }
+
+    @Override
+    public void deleteAll() {
+
+        logDao.deleteAll();
+    }
+}
+
+~~~
+
+EsLogServiceImpl
+
+~~~java
+package cn.exrick.xboot.core.serviceimpl.elasticsearch;
+
+import cn.exrick.xboot.core.common.vo.SearchVo;
+import cn.exrick.xboot.core.dao.elasticsearch.EsLogDao;
+import cn.exrick.xboot.core.entity.elasticsearch.EsLog;
+import cn.exrick.xboot.core.service.elasticsearch.EsLogService;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+/**
+ * @author Exrickx
+ */
+@Service
+@Transactional
+@Slf4j
+public class EsLogServiceImpl implements EsLogService {
+
+    /**
+     * 可选
+     */
+    @Autowired(required = false)
+    private EsLogDao logDao;
+
+    @Override
+    public EsLog saveLog(EsLog esLog) {
+
+        return logDao.save(esLog);
+    }
+
+    @Override
+    public void deleteLog(String id) {
+
+        logDao.deleteById(id);
+    }
+
+    @Override
+    public void deleteAll() {
+
+        logDao.deleteAll();
+    }
+
+    @Override
+    public Page<EsLog> findByCondition(Integer type, String key, SearchVo searchVo, Pageable pageable) {
+
+        if (type == null && StrUtil.isBlank(key) && StrUtil.isBlank(searchVo.getStartDate())) {
+            // 无过滤条件获取全部
+            return logDao.findAll(pageable);
+        } else if (type != null && StrUtil.isBlank(key) && StrUtil.isBlank(searchVo.getStartDate())) {
+            // 仅有type
+            return logDao.findByLogType(type, pageable);
+        }
+
+        QueryBuilder qb;
+
+        QueryBuilder qb0 = QueryBuilders.termQuery("logType", type);
+        QueryBuilder qb1 = QueryBuilders.multiMatchQuery(key, "name", "requestUrl", "requestType", "requestParam", "username", "ip", "ipInfo", "device");
+        // 在有type条件下
+        if (StrUtil.isNotBlank(key) && StrUtil.isBlank(searchVo.getStartDate()) && StrUtil.isBlank(searchVo.getEndDate())) {
+            // 仅有key
+            qb = QueryBuilders.boolQuery().must(qb0).must(qb1);
+        } else if (StrUtil.isBlank(key) && StrUtil.isNotBlank(searchVo.getStartDate()) && StrUtil.isNotBlank(searchVo.getEndDate())) {
+            // 仅有时间范围
+            Long start = DateUtil.parse(searchVo.getStartDate()).getTime();
+            Long end = DateUtil.endOfDay(DateUtil.parse(searchVo.getEndDate())).getTime();
+            QueryBuilder qb2 = QueryBuilders.rangeQuery("timeMillis").gte(start).lte(end);
+            qb = QueryBuilders.boolQuery().must(qb0).must(qb2);
+        } else {
+            // 两者都有
+            Long start = DateUtil.parse(searchVo.getStartDate()).getTime();
+            Long end = DateUtil.endOfDay(DateUtil.parse(searchVo.getEndDate())).getTime();
+            QueryBuilder qb2 = QueryBuilders.rangeQuery("timeMillis").gte(start).lte(end);
+            qb = QueryBuilders.boolQuery().must(qb0).must(qb1).must(qb2);
+        }
+
+        // 多字段搜索
+        return logDao.search(qb, pageable);
+    }
+}
+
+~~~
+
+---
+
+#### mall4j
+
+将数据库中的数据同步到 Elasticsearch 中，可以使用定时任务或者监听数据库变更事件来实现。例如，在 `yami - shop-admin` 模块中创建一个定时任务来同步数据：
+
+```java
+import com.yami.shop.bean.model.Product;
+import com.yami.shop.service.ProductService;
+import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.xcontent.XContentType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.util.List;
+
+@Component
+public class DataSyncTask {
+
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private RestHighLevelClient elasticsearchClient;
+
+    @Scheduled(fixedRate = 3600000) // 每小时同步一次
+    public void syncData() throws IOException {
+        List<Product> products = productService.getAllProducts();
+        for (Product product : products) {
+            IndexRequest indexRequest = new IndexRequest("products");
+            indexRequest.id(product.getProdId().toString());
+            indexRequest.source("{\"prodName\":\"" + product.getProdName() + "\"}", XContentType.JSON);
+            elasticsearchClient.index(indexRequest, RequestOptions.DEFAULT);
+        }
+    }
+}
+```
+
+---
+
+#### aurora
+
+在`aurora-springboot`项目的pom.xml文件中添加 Elasticsearch 依赖：
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+</dependency>
+```
+
+在application-prod.yml中配置 Elasticsearch 的连接信息：
+
+```yaml
+spring:
+  elasticsearch:
+    rest:
+      uris: http://es的ip:9200
+```
+
+定义数据
+
+在`ArticleSearchDTO`类中定义了 Elasticsearch 的文档结构：
+
+```java
+package com.aurora.model.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Document(indexName = "article")
+public class ArticleSearchDTO {
+
+    @Id
+    private Integer id;
+
+    @Field(type = FieldType.Text, analyzer = "ik_max_word")
+    private String articleTitle;
+
+    @Field(type = FieldType.Text, analyzer = "ik_max_word")
+    private String articleContent;
+
+    @Field(type = FieldType.Integer)
+    private Integer isDelete;
+
+    @Field(type = FieldType.Integer)
+    private Integer status;
+
+}
+```
+
+创建`ElasticsearchMapper`接口继承`ElasticsearchRepository`，用于操作 Elasticsearch：
+
+```java
+package com.aurora.mapper;
+
+import com.aurora.model.dto.ArticleSearchDTO;
+import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface ElasticsearchMapper extends ElasticsearchRepository<ArticleSearchDTO,Integer> {
+
+}
+```
+
+通过`MaxWellConsumer`类监听 RabbitMQ 消息，实现数据库与 Elasticsearch 的数据同步：
+
+```java
+package com.aurora.consumer;
+
+import com.alibaba.fastjson.JSON;
+import com.aurora.model.dto.ArticleSearchDTO;
+import com.aurora.model.dto.MaxwellDataDTO;
+import com.aurora.entity.Article;
+import com.aurora.mapper.ElasticsearchMapper;
+import com.aurora.util.BeanCopyUtil;
+import org.springframework.amqp.rabbit.annotation.RabbitHandler;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import static com.aurora.constant.RabbitMQConstant.MAXWELL_QUEUE;
+
+@Component
+@RabbitListener(queues = MAXWELL_QUEUE)
+public class MaxWellConsumer {
+
+    @Autowired
+    private ElasticsearchMapper elasticsearchMapper;
+
+    @RabbitHandler
+    public void process(byte[] data) {
+        MaxwellDataDTO maxwellDataDTO = JSON.parseObject(new String(data), MaxwellDataDTO.class);
+        Article article = JSON.parseObject(JSON.toJSONString(maxwellDataDTO.getData()), Article.class);
+        switch (maxwellDataDTO.getType()) {
+            case "insert":
+            case "update":
+                elasticsearchMapper.save(BeanCopyUtil.copyObject(article, ArticleSearchDTO.class));
+                break;
+            case "delete":
+                elasticsearchMapper.deleteById(article.getId());
+                break;
+            default:
+                break;
+        }
+    }
+}
+```
+
+实现搜索策略
+
+定义`SearchStrategy`接口
+
+~~~java
+package com.aurora.strategy;
+
+import com.aurora.model.dto.ArticleSearchDTO;
+
+import java.util.List;
+
+public interface SearchStrategy {
+
+    List<ArticleSearchDTO> searchArticle(String keywords);
+
+}
+~~~
+
+实现`EsSearchStrategyImpl`类，用于在 Elasticsearch 中搜索文章：
+
+```java
+package com.aurora.strategy.impl;
+
+import com.aurora.model.dto.ArticleSearchDTO;
+import com.aurora.strategy.SearchStrategy;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import lombok.extern.log4j.Log4j2;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
+import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.aurora.constant.CommonConstant.*;
+import static com.aurora.enums.ArticleStatusEnum.PUBLIC;
+
+@Log4j2
+@Service("esSearchStrategyImpl")
+public class EsSearchStrategyImpl implements SearchStrategy {
+
+    @Autowired
+    private ElasticsearchRestTemplate elasticsearchRestTemplate;
+
+    @Override
+    public List<ArticleSearchDTO> searchArticle(String keywords) {
+        if (StringUtils.isBlank(keywords)) {
+            return new ArrayList<>();
+        }
+        return search(buildQuery(keywords));
+    }
+
+    private NativeSearchQueryBuilder buildQuery(String keywords) {
+        NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.must(QueryBuilders.boolQuery().should(QueryBuilders.matchQuery("articleTitle", keywords))
+                        .should(QueryBuilders.matchQuery("articleContent", keywords)))
+                .must(QueryBuilders.termQuery("isDelete", FALSE))
+                .must(QueryBuilders.termQuery("status", PUBLIC.getStatus()));
+        nativeSearchQueryBuilder.withQuery(boolQueryBuilder);
+        return nativeSearchQueryBuilder;
+    }
+
+    private List<ArticleSearchDTO> search(NativeSearchQueryBuilder nativeSearchQueryBuilder) {
+        HighlightBuilder.Field titleField = new HighlightBuilder.Field("articleTitle");
+        titleField.preTags(PRE_TAG);
+        titleField.postTags(POST_TAG);
+        HighlightBuilder.Field contentField = new HighlightBuilder.Field("articleContent");
+        contentField.preTags(PRE_TAG);
+        contentField.postTags(POST_TAG);
+        contentField.fragmentSize(50);
+        nativeSearchQueryBuilder.withHighlightFields(titleField, contentField);
+        try {
+            SearchHits<ArticleSearchDTO> search = elasticsearchRestTemplate.search(nativeSearchQueryBuilder.build(), ArticleSearchDTO.class);
+            return search.getSearchHits().stream().map(hit -> {
+                ArticleSearchDTO article = hit.getContent();
+                List<String> titleHighLightList = hit.getHighlightFields().get("articleTitle");
+                if (CollectionUtils.isNotEmpty(titleHighLightList)) {
+                    article.setArticleTitle(titleHighLightList.get(0));
+                }
+                List<String> contentHighLightList = hit.getHighlightFields().get("articleContent");
+                if (CollectionUtils.isNotEmpty(contentHighLightList)) {
+                    article.setArticleContent(contentHighLightList.get(contentHighLightList.size() - 1));
+                }
+                return article;
+            }).collect(Collectors.toList());
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+        return new ArrayList<>();
+    }
+
+}
+```
+
+yaml
+
+~~~yaml
+search:
+  mode: elasticsearch
+~~~
+
+搜索策略上下文
+
+通过`SearchStrategyContext`类根据配置的搜索模式选择相应的搜索策略：
+
+```java
+package com.aurora.strategy.context;
+
+import com.aurora.model.dto.ArticleSearchDTO;
+import com.aurora.strategy.SearchStrategy;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+
+import static com.aurora.enums.SearchModeEnum.getStrategy;
+
+@Service
+public class SearchStrategyContext {
+
+    @Value("${search.mode}")
+    private String searchMode;
+
+    @Autowired
+    private Map<String, SearchStrategy> searchStrategyMap;
+
+    public List<ArticleSearchDTO> executeSearchStrategy(String keywords) {
+        return searchStrategyMap.get(getStrategy(searchMode)).searchArticle(keywords);
+    }
+}
+```
+
+SearchModeEnum
+
+~~~java
+package com.aurora.enums;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
+public enum SearchModeEnum {
+
+    MYSQL("mysql", "mySqlSearchStrategyImpl"),
+
+    ELASTICSEARCH("elasticsearch", "esSearchStrategyImpl");
+
+    private final String mode;
+
+    private final String strategy;
+
+    public static String getStrategy(String mode) {
+        for (SearchModeEnum value : SearchModeEnum.values()) {
+            if (value.getMode().equals(mode)) {
+                return value.getStrategy();
+            }
+        }
+        return null;
+    }
+
+}
+~~~
+
+EsSearchStrategyImpl
+
+~~~java
+package com.aurora.strategy.impl;
+
+import com.aurora.model.dto.ArticleSearchDTO;
+import com.aurora.strategy.SearchStrategy;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import lombok.extern.log4j.Log4j2;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
+import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.stereotype.Service;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.aurora.constant.CommonConstant.*;
+import static com.aurora.enums.ArticleStatusEnum.PUBLIC;
+
+@Log4j2
+@Service("esSearchStrategyImpl")
+public class EsSearchStrategyImpl implements SearchStrategy {
+
+    @Autowired
+    private ElasticsearchRestTemplate elasticsearchRestTemplate;
+
+    @Override
+    public List<ArticleSearchDTO> searchArticle(String keywords) {
+        if (StringUtils.isBlank(keywords)) {
+            return new ArrayList<>();
+        }
+        return search(buildQuery(keywords));
+    }
+
+    private NativeSearchQueryBuilder buildQuery(String keywords) {
+        NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder();
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.must(
+                QueryBuilders.boolQuery()
+                        .should(QueryBuilders.matchQuery("articleTitle", keywords))
+                        .should(QueryBuilders.matchQuery("articleContent", keywords))
+                )
+                .must(QueryBuilders.termQuery("isDelete", FALSE))
+                .must(QueryBuilders.termQuery("status", PUBLIC.getStatus()));
+        nativeSearchQueryBuilder.withQuery(boolQueryBuilder);
+        return nativeSearchQueryBuilder;
+    }
+
+    private List<ArticleSearchDTO> search(NativeSearchQueryBuilder nativeSearchQueryBuilder) {
+        HighlightBuilder.Field titleField = new HighlightBuilder.Field("articleTitle");
+        titleField.preTags(PRE_TAG);
+        titleField.postTags(POST_TAG);
+        HighlightBuilder.Field contentField = new HighlightBuilder.Field("articleContent");
+        contentField.preTags(PRE_TAG);
+        contentField.postTags(POST_TAG);
+        contentField.fragmentSize(50);
+        nativeSearchQueryBuilder.withHighlightFields(titleField, contentField);
+        try {
+            SearchHits<ArticleSearchDTO> search = elasticsearchRestTemplate.search(nativeSearchQueryBuilder.build(), ArticleSearchDTO.class);
+            return search.getSearchHits().stream().map(hit -> {
+                ArticleSearchDTO article = hit.getContent();
+                List<String> titleHighLightList = hit.getHighlightFields().get("articleTitle");
+                if (CollectionUtils.isNotEmpty(titleHighLightList)) {
+                    article.setArticleTitle(titleHighLightList.get(0));
+                }
+                List<String> contentHighLightList = hit.getHighlightFields().get("articleContent");
+                if (CollectionUtils.isNotEmpty(contentHighLightList)) {
+                    article.setArticleContent(contentHighLightList.get(contentHighLightList.size() - 1));
+                }
+                return article;
+            }).collect(Collectors.toList());
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+        return new ArrayList<>();
+    }
+
+}
+~~~
+
+MySqlSearchStrategyImpl
+
+~~~java
+package com.aurora.strategy.impl;
+
+import com.aurora.entity.Article;
+import com.aurora.mapper.ArticleMapper;
+import com.aurora.model.dto.ArticleSearchDTO;
+import com.aurora.strategy.SearchStrategy;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import static com.aurora.constant.CommonConstant.*;
+import static com.aurora.enums.ArticleStatusEnum.PUBLIC;
+
+@Service("mySqlSearchStrategyImpl")
+public class MySqlSearchStrategyImpl implements SearchStrategy {
+
+    @Autowired
+    private ArticleMapper articleMapper;
+
+    @Override
+    public List<ArticleSearchDTO> searchArticle(String keywords) {
+        if (StringUtils.isBlank(keywords)) {
+            return new ArrayList<>();
+        }
+        List<Article> articles = articleMapper.selectList(new LambdaQueryWrapper<Article>()
+                .eq(Article::getIsDelete, FALSE)
+                .eq(Article::getStatus, PUBLIC.getStatus())
+                .and(i -> i.like(Article::getArticleTitle, keywords)
+                        .or()
+                        .like(Article::getArticleContent, keywords)));
+        return articles.stream().map(item -> {
+                    boolean isLowerCase = true;
+                    String articleContent = item.getArticleContent();
+                    int contentIndex = item.getArticleContent().indexOf(keywords.toLowerCase());
+                    if (contentIndex == -1) {
+                        contentIndex = item.getArticleContent().indexOf(keywords.toUpperCase());
+                        if (contentIndex != -1) {
+                            isLowerCase = false;
+                        }
+                    }
+                    if (contentIndex != -1) {
+                        int preIndex = contentIndex > 15 ? contentIndex - 15 : 0;
+                        String preText = item.getArticleContent().substring(preIndex, contentIndex);
+                        int last = contentIndex + keywords.length();
+                        int postLength = item.getArticleContent().length() - last;
+                        int postIndex = postLength > 35 ? last + 35 : last + postLength;
+                        String postText = item.getArticleContent().substring(contentIndex, postIndex);
+                        if (isLowerCase) {
+                            articleContent = (preText + postText).replaceAll(keywords.toLowerCase(), PRE_TAG + keywords.toLowerCase() + POST_TAG);
+                        } else {
+                            articleContent = (preText + postText).replaceAll(keywords.toUpperCase(), PRE_TAG + keywords.toUpperCase() + POST_TAG);
+                        }
+                    } else {
+                        return null;
+                    }
+                    isLowerCase = true;
+                    int titleIndex = item.getArticleTitle().indexOf(keywords.toLowerCase());
+                    if (titleIndex == -1) {
+                        titleIndex = item.getArticleTitle().indexOf(keywords.toUpperCase());
+                        if (titleIndex != -1) {
+                            isLowerCase = false;
+                        }
+                    }
+                    String articleTitle;
+                    if (isLowerCase) {
+                        articleTitle = item.getArticleTitle().replaceAll(keywords.toLowerCase(), PRE_TAG + keywords.toLowerCase() + POST_TAG);
+                    } else {
+                        articleTitle = item.getArticleTitle().replaceAll(keywords.toUpperCase(), PRE_TAG + keywords.toUpperCase() + POST_TAG);
+                    }
+                    return ArticleSearchDTO.builder()
+                            .id(item.getId())
+                            .articleTitle(articleTitle)
+                            .articleContent(articleContent)
+                            .build();
+                }).filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
+}
+~~~
+
+前端搜索交互
+
+在`aurora-vue`项目的SearchModel.vue组件中实现了前端搜索交互逻辑，用户输入关键词后调用后端接口进行搜索：
+
+```javascript
+const searchKeywords = (e: any) => {
+    let curIndex = ++index
+    if (e.target.value !== '') {
+        let params = {
+            keywords: e.target.value
+        }
+        api.searchArticles(params).then(({ data }) => {
+            if (curIndex < index) {
+                return
+            }
+            searchResults.value = data.data
+            if (searchResults.value.length > 0) {
+                resetIndex(searchResults.value.length)
+                isEmpty.value = false
+            } else {
+                isEmpty.value = true
+            }
+        })
+    } else {
+        if (curIndex < index) {
+            return
+        }
+        isEmpty.value = false
+        searchResults.value = []
+        resetIndex(recentResults.value.length)
+    }
+}
+```
+
 
 
 

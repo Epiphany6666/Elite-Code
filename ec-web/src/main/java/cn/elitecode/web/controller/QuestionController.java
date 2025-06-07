@@ -8,9 +8,11 @@ import cn.elitecode.model.dto.question.QuestionUpdateDTO;
 import cn.elitecode.model.entity.Problemset;
 import cn.elitecode.model.entity.Question;
 import cn.elitecode.model.entity.Tag;
+import cn.elitecode.model.dto.elasticsearch.QuestionSearchDTO;
 import cn.elitecode.service.ProblemsetService;
 import cn.elitecode.service.QuestionService;
 import cn.elitecode.service.TagService;
+import cn.elitecode.strategy.context.SearchStrategyContext;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -28,14 +30,16 @@ public class QuestionController {
     @Autowired
     private QuestionService questionService;
     @Autowired
+    private SearchStrategyContext searchStrategyContext;
+    @Autowired
     private ProblemsetService problemsetService;
     @Autowired
     private TagService tagService;
 
     @ApiOperation(value = "根据分页条件查询题目信息")
     @PostMapping("/list")
-    private CommonPage<Question> listQuestion(@RequestBody QuestionQueryDTO questionQueryDTO) {
-        return questionService.selectQuestionList(questionQueryDTO);
+    private CommonResult<CommonPage<QuestionSearchDTO>> listQuestion(@RequestBody QuestionQueryDTO questionQueryDTO) {
+        return CommonResult.success(searchStrategyContext.executeSearchStrategy(questionQueryDTO));
     }
 
     @ApiOperation(value = "新增题目")

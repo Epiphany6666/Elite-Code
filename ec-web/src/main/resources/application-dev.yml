@@ -17,6 +17,12 @@ spring:
         max-idle: 8 # 连接池中的最大空闲连接
         min-idle: 0 # 连接池中的最小空闲连接
     timeout: 3000ms # 连接超时时间（毫秒）
+  data:
+    elasticsearch:
+      repositories:
+        enabled: true
+  elasticsearch:
+    uris: http://localhost:9200
 
 # Minio对象存储相关配置
 minio:
@@ -24,3 +30,7 @@ minio:
   bucketName: elitecode # 存储桶名称
   accessKey: minioadmin # 访问的key
   secretKey: minioadmin # 访问的秘钥
+
+elitecode:
+  search:
+    mode: elasticsearch

@@ -65,6 +65,12 @@ public interface QuestionMapper {
      * @return
      */
     Long selectProblemsetQuestionTotal(ProblemsetQueryQuestionDTO problemsetQueryQuestionDTO);
+
+    /**
+     * 查询所有题目
+     * @return
+     */
+    List<Question> getAllQuestionList();
 }
 
 
