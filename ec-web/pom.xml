@@ -38,29 +38,30 @@
         </dependency>
     </dependencies>
 
-    <!-- SpringBoot应用打包插件-->
+    <!-- 构建Docker镜像 -->
     <build>
         <plugins>
+            <!-- SpringBoot应用打包插件 -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <!--指定项目源码jdk的版本-->
-                    <source>17</source>
-                    <!--指定项目编译后的jdk的版本-->
-                    <target>17</target>
+                    <mainClass>cn.elitecode.ECMainApplication</mainClass>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>repackage</id>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
-            <!--负责处理项目资源文件并拷贝到输出目录，如果有额外的资源文件目录则需要配置-->
+            <!-- 使用Maven插件构建Docker镜像 -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <configuration>
-                    <encoding>utf-8</encoding>
-                    <!--使用默认分隔符，resource中可以使用分割符定义过虑的路径-->
-                    <useDefaultDelimiters>true</useDefaultDelimiters>
-                </configuration>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

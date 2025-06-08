@@ -3393,6 +3393,276 @@ const searchKeywords = (e: any) => {
 
 
 
+---
+
+# 部署
+
+## 一、准备
+
+- [ ] 复习Doker、Docker Compose
+- [ ] Nginx
+  - 阅读笔记中的Nginx使用教程
+  - 阅读mall的Nginx使用教程
+- [ ] 阅读mall使用Jetkins实现自动化部署
+
+---
+
+## 二、基于Docker部署
+
+像mysql等容器的docker安装这里就不再赘述，这里主要讲解的是：使用Maven插件为SpringBoot应用构建Docker镜像。
+
+### 1）Docker Registry 2.0搭建
+
+```bash
+docker run -d -p 5000:5000 --restart=always --name registry2 registry:2
+```
+
+如果遇到镜像下载不下来的情况，需要修改 /etc/docker/daemon.json 文件并添加上 registry-mirrors 键值，然后重启docker服务：
+
+```json
+{
+  "registry-mirrors": ["https://registry.docker-cn.com"]
+}
+```
+
+---
+
+### 2）Docker开启远程API
+
+#### ① 用vim编辑器修改docker.service文件
+
+```bash
+vi /usr/lib/systemd/system/docker.service
+```
+
+需要修改的部分：
+
+```bash
+ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+```
+
+修改后的部分：
+
+```bash
+ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375 -H unix://var/run/docker.sock
+```
+
+---
+
+#### ② 让Docker支持http上传镜像
+
+```bash
+echo '{ "insecure-registries":["192.168.3.101:5000"] }' > /etc/docker/daemon.json
+```
+
+---
+
+#### ③ 修改配置后需要使用如下命令使配置生效
+
+```bash
+systemctl daemon-reload
+```
+
+----
+
+#### ④ 重新启动Docker服务
+
+```bash
+systemctl stop docker
+systemctl start docker
+```
+
+---
+
+#### ⑤ 开启防火墙的Docker构建端口
+
+```bash
+firewall-cmd --zone=public --add-port=2375/tcp --permanent
+firewall-cmd --reload
+```
+
+---
+
+### 3）使用Maven构建Docker镜像
+
+该代码是在mall-tiny-02的基础上修改的。
+
+#### ① 在应用的pom.xml文件中添加docker-maven-plugin的依赖
+
+```xml
+<plugin>
+    <groupId>io.fabric8</groupId>
+    <artifactId>docker-maven-plugin</artifactId>
+    <version>${docker.maven.plugin.version}</version>
+        <executions>
+            <!--如果想在项目打包时构建镜像添加-->
+            <execution>
+                <id>build-image</id>
+                <phase>package</phase>
+                <goals>
+                    <goal>build</goal>
+                </goals>
+            </execution>
+        </executions>
+    <configuration>
+        <!-- Docker 远程管理地址-->
+        <dockerHost>${docker.host}</dockerHost>
+        <images>
+            <image>
+                <!--定义镜像名称-->
+                <name>mall/${project.name}:${project.version}</name>
+                <!--定义镜像构建行为-->
+                <build>
+                    <!--定义基础镜像-->
+                    <from>openjdk:17</from>
+                    <args>
+                        <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
+                    </args>
+                    <!--定义哪些文件拷贝到容器中-->
+                    <assembly>
+                        <!--定义拷贝到容器的目录-->
+                        <targetDir>/</targetDir>
+                        <!--只拷贝生成的jar包-->
+                        <descriptorRef>artifact</descriptorRef>
+                    </assembly>
+                    <!--定义容器启动命令-->
+                    <entryPoint>["java", "-jar","-Dspring.profiles.active=prod","/${project.build.finalName}.jar"]</entryPoint>
+                    <!--定义维护者-->
+                    <maintainer>macrozheng</maintainer>
+                </build>
+            </image>
+        </images>
+    </configuration>
+</plugin>
+```
+
+---
+
+#### ② 修改application.yml，将localhost改为db
+
+可以把docker中的容器看作独立的虚拟机，mall-tiny-docker访问localhost自然会访问不到mysql，docker容器之间可以通过指定好的服务名称db进行访问，至于db这个名称可以在运行mall-tiny-docker容器的时候指定。
+
+```yaml
+spring:
+  datasource:
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://db:3306/elite-code?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+      username: root
+      password: 123456
+```
+
+---
+
+### 4）使用IDEA打包项目并构建镜像
+
+注意：依赖的基础镜像需要先行下载，否则会出现构建镜像超时的情况，比如我本地并没有openjdk:17的镜像，就需要先把镜像pull下来，再用maven插件进行构建。
+
+执行maven的package命令:
+
+<img src="./assets/image-20250608214516671.png" alt="image-20250608214516671" style="zoom:50%;" />
+
+构建成功:
+
+![image-20250608214658736](./assets/image-20250608214658736.png)
+
+镜像仓库已有该镜像：
+
+![image-20250608214725024](./assets/image-20250608214725024.png)
+
+---
+
+### 5）运行elitecode-docker项目
+
+#### ① 启动mysql服务
+
+使用docker命令启动：
+
+```bash
+docker run -p 3306:3306 --name mysql \
+-v /mydata/mysql/log:/var/log/mysql \
+-v /mydata/mysql/data:/var/lib/mysql \
+-v /mydata/mysql/conf:/etc/mysql \
+-e MYSQL_ROOT_PASSWORD=root  \
+-d mysql:8.0
+```
+
+进入运行mysql的docker容器：
+
+```bash
+docker exec -it mysql /bin/bash
+```
+
+使用mysql命令打开客户端：
+
+```bash
+mysql -uroot -proot --default-character-set=utf8
+```
+
+![img](./assets/refer_screen_69-Cn1i3Fyy-3684439.png)
+
+修改root帐号的权限，使得任何ip都能访问：
+
+```bash
+grant all privileges on *.* to 'root'@'%'
+```
+
+![img](./assets/refer_screen_70-fOSKnsiL-3684439.png)
+
+创建elite-code数据库：
+
+```bash
+create database `elite-code` character set utf8
+```
+
+将[elitecode.sql](https://github.com/macrozheng/mall-learning/blob/master/document/sql/mall.sql)文件拷贝到mysql容器的/目录下：
+
+```bash
+docker cp /mydata/elitecode.sql mysql:/
+```
+
+将sql文件导入到数据库：
+
+```bash
+use `elite-code`;
+source /elitecode.sql;
+```
+
+<img src="./assets/image-20250608215022548.png" alt="image-20250608215022548" style="zoom:50%;" />
+
+---
+
+#### ② 启动elitecode-docker应用服务
+
+使用docker命令启动（--link表示应用可以用db这个域名访问mysql服务）：
+
+```bash
+docker run -p 8901:8901 --name elitecode-docker \
+--link mysql:db \
+--link minio:minio \
+--link es-test:es \
+--link redis:redis \
+-v /etc/localtime:/etc/localtime \
+-v /elitecode/elitecode-docker/logs:/var/logs \
+-d elitecode/ec-web:1.0-SNAPSHOT
+```
+
+![image-20250608215103603](./assets/image-20250608215103603.png)
+
+---
+
+## 四、基于Docker Compose部署
+
+
+
+---
+
+## 五、使用Jetkins实现自动化部署
+
+
+
+
+
 ----
 
 # 框架
