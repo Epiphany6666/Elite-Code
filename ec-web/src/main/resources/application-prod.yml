@@ -2,7 +2,8 @@ spring:
   datasource:
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://db:3306/elite-code?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+      # 如果在同一个docker-compose工程中，那么通过服务名访问；但如果不在同一个docker-compose项目中，则需要通过external_links指定访问的域名
+      url: jdbc:mysql://mysql:3306/elite-code?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
       username: root
       password: 123456
   redis:
@@ -22,7 +23,7 @@ spring:
       repositories:
         enabled: true
   elasticsearch:
-    uris: http://es:9200
+    uris: http://elasticsearch:9200
 # Knife4j线上配置
 knife4j:
   basic:
@@ -32,10 +33,11 @@ knife4j:
 
 # Minio对象存储相关配置
 minio:
+  url: http://192.168.88.130:9090 # 访问URL地址
   endpoint: http://minio:9000 # Minio服务所在地址
   bucketName: elitecode # 存储桶名称
   accessKey: minioadmin # 访问的key
-  secretKey: minioadmin # 访问的秘钥
+  secretKey: 123456qqq. # 访问的秘钥
 
 elitecode:
   search:

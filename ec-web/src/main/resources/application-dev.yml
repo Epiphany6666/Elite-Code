@@ -26,6 +26,7 @@ spring:
 
 # Minio对象存储相关配置
 minio:
+  url: http://localhost:9090 # 访问URL地址
   endpoint: http://localhost:9090 # Minio服务所在地址
   bucketName: elitecode # 存储桶名称
   accessKey: minioadmin # 访问的key

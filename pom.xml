@@ -153,6 +153,9 @@
                                     <args>
                                         <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
                                     </args>
+                                    <env>
+                                        <TZ>Asia/Shanghai</TZ>
+                                    </env>
                                     <!-- 定义哪些文件拷贝到容器中 -->
                                     <assembly>
                                         <!-- 定义拷贝到容器的目录 -->

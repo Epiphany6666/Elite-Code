@@ -1,3 +1,4 @@
+drop database if exists `elite-code`;
 create database if not exists `elite-code`;
 use `elite-code`;
 

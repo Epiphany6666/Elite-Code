@@ -1,0 +1,22 @@
+# docker-compose下载
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+# 赋予执行权限
+sudo chmod +x /usr/local/bin/docker-compose
+
+# 运行nacos
+docker run -d \
+-e MODE=standalone \
+--privileged=true \
+-e SPRING_DATASOURCE_PLATFORM=mysql \
+-e MYSQL_SERVICE_HOST=host.docker.internal \
+-e MYSQL_SERVICE_PORT=3306 \
+-e MYSQL_SERVICE_USER=root \
+-e MYSQL_SERVICE_PASSWORD=12345678 \
+-e MYSQL_SERVICE_DB_NAME=nacos_config \
+-e TIME_ZONE='Asia/Shanghai' \
+-e NACOS_AUTH_ENABLE=true \
+-v /Users/luoyan/develop/docker/nacos/logs:/home/nacos/logs \
+-v /Users/luoyan/develop/docker/nacos/data:/home/nacos/data \
+-v /Users/luoyan/develop/docker/nacos/conf:/home/nacos/conf \
+-p 8848:8848 -p 9848:9848 -p 9849:9849 \
+--name nacos --restart=always nacos/nacos-server:v2.1.1

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "minio")
 public class MinioProperties {
 
+    private static String url;
     private static String endpoint;
     private static String bucketName;
     private static String accessKey;
@@ -18,6 +19,22 @@ public class MinioProperties {
      */
     public static String getEndpoint() {
         return endpoint;
+    }
+
+    /**
+     * 获取
+     * @return url
+     */
+    public static String getUrl() {
+        return url;
+    }
+
+    /**
+     * 设置
+     * @param url
+     */
+    public void setUrl(String url) {
+        MinioProperties.url = url;
     }
 
     /**

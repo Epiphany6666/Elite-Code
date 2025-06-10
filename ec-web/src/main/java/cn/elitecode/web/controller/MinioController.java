@@ -70,7 +70,7 @@ public class MinioController {
                     .build();
             minioClient.putObject(putObjectArgs);
             MinioUploadVO minioUploadVO = new MinioUploadVO();
-            minioUploadVO.setUrl(MinioProperties.getEndpoint() + "/" + MinioProperties.getBucketName() + "/" + objectName);
+            minioUploadVO.setUrl(MinioProperties.getUrl() + "/" + MinioProperties.getBucketName() + "/" + objectName);
             minioUploadVO.setFilename(newFileName);
             return CommonResult.success(minioUploadVO);
         } catch (Exception e) {

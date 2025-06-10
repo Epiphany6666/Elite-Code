@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  ec-web:
+    image: elitecode/ec-web:1.0-SNAPSHOT
+    container_name: ec-web
+    ports:
+      - "8901:8901"
+    volumes:
+      - /elitecode/app/ec-web/logs:/var/logs
+    external_links:
+      - ec-mysql:mysql
+      - ec-redis:redis
+      - ec-elasticsearch:elasticsearch
+      - ec-minio:minio

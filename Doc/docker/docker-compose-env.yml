@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8
+    container_name: ec-mysql
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3306:3306"
+    environment:
+      - 'TZ="Asia/Shanghai"'
+      - "MYSQL_DATABASE=${MYSQL_DATABASE:-elite-code}"
+      - "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-123456qqq.}"
+    volumes:
+      - /elitecode/mysql/data:/var/lib/mysql # 数据文件目录挂载
+      - /elitecode/mysql/conf:/etc/mysql/conf.d # 配置文件目录挂载
+      - /elitecode/mysql/log:/var/log/mysql # 日志文件目录挂载
+      - /elitecode/sql/mysql/EliteCode.sql:/docker-entrypoint-initdb.d/EliteCode.sql:ro
+
+  redis:
+    container_name: ec-redis
+    image: redis:7
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - /elitecode/redis/data:/data
+    healthcheck: # 添加 Redis 的健康检查
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s # 给 Redis 几秒钟时间启动
+
+  elasticsearch:
+    image: elasticsearch:7.12.1
+    container_name: ec-elasticsearch
+    environment:
+      - "TZ=Asia/Shanghai" # 配置程序默认时区为上海（中国标准时间）
+      - "cluster.name=elasticsearch" #设置集群名称为elasticsearch
+      - "discovery.type=single-node" #以单一节点模式启动
+      - "ES_JAVA_OPTS=-Xms512m -Xmx1024m" #设置es使用的jvm内存大小
+    volumes:
+      - /elitecode/elasticsearch/data:/usr/share/elasticsearch/data # 数据文件目录挂载
+      - /elitecode/elasticsearch/plugins:/usr/share/elasticsearch/plugins # 插件文件目录挂载
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+
+  kibana:
+    image: kibana:7.12.1
+    container_name: ec-kibana
+    depends_on:
+      - elasticsearch # kibana在elasticsearch启动之后再启动
+    environment:
+      - 'TZ="Asia/Shanghai"'
+      - "elasticsearch.hosts=http://elasticsearch:9200" # 设置访问elasticsearch的地址
+    ports:
+      - "5601:5601"
+
+  minio:
+    image: minio/minio
+    container_name: ec-minio
+    command: server /data --console-address ":9001" # 指定数据目录及console运行端口启动
+    volumes:
+      - /elitecode/minio/data:/data # 数据目录挂载
+    environment:
+      - 'TZ="Asia/Shanghai"'
+      - "MINIO_ROOT_USER=minioadmin"
+      - "MINIO_ROOT_PASSWORD=123456qqq."
+    ports:
+      - "9090:9000"
+      - "9001:9001"
