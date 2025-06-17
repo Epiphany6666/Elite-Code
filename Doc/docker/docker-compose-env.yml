@@ -10,7 +10,6 @@ services:
     ports:
       - "3306:3306"
     environment:
-      - 'TZ="Asia/Shanghai"'
       - "MYSQL_DATABASE=${MYSQL_DATABASE:-elite-code}"
       - "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-123456qqq.}"
     volumes:
@@ -38,7 +37,6 @@ services:
     image: elasticsearch:7.12.1
     container_name: ec-elasticsearch
     environment:
-      - "TZ=Asia/Shanghai" # 配置程序默认时区为上海（中国标准时间）
       - "cluster.name=elasticsearch" #设置集群名称为elasticsearch
       - "discovery.type=single-node" #以单一节点模式启动
       - "ES_JAVA_OPTS=-Xms512m -Xmx1024m" #设置es使用的jvm内存大小
@@ -55,7 +53,6 @@ services:
     depends_on:
       - elasticsearch # kibana在elasticsearch启动之后再启动
     environment:
-      - 'TZ="Asia/Shanghai"'
       - "elasticsearch.hosts=http://elasticsearch:9200" # 设置访问elasticsearch的地址
     ports:
       - "5601:5601"
@@ -67,7 +64,6 @@ services:
     volumes:
       - /elitecode/minio/data:/data # 数据目录挂载
     environment:
-      - 'TZ="Asia/Shanghai"'
       - "MINIO_ROOT_USER=minioadmin"
       - "MINIO_ROOT_PASSWORD=123456qqq."
     ports:

@@ -6,8 +6,11 @@ services:
     container_name: ec-web
     ports:
       - "8901:8901"
+    environment:
+      - 'TZ="Asia/Shanghai"'
     volumes:
       - /elitecode/app/ec-web/logs:/var/logs
+      - /etc/localtime:/etc/localtime
     external_links:
       - ec-mysql:mysql
       - ec-redis:redis

@@ -13,6 +13,7 @@
         <module>ec-model</module>
         <module>ec-service</module>
         <module>ec-web</module>
+        <module>ec-dependencies</module>
     </modules>
 
     <properties>
@@ -153,9 +154,6 @@
                                     <args>
                                         <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
                                     </args>
-                                    <env>
-                                        <TZ>Asia/Shanghai</TZ>
-                                    </env>
                                     <!-- 定义哪些文件拷贝到容器中 -->
                                     <assembly>
                                         <!-- 定义拷贝到容器的目录 -->
@@ -164,7 +162,7 @@
                                         <descriptorRef>artifact</descriptorRef>
                                     </assembly>
                                     <!-- 定义容器启动命令 -->
-                                    <entryPoint>["java", "-jar", "-Dspring.profiles.active=prod", "/${project.build.finalName}.jar"]</entryPoint>
+                                    <entryPoint>["java", "-jar", "-Duser.timezone=Asia/Shanghai", "-Dspring.profiles.active=prod", "/${project.build.finalName}.jar"]</entryPoint>
                                     <!-- 定义维护者 -->
                                     <maintainer>LuoYan</maintainer>
                                 </build>
