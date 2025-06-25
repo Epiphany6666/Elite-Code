@@ -7044,7 +7044,7 @@ create table sys_role (
   role_key             varchar(100)    not null                   comment '角色权限字符串',
   role_sort            int(4)          not null                   comment '显示顺序',
   data_scope           char(1)         default '1'                comment '数据范围（1：全部数据权限 2：自定数据权限 3：本部门数据权限 4：本部门及以下数据权限）',
-  menu_check_strictly  tinyint(1)      default 1                  comment '菜单树选择项是否关联显示',
+  menu_check_strictly  tinyint(1)      default 1                  comment '菜单树选择项是否关联显示（ 0：父子不互相关联显示 1：父子互相关联显示）',
   dept_check_strictly  tinyint(1)      default 1                  comment '部门树选择项是否关联显示',
   status               char(1)         not null                   comment '角色状态（0正常 1停用）',
   del_flag             char(1)         default '0'                comment '删除标志（0代表存在 2代表删除）',
@@ -7387,6 +7387,532 @@ CREATE TABLE `ums_admin_login_log`  (
 # VO，BO，PO，DO，DTO
 
 ![img](./assets/v2-24e3ed681c02b6434681719753c53b40_1440w.jpg)
+
+
+
+----
+
+# 使用 Maven BOM 来管理你的版本依赖
+
+BOM（Bill of Materials，物料清单）是由Maven提供的功能,它通过定义一整套相互兼容的jar包版本集合，使用时只需要依赖该BOM文件，即可放心的使用需要的依赖jar包，且无需再指定版本号。BOM的维护方负责版本升级，并保证BOM中定义的jar包版本之间的兼容性。
+
+**Bom 通常是项目中单独的一个模块，即只有单个pom.xml文件的module，并配合 dependencyManagement 等标签实现项目的全局依赖统一管理。**
+
+## 一、为什么要使用BOM
+
+使用BOM除了可以方便使用者在声明依赖的客户端时不需要指定版本号外，最主要的原因是可以解决依赖冲突，如考虑以下的依赖场景：
+
+```java
+项目A依赖项目B 2.1和项目C 1.2版本： 
+项目B 2.1依赖项目D 1.1版本； 
+项目C 1.2依赖项目D 1.3版本；
+```
+
+在该例中，项目A对于项目D的依赖就会出现冲突，按照maven dependency mediation的规则，最后生效的可能是:项目A中会依赖到项目D1.1版本（就近原则，取决于路径和依赖的先后,和Maven版本有关系）。 在这种情况下，由于项目C依赖1.3版本的项目D，但是在运行时生效的确是1.1版本，所以在运行时很容易产生问题，如 NoSuchMethodError, ClassNotFoundException等。
+
+---
+
+## 二、如何定义BOM
+
+BOM本质上是一个普通的POM文件，区别是对于使用方而言，生效的只有`<dependencyManagement>`这一个部分。只需要在`<dependencyManagement>`定义对外发布的客户端版本即可:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.ydj.qd</groupId>
+    <artifactId>inf-bom</artifactId>
+    <version>1.0</version>
+    <packaging>pom</packaging>
+
+    <name>inf-bom</name>
+    <description>第三方jar包统一管理</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <spring.version>4.3.15.RELEASE</spring.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <!-- 阿里 -->
+            <!-- https://mvnrepository.com/artifact/com.alibaba/druid -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid</artifactId>
+                <version>1.1.12</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/com.aliyun.mns/aliyun-sdk-mns -->
+            <dependency>
+                <groupId>com.aliyun.mns</groupId>
+                <artifactId>aliyun-sdk-mns</artifactId>
+                <version>1.1.8</version>
+                <classifier>jar-with-dependencies</classifier>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>1.2.29</version>
+            </dependency>
+
+            <!-- Apache -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.3.2</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>3.2.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
+                <version>4.1</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-beanutils</groupId>
+                <artifactId>commons-beanutils</artifactId>
+                <version>1.9.1</version>
+            </dependency>
+
+
+            <!-- 谷歌 -->
+            <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>27.0.1-jre</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>2.8.5</version>
+            </dependency>
+
+
+            <!-- 常用工具 -->
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>2.7</version>
+            </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.14.4</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+    </build>
+
+    <distributionManagement>
+        <repository>
+            <id>maven-releases</id>
+            <name>maven-releases</name>
+            <url>http://mvn.ydj.com/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>maven-snapshots</id>
+            <name>maven-snapshots</name>
+            <url>http://mvn.ydj.com/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+</project>
+```
+
+---
+
+## 三、项目使用方法
+
+在你的项目主pom.xml文件中`<dependencyManagement></dependencyManagement>`节点下首位处加入如下：
+
+```xml
+<dependencyManagement>
+    <dependencies>
+         <dependency>
+            <groupId>com.jlcx.qd</groupId>
+            <artifactId>inf-bom</artifactId>
+            <version>${version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+          </dependency>
+          
+          <dependency>
+            ...
+          </dependency>
+    </dependencies>
+</dependencyManagement>
+```
+
+在需要使用相关JAR包的pom.xml文件中`<dependencies></dependencies>`节点下引入如下：
+
+```xml
+<dependencies>
+    ...
+    <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>commons-collections</groupId>
+        <artifactId>commons-collections</artifactId>
+    </dependency>
+    ....
+</dependencies>
+```
+
+如果需要使用不同于当前bom中所维护的jar包版本，则加上`<version>`覆盖即可，如：
+
+~~~xml
+<dependencies>
+    ...
+    <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>commons-collections</groupId>
+        <artifactId>commons-collections</artifactId>
+        <version>3.2.1</version>
+    </dependency>
+    ....
+</dependencies>
+~~~
+
+---
+
+## 四、常见的官方BOM
+
+Each project has it’s own maven bom file
+
+请注意，没有通用或通用的bom文件。每个项目（如果支持此功能）都提供自己的bom文件，并管理其相关依赖项的版本。
+
+Spring、SpringBoot、SpringCloud自身都采用了此机制来解决第三方包的冲突 .
+
+**建议项目中也建议使用此优良传统, 尤其实在项目开发初期，在后期再修改成BOM可能涉及很多版本的修改，就比较难了。**
+
+### ① Spring Maven BOM dependency
+
+```xml
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-framework-bom</artifactId>
+            <version>4.0.1.RELEASE</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+```
+
+---
+
+### ② SpringBoot SpringCloud Maven BOM dependency
+
+```xml
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-dependencies</artifactId>
+            <version>2.4.4</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-dependencies</artifactId>
+            <version>2020.0.2</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+```
+
+---
+
+### ③ JBOSS Maven BOM dependency
+
+```xml
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.jboss.bom</groupId>
+            <artifactId>jboss-javaee-6.0-with-tools</artifactId>
+            <version>${some.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement> 
+```
+
+---
+
+### ④ RESTEasy Maven BOM dependency
+
+```xml
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-bom</artifactId>
+            <version>3.0.6.Final</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+```
+
+---
+
+### ⑤ Jersey Maven BOM dependency
+
+```xml
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.glassfish.jersey</groupId>
+            <artifactId>jersey-bom</artifactId>
+            <version>${jersey.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+```
+
+
+
+---
+
+# maven `<type>pom</type>、<scope>import</scope>` 详解
+
+## 一、前言
+
+一开始我们使用 `<dependencyManagement>` 是为了进行依赖的版本管理，如果项目中没有在 `<dependencies>` 中显示引用，是不会将jar包依赖进来的。
+
+但是，在一次观察项目代码中，有一个jar包只在dependencyManagement中进行了配置，并没有显示的引用，但是却出现在了项目中
+
+```xml
+<dependency>
+    <groupId>com.demo</groupId>
+    <artifactId>demo1</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <type>pom</type>
+    <scope>import</scope>
+</dependency>
+```
+
+这里就要说到
+
+```xml
+<scope>import</scope>
+```
+
+的作用了。
+
+要说清楚 `<scope>import</scope>` 这个标签作用我们**先来说一下 `<type>` 这个标签**。
+
+---
+
+## 二、type标签
+
+type：指明依赖需要引入的类型（jar、war、pom等），默认jar。为什么要说这个标签呢因为要用到 `<scope>import</scope>` 这个必须要声明 `<type>pom</type>` 。
+
+我们来看下我项目中的例子：
+
+~~~xml
+<modules>
+    <module>user-service</module>
+    <module>order-service</module>
+    <module>eureka-server</module>
+    <module>gateway</module>
+</modules>
+
+<packaging>pom</packaging>
+
+<parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.3.9.RELEASE</version>
+    <relativePath/>
+</parent>
+~~~
+
+首先，我这个pom文件是**作为其他子模块pom文件的\**父类\****，在该模块下我***\*使用 `<parent>` 标签\****继承了SpringBoot的**所有**依赖（但不是引入jar包！），这样方便于版本的管理。
+
+其次，我**还要**在项目中用到SpringCloud的相关依赖，但是**`<parent>`标签已经被占用了，怎么办？**
+
+这时候我们就需要使用 `<dependencyManagement> + <dependencies>` 来引入SpringCloud的相关依赖，也就是我们常说的需要“解决Maven依赖单继承问题”。
+
+也就是说，这时由于maven的继承模式是单继承模式，我们就不能直接使用 `<parent>` 标签来继承Spring Cloud的依赖，那要怎么办呢？我们看下面代码：
+
+```xml
+<dependencyManagement>
+    <dependencies>
+        <!-- springCloud -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-dependencies</artifactId>
+            <version>${spring-cloud.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>   
+    </dependencies>dependencies>
+</dependencyManagement>
+```
+
+一个一个导入会很麻烦而且会使pom文件过大，所以官方提供了一个依赖合集——直接引入 `spring-cloud-dependencies`，即整个cloud全套的依赖！！
+
+这样就解决了单继承的问题。要注意的是 `<scope>import</scope>` 必须在 `<dependencyManagement>` 下使用并且必须声明类型为 `<type>pom</type>`。
+
+PS：type 默认是jar，依赖jar工程时可以不写type标签，所以如果依赖于一个jar工程，而jar工程中包含大量的依赖，也会一起传递过来，这也就是maven依赖传递的原理。
+
+----
+
+## 三、`<scope>import</scope>` 作用
+
+简而言之，这个标签就是 引入该dependency的pom中定义的所有dependency定义！
+
+对上例来说就是把demo1依赖的jar包都引入进来
+
+---
+
+## 四、思考
+
+为什么要用这个标签值呢，这就可以类比继承，正规继承是pom中的 `<parent></parent>` 标签，如果我们想继承多套pom文件，就需要在dependencyManagement中使用impot
+
+---
+
+## 五、注意
+
+这个标签值只能在dependencyManagement标签下使用！
+并且仅用于type为"pom"的dependency，其意义为引入该dependency的pom中定义的所有dependency定义。**如果在\**jar\**类型的maven工程中添加了dependencyManagement，是\**没有意义\**的。**
+
+
+
+---
+
+# spring-boot-maven插件repackage（goal）的那些事
+
+## 一、前言
+
+在打包Springboot项目成jar包时需要在pom.xml使用spring-boot-maven-plugin来增加Maven功能，在我的上一篇博客<<[Maven生命周期](https://so.csdn.net/so/search?q=Maven生命周期&spm=1001.2101.3001.7020)和插件的那些事（2021版）>>中已经介绍过Maven和插件的关系，在此不再赘述，感兴趣的小伙伴可以点击链接了解下。那么到底spring-boot-maven插件到底增加了哪些功能并没有深入探讨，下面针对Maven的package命令，分使用和不适用spring-boot-maven插件两种情境下的控制台输出和jar包组成简单讨论下。
+
+以下两张图的文字描述和控制台输出可以得出：运行mvn package命令时，使用spring-boot-maven插件的打包过程比没有使用spring-boot-maven插件多了一次repackage过程，下面简单记录下repackage到底干了哪些工作？
+
+![img](./assets/d322a1af709456d65c25a31aa7db991e.png)
+
+![img](./assets/b560cb57277e3492ea670dbfaaa0c82d.png)
+
+---
+
+## 二、首先对比下打包的成果物
+
+![img](./assets/24cf46437cfe9f3e31750b95973cba3c.png)
+
+可以发现使用[spring-boot-maven-plugin](https://so.csdn.net/so/search?q=spring-boot-maven-plugin&spm=1001.2101.3001.7020)插件的比没有使用的场景，多了一个以 `.original` 结尾的文件，且该文件的大小与没使用spring-boot-maven插件打包的jar文件大小一样。下面对这两个大小一样的文件解压缩，解压后内容如下，可以看到解压后的内容无论是大小还是目录结构以及目录下的内容都一样。
+
+![img](./assets/424e53db05754917d9988f85e09fd447.png)
+
+ 对此我们可以得出第一个结论：spring-boot-maven-plugin的package（goal）将Maven的package命令默认实现（jar:jar)打包的重命名为XXX.jar.original
+
+---
+
+## 三、下面开始分析由spring-boot-maven插件打包的jar包结构如下
+
+没有加repackage（goal）打出的包是这样的：
+
+![img](./assets/ac8c3827cb2dd0ecbf5ca450e64d57ad.png)
+
+ 加了repackage（goal）是这样的：
+
+![img](./assets/82b06dceeac443df0936caa37ece8123.png)
+
+
+
+BOOT-INF目录下有两个子目录：classes和lib目录。lib目录存放的是应用依赖的jar包，具体参照Maven的pom.xml中的依赖内容。classes目录下存放的是项目CLASS_PATH下的内容，包括应用代码和配置文件（比如application.yml等），可以理解为repackage将原始[Maven打包](https://so.csdn.net/so/search?q=Maven打包&spm=1001.2101.3001.7020)的jar文件中的除META-INF以外的内容放置到该目录下打包。
+
+ META-INF目录下存放的是应用相关的元信息，比如JAR包的必要配置文件MANIFEST.MF和Maven的配置文件等。
+
+org目录下放置的与springboot应用jar加载和启动相关的类，后期会有博客专门讲解springboot应用的启动过程，会重点分析spring-boot-loader的。
+
+**根据以上控制台日志输出以及有无spring-boot-maven插件下打包形成的jar包组成可以推断，spring-boot-maven插件的repackage（goal）有如下两个作用：**
+
+**1、在原始Maven打包形成的jar包基础上，进行重新打包，新形成的jar包不但包含应用类文件和配置文件，而且还会包含应用所依赖的jar包以及Springboot启动相关类（loader等），以此来满足Springboot独立应用的特性；**
+
+**2、将原始Maven打包的jar重命名为XXX.jar.original作为原始文件；**
+
+---
+
+## 四、打包插件pom
+
+```xml
+<build>
+    <finalName>${project.artifactId}</finalName>
+    <plugins>
+        <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+            <version>2.6.7</version>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>repackage</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+    </plugins>
+    <resources>
+        <resource>
+            <directory>src/main/resources</directory>
+        </resource>
+        <resource>
+            <directory>src/main/java</directory>
+            <includes>
+                <include>**/*.xml</include>
+            </includes>
+            <filtering>false</filtering>
+        </resource>
+    </resources>
+</build>
+```
+
+---
+
+## 五、注意
+
+1. pom中加入repackage打的是可执行的包，MANIFEST.MF有启动类，但是可执行的包不能作为依赖引入，引入这样的jar会报错找不到类。报错：com.oceansite.system.config.ShipImoConfig
+2. pom中不加repackage打的是依赖包，不可执行，MANIFEST.MF中没有启动类，但是可以当作依赖jar包引入其他项目中。
+3. 打包插件版本应该和springboot版本一致，否则会报版本报错。如果子模块有引入其他模块。直接子模块打包会报错找不到这个依赖（因为会从仓库里去找），需要整个项目一起打包，才能打成功。
+4. 若依cloud 项目中，只需要对应的模块的pom文件中加入打包插件就可以，比如：file，像models模块下就不需要（file是models模块下的子模块），因为只是起到文件夹的作用。而且pom文件的生效是由内而外的，如果本模块下pom没有引入，并在外层pom中找
+5. 如果你在没有主类的公共包的pom文件中强行加入repackage，打包时会报错：Unable to find main class
+
+
+
+---
+
+
 
 
 

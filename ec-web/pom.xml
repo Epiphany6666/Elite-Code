@@ -38,8 +38,8 @@
         </dependency>
     </dependencies>
 
-    <!-- 构建Docker镜像 -->
     <build>
+        <finalName>${project.artifactId}</finalName>
         <plugins>
             <!-- SpringBoot应用打包插件 -->
             <plugin>
@@ -58,10 +58,54 @@
                 </executions>
             </plugin>
 
-            <!-- 使用Maven插件构建Docker镜像 -->
+            <!-- 构建Docker镜像 -->
             <plugin>
                 <groupId>io.fabric8</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
+                <version>${docker.maven.plugin.version}</version>
+                <executions>
+                    <!-- 定义一个任务 -->
+                    <execution>
+                        <!-- 指定唯一标识符 -->
+                        <id>build-image</id>
+                        <!-- 在package生命周期阶段被执行 -->
+                        <phase>package</phase>
+                        <goals>
+                            <!-- 指定该任务的插件目标 -->
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <!-- 配置执行build目标时所需的具体配置参数 -->
+                <configuration>
+                    <!-- Docker 远程管理地址 -->
+                    <dockerHost></dockerHost>
+                    <images>
+                        <image>
+                            <!-- 定义镜像名称 -->
+                            <name>elitecode/${project.artifactId}:${project.version}</name>
+                            <!-- 定义镜像构建行为 -->
+                            <build>
+                                <!-- 定义基础镜像 -->
+                                <from>openjdk:17</from>
+                                <args>
+                                    <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
+                                </args>
+                                <!-- 定义哪些文件拷贝到容器中 -->
+                                <assembly>
+                                    <!-- 定义拷贝到容器的目录 -->
+                                    <targetDir>/</targetDir>
+                                    <!-- 只拷贝生成的jar包 -->
+                                    <descriptorRef>artifact</descriptorRef>
+                                </assembly>
+                                <!-- 定义容器启动命令 -->
+                                <entryPoint>["java", "-jar", "-Duser.timezone=Asia/Shanghai", "-Dspring.profiles.active=prod", "/${project.build.finalName}.jar"]</entryPoint>
+                                <!-- 定义维护者 -->
+                                <maintainer>LuoYan</maintainer>
+                            </build>
+                        </image>
+                    </images>
+                </configuration>
             </plugin>
         </plugins>
     </build>

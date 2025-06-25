@@ -1,3 +1,8 @@
+# 改进
+
+- [ ] 模块重新划分
+
+  - 父项目的pom文件新建一个模块 `ec-dependencies`，使用maven bom管理项目依赖
 # 项目搭建（后端）
 
 - [x] 创建Maven项目
