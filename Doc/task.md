@@ -50,7 +50,7 @@
 
   <img src="./assets/image-20250620184955172.png" alt="image-20250620184955172" style="zoom:50%;" />
 
-- [ ] 将 `Elite-Code` 项目名更改为 `elite-code`
+- [x] 将 `Elite-Code` 项目名更改为 `elite-code`
 
 - [ ] 表结构按照模块名区分，例如 `ec-module-system`，那么表的前缀就是 `system`；`ec-module_member` 的表前缀就是 `member`。
 

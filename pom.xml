@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>cn.elitecode</groupId>
-    <artifactId>Elite-Code</artifactId>
+    <artifactId>elite-code</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
     <modules>

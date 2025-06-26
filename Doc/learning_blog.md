@@ -8103,6 +8103,102 @@ Maven官方文档说：自 Maven 3.5.0-beta-1 开始，可以使用  `${revision
 
 ---
 
+# 【IDEA】如何完美的修改重命名一个SpringBoot项目工程名称
+
+自己之前做好了一个基础的[web项目](https://so.csdn.net/so/search?q=web项目&spm=1001.2101.3001.7020)框架web-basic，打算以后开发的时候，都从这个框架开始进行项目的开发，如果以后有心情的话，可能会一直维护好这个框架。自己今天准备开始一个新的项目名字叫pts8000，所以把web-basic项目拷贝过来，最上面一层根目录文件夹的名字已修改为pts8000。
+修改项目名称主要有以下步骤：
+
+## 一、修改项目根目录文件夹名称
+
+在操作系统里，将根目录的文件夹名称从web-basic改为pts8000。
+修改之后，使用Idea的Open工具，打开项目的根目录，进入项目中，可以看到已经有两处名称修改过来了，如下：
+
+![img](./assets/54627630421225fa7d85f542a991c34d.png)
+
+---
+
+## 二、修改项目名称
+
+使用rename来修改项目名字：在项目名称上右键->Refactor->Rename…
+
+![img](./assets/2e3c2c176b509e87d35ba5d9afeb12e4.png)
+
+然后修改为pts8000
+
+![img](./assets/f3a9c56666926fc936216efdd26eed2d.png)
+
+---
+
+## 三、修改Java文件下的包名称
+
+然后同样的，使用Rename修改包名称：
+
+![img](./assets/79333c76ff9d91e111b149a850d63110.png)
+
+修改为pts8000，会提示你是修改文件夹名称还是修改包名称，选择修改包名称，然后点击下方控制台弹出的Do Refactor按钮，确认修改所有的。
+
+![img](./assets/3e9d6b42e3a913efa477169cc2b6e2c3.png)
+
+
+修改名称，然后点击Refactor
+
+![img](./assets/4d85428ba01be34950622f4c1a707d70.png)
+
+然后选择Do Refactor。
+
+![img](./assets/74f5388bd807e476020a643c043f2117.png)
+
+----
+
+## 四、修改启动类名称
+
+然后修改启动类名称，改为WebBasicApplication。修改后会自动找出来启动类所被引用的代码段，找出需要修改的地方，全部选择即可，然后点击修改：
+
+![img](./assets/2ecb8f3bb4fbf7888fee5c1cc2b198a8.png)
+
+---
+
+## 五、修改Pom.xml文件
+
+接下来修改pom.xml文件中的artifactId和name两个标签，groupId标签的内容也可以修改一下，改为自己想要的，比如com.xjgc.pts8000。
+
+![img](./assets/25fc86e4fece3456f406d2da32bedb96.png)
+
+----
+
+## 六、修改项目调试启动名称
+
+然后点击项目调试运行的地方，Edit Configurations…
+
+![img](./assets/f305110ba350bf14353dc455e8b66c89.png)
+
+修改Name属性，点击OK：
+
+![img](./assets/cfc57625fb5c6ddc141ac333e75debef.png)
+
+---
+
+## 七、修改application.properties文件
+
+最后修改application.properties文件
+修改
+
+```properties
+spring.application.name=web-basic
+```
+
+改为
+
+```properties
+spring.application.name=pts8000
+```
+
+项目所有名称修改完毕，启动运行检查项目是否能够正常启动，项目名称修改完成。
+
+
+
+---
+
 
 
 
