@@ -7,10 +7,11 @@
 
     <groupId>cn.elitecode</groupId>
     <artifactId>ec-dependencies</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>${revision}</version>
 
     <properties>
-        <ec.version>1.0-SNAPSHOT</ec.version>
+        <revision>1.0-SNAPSHOT</revision>
+        <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
         <!-- 统一依赖管理 -->
         <spring-boot.version>2.7.2</spring-boot.version>
         <!-- web相关 -->
@@ -29,19 +30,19 @@
             <dependency>
                 <groupId>cn.elitecode</groupId>
                 <artifactId>ec-model</artifactId>
-                <version>${ec.version}</version>
+                <version>${revision}</version>
             </dependency>
 
             <dependency>
                 <groupId>cn.elitecode</groupId>
                 <artifactId>ec-mapper</artifactId>
-                <version>${ec.version}</version>
+                <version>${revision}</version>
             </dependency>
 
             <dependency>
                 <groupId>cn.elitecode</groupId>
                 <artifactId>ec-service</artifactId>
-                <version>${ec.version}</version>
+                <version>${revision}</version>
             </dependency>
 
             <!-- SpringBoot的依赖配置-->
@@ -90,4 +91,34 @@
         </dependencies>
     </dependencyManagement>
 
+    <build>
+        <plugins>
+            <!-- 统一 revision 版本 -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>${flatten-maven-plugin.version}</version>
+                <configuration>
+                    <flattenMode>bom</flattenMode>
+                    <updatePomFile>true</updatePomFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                    </execution>
+                    <execution>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

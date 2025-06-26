@@ -7912,6 +7912,197 @@ org目录下放置的与springboot应用jar加载和启动相关的类，后期�
 
 ---
 
+# maven 版本管理与 flatten-maven-plugin
+
+## 一、版本管理
+
+研究的maven版本管理的原因是觉得有些项目管理方式感觉不太科学，比如在微服务系统当中，有一种做法是所有服务都依赖一个包，里面进行版本管理。可是里面的每个服务的version版本管理却是单独使用一个版本号。快速迭代的版本中，通常是要不断地切换version，那么当服务众多的时候，修改起版本来就很麻烦。
+
+比如 [SimonLee/xkcoding_spring-boot-demo](https://link.zhihu.com/?target=https%3A//gitee.com/lzqsimonlee/xkcoding_spring-boot-demo/tree/master) 这个大哥写的demo就很不错，我会来参考学习。然后看它的版本管理方式：
+
+![img](./assets/v2-a83d3cd9fe527e582c8bdc36f8aa2b8c_1440w.jpg)
+
+最外层的parent这里写死了版本
+
+![img](./assets/v2-eb9047fd32b801a0f921d8c4d8cf2db3_1440w.jpg)
+
+然后里面的单独的[dubbo](https://zhida.zhihu.com/search?content_id=148257945&content_type=Article&match_order=1&q=dubbo&zhida_source=entity)系统里也写死了版本。
+
+也就是全部都写死了版本。（大哥他不需要更新，所以这些写没啥毛病）
+
+然后我们在版本快速迭代中，也这样使用的话，通常做法就是全局搜索替换版本号，这样就显得很捞，感觉不太科学。
+
+然后就有了[revision](https://zhida.zhihu.com/search?content_id=148257945&content_type=Article&match_order=1&q=revision&zhida_source=entity)的占位符统一管理。
+
+Maven官方文档说：自 Maven 3.5.0-beta-1 开始，可以使用  `${revision}`、`${sha1}` 和 `${changelist}`  这样的变量作为版本占位符
+
+这种写法也可以在[springboot](https://zhida.zhihu.com/search?content_id=148257945&content_type=Article&match_order=1&q=springboot&zhida_source=entity)源码中有看到。
+
+[https://github.com/spring-projects/spring-boot/blob/2.0.x/pom.xml](https://link.zhihu.com/?target=https%3A//github.com/spring-projects/spring-boot/blob/2.0.x/pom.xml)
+
+![img](./assets/v2-139dbed30889cb42cd64550f6dc44827_1440w.jpg)
+
+
+
+然后你可以看到里面其它子系统都是使用这种方式进行管理的。
+
+然后拿个具体的demo来试试，这是我以前学习dubbo从网上复制改编的例子
+
+原来的结构是这样的
+
+![img](./assets/v2-712a2128c223a1da93b7e09e428bfd6e_1440w.jpg)
+
+父类传递依赖。然后里面也是直接写死了版本，然后我使用revision来修改
+
+![img](./assets/v2-21548e2c43707139d99f79a97353808e_1440w.jpg)
+
+这个是父pom
+
+![img](./assets/v2-edef19489a378f09bedaebd9e971666c_1440w.jpg)
+
+这个是子类pom.
+
+然后编译运行也是没什么问题的。
+
+然后install、deploy的时候就出现问题了。打出来的jar包的pom文件里还是原来的revision变量，即到maven仓库中查看
+
+![img](./assets/v2-3e26c1a0e3c98cbad50bfd1a421d0d1c_1440w.jpg)
+
+这里识别不出版本号，这样就可能导致引用方不能识别你的jar包。
+
+然后这个时候就需要一个插件来改善一下了
+
+```xml
+<plugin>
+    <groupId>org.codehaus.mojo</groupId>
+    <artifactId>flatten-maven-plugin</artifactId>
+    <version>1.1.0</version>
+    <configuration>
+        <updatePomFile>true</updatePomFile>
+        <flattenMode>resolveCiFriendliesOnly</flattenMode>
+    </configuration>
+    <executions>
+        <execution>
+            <id>flatten</id>
+            <phase>process-resources</phase>
+            <goals>
+                <goal>flatten</goal>
+            </goals>
+        </execution>
+        <execution>
+            <id>flatten.clean</id>
+            <phase>clean</phase>
+            <goals>
+                <goal>clean</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+```
+
+也就是在父pom中引入 flatten-maven-plugin 插件。
+
+然后install之后，这个时候再观察项目结构
+
+![img](./assets/v2-0aa0cac843e1c887069788cf64ce80be_1440w.jpg)
+
+发现多了pom文件。
+
+点开一看
+
+![img](./assets/v2-66feca52d6f75b02da121e4fdbf53bdf_1440w.jpg)
+
+发现这是把占位符替换掉的完整的pom文件。
+
+然后再比对一下两者的控制台输出
+
+![img](./assets/v2-a1bacf1cf8225d359fd7c8961f0b86db_1440w.jpg)
+
+发现使用插件之后，发现它是把这个新的pom打到jar包里。也就是说，这个插件的作用就是在install或者deploy的时候，生成一个新的替换占位符的pom文件，也就是帮你替换了这些变量，接着把新的pom文件打入到jar包里。
+
+然后此时再来看maven仓库的内容
+
+![img](./assets/v2-46039cdb354e23ef91b2ec94e4e8ce21_1440w.jpg)
+
+发现是新的pom文件。这样其实就和之前的没什么差别了。
+
+我install的是父工程，直接打子类会出问题，这些就是maven基础了，不多赘述。
+
+然后，这样就可以比较好地解决了快速版本替换时的修改问题了。
+
+---
+
+## 二、压缩
+
+使用maven开发的模块化应用，可以发布出去供他人使用，比如各种开源库，使用时，要么是继承，要么是以依赖的形式引入。但我们看各种库的pom.xml文件，通常都比较简单，一般只有一些必要的依赖信息，作为开发者，通常认为使用者也就需要这些信息。但是真正开发时，对应模块的pom可能比较复杂，可能要使用各种插件，引用各种依赖，组件间有继承关系，甚至根据不同的参数走不同的分支，即使用profile机制等，maven默认在部署时，会保留对应模块中的pom的所有信息，不会做改动。这样就给模块的发布带来了一定的麻烦，如果直接发布这样的pom.xml，是可能给使用者造成干扰的，出了问题又很难进行定位。
+
+解决这个问题有很多的做法，比如构建两个工程，一个用于开发，一个用于版本发布，两个工程的pom是不同的，这样看上去也更符合软件开发的常规流程，另外，也可以考虑禁用maven默认的deloy过程，然后直接调用deploy:deploy-file单独部署某个文件。总之，不管怎样，办法肯定是有的。
+
+而本文的目的，是想介绍一种新的方式，来优雅地解决这个问题，也许实际开发中并不需要这样做。
+
+具体做法是，使用社区专门针对这个问题开发的插件，即`Maven Flatten Plugin`，这个插件使用起来非常简单，如下：
+
+```xml
+<plugins>
+  <plugin>
+    <groupId>org.codehaus.mojo</groupId>
+    <artifactId>flatten-maven-plugin</artifactId>
+    <version>1.0.0</version>
+    <configuration>
+    </configuration>
+    <executions>
+      <execution>
+        <id>flatten</id>
+        <phase>process-resources</phase>
+        <goals>
+          <goal>flatten</goal>
+        </goals>
+      </execution>
+    </executions>
+  </plugin>
+</plugins>
+```
+
+这个插件的作用是，生成一个压缩版的pom.xml文件，然后在`install`和`deploy`阶段使用压缩后的pom.xml文件，替换原来的pom.xml文件，具体压缩策略如下：
+
+- 和构建有关的元素会被删除；
+- 和开发有关的元素默认会被删除；
+- 只包含构件的使用者必须的一些信息；
+- 变量会被解析；
+- 上级关系会被解析，然后被压缩删除；
+- 构建时实际使用的profile会被评估，视情况处理；
+- 由JDK或者OS驱动的profile会被保留，需要时可以动态地控制依赖。
+
+在默认的压缩逻辑下，插件如何处理各种元素，可以看[这里](http://www.mojohaus.org/flatten-maven-plugin/plugin-info.html)。 下面会重点介绍如何通过各种参数来控制压缩的过程：
+
+| 属性名                          | 类型                | 描述                                                         |
+| ------------------------------- | ------------------- | ------------------------------------------------------------ |
+| `embedBuildProfileDependencies` | `Boolean`           | 由OS或者JDK的不同而触发的profile，可能根据环境的不同而产生不同的依赖，但是由属性等触发的profile，就不确定了，如果属性设置为`true`，profile中的依赖会直接写入生成的pom中，如果设置为`false`，所有的profile信息都会保留,默认是`false`。 |
+| `flattenMode`                   | `FlattenMode`       | 插件预定义了若干种压缩模式，下面会详述。                     |
+| `flattenedPomFilename`          | `String`            | 生成的压缩后的pom.xml文件的文件名，默认为`.flattened-pom.xml`。 |
+| `outputDirectory`               | `File`              | 生成的压缩后的pom.xml文件的存放位置，默认为`${project.basedir}`。 |
+| `pomElements`                   | `FlattenDescriptor` | 该元素定义了如何处理额外的元素，如果可能，尽量使用`flattenMode`，这个元素仅仅用于进一步提高灵活性，它可以控制具体的某个元素是保留还是删除，比如要指定删除`repositories`，可以这样：`<pomElements><repositories>flatten</repositories></pomElements>`。 |
+| `updatePomFile`                 | `Boolean`           | 插件默认只会处理`packaging`属性为非`pom`的，如果要处理`packaging`为`pom`的，可将本属性值设置为`true`。 |
+
+插件预定义了若干种模式，可以满足若干种常见的场景，这些模式定义在`org.codehaus.mojo.flatten.FlattenMode`枚举中，具体可以看[代码](https://github.com/mojohaus/flatten-maven-plugin/blob/master/src/main/java/org/codehaus/mojo/flatten/FlattenMode.java)，本文简单描述如下：
+
+| 模式       | 描述                                                         |
+| ---------- | ------------------------------------------------------------ |
+| `minimum`  | 不推荐使用，会展开`pluginRepositories`。                     |
+| `bom`      | 会保留`dependencyManagement`，展开`properties`。             |
+| `oss`      | 推荐开源项目使用，会展开`ciManagement`、`contributors`、`distributionManagement`、`inceptionYear`、`issueManagement`、`mailingLists`、`organization`、`prerequisites` |
+| `ossrh`    | 会展开`name`、`description`、`url`、`scm`、`developers`      |
+| `defaults` | 会展开`repositories`                                         |
+| `clean`    | 删除全部可选元素                                             |
+
+> 具体可以看`FlattenMode`的javadoc。
+>
+> http://www.mojohaus.org/flatten-maven-plugin/examples/example-multiple-versions.html
+
+
+
+---
+
 
 
 

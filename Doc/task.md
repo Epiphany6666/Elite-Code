@@ -3,6 +3,145 @@
 - [ ] 模块重新划分
 
   - 父项目的pom文件新建一个模块 `ec-dependencies`，使用maven bom管理项目依赖
+
+  - 学习：flatten-maven-plugin，使用 flatten-maven-plugin 进行统一版本管理
+
+  - 新建模块 `ec-framework`，用于实现 `Elite-Code` 项目的封装
+
+    每个组件，包含两部分：
+
+    1. `core` 包：组件的核心封装，拓展相关的功能。
+    2. `config` 包：组件的 Spring Boot 自动配置。
+
+    <img src="./assets/image-20250624155351470.png" alt="image-20250624155351470" style="zoom:50%;" />
+
+    - 封装 `ec-spring-boot-starter-redis`
+    - 封装 `ec-spring-boot-starter-security`
+
+  - `module` 模块：
+
+    每个模块包含两个 Maven Module，分别是：
+
+    | Maven Module              | 作用                               |
+    | ------------------------- | ---------------------------------- |
+    | `yudao-module-xxx-api`    | 提供给其它模块的 API 定义          |
+    | `yudao-module-xxx-server` | 模块的功能的具体实现（服务提供者） |
+
+    例如说，`yudao-module-infra` 想要访问 `yudao-module-system` 的用户、部门等数据，需要引入 `yudao-module-system-api` 子模块。
+
+    项目结构如下：
+
+    ![1](./assets/1.png)
+
+    `yudao-module-xxx-api` 子模块的项目结构如下：
+
+    <img src="./assets/image-20250624214525347.png" alt="image-20250624214525347" style="zoom:50%;" />
+
+    - 权限管理新建一个模块 `ec-module-system` 
+    - 题目系统新建一个模块 `ec-module-question`
+
+  - `dto` 更改为：VO 提供给 HTTP Controller（前端），DTO 提供给 RPC API（服务之间）。 然后出入参通过 Req 请求、Resp 响应标记。 这样，一眼就能看出，这个类是在哪一层传递进来的。
+
+  
+
+  controller包下分为admin和app
+
+  建包参考下图
+
+  <img src="./assets/image-20250620184955172.png" alt="image-20250620184955172" style="zoom:50%;" />
+
+- [ ] 将 `Elite-Code` 项目名更改为 `elite-code`
+
+- [ ] 表结构按照模块名区分，例如 `ec-module-system`，那么表的前缀就是 `system`；`ec-module_member` 的表前缀就是 `member`。
+
+- [ ] `BeanUtils.copyProperties` 全部改成使用 `MapStruct` 实现对象与对象之间的转换
+
+  引入依赖
+
+  PS：一定要在 `maven-compiler-plugin` 插件中，声明 `mapstruct-processor` 为 JSR 269 的 Java 注解处理器。
+
+  ~~~xml
+  <dependencies>
+      <dependency>
+          <groupId>org.mapstruct</groupId>
+          <artifactId>mapstruct</artifactId>
+          <version>${mapstruct.version}</version>
+      </dependency>
+  </dependencies>
+  
+  <build>
+      <plugins>
+          <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-compiler-plugin</artifactId>
+              <version>3.8.1</version>
+              <configuration>
+                  <source>${java.version}</source>
+                  <target>${java.version}</target>
+                  <annotationProcessorPaths>
+                      <path>
+                          <groupId>org.mapstruct</groupId>
+                          <artifactId>mapstruct-processor</artifactId>
+                          <version>${mapstruct.version}</version>
+                      </path>
+                  </annotationProcessorPaths>
+              </configuration>
+          </plugin>
+      </plugins>
+  </build>
+  ~~~
+
+  创建 [UserConvert](https://github.com/YunaiV/SpringBoot-Labs/blob/master/lab-55/lab-55-mapstruct-demo/src/main/java/cn/iocoder/springboot/lab55/mapstructdemo/convert/UserConvert.java) 接口，作为 User 相关 Bean 的转换器。代码如下：
+
+  ~~~java
+  @Mapper // <1>
+  public interface UserConvert {
+  
+      UserConvert INSTANCE = Mappers.getMapper(UserConvert.class); // <2>
+  
+      UserBO convert(UserDO userDO); // <3>
+  
+  }
+  ~~~
+
+  `<1>` 处，添加 [`@Mapper`](https://github.com/mapstruct/mapstruct/blob/master/core/src/main/java/org/mapstruct/Mapper.java) 注解，声明它是一个 MapStruct Mapper 映射器。
+
+  `<2>` 处，通过调用 [Mappers](https://github.com/mapstruct/mapstruct/blob/master/core/src/main/java/org/mapstruct/factory/Mappers.java) 的 `#getMapper(Class<T> clazz)` 方法，获得 MapStruct 帮我们**自动生成的 UserConvert 实现类**的对象。
+
+  `<3>` 处，定义 `#convert(UserDO userDO)` 方法，声明 UserDO 转换成 UserBO。后续，在我们每次编译该项目时，在如下目录可以看到自动生成的 UserConvert 实现类，可以用于 Debug 调试噢：
+
+  ![image-20250613194245093](./assets/image-20250613194245093.png)
+
+  使用：
+
+  ~~~java
+  UserBO userBO = UserConvert.INSTANCE.convert(userDO);
+  ~~~
+
+- [ ] 学习：使用 `spring-boot-starter-actuator` 在debug界面可以看见所有mapping
+
+  ~~~xml
+  <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+  </dependency>
+  ~~~
+
+- [ ] pom文件所有都加上 `<description>` 用来描述该模块的作用
+
+  ~~~xml
+  <name>${project.artifactId}</name>
+  <description>
+      demo 模块，主要实现 XXX
+  </description>
+  ~~~
+
+  
+
+
+
+----
+
 # 项目搭建（后端）
 
 - [x] 创建Maven项目

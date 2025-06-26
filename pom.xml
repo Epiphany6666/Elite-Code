@@ -6,7 +6,7 @@
 
     <groupId>cn.elitecode</groupId>
     <artifactId>Elite-Code</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
     <modules>
         <module>ec-mapper</module>
@@ -17,12 +17,15 @@
     </modules>
 
     <properties>
+        <revision>1.0-SNAPSHOT</revision>
         <!-- Maven 相关 -->
         <java.version>17</java.version>
         <maven.compile.source>${java.version}</maven.compile.source>
         <maven.compile.target>${java.version}</maven.compile.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
+        <!-- Docker 相关 -->
         <docker.maven.plugin.version>0.43.3</docker.maven.plugin.version>
         <docker.host>http://111.230.63.162:2375</docker.host>
     </properties>
@@ -32,11 +35,42 @@
             <dependency>
                 <groupId>cn.elitecode</groupId>
                 <artifactId>ec-dependencies</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>${revision}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <build>
+        <plugins>
+            <!-- 统一 revision 版本 -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>${flatten-maven-plugin.version}</version>
+                <configuration>
+                    <flattenMode>oss</flattenMode>
+                    <updatePomFile>true</updatePomFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                    </execution>
+                    <execution>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
