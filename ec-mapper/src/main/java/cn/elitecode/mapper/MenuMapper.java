@@ -2,12 +2,14 @@ package cn.elitecode.mapper;
 
 import cn.elitecode.model.dto.menu.MenuQueryDTO;
 import cn.elitecode.model.entity.Menu;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
 * menu(菜单权限表)
 */
+@Mapper
 public interface MenuMapper {
 
     /**

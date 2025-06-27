@@ -1,12 +1,14 @@
 package cn.elitecode.mapper;
 
 import cn.elitecode.model.entity.RoleMenu;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
 * role_menu(角色和菜单关联表)
 */
+@Mapper
 public interface RoleMenuMapper {
 
     /**

@@ -2,12 +2,14 @@ package cn.elitecode.mapper;
 
 import cn.elitecode.model.dto.tag.TagQueryDTO;
 import cn.elitecode.model.entity.Tag;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
 * question_tag(题目标签表)
 */
+@Mapper
 public interface TagMapper {
 
     /**

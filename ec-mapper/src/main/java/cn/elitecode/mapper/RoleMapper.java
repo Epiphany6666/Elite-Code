@@ -2,12 +2,14 @@ package cn.elitecode.mapper;
 
 import cn.elitecode.model.dto.role.RoleQueryDTO;
 import cn.elitecode.model.entity.Role;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
 * role(角色信息表)
 */
+@Mapper
 public interface RoleMapper {
 
     /**

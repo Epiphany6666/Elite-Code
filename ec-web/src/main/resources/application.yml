@@ -39,7 +39,7 @@ spring:
 
 # MyBatis配置
 mybatis:
-  mapper-locations: cn.elitecode.mapper/*.xml #mapper位置
+  mapper-locations: cn.elitecode.mapper.*.xml #mapper位置
   configuration:
     log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
   type-aliases-package: cn.elitecode.model.entity
@@ -55,6 +55,7 @@ knife4j:
         api-rule: package
         api-rule-resources:
           - cn.elitecode.web.controller
+          - cn.elitecode.module
 
 # jwt配置
 jwt:

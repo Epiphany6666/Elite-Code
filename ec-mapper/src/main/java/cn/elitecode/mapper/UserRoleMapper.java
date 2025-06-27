@@ -1,12 +1,14 @@
 package cn.elitecode.mapper;
 
 import cn.elitecode.model.entity.UserRole;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
 * user_role(用户和角色关联表)
 */
+@Mapper
 public interface UserRoleMapper {
 
     /**

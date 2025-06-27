@@ -3,12 +3,14 @@ package cn.elitecode.mapper;
 import cn.elitecode.model.dto.problemset.ProblemsetQueryQuestionDTO;
 import cn.elitecode.model.dto.question.QuestionQueryDTO;
 import cn.elitecode.model.entity.Question;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
 * question(题目表)
 */
+@Mapper
 public interface QuestionMapper {
 
     /**

@@ -2,12 +2,14 @@ package cn.elitecode.mapper;
 
 import cn.elitecode.model.dto.user.UserQueryDTO;
 import cn.elitecode.model.entity.User;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
  * 用户表 数据层
 */
+@Mapper
 public interface UserMapper {
 
     /**
