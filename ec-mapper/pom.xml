@@ -31,19 +31,6 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <!-- 指定项目在构建过程中需要包含的资源文件 -->
-        <resources>
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.xml</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-            </resource>
-        </resources>
-    </build>
+
 
 </project>

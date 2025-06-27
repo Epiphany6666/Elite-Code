@@ -9,9 +9,9 @@ drop table if exists `user`;
 create table if not exists `user` (
     id            bigint(20)    not null auto_increment     comment '用户ID',
     username      varchar(256)  not null                    comment '账号',
-    password      varchar(512)  not null                    comment '密码',
-    nick_name     varchar(256)  default null                comment '用户昵称',
-    avatar        varchar(1024) default null                comment '用户头像',
+    password      varchar(100)  not null                    comment '密码',
+    nick_name     varchar(30)   default null                comment '用户昵称',
+    avatar        varchar(512)  default null                comment '用户头像',
     profile       varchar(512)  default null                comment '用户简介',
     del_flag      char(1)       default '0'                 comment '删除标志（0代表存在，2代表删除）',
     create_by     bigint(20)    default null                comment '创建者',
@@ -26,27 +26,57 @@ create table if not exists `user` (
 -- 初始化-用户信息表数据
 -- ----------------------------
 INSERT INTO `user` (id, username, password, `nick_name`, avatar, profile, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`)
-VALUES (1, 'luoyan', '$2a$10$QRahICxJnpkrbd9HAQ/hCumW2/F2fVvJYhPpJcWGHMipkKbFwHdI2', '管理员', 'https://pic.luo-yan.cn/elitecode/avatar.jpg', '系统管理员', '0', 1, '2024-11-22 08:36:41', 1, '2024-11-27 08:36:41');
+VALUES (1, 'luoyan', '$2a$10$QRahICxJnpkrbd9HAQ/hCumW2/F2fVvJYhPpJcWGHMipkKbFwHdI2', '管理员', 'http://localhost:9090/elitecode/20250603/83e7e9c3d49748d289899f3fb105e4e8.jpg', '系统管理员', '0', 1, '2024-11-22 08:36:41', 1, '2024-11-27 08:36:41');
 INSERT INTO `user` (id, username, password, `nick_name`, avatar, profile, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`)
-VALUES (2, 'testuser', '$2a$10$QRahICxJnpkrbd9HAQ/hCumW2/F2fVvJYhPpJcWGHMipkKbFwHdI2', '测试用户', 'https://pic.luo-yan.cn/elitecode/avatar.jpg', '测试人员', '0', 1, '2024-11-27 08:36:41', 1, '2024-11-27 08:36:41');
+VALUES (2, 'testuser', '$2a$10$QRahICxJnpkrbd9HAQ/hCumW2/F2fVvJYhPpJcWGHMipkKbFwHdI2', '测试用户', 'http://localhost:9090/elitecode/20250603/83e7e9c3d49748d289899f3fb105e4e8.jpg', '测试人员', '0', 1, '2024-11-27 08:36:41', 1, '2024-11-27 08:36:41');
 INSERT INTO `user` (id, username, password, `nick_name`, avatar, profile, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`)
-VALUES (100, 'luoyantst', '$2a$10$QRahICxJnpkrbd9HAQ/hCumW2/F2fVvJYhPpJcWGHMipkKbFwHdI2', 'luoyantst', 'https://pic.luo-yan.cn/elitecode/avatar.jpg', '', '0', 1, '2024-12-06 08:10:43', 1, '2024-12-06 08:10:43');
+VALUES (100, 'luoyantst', '$2a$10$QRahICxJnpkrbd9HAQ/hCumW2/F2fVvJYhPpJcWGHMipkKbFwHdI2', 'luoyantst', 'http://localhost:9090/elitecode/20250603/83e7e9c3d49748d289899f3fb105e4e8.jpg', '', '0', 1, '2024-12-06 08:10:43', 1, '2024-12-06 08:10:43');
 INSERT INTO `user` (id, username, password, `nick_name`, avatar, profile, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`)
-VALUES (101, 'luoyantest', '$2a$10$QRahICxJnpkrbd9HAQ/hCumW2/F2fVvJYhPpJcWGHMipkKbFwHdI2', 'luoyantest', 'https://pic.luo-yan.cn/elitecode/avatar.jpg', '', '0', 1, '2024-12-06 16:49:27', 1, '2024-12-06 16:49:27');
+VALUES (101, 'luoyantest', '$2a$10$QRahICxJnpkrbd9HAQ/hCumW2/F2fVvJYhPpJcWGHMipkKbFwHdI2', 'luoyantest', 'http://localhost:9090/elitecode/20250603/83e7e9c3d49748d289899f3fb105e4e8.jpg', '', '0', 1, '2024-12-06 16:49:27', 1, '2024-12-06 16:49:27');
 INSERT INTO `user` (id, username, password, `nick_name`, avatar, profile, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`)
-VALUES (102, 'luoyantest1', '$2a$10$QRahICxJnpkrbd9HAQ/hCumW2/F2fVvJYhPpJcWGHMipkKbFwHdI2', 'luoyantest1', 'https://pic.luo-yan.cn/elitecode/avatar.jpg', '', '0', 1, '2024-12-06 17:13:38', 1, '2024-12-06 17:13:38');
+VALUES (102, 'luoyantest1', '$2a$10$QRahICxJnpkrbd9HAQ/hCumW2/F2fVvJYhPpJcWGHMipkKbFwHdI2', 'luoyantest1', 'http://localhost:9090/elitecode/20250603/83e7e9c3d49748d289899f3fb105e4e8.jpg', '', '0', 1, '2024-12-06 17:13:38', 1, '2024-12-06 17:13:38');
 INSERT INTO `user` (id, username, password, `nick_name`, avatar, profile, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`)
-VALUES (103, 'luoyantest2', '$2a$10$QRahICxJnpkrbd9HAQ/hCumW2/F2fVvJYhPpJcWGHMipkKbFwHdI2', 'luoyantest2', 'https://pic.luo-yan.cn/elitecode/avatar.jpg', '', '0', 1, '2024-12-06 19:58:42', 1, '2024-12-06 19:58:42');
+VALUES (103, 'luoyantest2', '$2a$10$QRahICxJnpkrbd9HAQ/hCumW2/F2fVvJYhPpJcWGHMipkKbFwHdI2', 'luoyantest2', 'http://localhost:9090/elitecode/20250603/83e7e9c3d49748d289899f3fb105e4e8.jpg', '', '0', 1, '2024-12-06 19:58:42', 1, '2024-12-06 19:58:42');
 INSERT INTO `user` (id, username, password, `nick_name`, avatar, profile, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`)
-VALUES (105, 'luoyantest4', '$2a$10$QRahICxJnpkrbd9HAQ/hCumW2/F2fVvJYhPpJcWGHMipkKbFwHdI2', 'luoyantest4', 'https://pic.luo-yan.cn/elitecode/avatar.jpg', '', '0', 1, '2024-12-08 23:12:54', 1, '2024-12-08 23:12:54');
+VALUES (105, 'luoyantest4', '$2a$10$QRahICxJnpkrbd9HAQ/hCumW2/F2fVvJYhPpJcWGHMipkKbFwHdI2', 'luoyantest4', 'http://localhost:9090/elitecode/20250603/83e7e9c3d49748d289899f3fb105e4e8.jpg', '', '0', 1, '2024-12-08 23:12:54', 1, '2024-12-08 23:12:54');
 INSERT INTO `user` (id, username, password, `nick_name`, avatar, profile, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`)
-VALUES (106, 'luoyantest3', '$2a$10$QRahICxJnpkrbd9HAQ/hCumW2/F2fVvJYhPpJcWGHMipkKbFwHdI2', 'luoyantest3', 'https://pic.luo-yan.cn/elitecode/avatar.jpg', '', '0', 1, '2024-12-08 23:22:03', 1, '2024-12-08 23:22:03');
+VALUES (106, 'luoyantest3', '$2a$10$QRahICxJnpkrbd9HAQ/hCumW2/F2fVvJYhPpJcWGHMipkKbFwHdI2', 'luoyantest3', 'http://localhost:9090/elitecode/20250603/83e7e9c3d49748d289899f3fb105e4e8.jpg', '', '0', 1, '2024-12-08 23:22:03', 1, '2024-12-08 23:22:03');
 INSERT INTO `user` (id, username, password, `nick_name`, avatar, profile, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`)
 VALUES (107, '2123', '$2a$10$QRahICxJnpkrbd9HAQ/hCumW2/F2fVvJYhPpJcWGHMipkKbFwHdI2', null, null, null, '0', null, '2025-01-02 14:04:29', null, '2025-01-02 14:04:29');
 INSERT INTO `user` (id, username, password, `nick_name`, avatar, profile, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`)
 VALUES (108, '21321312', '$2a$10$QRahICxJnpkrbd9HAQ/hCumW2/F2fVvJYhPpJcWGHMipkKbFwHdI2', null, null, null, '0', null, '2025-02-26 09:16:26', null, '2025-02-26 09:16:26');
 INSERT INTO `user` (id, username, password, `nick_name`, avatar, profile, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`)
 VALUES (109, '341341', '$2a$10$QRahICxJnpkrbd9HAQ/hCumW2/F2fVvJYhPpJcWGHMipkKbFwHdI2', null, null, null, '0', null, '2025-02-26 09:20:45', null, '2025-02-26 09:20:45');
+
+-- ----------------------------
+-- 会员信息表
+-- ----------------------------
+drop table if exists `member_user`;
+create table if not exists `member_user` (
+    id            bigint(20)        not null auto_increment     comment '会员ID',
+    mobile        varchar(11)       not null                    comment '手机号',
+    password      varchar(512)      not null                    comment '密码',
+    nick_name     varchar(30)       default null                comment '用户昵称',
+    avatar        varchar(512)      default null                comment '会员头像',
+    sex           char(1)           default null                comment '会员性别',
+    create_by     bigint(20)        default null                comment '创建者',
+    create_time   datetime          default current_timestamp   comment '创建时间',
+    update_by     bigint(20)        default null                comment '更新者',
+    update_time   datetime          default current_timestamp   comment '更新时间',
+    primary key (id)
+) engine = innodb
+  auto_increment = 100 comment '会员信息表';
+
+-- ----------------------------
+-- 初始化-会员信息表数据
+-- ----------------------------
+INSERT INTO `member_user` (id, mobile, password, nick_name, avatar, sex, create_by, create_time, update_by, update_time)
+VALUES (100, '13800138000', '$2a$10$QRahICxJnpkrbd9HAQ/hCumW2/F2fVvJYhPpJcWGHMipkKbFwHdI2', '张三', 'http://localhost:9090/elitecode/20250603/83e7e9c3d49748d289899f3fb105e4e8.jpg', '1', 1, '2024-12-01 10:00:00', 1, '2024-12-01 10:00:00');
+INSERT INTO `member_user` (id, mobile, password, nick_name, avatar, sex, create_by, create_time, update_by, update_time)
+VALUES (101, '13912345678', '$2a$10$QRahICxJnpkrbd9HAQ/hCumW2/F2fVvJYhPpJcWGHMipkKbFwHdI2', '李四', 'http://localhost:9090/elitecode/20250603/83e7e9c3d49748d289899f3fb105e4e8.jpg', '0', 1, '2024-12-05 11:30:00', 1, '2024-12-05 11:30:00');
+INSERT INTO `member_user` (id, mobile, password, nick_name, avatar, sex, create_by, create_time, update_by, update_time)
+VALUES (102, '13012345678', '$2a$10$QRahICxJnpkrbd9HAQ/hCumW2/F2fVvJYhPpJcWGHMipkKbFwHdI2', '王五', 'http://localhost:9090/elitecode/20250603/83e7e9c3d49748d289899f3fb105e4e8.jpg', '0', 1, '2024-12-10 14:45:00', 1, '2024-12-10 14:45:00');
+
 
 -- ----------------------------
 -- 系统访问记录

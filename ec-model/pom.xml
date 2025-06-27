@@ -25,12 +25,6 @@
             <artifactId>hutool-all</artifactId>
         </dependency>
 
-        <!-- SpringSecurity -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-
         <!-- 自定义验证注解 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

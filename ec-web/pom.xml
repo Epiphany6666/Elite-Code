@@ -36,10 +36,23 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>cn.elitecode</groupId>
+            <artifactId>ec-spring-boot-starter-security</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.elitecode</groupId>
+            <artifactId>ec-module-member-server</artifactId>
+            <version>${revision}</version>
+        </dependency>
     </dependencies>
 
     <build>
         <finalName>${project.artifactId}</finalName>
+
         <plugins>
             <!-- SpringBoot应用打包插件 -->
             <plugin>

@@ -30,5 +30,17 @@
         </exclusion>
       </exclusions>
     </dependency>
+    <dependency>
+      <groupId>cn.elitecode</groupId>
+      <artifactId>ec-spring-boot-starter-security</artifactId>
+      <version>1.0-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>cn.elitecode</groupId>
+      <artifactId>ec-module-member-server</artifactId>
+      <version>1.0-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
 </project>

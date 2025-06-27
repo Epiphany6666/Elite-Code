@@ -31,6 +31,6 @@ public class FastJson2JsonRedisSerializer<T> implements RedisSerializer<T> {
         if (bytes == null || bytes.length == 0) {
             return null;
         }
-        return JSON.parseObject(new String(bytes), clazz, JSONReader.autoTypeFilter("org.springframework", "cn.elitecode.model"));
+        return JSON.parseObject(new String(bytes), clazz, JSONReader.autoTypeFilter("org.springframework", "cn.elitecode"));
     }
 }

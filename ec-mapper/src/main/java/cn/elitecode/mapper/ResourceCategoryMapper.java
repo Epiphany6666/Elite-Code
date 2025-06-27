@@ -1,12 +1,14 @@
 package cn.elitecode.mapper;
 
 import cn.elitecode.model.entity.ResourceCategory;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
 * resource_category(后台资源分类表)
 */
+@Mapper
 public interface ResourceCategoryMapper {
 
     /**

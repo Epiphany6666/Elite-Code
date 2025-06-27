@@ -14,6 +14,8 @@
         <module>ec-service</module>
         <module>ec-web</module>
         <module>ec-dependencies</module>
+        <module>ec-module-member</module>
+        <module>ec-framework</module>
     </modules>
 
     <properties>
@@ -43,6 +45,19 @@
     </dependencyManagement>
 
     <build>
+
+        <!-- 指定项目在构建过程中需要包含的资源文件 -->
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
         <plugins>
             <!-- 统一 revision 版本 -->
             <plugin>

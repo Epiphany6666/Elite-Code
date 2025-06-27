@@ -29,6 +29,12 @@
             <artifactId>minio</artifactId>
             <version>8.5.17</version>
         </dependency>
+
+        <dependency>
+            <groupId>cn.elitecode</groupId>
+            <artifactId>ec-spring-boot-starter-security</artifactId>
+            <version>${revision}</version>
+        </dependency>
     </dependencies>
 
 </project>

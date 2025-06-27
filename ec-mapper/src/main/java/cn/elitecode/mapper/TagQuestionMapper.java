@@ -1,12 +1,14 @@
 package cn.elitecode.mapper;
 
 import cn.elitecode.model.entity.TagQuestion;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
 * tag_question(题目和标签关联表)
 */
+@Mapper
 public interface TagQuestionMapper {
 
     /**

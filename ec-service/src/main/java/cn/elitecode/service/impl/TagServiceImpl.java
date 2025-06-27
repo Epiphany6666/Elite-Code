@@ -1,7 +1,7 @@
 package cn.elitecode.service.impl;
 
 import cn.elitecode.common.api.CommonPage;
-import cn.elitecode.common.utils.SecurityUtil;
+import cn.elitecode.framework.core.utils.SecurityUtil;
 import cn.elitecode.mapper.TagMapper;
 import cn.elitecode.model.dto.tag.TagAddDTO;
 import cn.elitecode.model.dto.tag.TagQueryDTO;
@@ -11,6 +11,7 @@ import cn.elitecode.service.TagService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 /**

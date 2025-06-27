@@ -44,7 +44,7 @@
     <logger name="org.springframework" level="warn" />
 
     <!-- SQL语句输出 -->
-    <logger name="cn.elitecode.mapper" level="DEBUG" additivity="false">
+    <logger name="cn.elitecode" level="DEBUG" additivity="false">
         <appender-ref ref="console"/>
         <appender-ref ref="file_info"/>
     </logger>

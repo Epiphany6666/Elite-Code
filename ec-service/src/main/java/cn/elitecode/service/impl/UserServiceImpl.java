@@ -4,9 +4,9 @@ import cn.elitecode.common.BaseContext;
 import cn.elitecode.common.api.CommonPage;
 import cn.elitecode.common.exception.user.AdminNotAllowedException;
 import cn.elitecode.common.exception.user.UsernameAlreadyExistsException;
-import cn.elitecode.common.utils.SecurityUtil;
 import cn.elitecode.constant.HttpStatus;
 import cn.elitecode.constant.UserConstant;
+import cn.elitecode.framework.core.utils.SecurityUtil;
 import cn.elitecode.mapper.UserMapper;
 import cn.elitecode.mapper.UserRoleMapper;
 import cn.elitecode.model.dto.user.UserAddDTO;
@@ -22,6 +22,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import java.util.List;
 

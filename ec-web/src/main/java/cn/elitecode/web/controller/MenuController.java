@@ -2,7 +2,7 @@ package cn.elitecode.web.controller;
 
 import cn.elitecode.common.api.CommonPage;
 import cn.elitecode.common.api.CommonResult;
-import cn.elitecode.common.utils.SecurityUtil;
+import cn.elitecode.framework.core.utils.SecurityUtil;
 import cn.elitecode.model.dto.menu.MenuAddDTO;
 import cn.elitecode.model.dto.menu.MenuQueryDTO;
 import cn.elitecode.model.dto.menu.MenuUpdateDTO;
@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

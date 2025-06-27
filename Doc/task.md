@@ -52,8 +52,32 @@
 
 - [x] 将 `Elite-Code` 项目名更改为 `elite-code`
 
-- [ ] 表结构按照模块名区分，例如 `ec-module-system`，那么表的前缀就是 `system`；`ec-module_member` 的表前缀就是 `member`。
+- [ ] 模块命名按照模块名区分，例如 `ec-module-system`，那么表的前缀就是 `system`；`ec-module_member` 的表前缀就是 `member`。
 
+- [ ] `system_users` 表新增 `sex` 字段
+
+- [x] 新建表 `member_user`
+
+  对于管理系统来说，管理员是它的用户，也就是项目中的 `system_users` 表
+
+  而对于题目、商城、论坛、博客等前台系统来说，会员是它的用户，也就是会员中心的 `member_user` 表。
+
+  ![image-20250626161904059](./assets/image-20250626161904059.png)
+
+  - [x] 新建 `ec-module-memeber` 模块
+  
+  管理员（admin）
+  
+  - [x] 改
+  - [x] 根据分页条件查询会员信息
+  - [x] 根据id获取会员信息
+  
+  用户前台（app）
+  
+  - [x] 根据手机号+密码登录
+  
+  - [ ] 根据手机号验证码登录
+  
 - [ ] `BeanUtils.copyProperties` 全部改成使用 `MapStruct` 实现对象与对象之间的转换
 
   引入依赖

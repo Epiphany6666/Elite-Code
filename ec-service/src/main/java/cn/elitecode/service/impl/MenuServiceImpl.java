@@ -1,7 +1,7 @@
 package cn.elitecode.service.impl;
 
 import cn.elitecode.common.api.CommonPage;
-import cn.elitecode.common.utils.SecurityUtil;
+import cn.elitecode.framework.core.utils.SecurityUtil;
 import cn.elitecode.mapper.MenuMapper;
 import cn.elitecode.mapper.RoleMapper;
 import cn.elitecode.model.bo.TreeSelect;
@@ -14,6 +14,7 @@ import cn.elitecode.service.MenuService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 

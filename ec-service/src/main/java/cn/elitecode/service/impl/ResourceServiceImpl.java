@@ -1,7 +1,7 @@
 package cn.elitecode.service.impl;
 
 import cn.elitecode.common.api.CommonPage;
-import cn.elitecode.common.utils.SecurityUtil;
+import cn.elitecode.framework.core.utils.SecurityUtil;
 import cn.elitecode.mapper.ResourceMapper;
 import cn.elitecode.mapper.RoleResourceMapper;
 import cn.elitecode.model.dto.resource.ResourceAddDTO;
@@ -14,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,8 +1,8 @@
 package cn.elitecode.web.controller;
 
 import cn.elitecode.common.api.CommonResult;
-import cn.elitecode.common.utils.SecurityUtil;
 import cn.elitecode.constant.HttpStatus;
+import cn.elitecode.framework.core.utils.SecurityUtil;
 import cn.elitecode.model.dto.user.UserRegisterDTO;
 import cn.elitecode.model.entity.User;
 import cn.elitecode.service.RegisterService;

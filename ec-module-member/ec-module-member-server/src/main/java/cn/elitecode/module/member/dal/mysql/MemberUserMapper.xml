@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.elitecode.module.member.dal.mysql.MemberUserMapper">
+
+    <resultMap id="MemberUserResult" type="cn.elitecode.module.member.dal.dataobject.user.MemberUserDO">
+            <id property="id" column="id" />
+            <result property="mobile" column="mobile" />
+            <result property="password" column="password" />
+            <result property="nickName" column="nick_name" />
+            <result property="avatar" column="avatar" />
+            <result property="sex" column="sex" />
+            <result property="createBy" column="create_by" />
+            <result property="createTime" column="create_time" />
+            <result property="updateBy" column="update_by" />
+            <result property="updateTime" column="update_time" />
+    </resultMap>
+
+    <!-- void updateUserById(MemberUserDO memberUserDO); -->
+    <update id="updateUserById">
+        update member_user
+        <set>
+            <if test="mobile != null and mobile != ''">mobile = #{mobile},</if>
+            <if test="nickName != null and nickName != ''">nick_name = #{nickName},</if>
+            <if test="avatar != null and avatar != ''">avatar = #{avatar},</if>
+            <if test="sex != null and sex != ''">sex = #{sex},</if>
+            <if test="updateBy != null and updateBy != 0">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </set>
+        where
+            id = #{id}
+    </update>
+
+    <!-- MemberUserDO selectUserById(Long userId); -->
+    <select id="selectUserById" resultMap="MemberUserResult">
+        select
+            id,mobile,password,nick_name,avatar,sex,
+            create_by,create_time,update_by,update_time
+        from
+            member_user
+        where
+            id = #{userId}
+    </select>
+
+    <!-- List<MemberUserDO> selectUserList(MemberUserQueryReqVO reqVO); -->
+    <select id="selectUserList" resultMap="MemberUserResult">
+        select
+            id,mobile,password,nick_name,avatar,sex,
+            create_by,create_time,update_by,update_time
+        from
+            member_user
+        <where>
+            <if test="mobile != null and mobile != ''">and mobile like concat("%", #{mobile}, "%")</if>
+            <if test="nickName != null and nickName != ''">and nick_name like concat("%", #{nickName}, "%")</if>
+            <if test="sex != null and sex != ''">and sex = #{sex}</if>
+            <if test="createBy != null and createBy != 0">and create_by = #{createBy}</if>
+            <if test="updateBy != null and updateBy != 0">and update_by = #{updateBy}</if>
+            <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>
+        </where>
+        <if test="sortFieldPair != null and sortFieldPair.size() != 0">
+            order by
+                <foreach collection="sortFieldPair" separator="," item="sortField">
+                    ${sortField}
+                </foreach>
+        </if>
+        limit #{current}, #{pageSize}
+    </select>
+
+    <!-- Long selectTotalByPage(MemberUserQueryReqVO reqVO); -->
+    <select id="selectTotalByPage" resultType="java.lang.Long">
+        select
+            count(1)
+        from member_user
+        <where>
+            <if test="mobile != null and mobile != ''">and mobile like concat("%", #{mobile}, "%")</if>
+            <if test="nickName != null and nickName != ''">and nick_name like concat("%", #{nickName}, "%")</if>
+            <if test="sex != null and sex != ''">and sex = #{sex}</if>
+            <if test="createBy != null and createBy != 0">and create_by = #{createBy}</if>
+            <if test="updateBy != null and updateBy != 0">and update_by = #{updateBy}</if>
+            <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>
+        </where>
+    </select>
+
+    <!-- MemberUserDO selectUserByMobile(String mobile); -->
+    <select id="selectUserByMobile" resultMap="MemberUserResult">
+        select
+            id,mobile,password,nick_name,avatar,sex,
+            create_by,create_time,update_by,update_time
+        from
+            member_user
+        where
+            mobile = #{mobile}
+    </select>
+</mapper>

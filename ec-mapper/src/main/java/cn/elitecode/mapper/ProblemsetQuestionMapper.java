@@ -1,12 +1,14 @@
 package cn.elitecode.mapper;
 
 import cn.elitecode.model.entity.ProblemsetQuestion;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
 * problemset_question(题目与题库关联表)
 */
+@Mapper
 public interface ProblemsetQuestionMapper {
 
     /**

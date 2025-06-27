@@ -2,8 +2,8 @@ package cn.elitecode.service.impl;
 
 import cn.elitecode.common.api.CommonPage;
 import cn.elitecode.common.exception.role.RoleAlreadyAssignException;
-import cn.elitecode.common.utils.SecurityUtil;
 import cn.elitecode.constant.HttpStatus;
+import cn.elitecode.framework.core.utils.SecurityUtil;
 import cn.elitecode.mapper.ResourceMapper;
 import cn.elitecode.mapper.RoleMapper;
 import cn.elitecode.mapper.RoleMenuMapper;
@@ -19,6 +19,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import java.util.List;
 

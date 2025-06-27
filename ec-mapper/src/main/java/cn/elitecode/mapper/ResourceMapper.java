@@ -2,12 +2,14 @@ package cn.elitecode.mapper;
 
 import cn.elitecode.model.dto.resource.ResourceQueryDTO;
 import cn.elitecode.model.entity.Resource;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
 * resource(后台资源表)
 */
+@Mapper
 public interface ResourceMapper {
 
     /**

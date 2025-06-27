@@ -2,7 +2,7 @@ package cn.elitecode.web.controller;
 
 import cn.elitecode.common.api.CommonPage;
 import cn.elitecode.common.api.CommonResult;
-import cn.elitecode.common.utils.SecurityUtil;
+import cn.elitecode.framework.core.utils.SecurityUtil;
 import cn.elitecode.model.dto.problemset.ProblemsetAddDTO;
 import cn.elitecode.model.dto.problemset.ProblemsetQueryDTO;
 import cn.elitecode.model.dto.problemset.ProblemsetQueryQuestionDTO;

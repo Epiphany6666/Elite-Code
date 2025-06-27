@@ -2,12 +2,14 @@ package cn.elitecode.mapper;
 
 import cn.elitecode.model.dto.problemset.ProblemsetQueryDTO;
 import cn.elitecode.model.entity.Problemset;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
 * problemset(题库表)
 */
+@Mapper
 public interface ProblemsetMapper {
 
     /**

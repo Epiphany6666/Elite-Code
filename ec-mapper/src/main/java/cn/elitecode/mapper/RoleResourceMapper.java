@@ -1,12 +1,14 @@
 package cn.elitecode.mapper;
 
 import cn.elitecode.model.entity.RoleResource;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
 * role_resource(角色资源关联表)
 */
+@Mapper
 public interface RoleResourceMapper {
 
     /**

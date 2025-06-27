@@ -1,6 +1,6 @@
 package cn.elitecode.service.impl;
 
-import cn.elitecode.common.utils.SecurityUtil;
+import cn.elitecode.framework.core.utils.SecurityUtil;
 import cn.elitecode.mapper.ResourceCategoryMapper;
 import cn.elitecode.model.dto.resourcecategory.ResourceCategoryAddDTO;
 import cn.elitecode.model.dto.resourcecategory.ResourceCategoryUpdateDTO;
@@ -9,6 +9,7 @@ import cn.elitecode.service.ResourceCategoryService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
