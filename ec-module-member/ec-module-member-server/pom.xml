@@ -14,18 +14,15 @@
     <dependencies>
         <dependency>
             <groupId>cn.elitecode</groupId>
-            <artifactId>ec-module-member-api</artifactId>
-            <version>${revision}</version>
+            <artifactId>ec-common</artifactId>
         </dependency>
         <dependency>
             <groupId>cn.elitecode</groupId>
             <artifactId>ec-spring-boot-starter-security</artifactId>
-            <version>${revision}</version>
         </dependency>
-        <!-- Mybatis整合Spring -->
         <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <groupId>cn.elitecode</groupId>
+            <artifactId>ec-spring-boot-starter-mybatis</artifactId>
         </dependency>
     </dependencies>
 

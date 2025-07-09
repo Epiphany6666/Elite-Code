@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.elitecode.module.resume.dal.mysql.problemset.ProblemsetMapper">
+
+    <resultMap id="ProblemsetResult" type="cn.elitecode.module.resume.dal.dataobject.problemset.ProblemsetDO">
+            <id property="id" column="id" />
+            <result property="title" column="title" />
+            <result property="description" column="description" />
+            <result property="picture" column="picture" />
+            <result property="delFlag" column="del_flag" />
+            <result property="createBy" column="create_by" />
+            <result property="createTime" column="create_time" />
+            <result property="updateBy" column="update_by" />
+            <result property="updateTime" column="update_time" />
+    </resultMap>
+
+    <!-- int insertProblemset(ProblemsetDO problemsetDO); -->
+    <insert id="insertProblemset" useGeneratedKeys="true" keyProperty="id">
+        insert into resume_problemset
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="title != null and title != ''">title,</if>
+                <if test="description != null and description != ''">description,</if>
+                <if test="createBy != null and createBy != 0">create_by,</if>
+            </trim>
+        values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="title != null and title != ''">#{title},</if>
+                <if test="description != null and description != ''">#{description},</if>
+                <if test="createBy != null and createBy != 0">#{createBy},</if>
+            </trim>
+    </insert>
+
+    <!-- int updateProblemsetById(ProblemsetDO problemsetDO); -->
+    <update id="updateProblemsetById">
+        update resume_problemset
+        <set>
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="description != null and description != ''">description = #{description},</if>
+            <if test="updateBy != null and updateBy != 0">update_by = #{updateBy,}</if>
+        </set>
+        where
+            id = #{id}
+    </update>
+
+    <!-- int deleteProblemsetByIds(@Param("problemsetIds") Long[] problemsetIds); -->
+    <delete id="deleteProblemsetByIds">
+        update resume_problemset
+        set
+            del_flag = '2'
+        where
+            id in
+            <foreach collection="problemsetIds" open="(" separator="," close=")" item="id">
+                #{id}
+            </foreach>
+    </delete>
+
+    <!-- List<ProblemsetDO> selectProblemsetList(ProblemsetQueryReqVO problemsetQueryReqVO); -->
+    <select id="selectProblemsetList" resultMap="ProblemsetResult">
+        select
+            id,title,description,picture,del_flag,create_by,
+            create_time,update_by,update_time
+        from
+            resume_problemset
+        <where>
+            <if test="title != null and title != ''">and title like concat("%", #{title}, "%")</if>
+            <if test="createBy != null and createBy != 0">and create_by = #{createBy}</if>
+            <if test="updateBy != null and updateBy != 0">and update_by = #{updateBy}</if>
+            <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>
+        </where>
+        <if test="sortFieldPair != null and sortFieldPair.size() > 0">
+            order by
+                <foreach collection="sortFieldPair" separator="," item="sortField">
+                    ${sortField}
+                </foreach>
+        </if>
+        limit #{current}, #{pageSize}
+    </select>
+
+    <!-- Long getTotal(ProblemsetQueryReqVO problemsetQueryReqVO); -->
+    <select id="getTotal" resultType="java.lang.Long">
+        select
+            count(*)
+        from
+            resume_problemset
+        <where>
+            <if test="title != null and title != ''">and title like concat("%", #{title}, "%")</if>
+            <if test="createBy != null and createBy != 0">and create_by = #{createBy}</if>
+            <if test="updateBy != null and updateBy != 0">and update_by = #{updateBy}</if>
+            <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>
+        </where>
+    </select>
+
+    <!-- List<ProblemsetDO> selectProblemsetAll(); -->
+    <select id="selectProblemsetAll" resultMap="ProblemsetResult">
+        select
+            id,title,description,picture,del_flag,create_by,
+            create_time,update_by,update_time
+        from
+            resume_problemset
+        where
+            del_flag = '0'
+    </select>
+
+    <!-- ProblemsetDO selectProblemsetById(Long problemsetId); -->
+    <select id="selectProblemsetById" resultMap="ProblemsetResult">
+        select
+            id,title,description,picture,del_flag,create_by,
+            create_time,update_by,update_time
+        from
+            resume_problemset
+        where
+            id = #{probelmsetId}
+    </select>
+
+</mapper>

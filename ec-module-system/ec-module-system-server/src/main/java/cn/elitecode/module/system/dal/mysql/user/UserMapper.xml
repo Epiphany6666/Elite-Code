@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.elitecode.module.system.dal.mysql.user.UserMapper">
+
+    <resultMap id="UserResult" type="cn.elitecode.module.system.dal.dataobject.user.UserDO">
+            <id property="id" column="u_id"/>
+            <result property="username" column="username"/>
+            <result property="password" column="password"/>
+            <result property="nickName" column="nick_name"/>
+            <result property="avatar" column="avatar"/>
+            <result property="profile" column="profile"/>
+            <result property="delFlag" column="del_flag"/>
+            <result property="createBy" column="create_by"/>
+            <result property="createTime" column="create_time"/>
+            <result property="updateBy" column="update_by"/>
+            <result property="updateTime" column="update_time"/>
+            <collection property="roleDOList" resultMap="RoleResult" />
+    </resultMap>
+
+    <resultMap id="RoleResult" type="cn.elitecode.module.system.dal.dataobject.permission.RoleDO">
+        <id property="id" column="r_id" />
+        <result property="name" column="r_name" />
+        <result property="sort" column="r_sort" />
+    </resultMap>
+
+    <!-- public UserDO selectUserById(Long userId); -->
+    <select id="selectUserById" resultMap="UserResult" parameterType="Long">
+        select
+            u.id as u_id,
+            u.username,
+            u.password,
+            u.nick_name,
+            u.avatar,
+            u.profile,
+            u.del_flag,
+            u.create_by,
+            u.create_time,
+            u.update_by,
+            u.update_time,
+            r.id as r_id,
+            r.name as r_name,
+            r.sort as r_sort
+        from
+            system_users u
+            left join system_user_role_relation ur on ur.user_id = u.id
+            left join system_role r on r.id = ur.role_id
+        where
+            u.id = #{userId}
+    </select>
+
+    <select id="selectUserByUsername" resultMap="UserResult">
+        select
+            u.id as u_id,
+            u.username,
+            u.password,
+            u.nick_name,
+            u.avatar,
+            u.profile,
+            u.del_flag,
+            u.create_by,
+            u.create_time,
+            u.update_by,
+            u.update_time,
+            r.id as r_id,
+            r.name as r_name,
+            r.sort as r_sort
+        from
+            system_users u
+            left join system_user_role_relation ur on ur.user_id = u.id
+            left join system_role r on r.id = ur.role_id
+        where
+            u.del_flag = '0'
+            and u.username = #{username}
+    </select>
+
+    <!-- int register(String username, String encryptPassword); -->
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
+        insert into system_users
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="id != null and id != 0">id,</if>
+                <if test="username != null and username != ''">username,</if>
+                <if test="password != null and password != ''">password,</if>
+                <if test="avatar != null and avatar != ''">avatar,</if>
+                <if test="profile != null and profile != ''">profile,</if>
+                <if test="createBy != null and createBy != 0">create_by,</if>
+                <if test="updateBy != null and updateBy != 0">update_by,</if>
+            </trim>
+        values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="id != null and id != 0">#{id},</if>
+                <if test="username != null and username != ''">#{username},</if>
+                <if test="password != null and password != ''">#{password},</if>
+                <if test="avatar != null and avatar != ''">#{avatar},</if>
+                <if test="profile != null and profile != ''">#{profile},</if>
+                <if test="createBy != null and createBy != 0">#{createBy},</if>
+            </trim>
+    </insert>
+
+    <!--  List<UserDO> selectUserList(UserDO userDO); -->
+    <select id="selectUserList" resultMap="UserResult">
+        select
+            u.id as u_id,
+            u.username,
+            u.password,
+            u.nick_name,
+            u.avatar,
+            u.profile,
+            u.del_flag,
+            u.create_by,
+            u.create_time,
+            u.update_by,
+            u.update_time,
+            r.id as r_id,
+            r.name as r_name,
+            r.sort as r_sort
+        from
+            system_users u
+            left join system_user_role_relation ur on ur.user_id = u.id
+            left join system_role r on r.id = ur.role_id
+        where
+            u.del_flag = '0'
+            <if test="username != null and username != ''">and u.username like concat("%", #{username}, "%")</if>
+            <if test="nickName != null and nickName != ''">and u.nick_name like concat("%", #{nickName}, "%")</if>
+            <if test="createBy != null and createBy != 0">and u.create_by = #{createBy}</if>
+            <if test="updateBy != null and updateBy != 0">and u.update_by = #{updateBy}</if>
+            <if test="startTime != null and endTime != null">and u.create_time between #{startTime} and #{endTime}</if>
+        <if test="sortFieldPair != null and sortFieldPair.size() > 0">
+            ORDER BY
+            <foreach collection="sortFieldPair" separator="," item="sortField">
+                ${sortField}
+            </foreach>
+        </if>
+        limit #{current}, #{pageSize}
+    </select>
+
+    <!-- Long getTotal(UserQueryDTO userQueryDTO); -->
+    <select id="getUserTotal" resultType="java.lang.Long">
+        select
+            count(*)
+        from
+            system_users
+        where
+            del_flag = '0'
+            <if test="username != null and username != ''">and username like concat("%", #{username}, "%")</if>
+            <if test="nickName != null and nickName != ''">and nick_name like concat("%", #{nickName}, "%")</if>
+            <if test="createBy != null and createBy != 0">and create_by like concat("%", #{createBy}, "%")</if>
+            <if test="updateBy != null and updateBy != 0">and update_by like concat("%", #{updateBy}, "%")</if>
+            <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>
+    </select>
+
+    <!-- UserDO checkUsernameUnique(String username); -->
+    <select id="checkUsernameUnique" resultMap="UserResult">
+        select id, username from system_users where username = #{username} and del_flag = '0' limit 1
+    </select>
+
+    <!-- void updateByPrimaryKeySelective(UserDO userDO); -->
+    <update id="updateUserById">
+        update system_users
+        <set>
+            <if test="username != null and username != ''">username = #{username},</if>
+            <if test="nickName != null and nickName != ''">nick_name = #{nickName},</if>
+            <if test="avatar != null and avatar != ''">avatar = #{avatar},</if>
+            <if test="profile != null and profile != ''">profile = #{profile},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </set>
+        where
+            id = #{id}
+    </update>
+
+    <!-- int deleteUserByIds(Long[] userIds); -->
+    <delete id="deleteUserByIds">
+        update system_users
+        set
+            del_flag = '2'
+        where
+            id in
+            <foreach collection="userIds" open="(" separator="," close=")" item="id">
+                #{id}
+            </foreach>
+    </delete>
+
+    <!-- int updateUserAvatar(Long id, String avatarUrl); -->
+    <update id="updateAvatar">
+        update system_users
+        set
+            avatar = #{avatarUrl}
+        where
+            id = #{id}
+    </update>
+
+</mapper>

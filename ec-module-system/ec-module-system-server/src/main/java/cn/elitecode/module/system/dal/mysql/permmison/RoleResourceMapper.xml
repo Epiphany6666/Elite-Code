@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.elitecode.module.system.dal.mysql.permmison.RoleResourceMapper">
+
+    <resultMap id="RoleResource" type="cn.elitecode.module.system.dal.dataobject.permission.RoleResourceDO">
+            <result property="roleId" column="role_id" />
+            <result property="resourceId" column="resource_id" />
+    </resultMap>
+
+    <!-- void batchRoleResource(@Param("roleResourceDOList") List<RoleResourceDO> roleResourceDOList); -->
+    <insert id="batchRoleResource">
+        insert into
+            system_role_resource_relation(role_id, resource_id)
+        values
+            <foreach collection="roleResourceDOList" separator="," item="roleResourceDO">
+                (#{roleResourceDO.roleId}, #{roleResourceDO.resourceId})
+            </foreach>
+    </insert>
+
+    <!-- void deleteRoleResourceByRoleId(Long roleId); -->
+    <delete id="deleteRoleResourceByRoleId">
+        delete
+        from
+            system_role_resource_relation
+        where
+            role_id = #{roleId}
+    </delete>
+</mapper>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>cn.elitecode</groupId>
+        <artifactId>elite-code</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <groupId>cn.elitecode</groupId>
+    <artifactId>ec-server</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>cn.elitecode</groupId>
+            <artifactId>ec-module-system-server</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.elitecode</groupId>
+            <artifactId>ec-module-infra-server</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.elitecode</groupId>
+            <artifactId>ec-module-member-server</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.elitecode</groupId>
+            <artifactId>ec-module-resume-server</artifactId>
+            <version>${revision}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${project.artifactId}</finalName>
+
+        <plugins>
+            <!-- SpringBoot应用打包插件 -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>cn.elitecode.ECServerApplication</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>repackage</id>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- 构建Docker镜像 -->
+<!--            <plugin>-->
+<!--                <groupId>io.fabric8</groupId>-->
+<!--                <artifactId>docker-maven-plugin</artifactId>-->
+<!--                <version>${docker.maven.plugin.version}</version>-->
+<!--                <executions>-->
+<!--                    &lt;!&ndash; 定义一个任务 &ndash;&gt;-->
+<!--                    <execution>-->
+<!--                        &lt;!&ndash; 指定唯一标识符 &ndash;&gt;-->
+<!--                        <id>build-image</id>-->
+<!--                        &lt;!&ndash; 在package生命周期阶段被执行 &ndash;&gt;-->
+<!--                        <phase>package</phase>-->
+<!--                        <goals>-->
+<!--                            &lt;!&ndash; 指定该任务的插件目标 &ndash;&gt;-->
+<!--                            <goal>build</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--                &lt;!&ndash; 配置执行build目标时所需的具体配置参数 &ndash;&gt;-->
+<!--                <configuration>-->
+<!--                    &lt;!&ndash; Docker 远程管理地址 &ndash;&gt;-->
+<!--                    <dockerHost></dockerHost>-->
+<!--                    <images>-->
+<!--                        <image>-->
+<!--                            &lt;!&ndash; 定义镜像名称 &ndash;&gt;-->
+<!--                            <name>elitecode/${project.artifactId}:${project.version}</name>-->
+<!--                            &lt;!&ndash; 定义镜像构建行为 &ndash;&gt;-->
+<!--                            <build>-->
+<!--                                &lt;!&ndash; 定义基础镜像 &ndash;&gt;-->
+<!--                                <from>openjdk:17</from>-->
+<!--                                <args>-->
+<!--                                    <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>-->
+<!--                                </args>-->
+<!--                                &lt;!&ndash; 定义哪些文件拷贝到容器中 &ndash;&gt;-->
+<!--                                <assembly>-->
+<!--                                    &lt;!&ndash; 定义拷贝到容器的目录 &ndash;&gt;-->
+<!--                                    <targetDir>/</targetDir>-->
+<!--                                    &lt;!&ndash; 只拷贝生成的jar包 &ndash;&gt;-->
+<!--                                    <descriptorRef>artifact</descriptorRef>-->
+<!--                                </assembly>-->
+<!--                                &lt;!&ndash; 定义容器启动命令 &ndash;&gt;-->
+<!--                                <entryPoint>["java", "-jar", "-Duser.timezone=Asia/Shanghai", "-Dspring.profiles.active=prod", "/${project.build.finalName}.jar"]</entryPoint>-->
+<!--                                &lt;!&ndash; 定义维护者 &ndash;&gt;-->
+<!--                                <maintainer>LuoYan</maintainer>-->
+<!--                            </build>-->
+<!--                        </image>-->
+<!--                    </images>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
+        </plugins>
+    </build>
+</project>

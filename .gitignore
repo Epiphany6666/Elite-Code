@@ -9,6 +9,7 @@ target/
 *.iml
 *.ipr
 logs
+.fastRequest/
 
 ### Eclipse ###
 .apt_generated

@@ -1,6 +1,6 @@
 # 改进
 
-- [ ] 模块重新划分
+- [x] 模块重新划分
 
   - 父项目的pom文件新建一个模块 `ec-dependencies`，使用maven bom管理项目依赖
 
@@ -17,6 +17,7 @@
 
     - 封装 `ec-spring-boot-starter-redis`
     - 封装 `ec-spring-boot-starter-security`
+    - 封装 `ec-spring-boot-starter-web`
 
   - `module` 模块：
 
@@ -27,24 +28,30 @@
     | `yudao-module-xxx-api`    | 提供给其它模块的 API 定义          |
     | `yudao-module-xxx-server` | 模块的功能的具体实现（服务提供者） |
 
-    例如说，`yudao-module-infra` 想要访问 `yudao-module-system` 的用户、部门等数据，需要引入 `yudao-module-system-api` 子模块。
-
-    项目结构如下：
-
-    ![1](./assets/1.png)
-
-    `yudao-module-xxx-api` 子模块的项目结构如下：
-
-    <img src="./assets/image-20250624214525347.png" alt="image-20250624214525347" style="zoom:50%;" />
-
+    - 基础架构模块 `ec-module-infra`
+    - 会员模块 `ec-module-member`
     - 权限管理新建一个模块 `ec-module-system` 
     - 题目系统新建一个模块 `ec-module-question`
-
+    
   - `dto` 更改为：VO 提供给 HTTP Controller（前端），DTO 提供给 RPC API（服务之间）。 然后出入参通过 Req 请求、Resp 响应标记。 这样，一眼就能看出，这个类是在哪一层传递进来的。
 
-  
+  - 拆掉 `ec-web`、`ec-service`、`ec-model`
 
-  controller包下分为admin和app
+  - dataobject下类名全部改为 `xxxDO`
+
+  - 添加表前缀，并且所有关联表表名后面新增relation，并且缩写也包含relation，例如：`ums_admin_role_relation`
+
+    - 表名
+    - （relation）：mapper层名字
+    - mapper xml文件中使用的表名
+
+  - 删除 `elitecode-ui` 前端
+
+  - 编写controller、service、mapper层的方法命名规范，并在对应的类中将方法命名修改过来（统一）
+
+    - 实体类后缀为DO
+
+- [x] controller包下分为admin和app
 
   建包参考下图
 
@@ -52,9 +59,7 @@
 
 - [x] 将 `Elite-Code` 项目名更改为 `elite-code`
 
-- [ ] 模块命名按照模块名区分，例如 `ec-module-system`，那么表的前缀就是 `system`；`ec-module_member` 的表前缀就是 `member`。
-
-- [ ] `system_users` 表新增 `sex` 字段
+- [x] 模块命名按照模块名区分，例如 `ec-module-system`，那么表的前缀就是 `system`；`ec-module_member` 的表前缀就是 `member`。
 
 - [x] 新建表 `member_user`
 
@@ -78,6 +83,8 @@
   
   - [ ] 根据手机号验证码登录
   
+- [ ] `system_users` 表新增 `sex` 字段
+
 - [ ] `BeanUtils.copyProperties` 全部改成使用 `MapStruct` 实现对象与对象之间的转换
 
   引入依赖
@@ -160,7 +167,32 @@
   </description>
   ~~~
 
+- [ ] 思考后端业务校验是否完整？手机号、账号、邮箱是否唯一？
+
+- [ ] 去掉所有自定义异常
+
+- [ ] 根据角色查询用户，传入的是否应该为角色的id值？
+
+  ![image-20250709154626047](./assets/image-20250709154626047.png)
   
+- [ ] 删除用户/角色时，需要同删除资源关联
+
+- [ ] 参考yudao项目，将每个校验抽取成方法
+
+  ~~~java
+  // 校验正确性
+  validateUserExists(id);
+  validateEmailUnique(id, reqVO.getEmail());
+  validateMobileUnique(id, reqVO.getMobile());
+  ~~~
+
+- [ ] 学习OpenAPI3和Knife4j：https://juejin.cn/post/7345070627107504180
+
+  - @Api不再使用tags属性，而是直接使用value属性，并删除description属性
+
+- [ ] 学习 `@AutoConfiguration`，并使用该注解优化项目
+
+- [ ] 后端：统一URL前缀；前端：同后端修改请求路径
 
 
 
@@ -169,7 +201,6 @@
 # 项目搭建（后端）
 
 - [x] 创建Maven项目
-
 - [x] 搭建SpringBoot工程，使用2.7.2版本
 - [x] 库表设计
 
@@ -177,7 +208,6 @@
   - [x] 题目表
   - [x] 题库表
   - [x] 题目关联表
-
 - [x] 使用CDN和轻量应用服务器搭建个人图床
 
   - [x] 搭建宝塔
@@ -185,73 +215,43 @@
   - [x] 搭建git
   - [x] 启动CDN加速
   - [x] 编写教程
-
 - [x] 连接数据库
-
 - [x] 整合Druid
-
 - [x] 整合Knife4j：https://doc.xiaominfo.com/docs/quick-start
-
 - [x] 封装自定义异常类
-
 - [x] 全局异常处理器
-
 - [x] 通用返回类
-
 - [x] 规划后端项目目录
-
 - [x] 分层领域模型包规划：创建用户DTO、VO
-
 - [x] MyBatis别名配置
-
 - [x] 解决跨域
-
 - [x] 修改selectUserByUserAccountAndUserPassword为selectUserByUserAccount，原因：不仅仅是用户登录要用到selectUserByUserAccount，用户注册也需要用到
-
 - [x] 将日志打印修改为自定义xml文件，同时修改MyBatis日志打印工具为Logback
-
 - [x] 实体类角色字段类型修改为List，修改XML文件使数据库字段String-JSON类型与实体类字段List类型进行转换（自写JSON类型处理器）
-
 - [x] 数据库设置默认值好还是在代码中编写好？
   参考博客：https://www.navicat.com.cn/company/aboutus/blog/369-mysql-
-
 - [x] 搜索提交规范中每一个规范英文代表什么
-
 - [x] 搭建服务器图床，目的：能够使用PicGo上传
-
-- [ ] 整理task，将已完成的任务移到后面，重新规划需要完成的任务
-
-- [ ] 学习Excel，将task抽取为：开发进度.xlsx
-
-  代办列表：https://www.excelhome.net/5296.html、https://zhuanlan.zhihu.com/p/215262754
-
-- [ ] 坚持写工作周报
-  参考：https://blog.csdn.net/qq_39609151/article/details/83780540
-
-- [ ] 学习Excel数据验证、函数
-
 - [x] 包名从cn.luoyan.elitecode改为cn.elitecode
 - [x] 补充Swagger注解
 - [x] 校验规范修改（不为空和查询数据库应该合并成一个方法）
-
-- [ ] 抽取Register、LoginController
-
 - [x] 删除Common3工具类，只使用hutool工具类
-
 - [ ] 新增日志模块
-
 - [ ] 操作日志
-
 - [x] 分模块开发
 
   - [x] （写博客）使用IDEA查看模块之间的依赖关系：https://blog.csdn.net/qq_27579471/article/details/121557639
-
 - [ ] 抽取BaseEntity（参考若依）
-
 - [ ] 分离出 `ec-security` 模块，参考mall项目
-
 - [ ] HttpStates需要更细划分
+- [ ] 封装JWTUtils工具类
 - [x] 格式化所有建表语句，并ai给出几条初始化语句
+- [ ] 区分业务数据库、系统数据库
+- [ ] 所有关联语句写全，不要写到关联表就不写了
+- [ ] 若 `roleDO` 是禁止的，根据角色ID查询菜单信息就应该查询不出来该菜单
+- [ ] 所有JSON转换更改使用FastJson2工具
+- [ ] 常量引入的地方都不要加类前缀
+- [ ] 什么表才需要加 `del_flag`？加了 `del_flag` 的表查询记得添加 `del_flag = 0`
 
 
 
@@ -260,6 +260,38 @@
 ## 登录
 
 - [ ] 记录登录信息，参考若依
+
+  User表新增字段
+
+  ~~~sql
+  login_ip          varchar(128)    default ''                 comment '最后登录IP',
+  login_date        datetime                                   comment '最后登录时间',
+  ~~~
+
+  LoginUser新增字段
+
+  ~~~java
+  /**
+   * 登录时间
+   */
+  private Long loginTime;
+  ~~~
+
+  JwtTokenUtil#refreshToken中记录登录时间
+
+  ~~~java
+  loginUser.setLoginTime(System.currentTimeMillis());
+  ~~~
+
+  
+
+  LoginService#login
+
+  ~~~java
+  AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_SUCCESS, MessageUtils.message("userDO.login.success")));
+  ~~~
+
+  AsyncFactory#recordLoginInfo
 
   ~~~java
   /**
@@ -281,7 +313,7 @@
 
 - [ ] LoginController：获取路由信息
 
-  - [ ] RouterVO
+  - [x] RouterVO
 
     ~~~java
     package com.ruoyi.system.domain.vo;
@@ -308,11 +340,6 @@
         private String path;
     
         /**
-         * 是否隐藏路由，当设置 true 的时候该路由不会再侧边栏出现
-         */
-        private boolean hidden;
-    
-        /**
          * 重定向地址，当设置 noRedirect 的时候该路由在面包屑导航中不可被点击
          */
         private String redirect;
@@ -321,16 +348,6 @@
          * 组件地址
          */
         private String component;
-    
-        /**
-         * 路由参数：如 {"id": 1, "name": "ry"}
-         */
-        private String query;
-    
-        /**
-         * 当你一个路由下面的 children 声明的路由大于1个时，自动会变成嵌套的模式--如组件页面
-         */
-        private Boolean alwaysShow;
     
         /**
          * 其他元素
@@ -344,7 +361,7 @@
     }
     ~~~
 
-  - [ ] MetaVo
+  - [x] MetaVo
 
     ~~~java
     package com.ruoyi.system.domain.vo;
@@ -364,9 +381,24 @@
         private String title;
     
         /**
-         * 设置该路由的图标，对应路径src/assets/icons/svg
+         * i设置该路由的图标，对应路径src/assets/icons/svg
          */
         private String icon;
+        
+        /**
+         * 是否隐藏路由，当设置 true 的时候该路由不会再侧边栏出现
+         */
+        private boolean hidden;
+    
+        /**
+         * 路由参数：如 {"id": 1, "name": "ry"}
+         */
+        private String query;
+    
+        /**
+         * 当你一个路由下面的 children 声明的路由大于1个时，自动会变成嵌套的模式--如组件页面
+         */
+        private Boolean alwaysShow;
     
         /**
          * 设置为true，则不会被 <keep-alive>缓存
@@ -380,7 +412,7 @@
     }
     ~~~
 
-  - [ ] LoiginController
+  - [x] LoiginController
 
     ~~~java
     /**
@@ -397,7 +429,7 @@
     }
     ~~~
 
-  - [ ] MenuService
+  - [x] MenuService
 
     ~~~java
     /**
@@ -425,43 +457,43 @@
         for (SysMenu menu : menus)
         {
             RouterVo router = new RouterVo();
-            router.setHidden("1".equals(menu.getVisible()));
-            router.setName(getRouteName(menu));
-            router.setPath(getRouterPath(menu));
-            router.setComponent(getComponent(menu));
-            router.setQuery(menu.getQuery());
-            router.setMeta(new MetaVo(menu.getMenuName(), menu.getIcon(), StringUtils.equals("1", menu.getIsCache()), menu.getPath()));
-            List<SysMenu> cMenus = menu.getChildren();
-            if (StringUtils.isNotEmpty(cMenus) && UserConstants.TYPE_DIR.equals(menu.getMenuType()))
+            router.setHidden("1".equals(menuDO.getVisible()));
+            router.setName(getRouteName(menuDO));
+            router.setPath(getRouterPath(menuDO));
+            router.setComponent(getComponent(menuDO));
+            router.setQuery(menuDO.getQuery());
+            router.setMeta(new MetaVo(menuDO.getMenuName(), menuDO.getIcon(), StringUtils.equals("1", menuDO.getIsCache()), menuDO.getPath()));
+            List<SysMenu> cMenus = menuDO.getChildren();
+            if (StringUtils.isNotEmpty(cMenus) && UserConstants.TYPE_DIR.equals(menuDO.getMenuType()))
             {
                 router.setAlwaysShow(true);
                 router.setRedirect("noRedirect");
                 router.setChildren(buildMenus(cMenus));
             }
-            else if (isMenuFrame(menu))
+            else if (isMenuFrame(menuDO))
             {
                 router.setMeta(null);
                 List<RouterVo> childrenList = new ArrayList<RouterVo>();
                 RouterVo children = new RouterVo();
-                children.setPath(menu.getPath());
-                children.setComponent(menu.getComponent());
-                children.setName(getRouteName(menu.getRouteName(), menu.getPath()));
-                children.setMeta(new MetaVo(menu.getMenuName(), menu.getIcon(), StringUtils.equals("1", menu.getIsCache()), menu.getPath()));
-                children.setQuery(menu.getQuery());
+                children.setPath(menuDO.getPath());
+                children.setComponent(menuDO.getComponent());
+                children.setName(getRouteName(menuDO.getRouteName(), menuDO.getPath()));
+                children.setMeta(new MetaVo(menuDO.getMenuName(), menuDO.getIcon(), StringUtils.equals("1", menuDO.getIsCache()), menuDO.getPath()));
+                children.setQuery(menuDO.getQuery());
                 childrenList.add(children);
                 router.setChildren(childrenList);
             }
-            else if (menu.getParentId().intValue() == 0 && isInnerLink(menu))
+            else if (menuDO.getParentId().intValue() == 0 && isInnerLink(menuDO))
             {
-                router.setMeta(new MetaVo(menu.getMenuName(), menu.getIcon()));
+                router.setMeta(new MetaVo(menuDO.getMenuName(), menuDO.getIcon()));
                 router.setPath("/");
                 List<RouterVo> childrenList = new ArrayList<RouterVo>();
                 RouterVo children = new RouterVo();
-                String routerPath = innerLinkReplaceEach(menu.getPath());
+                String routerPath = innerLinkReplaceEach(menuDO.getPath());
                 children.setPath(routerPath);
                 children.setComponent(UserConstants.INNER_LINK);
-                children.setName(getRouteName(menu.getRouteName(), routerPath));
-                children.setMeta(new MetaVo(menu.getMenuName(), menu.getIcon(), menu.getPath()));
+                children.setName(getRouteName(menuDO.getRouteName(), routerPath));
+                children.setMeta(new MetaVo(menuDO.getMenuName(), menuDO.getIcon(), menuDO.getPath()));
                 childrenList.add(children);
                 router.setChildren(childrenList);
             }
@@ -477,17 +509,17 @@
     /**
      * 获取路由名称
      * 
-     * @param menu 菜单信息
+     * @param menuDO 菜单信息
      * @return 路由名称
      */
-    public String getRouteName(SysMenu menu)
+    public String getRouteName(SysMenu menuDO)
     {
         // 非外链并且是一级目录（类型为目录）
-        if (isMenuFrame(menu))
+        if (isMenuFrame(menuDO))
         {
             return StringUtils.EMPTY;
         }
-        return getRouteName(menu.getRouteName(), menu.getPath());
+        return getRouteName(menuDO.getRouteName(), menuDO.getPath());
     }
     /**
      * 获取路由名称，如没有配置路由名称则取路由地址
@@ -509,25 +541,25 @@
     /**
      * 获取路由地址
      * 
-     * @param menu 菜单信息
+     * @param menuDO 菜单信息
      * @return 路由地址
      */
-    public String getRouterPath(SysMenu menu)
+    public String getRouterPath(SysMenu menuDO)
     {
-        String routerPath = menu.getPath();
+        String routerPath = menuDO.getPath();
         // 内链打开外网方式
-        if (menu.getParentId().intValue() != 0 && isInnerLink(menu))
+        if (menuDO.getParentId().intValue() != 0 && isInnerLink(menuDO))
         {
             routerPath = innerLinkReplaceEach(routerPath);
         }
         // 非外链并且是一级目录（类型为目录）
-        if (0 == menu.getParentId().intValue() && UserConstants.TYPE_DIR.equals(menu.getMenuType())
-                && UserConstants.NO_FRAME.equals(menu.getIsFrame()))
+        if (0 == menuDO.getParentId().intValue() && UserConstants.TYPE_DIR.equals(menuDO.getMenuType())
+                && UserConstants.NO_FRAME.equals(menuDO.getIsFrame()))
         {
-            routerPath = "/" + menu.getPath();
+            routerPath = "/" + menuDO.getPath();
         }
         // 非外链并且是一级目录（类型为菜单）
-        else if (isMenuFrame(menu))
+        else if (isMenuFrame(menuDO))
         {
             routerPath = "/";
         }
@@ -537,12 +569,12 @@
     /**
      * 是否为内链组件
      * 
-     * @param menu 菜单信息
+     * @param menuDO 菜单信息
      * @return 结果
      */
-    public boolean isInnerLink(SysMenu menu)
+    public boolean isInnerLink(SysMenu menuDO)
     {
-        return menu.getIsFrame().equals(UserConstants.NO_FRAME) && StringUtils.ishttp(menu.getPath());
+        return menuDO.getIsFrame().equals(UserConstants.NO_FRAME) && StringUtils.ishttp(menuDO.getPath());
     }
     
     /**
@@ -559,13 +591,13 @@
     /**
      * 是否为菜单内部跳转
      * 
-     * @param menu 菜单信息
+     * @param menuDO 菜单信息
      * @return 结果
      */
-    public boolean isMenuFrame(SysMenu menu)
+    public boolean isMenuFrame(SysMenu menuDO)
     {
-        return menu.getParentId().intValue() == 0 && UserConstants.TYPE_MENU.equals(menu.getMenuType())
-                && menu.getIsFrame().equals(UserConstants.NO_FRAME);
+        return menuDO.getParentId().intValue() == 0 && UserConstants.TYPE_MENU.equals(menuDO.getMenuType())
+                && menuDO.getIsFrame().equals(UserConstants.NO_FRAME);
     }
     ~~~
 
@@ -583,7 +615,7 @@
       import { getToken } from '@/utils/auth'
       import { isHttp, isPathMatch } from '@/utils/validate'
       import { isRelogin } from '@/utils/request'
-      import useUserStore from '@/store/modules/user'
+      import useUserStore from '@/store/modules/userDO'
       import useSettingsStore from '@/store/modules/settings'
       import usePermissionStore from '@/store/modules/permission'
       
@@ -758,7 +790,7 @@
         <div :class="{ 'has-logo': showLogo }" class="sidebar-container">
           <logo v-if="showLogo" :collapse="isCollapse" />
           <el-scrollbar wrap-class="scrollbar-wrapper">
-            <el-menu
+            <el-menuDO
               :default-active="activeMenu"
               :collapse="isCollapse"
               :background-color="getMenuBackground"
@@ -775,7 +807,7 @@
                 :item="route"
                 :base-path="route.path"
               />
-            </el-menu>
+            </el-menuDO>
           </el-scrollbar>
         </div>
       </template>
@@ -788,17 +820,17 @@
         <div v-if="!item.hidden">
           <template v-if="hasOneShowingChild(item.children, item) && (!onlyOneChild.children || onlyOneChild.noShowingChildren) && !item.alwaysShow">
             <app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path, onlyOneChild.query)">
-              <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{ 'submenu-title-noDropdown': !isNest }">
+              <el-menuDO-item :index="resolvePath(onlyOneChild.path)" :class="{ 'submenu-title-noDropdown': !isNest }">
                 <svg-icon :icon-class="onlyOneChild.meta.icon || (item.meta && item.meta.icon)"/>
-                <template #title><span class="menu-title" :title="hasTitle(onlyOneChild.meta.title)">{{ onlyOneChild.meta.title }}</span></template>
-              </el-menu-item>
+                <template #title><span class="menuDO-title" :title="hasTitle(onlyOneChild.meta.title)">{{ onlyOneChild.meta.title }}</span></template>
+              </el-menuDO-item>
             </app-link>
           </template>
       
-          <el-sub-menu v-else ref="subMenu" :index="resolvePath(item.path)" teleported>
+          <el-sub-menuDO v-else ref="subMenu" :index="resolvePath(item.path)" teleported>
             <template v-if="item.meta" #title>
               <svg-icon :icon-class="item.meta && item.meta.icon" />
-              <span class="menu-title" :title="hasTitle(item.meta.title)">{{ item.meta.title }}</span>
+              <span class="menuDO-title" :title="hasTitle(item.meta.title)">{{ item.meta.title }}</span>
             </template>
       
             <sidebar-item
@@ -807,9 +839,9 @@
               :is-nest="true"
               :item="child"
               :base-path="resolvePath(child.path)"
-              class="nest-menu"
+              class="nest-menuDO"
             />
-          </el-sub-menu>
+          </el-sub-menuDO>
         </div>
       </template>
       
@@ -887,8 +919,6 @@
       </script>
       ~~~
 
-      
-
 
 
 
@@ -927,15 +957,13 @@
 
 - [x] 制作个人简历，参考老鱼简历、超级简历
 
-- [ ] 重置密码
+- [ ] 重置密码(UserInfoController)
 
   微人事：/hr/pass
 
   若依：/updatePwd、/resetPwd
 
 - [ ] 忘记密码
-
-- [ ] 将用户表中的角色字段抽取出来，做成用户表，然后新建 `用户-角色关联表`
 
 - [x] controller层校验全部使用JSR-303
 
@@ -945,6 +973,16 @@
 - [x] 将 `生成BCryptPasswordEncoder密码` 抽取成 `SecurityUtils` 中的 `encryptPassword`
   - [x] 抽取UserInfoController（个人信息的改查、头像上传）
 - [x] 上面每一步 —— 前端同步（api、ts类型文件抽取）
+
+
+
+---
+
+## UserController
+
+- [ ] 用户分页查询时查询角色
+- [ ] 
+
 
 
 ---
@@ -958,24 +996,21 @@
     - [x] XML添加problemsets属性，并编写resultMap
   - [x] 将题库id、题库列表单独提取出来
   - [x] 新增题目题库关联
-  - [x] 题目实体类新增标签字段 `List<Tag> tagList`
-    - [x] XML添加 `tagList` 属性，并编写 resultMap
+  - [x] 题目实体类新增标签字段 `List<Tag> tagDOList`
+    - [x] XML添加 `tagDOList` 属性，并编写 resultMap
   - [x] 将标签id、标签列表单独提取出来
   - [x] 新增/修改题目DTO中添加 `List<Long> tagIds`
-  
 - [x] 更新题目
   - [x] 选择题库：先删除题目与题库全部关联、再新增题目与题库关联
   - [x] 选择标签：先删除题目与标签全部关联、再新增题目与标签关联
-  
 - [x] 删除题目
 
   - [x] 删除题目与题库关联
 
   - [x] 删除题目与标签关联
-
+- [x] 增、删、改添加 `@Transition` 事务注解
 - [x] 题目批量管理
   - [x] 【管理员】批量删除题目
-- [x] 增、删、改添加 `@Transition` 事务注解
 
 
 
@@ -983,11 +1018,15 @@
 
 ## 题库表
 
-- [ ] 增删改查
 - [x] 增删改查
+- [ ] 上传封面功能(新增题库和删除题库)
 - [x] 分页查询所属题库的题目（联表查询）
   - [x] 不要忘记 `del_flag = '0'`
   - [x] 可以根据题目标题、内容模糊查询
+- [ ] 批量
+  - [ ] 【管理员】批量向题库添加题目
+  - [ ] 【管理员】批量从题库移除题目
+- [ ] 删除题库时，如果题库中有题目，则无法删除
 
 
 
@@ -1004,22 +1043,164 @@
 
 
 
+---
+
+## 标签表
+
+- [x] 增删改查
+- [ ] 删除标签时，如果标签有关联题目，则无法删除
+
+
+
+---
+
 ## 其它
 
 - [ ] 所有新增、更新注意标题、内容的长度
+
 - [x] 不能为空的属性Swagger注解上加上 `required=true`
+
 - [x] 所有分页查询添加根据创建者、更新者、创建时间区域查询
+
 - [x] id、createBy、updateBy条件应为 `id != null and id != 0`，并且 `=` 两边加上空格
+
 - [x] sql有where条件就不要用  `<where>` 了
+
 - [x] 所有分页查询：去掉根据id查询
+
 - [x] 模糊查询全部改为用contact连接
+
 - [x] xml文件不使用include
+
 - [x] 去掉所有result判断
 
+- [ ] 编写表
+
+  - [ ] 题目_wiki
+
+  - [ ] 面试
+
+  - [ ] 题目表新增type类型，为 算法题 还是 面试题
+
+    新增题库时题库名要唯一（type类型相同的情况下）
+
+    可以写一个category和problemset的关联表
+
+  - [ ] 题目页面分为：题目、wiki、题解
+
+  - [ ] wiki应根据标签查找，设置sort字段，可以根据sort字段进行排序
+
+  - [ ] 新建 `数据结构`，然后里面存储的时每一种结构对应的文章（就是标签）
+  
+  - [ ] 包装类
+  
+  - [ ] 注解
+  
+- [ ] 更新时间需要我们自己维护
+
+- [ ] 新增时检查名字唯一
+
+- [ ] 删除题库/标签/角色时
+
+  - [ ] 若角色绑定了题目/题目/用户，那么删除失败
+
+- [ ] `count(*)` 全部改为 `count(1)`
+
+- [ ] 有sort字段的记得order by排序
+
+- [ ] role角色表新增角色名称字段（role_name），角色字符串（role_key）
+
+
+
+
+---
+
 ## 文件管理
+
 - [x] 使用Minio实现文件上传
 
-# Redis
+
+
+---
+
+## 验证码
+
+- [ ] LoginService.java#login
+
+  ~~~java
+  public String login(String username, String password, String code, String uuid)
+  {
+      // 验证码校验
+      validateCaptcha(username, code, uuid);
+  ~~~
+
+  ~~~java
+  /**
+       * 校验验证码
+       * 
+       * @param username 用户名
+       * @param code 验证码
+       * @param uuid 唯一标识
+       * @return 结果
+       */
+  public void validateCaptcha(String username, String code, String uuid)
+  {
+      boolean captchaEnabled = configService.selectCaptchaEnabled();
+      if (captchaEnabled)
+      {
+          String verifyKey = CacheConstants.CAPTCHA_CODE_KEY + StringUtils.nvl(uuid, "");
+          String captcha = redisCache.getCacheObject(verifyKey);
+          if (captcha == null)
+          {
+              AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("userDO.jcaptcha.expire")));
+              throw new CaptchaExpireException();
+          }
+          redisCache.deleteObject(verifyKey);
+          if (!code.equalsIgnoreCase(captcha))
+          {
+              AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("userDO.jcaptcha.error")));
+              throw new CaptchaException();
+          }
+      }
+  }
+  ~~~
+
+  ~~~java
+  /**
+   * 获取验证码开关
+   * 
+   * @return true开启，false关闭
+   */
+  @Override
+  public boolean selectCaptchaEnabled()
+  {
+      String captchaEnabled = selectConfigByKey("sys.account.captchaEnabled");
+      if (StringUtils.isEmpty(captchaEnabled))
+      {
+          return true;
+      }
+      return Convert.toBool(captchaEnabled);
+  }
+  ~~~
+
+
+---
+
+## 禁用账号
+
+- [ ] UmsAdminServiceImpl#（mall）
+
+  ~~~java
+  if(!userDetails.isEnabled()){
+      Asserts.fail("帐号已被禁用");
+  }
+  ~~~
+
+
+
+---
+
+## Redis
 
 - [x] 整合Redis
 
@@ -1152,11 +1333,11 @@
   ~~~java
   package cn.elitecode.service.impl;
   
-  import cn.elitecode.common.exception.user.UserPasswordNotMatchException;
+  import cn.elitecode.common.exception.userDO.UserPasswordNotMatchException;
   import cn.elitecode.common.utils.JwtTokenUtil;
-  import cn.elitecode.constant.HttpStatus;
-  import cn.elitecode.model.bo.LoginUser;
-  import cn.elitecode.service.LoginService;
+  import cn.elitecode.framework.common.enums.HttpStatus;
+  import cn.elitecode.framework.security.core.LoginUser;
+  import cn.elitecode.module.service.auth.LoginService;
   import org.springframework.beans.factory.annotation.Autowired;
   import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
   import org.springframework.security.core.context.SecurityContextHolder;
@@ -1268,8 +1449,8 @@
                   // 解析对应的权限以及用户信息
                   String uuid = (String) claims.get(Constants.LOGIN_USER_KEY);
                   String userKey = getTokenKey(uuid);
-                  LoginUser user = redisCache.getCacheObject(userKey);
-                  return user;
+                  LoginUser userDO = redisCache.getCacheObject(userKey);
+                  return userDO;
               }
               catch (Exception e)
               {
@@ -1363,9 +1544,9 @@
               // 删除用户缓存记录
               tokenService.delLoginUser(loginUser.getToken());
               // 记录用户退出日志
-              AsyncManager.me().execute(AsyncFactory.recordLogininfor(userName, Constants.LOGOUT, MessageUtils.message("user.logout.success")));
+              AsyncManager.me().execute(AsyncFactory.recordLogininfor(userName, Constants.LOGOUT, MessageUtils.message("userDO.logout.success")));
           }
-          ServletUtils.renderString(response, JSON.toJSONString(AjaxResult.success(MessageUtils.message("user.logout.success"))));
+          ServletUtils.renderString(response, JSON.toJSONString(AjaxResult.success(MessageUtils.message("userDO.logout.success"))));
       }
   }
   
@@ -1398,7 +1579,57 @@
   }
   ~~~
 
-- [ ] 
+- [ ] 字典管理缓存
+
+  使用`SYS_DICT_KEY`常量来管理字典数据的 Redis 缓存。
+
+  ```java
+  // RuoYi-Vue/ruoyi-common/src/main/java/com/ruoyi/common/constant/CacheConstants.java
+  public class CacheConstants {
+      public static final String SYS_DICT_KEY = "sys_dict:";
+  }
+  ```
+
+- [ ] 防重提交缓存
+
+  在`SameUrlDataInterceptor`类中，使用 Redis 缓存请求信息，判断是否为重复提交。
+
+  ```java
+  // RuoYi-Vue/ruoyi-framework/src/main/java/com/ruoyi/framework/interceptor/impl/SameUrlDataInterceptor.java
+  @Component
+  public class SameUrlDataInterceptor extends RepeatSubmitInterceptor {
+      @Autowired
+      private RedisCache redisCache;
+  
+      @Override
+      public boolean isRepeatSubmit(HttpServletRequest request, RepeatSubmit annotation) {
+          // ...
+          String cacheRepeatKey = CacheConstants.REPEAT_SUBMIT_KEY + url + submitKey;
+          Object sessionObj = redisCache.getCacheObject(cacheRepeatKey);
+          if (sessionObj != null) {
+              // ...
+          }
+          Map<String, Object> cacheMap = new HashMap<String, Object>();
+          cacheMap.put(url, nowDataMap);
+          redisCache.setCacheObject(cacheRepeatKey, cacheMap, annotation.interval(), TimeUnit.MILLISECONDS);
+          return false;
+      }
+  }
+  ```
+
+- [ ] 登录账户密码错误次数缓存
+
+  使用`PWD_ERR_CNT_KEY`常量来管理登录账户密码错误次数的 Redis 缓存。
+
+  ```java
+  // RuoYi-Vue/ruoyi-common/src/main/java/com/ruoyi/common/constant/CacheConstants.java
+  public class CacheConstants {
+      public static final String PWD_ERR_CNT_KEY = "pwd_err_cnt:";
+  }
+  ```
+
+
+
 ---
 
 ## Elasticsearch
@@ -1437,8 +1668,8 @@
   ~~~java
   package cn.elitecode.model.dto.elasticsearch;
   
-  import cn.elitecode.model.entity.Problemset;
-  import cn.elitecode.model.entity.Tag;
+  import cn.elitecode.module.dal.dataobject.problemset.ProblemsetDOet;
+  import cn.elitecode.module.dal.dataobject.tag.TagDOag;
   import io.swagger.annotations.ApiModelProperty;
   import org.springframework.data.annotation.Id;
   import org.springframework.data.elasticsearch.annotations.Document;
@@ -1448,9 +1679,9 @@
   import java.util.List;
   
   /**
-   * question(题目表) | 实体类
+   * questionDO(题目表) | 实体类
    */
-  @Document(indexName = "question")
+  @Document(indexName = "questionDO")
   public class QuestionSearchDTO {
   
       @ApiModelProperty("用户ID，主键")
@@ -1491,16 +1722,16 @@
   
       @ApiModelProperty("题库对象列表")
       @Field(type = FieldType.Nested)
-      List<Problemset> problemsetList;
+      List<Problemset> problemsetDOList;
   
       @ApiModelProperty("标签对象列表")
       @Field(type = FieldType.Nested)
-      List<Tag> tagList;
+      List<Tag> tagDOList;
   
       public QuestionSearchDTO() {
       }
   
-      public QuestionSearchDTO(Long id, String title, String content, String answer, String delFlag, Long createBy, Date createTime, Long updateBy, Date updateTime, List<Problemset> problemsetList, List<Tag> tagList) {
+      public QuestionSearchDTO(Long id, String title, String content, String answer, String delFlag, Long createBy, Date createTime, Long updateBy, Date updateTime, List<Problemset> problemsetDOList, List<Tag> tagDOList) {
           this.id = id;
           this.title = title;
           this.content = content;
@@ -1510,8 +1741,8 @@
           this.createTime = createTime;
           this.updateBy = updateBy;
           this.updateTime = updateTime;
-          this.problemsetList = problemsetList;
-          this.tagList = tagList;
+          this.problemsetDOList = problemsetDOList;
+          this.tagDOList = tagDOList;
       }
   
       /**
@@ -1660,18 +1891,18 @@
   
       /**
        * 获取
-       * @return problemsetList
+       * @return problemsetDOList
        */
       public List<Problemset> getProblemsetList() {
-          return problemsetList;
+          return problemsetDOList;
       }
   
       /**
        * 设置
-       * @param problemsetList
+       * @param problemsetDOList
        */
-      public void setProblemsetList(List<Problemset> problemsetList) {
-          this.problemsetList = problemsetList;
+      public void setProblemsetList(List<Problemset> problemsetDOList) {
+          this.problemsetDOList = problemsetDOList;
       }
   
       /**
@@ -1679,19 +1910,19 @@
        * @return tags
        */
       public List<Tag> getTagList() {
-          return tagList;
+          return tagDOList;
       }
   
       /**
        * 设置
-       * @param tagList
+       * @param tagDOList
        */
-      public void setTagList(List<Tag> tagList) {
-          this.tagList = tagList;
+      public void setTagList(List<Tag> tagDOList) {
+          this.tagDOList = tagDOList;
       }
   
       public String toString() {
-          return "Question{id = " + id + ", title = " + title + ", content = " + content + ", answer = " + answer + ", delFlag = " + delFlag + ", createBy = " + createBy + ", createTime = " + createTime + ", updateBy = " + updateBy + ", updateTime = " + updateTime + ", problemsetList = " + problemsetList + ", tags = " + tagList + "}";
+          return "Question{id = " + id + ", title = " + title + ", content = " + content + ", answer = " + answer + ", delFlag = " + delFlag + ", createBy = " + createBy + ", createTime = " + createTime + ", updateBy = " + updateBy + ", updateTime = " + updateTime + ", problemsetDOList = " + problemsetDOList + ", tags = " + tagDOList + "}";
       }
   }
   ~~~
@@ -1727,7 +1958,7 @@
   import cn.elitecode.mapper.EsQuestionMapper;
   import cn.elitecode.mapper.QuestionMapper;
   import cn.elitecode.model.dto.elasticsearch.QuestionSearchDTO;
-  import cn.elitecode.model.entity.Question;
+  import cn.elitecode.module.dal.dataobject.question.QuestionDOon;
   import org.junit.jupiter.api.Test;
   import org.springframework.beans.BeanUtils;
   import org.springframework.beans.factory.annotation.Autowired;
@@ -1748,8 +1979,8 @@
        */
       @Test
       public void testImportAllMySqlToES() {
-          List<Question> allQuestionList = questionMapper.getAllQuestionList();
-          esQuestionMapper.saveAll(allQuestionList.stream().map(item -> {
+          List<Question> allQuestionDOList = questionMapper.getAllQuestionList();
+          esQuestionMapper.saveAll(allQuestionDOList.stream().map(item -> {
               QuestionSearchDTO questionSearchDTO = new QuestionSearchDTO();
               BeanUtils.copyProperties(item, questionSearchDTO);
               return questionSearchDTO;
@@ -1802,9 +2033,9 @@
   ~~~java
   package cn.elitecode.strategy.context;
   
-  import cn.elitecode.common.api.CommonPage;
+  import cn.elitecode.framework.common.pojo.CommonPage;
   import cn.elitecode.enums.SearchModeEnum;
-  import cn.elitecode.model.dto.question.QuestionQueryDTO;
+  import cn.elitecode.model.dto.questionDO.QuestionQueryDTO;
   import cn.elitecode.model.dto.elasticsearch.QuestionSearchDTO;
   import cn.elitecode.strategy.SearchStrategy;
   import org.springframework.beans.factory.annotation.Autowired;
@@ -1833,8 +2064,8 @@
   ~~~java
   package cn.elitecode.strategy;
   
-  import cn.elitecode.common.api.CommonPage;
-  import cn.elitecode.model.dto.question.QuestionQueryDTO;
+  import cn.elitecode.framework.common.pojo.CommonPage;
+  import cn.elitecode.model.dto.questionDO.QuestionQueryDTO;
   import cn.elitecode.model.dto.elasticsearch.QuestionSearchDTO;
   
   public interface SearchStrategy {
@@ -1853,10 +2084,10 @@
   ~~~java
   package cn.elitecode.service.impl;
   
-  import cn.elitecode.common.api.CommonPage;
+  import cn.elitecode.framework.common.pojo.CommonPage;
   import cn.elitecode.mapper.QuestionMapper;
-  import cn.elitecode.model.dto.question.QuestionQueryDTO;
-  import cn.elitecode.model.entity.Question;
+  import cn.elitecode.model.dto.questionDO.QuestionQueryDTO;
+  import cn.elitecode.module.dal.dataobject.question.QuestionDOon;
   import cn.elitecode.model.dto.elasticsearch.QuestionSearchDTO;
   import cn.elitecode.strategy.SearchStrategy;
   import org.springframework.beans.BeanUtils;
@@ -1875,9 +2106,9 @@
           if (questionQueryDTO.getCurrent() != null && questionQueryDTO.getPageSize() != null) {
               questionQueryDTO.setCurrent((questionQueryDTO.getCurrent() - 1) * questionQueryDTO.getPageSize());
           }
-          List<Question> questionList = questionMapper.selectQuestionList(questionQueryDTO);
+          List<Question> questionDOList = questionMapper.selectQuestionList(questionQueryDTO);
           Long total = questionMapper.getQuestionTotal(questionQueryDTO);
-          List<QuestionSearchDTO> result = questionList.stream().map(item -> {
+          List<QuestionSearchDTO> result = questionDOList.stream().map(item -> {
               QuestionSearchDTO questionSearchDTO = new QuestionSearchDTO();
               BeanUtils.copyProperties(item, questionSearchDTO);
               return questionSearchDTO;
@@ -1894,8 +2125,8 @@
   ~~~java
   package cn.elitecode.service.impl;
   
-  import cn.elitecode.common.api.CommonPage;
-  import cn.elitecode.model.dto.question.QuestionQueryDTO;
+  import cn.elitecode.framework.common.pojo.CommonPage;
+  import cn.elitecode.model.dto.questionDO.QuestionQueryDTO;
   import cn.elitecode.model.dto.elasticsearch.QuestionSearchDTO;
   import cn.elitecode.strategy.SearchStrategy;
   import cn.hutool.core.util.StrUtil;
@@ -1951,9 +2182,9 @@
        */
       private CommonPage<QuestionSearchDTO> search(NativeSearchQueryBuilder nativeSearchQueryBuilder) {
           SearchHits<QuestionSearchDTO> search = elasticsearchRestTemplate.search(nativeSearchQueryBuilder.build(), QuestionSearchDTO.class);
-          List<QuestionSearchDTO> questionList = search.getSearchHits().stream().map(item -> item.getContent()).collect(Collectors.toList());
+          List<QuestionSearchDTO> questionDOList = search.getSearchHits().stream().map(item -> item.getContent()).collect(Collectors.toList());
           long total = search.getTotalHits();
-          CommonPage<QuestionSearchDTO> questionCommonPage = new CommonPage<>(total, questionList);
+          CommonPage<QuestionSearchDTO> questionCommonPage = new CommonPage<>(total, questionDOList);
           return questionCommonPage;
       }
   
@@ -2529,49 +2760,6 @@ public interface ElasticsearchMapper extends ElasticsearchRepository<ArticleSear
 }
 ```
 
-通过`MaxWellConsumer`类监听 RabbitMQ 消息，实现数据库与 Elasticsearch 的数据同步：
-
-```java
-package com.aurora.consumer;
-
-import com.alibaba.fastjson.JSON;
-import com.aurora.model.dto.ArticleSearchDTO;
-import com.aurora.model.dto.MaxwellDataDTO;
-import com.aurora.entity.Article;
-import com.aurora.mapper.ElasticsearchMapper;
-import com.aurora.util.BeanCopyUtil;
-import org.springframework.amqp.rabbit.annotation.RabbitHandler;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import static com.aurora.constant.RabbitMQConstant.MAXWELL_QUEUE;
-
-@Component
-@RabbitListener(queues = MAXWELL_QUEUE)
-public class MaxWellConsumer {
-
-    @Autowired
-    private ElasticsearchMapper elasticsearchMapper;
-
-    @RabbitHandler
-    public void process(byte[] data) {
-        MaxwellDataDTO maxwellDataDTO = JSON.parseObject(new String(data), MaxwellDataDTO.class);
-        Article article = JSON.parseObject(JSON.toJSONString(maxwellDataDTO.getData()), Article.class);
-        switch (maxwellDataDTO.getType()) {
-            case "insert":
-            case "update":
-                elasticsearchMapper.save(BeanCopyUtil.copyObject(article, ArticleSearchDTO.class));
-                break;
-            case "delete":
-                elasticsearchMapper.deleteById(article.getId());
-                break;
-            default:
-                break;
-        }
-    }
-}
-```
-
 实现搜索策略
 
 定义`SearchStrategy`接口
@@ -2956,6 +3144,58 @@ const searchKeywords = (e: any) => {
 }
 ```
 
+---
+
+## 三、优化
+
+- [ ] 使用maxwell将MySQL中的数据同步到ES
+
+  通过`MaxWellConsumer`类监听 RabbitMQ 消息，实现数据库与 Elasticsearch 的数据同步：
+
+  ```java
+  package com.aurora.consumer;
+  
+  import com.alibaba.fastjson.JSON;
+  import com.aurora.model.dto.ArticleSearchDTO;
+  import com.aurora.model.dto.MaxwellDataDTO;
+  import com.aurora.entity.Article;
+  import com.aurora.mapper.ElasticsearchMapper;
+  import com.aurora.util.BeanCopyUtil;
+  import org.springframework.amqp.rabbit.annotation.RabbitHandler;
+  import org.springframework.amqp.rabbit.annotation.RabbitListener;
+  import org.springframework.beans.factory.annotation.Autowired;
+  import org.springframework.stereotype.Component;
+  import static com.aurora.constant.RabbitMQConstant.MAXWELL_QUEUE;
+  
+  @Component
+  @RabbitListener(queues = MAXWELL_QUEUE)
+  public class MaxWellConsumer {
+  
+      @Autowired
+      private ElasticsearchMapper elasticsearchMapper;
+  
+      @RabbitHandler
+      public void process(byte[] data) {
+          MaxwellDataDTO maxwellDataDTO = JSON.parseObject(new String(data), MaxwellDataDTO.class);
+          Article article = JSON.parseObject(JSON.toJSONString(maxwellDataDTO.getData()), Article.class);
+          switch (maxwellDataDTO.getType()) {
+              case "insert":
+              case "update":
+                  elasticsearchMapper.save(BeanCopyUtil.copyObject(article, ArticleSearchDTO.class));
+                  break;
+              case "delete":
+                  elasticsearchMapper.deleteById(article.getId());
+                  break;
+              default:
+                  break;
+          }
+      }
+  }
+  ```
+
+  
+
+
 
 
 
@@ -2964,34 +3204,58 @@ const searchKeywords = (e: any) => {
 # 项目搭建（前端）
 
 - [x] 初始化Vue3
+
 - [x] 创建路由
+
 - [ ] 自己写默认样式(@/assets/styles/index.less)
+
 - [x] 封装axios实例、api
+
 - [x] 配置axios拦截器
+
 - [x] 配置axios响应拦截器中的失败回调
-- [ ] 使用**NProgress**搭建轻量级的页面加载进度条（参考若依，在全局路由守卫中）
+
+- [x] 使用**NProgress**搭建轻量级的页面加载进度条（参考若依，在全局路由守卫中）
+
 - [x] 配置环境变量（`.env.xxx文件`）
   - axios url
-- [ ] form表单数据一并改为使用ref，此时接口参数可以直接 `...loginRef.value`
+  
+- [x] form表单数据一并改为使用ref，此时接口参数可以直接 `...loginRef.value`
+
 - [ ] 一切await改为 `then…catch…`，方便异常处理
+
 - [ ] 阅读完“从 Vue 3 的项目模板学习 tsconfig 配置”并附加上官网网址
+
 - [x] 登录注册页面加上背景
+
 - [ ] 配置eslint
+
 - [ ] 配置prettier
+
 - [ ] 配置stylelint（scss）
+
 - [ ] 配置husky
+
 - [ ] 配置commitlint
-- [ ] 配置环境变量
-- [ ] SVG图标设置
+
+- [x] 配置环境变量
+
+- [x] SVG图标设置
+
+- [ ] axios拦截器：根据状态码不同弹出对应的信息
 
 - [x] 退出登录
+
 - [x] 检查每个组件是否有自己的名字
+
 - [x] 检查每个store是否有ts类型
 
 - [x] 退出登录时再重新登陆应该是退出登录时的页面
 
   - [x] 退出登录时携带redirect query参数
   - [x] 登录时往query参数上调
+  
+- [ ] 每个路由添加 `alwaysShow` 配置项
 
 
 
@@ -3000,17 +3264,21 @@ const searchKeywords = (e: any) => {
 ## 登录
 
 - [x] 样式编写
+
 - [x] 表单校验
-- [ ] 重置表单
-- [ ] 表单校验
-- [x] 表单校验
+
 - [x] 登录成功跳转到主页
-- [ ] 记住密码
+
+- [ ] 记住密码，使用 `npm i js-cookie`
+
 - [x] 登录按钮增加loading：登录、登录中...（参考若依）
-- [ ] 动态加载和管理 SVG 图标
+
 - [x] 搭建Pnia
+
 - [x] 获取用户信息放到Pinia
+
 - [x] 按enter可登录
+
 - [x] 登录成功
   - [x] 将login抽取到pinia中的actions中
   - [x] 编写路由守卫（permission.ts）
@@ -3033,6 +3301,173 @@ const searchKeywords = (e: any) => {
 
 - [ ] 登陆成功给用户一个提醒
 
+- [ ] login api 需执行该请求不需要token验证（isTToken
+
+  store/module/userDO.ts
+
+  ~~~js
+  // 登录方法
+  export function login(username, password, code, uuid) {
+    const data = {
+      username,
+      password,
+      code,
+      uuid
+    }
+    return request({
+      url: '/login',
+      headers: {
+        isToken: false,
+        repeatSubmit: false
+      },
+      method: 'post',
+      data: data
+    })
+  }
+  ~~~
+
+  utils/request.ts
+
+  ~~~ts
+  // request拦截器
+  service.interceptors.request.use(config => {
+    // 是否需要设置 token
+    const isToken = (config.headers || {}).isToken === false
+    // 是否需要防止数据重复提交
+    const isRepeatSubmit = (config.headers || {}).repeatSubmit === false
+    if (getToken() && !isToken) {
+      config.headers['Authorization'] = 'Bearer ' + getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
+    }
+  ~~~
+
+- [ ] 防止重复提交
+
+  PS：后端也需要防止重复提交
+
+  login.ts
+  
+  ~~~ts
+  // 登录方法
+  export function login(username, password, code, uuid) {
+    const data = {
+      username,
+      password,
+      code,
+      uuid
+    }
+    return request({
+      url: '/login',
+      headers: {
+        isToken: false,
+        repeatSubmit: false
+      },
+      method: 'post',
+      data: data
+    })
+  }
+  ~~~
+
+  request.ts
+  
+  ~~~ts
+  // request拦截器
+  service.interceptors.request.use(config => {
+    // 是否需要设置 token
+    const isToken = (config.headers || {}).isToken === false
+    // 是否需要防止数据重复提交
+    const isRepeatSubmit = (config.headers || {}).repeatSubmit === false
+    if (getToken() && !isToken) {
+      config.headers['Authorization'] = 'Bearer ' + getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
+    }
+    // get请求映射params参数
+    if (config.method === 'get' && config.params) {
+      let url = config.url + '?' + tansParams(config.params);
+      url = url.slice(0, -1);
+      config.params = {};
+      config.url = url;
+    }
+    if (!isRepeatSubmit && (config.method === 'post' || config.method === 'put')) {
+      const requestObj = {
+        url: config.url,
+        data: typeof config.data === 'object' ? JSON.stringify(config.data) : config.data,
+        time: new Date().getTime()
+      }
+      const requestSize = Object.keys(JSON.stringify(requestObj)).length; // 请求数据大小
+      const limitSize = 5 * 1024 * 1024; // 限制存放数据5M
+      if (requestSize >= limitSize) {
+        console.warn(`[${config.url}]: ` + '请求数据大小超出允许的5M限制，无法进行防重复提交验证。')
+        return config;
+      }
+      const sessionObj = cache.session.getJSON('sessionObj')
+      if (sessionObj === undefined || sessionObj === null || sessionObj === '') {
+        cache.session.setJSON('sessionObj', requestObj)
+      } else {
+        const s_url = sessionObj.url;                // 请求地址
+        const s_data = sessionObj.data;              // 请求数据
+        const s_time = sessionObj.time;              // 请求时间
+        const interval = 1000;                       // 间隔时间(ms)，小于此时间视为重复提交
+        if (s_data === requestObj.data && requestObj.time - s_time < interval && s_url === requestObj.url) {
+          const message = '数据正在处理，请勿重复提交';
+          console.warn(`[${s_url}]: ` + message)
+          return Promise.reject(new Error(message))
+        } else {
+          cache.session.setJSON('sessionObj', requestObj)
+        }
+      }
+    }
+    return config
+  }, error => {
+      console.log(error)
+      Promise.reject(error)
+  })
+  ~~~
+
+
+
+其它
+
+- [ ] 查询用户后（UserDetails中）
+
+  - [ ] 检查用户是否已经被停用
+
+- [ ] 黑名单功能
+
+  ~~~java
+  // IP黑名单校验
+  String blackStr = configService.selectConfigByKey("sys.login.blackIPList");
+  if (IpUtils.isMatchedIp(blackStr, IpUtils.getIpAddr()))
+  {
+      AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("login.blocked")));
+      throw new BlackListException();
+  }
+  ~~~
+
+- [ ] 密码重试次数功能实现
+
+  PasswordService.java#{validate}
+
+  ~~~java
+  Integer retryCount = redisCache.getCacheObject(getCacheKey(username));
+  
+  if (retryCount == null)
+  {
+      retryCount = 0;
+  }
+  
+  if (retryCount >= Integer.valueOf(maxRetryCount).intValue())
+  {
+      throw new UserPasswordRetryLimitExceedException(maxRetryCount, lockTime);
+  }
+  
+  if (!matches(userDO, password))
+  {
+      retryCount = retryCount + 1;
+  ~~~
+
+  
+
+
+
 
 
 ---
@@ -3045,6 +3480,11 @@ const searchKeywords = (e: any) => {
 - [x] 表单校验
 - [x] 按enter可注册
 - [x] 注册按钮：注册、注册中...
+
+
+
+
+
 ---
 
 ## 布局
@@ -3095,15 +3535,63 @@ const searchKeywords = (e: any) => {
   </div>
   ~~~
 
-- [ ] 实现个人中心、退出登录跳转
+- [ ] 个人中心
 
-- [ ] 抽离Navbar
+- [x] 根据路由加载页面标题
+
+  permission.ts
+
+  ~~~ts
+  to.meta.title && useSettingsStore().setTitle(to.meta.title)
+  ~~~
 
 - [x] 配置404路由
 
+- [ ] 自写404页面
 
----
+  参考力扣
 
+  ![image-20250525141449683](./assets/image-20250525141449683.png)
+
+  
+
+- [ ] 路由设置滚动行为
+
+  官网：https://router.vuejs.org/guide/advanced/scroll-behavior.html#Scroll-Behavior
+
+  博客：https://juejin.cn/post/7416539641929646115
+
+  ~~~js
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    }
+    return { top: 0 }
+  },
+  ~~~
+
+- [ ] 配置滚动条样式
+
+  ~~~scss
+  //滚动条外观设置
+  ::-webkit-scrollbar {
+      width: 10px;
+  }
+  
+  ::-webkit-scrollbar-track {
+      // 滚动条背景图
+      background: $base-menuDO-background;
+  }
+  
+  // 滚动条中的小条子配置
+  ::-webkit-scrollbar-thumb{
+      width: 10px;
+      background-color: yellowgreen;
+      border-radius: 10px;
+  }
+  ~~~
+  
+- [ ] 消除底部白色条
 
 - [x] 根据路由动态生成菜单（递归组件一定要起名字）
 
@@ -3115,10 +3603,10 @@ const searchKeywords = (e: any) => {
 
     ~~~html
     <a v-else-if="child.path.startsWith('http')" v-bind:href="child.path" target="_blank" :key="child.name">
-      <el-menu-item :index="item.path+'/'+child.path">
+      <el-menuDO-item :index="item.path+'/'+child.path">
         <svg-icon v-if="child.meta&&child.meta.icon" :icon-class="child.meta.icon"></svg-icon>
         <span v-if="child.meta&&child.meta.title" slot="title">{{child.meta.title}}</span>
-      </el-menu-item>
+      </el-menuDO-item>
     </a>
     ~~~
 
@@ -3151,11 +3639,223 @@ const searchKeywords = (e: any) => {
 
 ---
 
+## 题库页面
+
+- [ ] 查询题库列表的时候添加loading
+- [ ] 
+
+
+
+---
+
+## 题目页面
+
+- [ ] 题目内容和答案改用Markdown展示
+
+  推荐MD编辑器：https://github.com/pd4d10/bytemd
+
+- [ ] 
+
+
+
+---
+
+# RABC
+
+## 1
+
+- [x] 新建role、user_role、menu、role_menu
+
+- [ ] 记录用户登录信息
+
+- [ ] 完善LoginUser
+
+  ~~~java
+  /**
+   * 权限列表
+   */
+  private Set<String> permissions;
+  ~~~
+
+- [ ] loadUserByUsername方法返回的用户信息应该携带权限信息
+
+  ~~~java
+  return new LoginUser(userDO.getUserId(), userDO.getDeptId(), userDO, permissionService.getMenuPermission(userDO));
+  ~~~
+
+- [ ] 获取菜单数据权限
+
+  PermissionService.java
+
+  ~~~java
+  public Set<String> getMenuPermission(SysUser userDO)
+  {
+      // 多个角色可能会有相同的菜单权限，因此这里使用Set集合
+      Set<String> perms = new HashSet<String>();
+      // 管理员拥有所有权限
+      if (userDO.isAdmin())
+      {
+          perms.add("*:*:*"); // 将所有权限添加到集合中
+      }
+      else
+      {
+          List<SysRole> roles = userDO.getRoles();
+          if (!CollectionUtils.isEmpty(roles))
+          {
+              // 多角色设置permissions属性，以便数据权限匹配权限
+              for (SysRole roleDO : roles)
+              {
+                  if (StringUtils.equals(roleDO.getStatus(), UserConstants.ROLE_NORMAL))
+                  {
+                      Set<String> rolePerms = menuService.selectMenuPermsByRoleId(roleDO.getRoleId());
+                      roleDO.setPermissions(rolePerms);
+                      perms.addAll(rolePerms);
+                  }
+              }
+          }
+          else
+          {
+              perms.addAll(menuService.selectMenuPermsByUserId(userDO.getUserId()));
+          }
+      }
+      return perms;
+  }
+  ~~~
+
+- [ ] 后端完善 `/getInfo` 请求方法
+
+  ~~~java
+  /**
+   * 获取用户信息
+   * 
+   * @return 用户信息
+   */
+  @GetMapping("getInfo")
+  public AjaxResult getInfo()
+  {
+      LoginUser loginUser = SecurityUtils.getLoginUser();
+      SysUser userDO = loginUser.getUser();
+      // 角色集合
+      Set<String> roles = permissionService.getRolePermission(userDO);
+      // 权限集合
+      Set<String> permissions = permissionService.getMenuPermission(userDO);
+      if (!loginUser.getPermissions().equals(permissions))
+      {
+          loginUser.setPermissions(permissions);
+          tokenService.refreshToken(loginUser);
+      }
+      AjaxResult ajax = AjaxResult.success();
+      ajax.put("userDO", userDO);
+      ajax.put("roles", roles);
+      ajax.put("permissions", permissions);
+      return ajax;
+  }
+  ~~~
+
+- [ ] 实现permissionService#getLoginUser
+
+  ~~~java
+  /**
+   * 获取角色数据权限
+   * 
+   * @param userDO 用户信息
+   * @return 角色权限信息
+   */
+  public Set<String> getRolePermission(SysUser userDO)
+  {
+      Set<String> roles = new HashSet<String>();
+      // 管理员拥有所有权限
+      if (userDO.isAdmin())
+      {
+          roles.add("admin");
+      }
+      else
+      {
+          // 非管理员用户，通过用户ID查询其角色权限，并添加到集合中
+          roles.addAll(roleService.selectRolePermissionByUserId(userDO.getUserId()));
+      }
+      return roles;
+  }
+  ~~~
+
+- [ ] 实现RoleServiceImpl#selectRolePermissionByUserId
+
+  ~~~java
+  /**
+   * 根据用户ID查询权限
+   * 
+   * @param userId 用户ID
+   * @return 权限列表
+   */
+  @Override
+  public Set<String> selectRolePermissionByUserId(Long userId)
+  {
+      List<SysRole> perms = roleMapper.selectRolePermissionByUserId(userId);
+      Set<String> permsSet = new HashSet<>();
+      for (SysRole perm : perms)
+      {
+          if (StringUtils.isNotNull(perm))
+          {
+              // 一般情况下一个角色只有一个角色字符串，但也不排除多个的
+              permsSet.addAll(Arrays.asList(perm.getRoleKey().trim().split(",")));
+          }
+      }
+      return permsSet;
+  }
+  ~~~
+
+- [ ] 编写selectRolePermissionByUserId SQL语句（RoleMapper）
+
+  ~~~xml
+  <select id="selectRolePermissionByUserId" parameterType="Long" resultMap="SysRoleResult">
+    <include refid="selectRoleVo"/>
+    WHERE r.del_flag = '0' and ur.user_id = #{userId}
+  </select>
+  ~~~
+
+  
+
+- [ ] userStore#getInfo存储权限
+
+  ~~~ts
+  if (res.roles && res.roles.length > 0) { // 验证返回的roles是否是一个非空数组
+    this.roles = res.roles
+    this.permissions = res.permissions
+  } else {
+    this.roles = ['ROLE_DEFAULT']
+  }
+  ~~~
+
+- [ ] 获取完用户信息后，应根据权限动态加载菜单（permission.ts）
+
+  ~~~ts
+  // 判断当前用户是否已拉取完user_info信息
+  useUserStore().getInfo().then(() => {
+    isRelogin.show = false
+    usePermissionStore().generateRoutes().then(accessRoutes => {
+      // 根据roles权限生成可访问的路由表
+      accessRoutes.forEach(route => {
+        if (!isHttp(route.path)) {
+          router.addRoute(route) // 动态添加可访问路由表
+        }
+      })
+      next({ ...to, replace: true }) // hack方法 确保addRoutes已完成
+    })
+  }).catch(err => {
+    useUserStore().logOut().then(() => {
+      ElMessage.error(err)
+      next({ path: '/' })
+    })
+  })
+  ~~~
+
+---
+
 ### 角色表
 
 - [x] 增删改查
 - [x] 新增用户时应选择角色
-  - [x] 用户实体类新增角色字段 `List<Role> roleList;`
+  - [x] 用户实体类新增角色字段 `List<Role> roleDOList;`
   - [x] 新增用户DTO新增角色字段 `List<Long> roleIds;`
   - [x] XML增加roleList属性，并编写resultMap
   - [x] 将角色id、角色列表单独提取出来
@@ -3169,14 +3869,23 @@ const searchKeywords = (e: any) => {
 - [x] 增、删、改添加 `@Transition` 事务注解
 
 ---
+
 ## 用户角色关联表
-## 菜单表
+
 - [x] 增删改查
+
+---
+
+## 菜单表
+
+- [x] 增删改查
+
 - [x] 新增角色时应选择绑定的菜单
+
   - [x] 新增/更新角色DTO新增字段 `List<Long> menuIds`
   - [x] 新增角色菜单关联
 
-- [x] 树状菜单 `/menu/roleMenuTreeselect/{roleId}`，返回 `menuList`
+- [x] 树状菜单 `/menuDO/roleMenuTreeselect/{roleId}`，返回 `menuDOList`
 
   - [x] Role实体类新增字段（mapper `selectMenuListByRoleId` 实现父子联动）
 
@@ -3188,9 +3897,13 @@ const searchKeywords = (e: any) => {
   - [x] Menu实体类新增 `private List<SysMenu> children = new ArrayList<SysMenu>();`
 
 - [x] 更新角色
+
   - [x] 选择菜单：先删除角色与菜单关联、再新增角色与菜单关联
+
 - [x] 删除角色时
+
   - [x] 删除角色与菜单关联
+
 - [x] 增、删、改添加 `@Transition` 事务注解
 
 ---
@@ -3203,13 +3916,13 @@ const searchKeywords = (e: any) => {
 
 ## 资源管理
 
-- [x] 编写 `resource`、`reource_category`、`role_resource` 表结构
+- [x] 编写 `resource`、`reource_category`、`system_role_resource_relation` 表结构
 
 - [x] 使用MyBatisX插件生成实体类、Service、Mapper
 
-- [ ] 编写 `resource`、`reource_category`、`role_resource` 对应的增删改查接口
+- [ ] 编写 `resourceDO`、`reource_category`、`system_role_resource_relation` 对应的增删改查接口
 
-  resource
+  resourceDO
 
   - [x] 新增后台资源
   - [x] 批量删除后台资源
@@ -3225,7 +3938,7 @@ const searchKeywords = (e: any) => {
   - [x] 修改后台资源分类
   - [x] 查询所有后台资源分类
 
-  role_resource
+  system_role_resource_relation
 
   - [ ] 前端页面单写一个 `分配权限` 按钮
 
@@ -3439,7 +4152,7 @@ const searchKeywords = (e: any) => {
                   Map<String, ConfigAttribute> map = new ConcurrentHashMap<>();
                   List<UmsResource> resourceList = resourceService.listAll();
                   for (UmsResource resource : resourceList) {
-                      map.put(resource.getUrl(), new org.springframework.security.access.SecurityConfig(resource.getId() + ":" + resource.getName()));
+                      map.put(resource.getUrl(), new org.springframework.security.access.SecurityConfig(resourceDO.getId() + ":" + resourceDO.getName()));
                   }
                   return map;
               }
@@ -3533,9 +4246,48 @@ const searchKeywords = (e: any) => {
 # 菜单权限
 
 - [ ] 给每个路由加上name属性
+
+- [ ] 动态生成路由表（permission.ts）
+
+  ~~~ts
+  usePermissionStore().generateRoutes().then(accessRoutes => {
+  // 根据roles权限生成可访问的路由表
+  accessRoutes.forEach(route => {
+    if (!isHttp(route.path)) {
+      router.addRoute(route) // 动态添加可访问路由表
+    }
+  })
+  next({ ...to, replace: true }) // hack方法 确保addRoutes已完成
+  })
+  ~~~
+
+- [ ] 后端：LoginController
+
+  ~~~java
+  /**
+   * 获取路由信息
+   * 
+   * @return 路由信息
+   */
+  @GetMapping("getRouters")
+  public AjaxResult getRouters()
+  {
+      Long userId = SecurityUtils.getUserId();
+      List<SysMenu> menus = menuService.selectMenuTreeByUserId(userId);
+      // 构建前端路由列表格式
+      return AjaxResult.success(menuService.buildMenus(menus));
+  }
+  ~~~
+
+
+
+
+前端：
+
+- [ ] 拆分路由（静态路由、动态路由、任意路由(指向404)）
 - [ ] 
 
-  ![image-20241203185346267](./assets/image-20241203185346267.png)
+
 
 
 
@@ -3543,7 +4295,7 @@ const searchKeywords = (e: any) => {
 
 # 待测试
 
-- [ ] 获取个人信息接口
+- [x] 获取个人信息接口
 
 
 
@@ -3567,7 +4319,7 @@ const searchKeywords = (e: any) => {
 
 ## 一、准备
 
-- [ ] 复习Doker、Docker Compose
+- [x] 复习Doker、Docker Compose
 - [ ] Nginx
   - 阅读笔记中的Nginx使用教程
   - 阅读mall的Nginx使用教程
@@ -4059,29 +4811,45 @@ vue-next-admin：https://github.com/lyt-Top/vue-next-admin
   https://zhuanlan.zhihu.com/p/365513384（强推）
 
   - [x] SpringSecurity整合JWT
-
-  - [x] 了解Bearer Token：https://docs.apifox.com/5734558m0
-
+  
+- [x] 了解Bearer Token：https://docs.apifox.com/5734558m0
   - [ ] 认证失败处理类
+  
+- [ ] 封装JwtTokenUtil
+  - [ ] 数据库升级为RBAC
 
 - [x] 将logout请求方法封装到SpringSecurity中
 
-    ~~~java
-    // 添加CORS filter
-    .addFilterBefore(corsFilter, JwtAuthenticationTokenFilter.class)
-    .addFilterBefore(corsFilter, LogoutFilter.class)
-    ~~~
+  ~~~java
+  // 添加Logout filter
+  .logout(logout -> logout.logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler))
+  ~~~
+  
+- [ ] 设置用户代理信息
 
-  - [ ] 封装JwtTokenUtil
+  TokenService.java
 
+  ~~~java
+  public String createToken(LoginUser loginUser)
+  {
+      String token = IdUtils.fastUUID();
+      loginUser.setToken(token);
+      setUserAgent(loginUser);
+      refreshToken(loginUser);
+  
+      Map<String, Object> claims = new HashMap<>();
+      claims.put(Constants.LOGIN_USER_KEY, token);
+      return createToken(claims);
+  }
+  ~~~
 
+- [ ] 整合oAuth2
 
----
+  - https://blog.csdn.net/m0_64469199/article/details/130477346
+  
+- [ ] 实现细粒度查询（目前项目好像还没用到。。。）
 
-# Redis
-
-- [ ] JWT存UserDetails应该改为存token（参考若依项目）
-- [ ] 
+- [ ] 将系统用户（userDO）和成员（member区分开来）
 
 
 
@@ -4111,6 +4879,7 @@ vue-next-admin：https://github.com/lyt-Top/vue-next-admin
 
   - [x] 复习
   - [ ] 整理git笔记
+  - [ ] 廖雪峰Git学习官网：https://liaoxuefeng.com/books/git/introduction/index.html
   - [ ] 学习git的游戏：https://learngitbranching.js.org/?locale=zh_CN
   - [ ] merge、rebase：
     - [ ] https://www.cnblogs.com/FraserYu/p/11192840.html
@@ -4131,7 +4900,62 @@ vue-next-admin：https://github.com/lyt-Top/vue-next-admin
 
 - [ ] Maven不同版本有什么区别？
 
+- [ ] CSS currentColor 变量的使用
+
+  - [ ] https://www.cnblogs.com/Wayou/p/css-currentColor.html
+  - [ ] https://www.zhangxinxu.com/wordpress/2014/10/currentcolor-css3-powerful-css-keyword/
+  - [ ] https://developer.mozilla.org/en-US/docs/Web/CSS/color_value#currentcolor_keyword
+  
+- [ ] 深入学习TS：https://jkchao.github.io/typescript-book-chinese/
+
+  ~~~ts
+  declare module 'axios' {
+    export interface AxiosInstance {
+      <T = any>(config: AxiosRequestConfig): Promise<T>;
+      request<T = any> (config: AxiosRequestConfig): Promise<T>;
+      get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T>;
+      delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<T>;
+      head<T = any>(url: string, config?: AxiosRequestConfig): Promise<T>;
+      post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T>;
+      put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T>;
+      patch<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T>;
+    }
+  }
+  ~~~
+
+- [ ] 重新听JVM
+
+- [ ] 学成在线：学到第五章 —— 网关认证
+
+- [ ] 重学SpringCloud
+
+- [ ] docker-compose json语法：https://www.cnblogs.com/zoe-zyq/p/15391746.html
+
 - [x] 学习minio
+
+- [x] 黑马回顾
+
+  - [x] 流
+  - [x] 文件流
+  - [x] 日期
+  - [x] 方法引用
+
+- [ ] 尚硅谷
+
+  - [x] 函数式接口
+  
+  - [ ] 文件流
+  
+  - [ ] 日期
+  
+  - [x] 枚举类
+  
+  - [x] 单元测试
+  
+  - [ ] 泛型
+  
+  - [x] `ArrayList` 为什么用 `List` 接收？
+
 
 
 ---
@@ -4145,27 +4969,37 @@ vue-next-admin：https://github.com/lyt-Top/vue-next-admin
 
 
 
+Vue
+
+- 动态组件：https://vuejs.org/guide/essentials/component-basics.html#dynamic-components
+
+
+
+
+
+Vue-Router
+
+- 滚动行为：https://router.vuejs.org/guide/advanced/scroll-behavior.html#Scroll-Behavior
+- Vue可重复参数：https://router.vuejs.org/guide/essentials/route-matching-syntax.html#Repeatable-params
+
+
+
 ---
 
 # 其他
 
 - [ ] Mac安装centos：https://www.jianshu.com/p/5f66c7e5d364
 - [ ] 学会搭建gitlab
-- [ ] macos用户，在外置磁盘中装一个用户，并将微信、QQ安装在此用户下
-- [ ] 环境使用手册
-  - [ ] Maven环境搭建
-  - [ ] Git环境搭建
-  - [ ] WebStorm配置
-  - [ ] NVM安装
-  - [ ] 安装虚拟机软件
-  - [ ] 安装CentOS7
-  - [ ] 安装Docker
+- [x] macos用户，在外置磁盘中装一个用户，并将微信、QQ安装在此用户下
+- [ ] 启动类加上菩萨保佑
 
 
 
 ---
 
 # 扩展设计
+
+## 用户
 
 1）如果要实现会员功能，可以对表进行如下扩展：
 
@@ -4195,6 +5029,8 @@ inviteUser    bigint       DEFAULT NULL COMMENT '邀请用户 id'
 ```
 
 ---
+
+## 题库
 
 1）如果要实现题库审核功能，可以对表进行如下扩展：
 
@@ -4232,7 +5068,58 @@ viewNum  int  default 0  not null comment '浏览量'
 
 如果要实现用户浏览数（同一个用户浏览数最多 +1），还需要额外的题库浏览记录表。
 
+---
 
+## 题目
+
+题目表有很多可以扩展的方法，下面举一些例子。
+
+1）如果要实现题目审核功能，可以参考上述题库审核功能，新增 4 个字段即可：
+
+```sql
+reviewStatus  int      default 0  not null comment '状态：0-待审核, 1-通过, 2-拒绝',
+reviewMessage varchar(512)        null comment '审核信息',
+reviewerId    bigint              null comment '审核人 id',
+reviewTime    datetime            null comment '审核时间'
+```
+
+2）可能有很多评价题目的指标，比如浏览数、点赞数、收藏数，参考字段如下：
+
+```sql
+viewNum       int      default 0    not null comment '浏览量',
+thumbNum      int      default 0    not null comment '点赞数',
+favourNum     int      default 0    not null comment '收藏数'
+```
+
+3）如果要实现题目排序、精选和置顶功能，可以参考上述题库表的设计，新增整型的优先级字段，并且根据该字段排序。对应的 SQL 如下：
+
+```sql
+priority  int  default 0  not null comment '优先级'
+```
+
+4）如果题目是从其他网站或途径获取到的，担心有版权风险，可以增加题目来源字段。最简单的实现方式就是直接存来源名称：
+
+```sql
+source   varchar(512)  null comment '题目来源'
+```
+
+5）如果想设置部分题目仅会员可见，可以给题目表加上一个 “是否仅会员可见” 的字段，本质上是个布尔类型，用 1 表示仅会员可见。参考 SQL 如下：
+
+```sql
+needVip  tinyint  default 0  not null comment '仅会员可见（1 表示仅会员可见）'
+```
+
+---
+
+## 题库题目
+
+1）如果要对题库内的题目进行排序，可以增加题目顺序字段（整型）。对应的 SQL 如下：
+
+```sql
+questionOrder  int  default 0  not null comment '题目顺序（题号）'
+```
+
+需要注意，如果要实现任意移动题目顺序的功能，可能每次要更新多条记录的顺序，比较影响性能。如果追求更高性能的话，可以先在内存中计算出要变更的题目顺序，以减少更新的记录数。比如将第 100 题移动到第 98 题，只需要修改最后几条记录的顺序，不影响前面的题目。
 
 
 
@@ -4298,7 +5185,98 @@ viewNum  int  default 0  not null comment '浏览量'
 
 
 
+---
 
+# NextJS（考虑中...）
+
+- [x] 初始化NextJS工程
+
+- [x] 引入AntDesign组件库
+
+- [x] 通用布局
+
+- [ ] 登录 / 注册页面
+
+- [x] 生产环境和本地环境配置：https://nextjs.org/docs/app/building-your-application/configuring/environment-variables
+
+  ![image-20241203185346267](./assets/image-20241203185346267.png)
+
+---
+
+# Docs
+
+- [ ] 整理task，将已完成的任务移到后面，重新规划需要完成的任务
+
+- [ ] 学习Excel，将task抽取为：开发进度.xlsx
+
+  代办列表：https://www.excelhome.net/5296.html、https://zhuanlan.zhihu.com/p/215262754
+
+- [ ] 坚持写工作周报
+  参考：https://blog.csdn.net/qq_39609151/article/details/83780540
+
+- [ ] 学习Excel数据验证、函数
+
+- [ ] 环境使用手册
+
+  - [ ] Maven环境搭建
+  - [ ] Git环境搭建
+  - [ ] WebStorm配置
+  - [ ] NVM安装
+  - [ ] 安装虚拟机软件
+  - [ ] 安装CentOS7
+  - [ ] 安装Docker
+
+
+
+---
+
+# 微服务
+
+- [ ] 升级微服务的时候，git创建一个tag
+
+- [ ] 学习单体架构如何升级到微服务
+
+  - 可以参考鱼皮的OJ项目
+
+  - 依赖是否有变化？例如SpringSecurity
+
+    ~~~xml
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-security</artifactId>
+    </dependency>
+    ~~~
+
+- [ ] 整合oAuth2（详细阅读学成在线的第五章）
+
+  ~~~xml
+  <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-oauth2</artifactId>
+  </dependency>
+  ~~~
+
+- [ ] 
+
+
+
+---
+
+# 工具
+
+- [ ] MD编辑器：https://bytemd.js.org/#installation
+
+
+
+
+
+
+---
+
+# 容易遗忘的地方
+
+- 自己写xml忘记加上 `del_flag = '0'`
+- 写了导航守卫（permission.ts），结果忘记在main.ts引入，我还疑惑了很久为什么没生效。。。
 
 
 

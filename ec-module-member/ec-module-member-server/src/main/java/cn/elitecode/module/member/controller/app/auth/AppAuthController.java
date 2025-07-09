@@ -1,7 +1,7 @@
 package cn.elitecode.module.member.controller.app.auth;
 
-import cn.elitecode.common.api.CommonResult;
-import cn.elitecode.common.properties.JWTProperties;
+import cn.elitecode.framework.common.pojo.CommonResult;
+import cn.elitecode.framework.security.config.JWTProperties;
 import cn.elitecode.module.member.controller.app.auth.vo.AppAuthLoginReqVO;
 import cn.elitecode.module.member.controller.app.auth.vo.AppAuthLoginRespVO;
 import cn.elitecode.module.member.service.auth.MemberAuthService;

@@ -9,13 +9,13 @@
     <version>${revision}</version>
     <packaging>pom</packaging>
     <modules>
-        <module>ec-mapper</module>
-        <module>ec-model</module>
-        <module>ec-service</module>
-        <module>ec-web</module>
+        <module>ec-server</module>
         <module>ec-dependencies</module>
         <module>ec-module-member</module>
         <module>ec-framework</module>
+        <module>ec-module-resume</module>
+        <module>ec-module-system</module>
+        <module>ec-module-infra</module>
     </modules>
 
     <properties>
@@ -45,7 +45,6 @@
     </dependencyManagement>
 
     <build>
-
         <!-- 指定项目在构建过程中需要包含的资源文件 -->
         <resources>
             <resource>
@@ -58,6 +57,7 @@
                 <directory>src/main/resources</directory>
             </resource>
         </resources>
+
         <plugins>
             <!-- 统一 revision 版本 -->
             <plugin>

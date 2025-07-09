@@ -1,7 +1,7 @@
 package cn.elitecode.module.member.controller.admin.user;
 
-import cn.elitecode.common.api.CommonPage;
-import cn.elitecode.common.api.CommonResult;
+import cn.elitecode.framework.common.pojo.CommonPage;
+import cn.elitecode.framework.common.pojo.CommonResult;
 import cn.elitecode.module.member.controller.admin.user.vo.MemberUserQueryReqVO;
 import cn.elitecode.module.member.controller.admin.user.vo.MemberUserUpdateReqVO;
 import cn.elitecode.module.member.dal.dataobject.user.MemberUserDO;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Api(tags = "MemberUserController", description = "会员信息管理")
 @RestController
-@RequestMapping("/admin-api/member/user")
+@RequestMapping("/member/user")
 public class MemberUserController {
 
     @Autowired

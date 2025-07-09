@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.elitecode.module.system.dal.mysql.permmison.RoleMapper">
+
+    <resultMap id="RoleResult" type="cn.elitecode.module.system.dal.dataobject.permission.RoleDO">
+            <id property="id" column="id" />
+            <result property="name" column="name" />
+            <result property="sort" column="sort" />
+            <result property="menuCheckStrictly" column="menu_check_strictly" />
+            <result property="delFlag" column="del_flag" />
+            <result property="createBy" column="create_by" />
+            <result property="createTime" column="create_time" />
+            <result property="updateBy" column="update_by" />
+            <result property="updateTime" column="update_time" />
+    </resultMap>
+
+    <!-- void insertRole(RoleDO roleDO); -->
+    <insert id="insertRole" useGeneratedKeys="true" keyProperty="id">
+        insert into system_role
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="name != null and name != ''">name,</if>
+                <if test="sort != null">sort,</if>
+                <if test="menuCheckStrictly != null">menu_check_strictly,</if>
+                <if test="createBy != null and createBy != 0">create_by,</if>
+            </trim>
+        values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="name != null and name != ''">#{name},</if>
+                <if test="sort != null">#{sort},</if>
+                <if test="menuCheckStrictly != null">#{menuCheckStrictly},</if>
+                <if test="createBy != null and createBy != 0">#{createBy},</if>
+            </trim>
+    </insert>
+
+    <!-- void updateRoleById(RoleDO roleDO); -->
+    <update id="updateRoleById">
+        update system_role
+        <set>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="menuCheckStrictly != null">menu_check_strictly = #{menuCheckStrictly},</if>
+            <if test="updateBy != null and updateBy != 0">update_by = #{updateBy},</if>
+        </set>
+        where
+            id = #{id}
+    </update>
+
+    <!-- void removeRoleByIds(@Param("roleIds") Long[] roleIds); -->
+    <delete id="removeRoleByIds">
+        update system_role
+        set
+            del_flag = '2'
+        where
+            id in
+            <foreach collection="roleIds" open="(" separator="," close=")" item="roleId">
+                #{roleId}
+            </foreach>
+    </delete>
+
+    <!-- List<RoleDO> selectRoleListByPage(RoleQueryReqVO roleQueryReqVO); -->
+    <select id="selectRoleListByPage" resultMap="RoleResult">
+        select
+            id,name,sort,menu_check_strictly, del_flag,create_by,create_time,
+            update_by,update_time
+        from
+            system_role
+        where
+            del_flag = '0'
+            <if test="name != null and name != ''">and name like concat("%", #{name}, "%")</if>
+            <if test="createBy != null and createBy != ''">and create_by = #{createBy}</if>
+            <if test="updateBy != null and updateBy != ''">and update_by = #{updateBy}</if>
+            <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>
+        <if test="sortFieldPair != null and sortFieldPair.size() != 0">
+            order by
+                <foreach collection="sortFieldPair" separator="," item="sortField">
+                    ${sortField}
+                </foreach>
+        </if>
+        limit #{current}, #{pageSize}
+    </select>
+
+    <!-- Long getTotal(RoleQueryReqVO roleQueryReqVO); -->
+    <select id="getTotal" resultType="long">
+        select
+            count(*)
+        from
+            system_role
+        where
+            del_flag = '0'
+            <if test="name != null and name != ''">and name like concat("%", #{name}, "%"})</if>
+            <if test="createBy != null and createBy != ''">and create_by = #{createBy}</if>
+            <if test="updateBy != null and updateBy != ''">and update_by = #{updateBy}</if>
+            <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>
+    </select>
+
+    <!-- List<RoleDO> selectRoleListAll(); -->
+    <select id="selectRoleListAll" resultMap="RoleResult">
+        select
+            id,name,sort,menu_check_strictly, del_flag,create_by,create_time,
+            update_by,update_time
+        from
+            system_role
+        where
+            del_flag = '0'
+    </select>
+
+    <!-- RoleDO selectRoleById(Long roleId); -->
+    <select id="selectRoleById" resultMap="RoleResult">
+        select
+            id,name,sort,menu_check_strictly, del_flag,create_by,create_time,
+            update_by,update_time
+        from
+            system_role
+        where
+            id = #{roleId}
+    </select>
+</mapper>

@@ -23,35 +23,48 @@
         <!-- 工具类相关 -->
         <hutool.version>5.8.16</hutool.version>
         <fastjson.version>2.0.53</fastjson.version>
+        <minio.version>8.5.17</minio.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>cn.elitecode</groupId>
-                <artifactId>ec-model</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cn.elitecode</groupId>
-                <artifactId>ec-mapper</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cn.elitecode</groupId>
-                <artifactId>ec-service</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <!-- SpringBoot的依赖配置-->
+            <!-- 统一依赖管理 -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
                 <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.elitecode</groupId>
+                <artifactId>ec-spring-boot-starter-redis</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.elitecode</groupId>
+                <artifactId>ec-spring-boot-starter-security</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.elitecode</groupId>
+                <artifactId>ec-spring-boot-starter-web</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.elitecode</groupId>
+                <artifactId>ec-common</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.elitecode</groupId>
+                <artifactId>ec-spring-boot-starter-mybatis</artifactId>
+                <version>${revision}</version>
             </dependency>
 
             <!-- Mybatis整合Spring -->
@@ -87,6 +100,13 @@
                 <groupId>com.alibaba.fastjson2</groupId>
                 <artifactId>fastjson2</artifactId>
                 <version>${fastjson.version}</version>
+            </dependency>
+
+            <!-- minio -->
+            <dependency>
+                <groupId>io.minio</groupId>
+                <artifactId>minio</artifactId>
+                <version>${minio.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

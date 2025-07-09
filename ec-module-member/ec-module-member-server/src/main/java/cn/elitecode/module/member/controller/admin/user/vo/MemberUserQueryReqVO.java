@@ -1,7 +1,8 @@
 package cn.elitecode.module.member.controller.admin.user.vo;
 
-import cn.elitecode.common.PageRequest;
+import cn.elitecode.framework.common.pojo.PageRequest;
 import io.swagger.annotations.ApiModelProperty;
+
 import java.util.Date;
 
 public class MemberUserQueryReqVO extends PageRequest {

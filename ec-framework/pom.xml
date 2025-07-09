@@ -11,6 +11,10 @@
     <packaging>pom</packaging>
     <modules>
         <module>ec-spring-boot-starter-security</module>
+        <module>ec-spring-boot-starter-redis</module>
+        <module>ec-common</module>
+        <module>ec-spring-boot-starter-web</module>
+        <module>ec-spring-boot-starter-mybatis</module>
     </modules>
 
     <artifactId>ec-framework</artifactId>

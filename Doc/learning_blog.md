@@ -1302,8 +1302,8 @@ Windows电脑按 <kbd>alt</kbd> 就可以使用放大镜
 
 ## 一、使用场景
 
-|         实体类          |                 数据库                  |
-| :---------------------: | :-------------------------------------: |
+|         实体类          |                   数据库                   |
+| :---------------------: |:---------------------------------------:|
 |     `List<String>`      |           `["user", "admin"]`           |
 | `List<List<List<ADT>>>` | `{"ADT":[[{"BookingCode":["N","N"]}]]}` |
 
@@ -1334,7 +1334,7 @@ public class Price {
 </resultMap>
 
 <insert id="insertUser" useGeneratedKeys="true" keyProperty="userId">
-insert into user(
+insert into system_users(
 <if test="userRole != null and userRole != ''">user_role,</if>
 )
 values(
@@ -1767,7 +1767,7 @@ JSON_CONTAINS(target*, candidate[, path])
 需求：后端存储 `roles字段` 为JSON数组，我想筛选有哪些用户具有某个角色
 
 ~~~sql
-select * FROM user where JSON_CONTAINS(roles, '"admin"');
+select * from system_users where JSON_CONTAINS(roles, '"admin"');
 ~~~
 
 效果如下：
@@ -2418,7 +2418,7 @@ DNS1：域名解析的服务器这里设置为网关即可，VMWare会自动去�
 
 ```
 # 将默认级别修改为多用户文本模式
-systemctl set-default multi-user.target
+systemctl set-default multi-userDO.target
 # 将默认级别修改为图形用户界面模式
 systemctl set-default graphical.target
 # 重启
@@ -5901,7 +5901,7 @@ css
     font-size: 14px;
     line-height: 1.42857143;
     border-radius: 4px;
-    user-select: none;
+    userDO-select: none;
 }
 
 .btn-default {
@@ -5936,7 +5936,7 @@ css
     font-size: 14px;
     line-height: 1.42857143;
     border-radius: 4px;
-    user-select: none;
+    userDO-select: none;
 }
 
 .btn-default {
@@ -6073,7 +6073,7 @@ css
     font-size: 14px;
     line-height: 1.42857143;
     border-radius: 4px;
-    user-select: none;
+    userDO-select: none;
 }
         
 .btn-default {
@@ -6111,7 +6111,7 @@ css
     font-size: 14px;
     line-height: 1.42857143;
     border-radius: 4px;
-    user-select: none;
+    userDO-select: none;
 }
 
 .btn-default {
@@ -7182,7 +7182,7 @@ create table sys_menu (
 ### hr
 
 ~~~sql
-CREATE TABLE `menu` (
+CREATE TABLE `system_menu` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `url` varchar(64) DEFAULT NULL,
   `path` varchar(64) DEFAULT NULL,
@@ -7195,7 +7195,7 @@ CREATE TABLE `menu` (
   `enabled` tinyint(1) DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `parentId` (`parentId`),
-  CONSTRAINT `menu_ibfk_1` FOREIGN KEY (`parentId`) REFERENCES `menu` (`id`)
+  CONSTRAINT `menu_ibfk_1` FOREIGN KEY (`parentId`) REFERENCES `menuDO` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
 ~~~
 
@@ -7742,7 +7742,7 @@ type：指明依赖需要引入的类型（jar、war、pom等），默认jar。�
 
 ~~~xml
 <modules>
-    <module>user-service</module>
+    <module>userDO-service</module>
     <module>order-service</module>
     <module>eureka-server</module>
     <module>gateway</module>
@@ -8200,6 +8200,29 @@ spring.application.name=pts8000
 ---
 
 
+
+---
+
+# vue项目重命名
+
+**1、例如lz想把原有的vue-master项目名称修改成vueapp-master，进入vue项目工作空间，修改vue-master文件夹的名称为vueapp-master，如下图：**
+![在这里插入图片描述](./assets/b6098206bc672f917940507050f9fbef.png)
+![在这里插入图片描述](./assets/4843b8c81b13db96bfb754e56f633525.png)
+
+**2、删除node_modules文件夹,如下图：**
+![在这里插入图片描述](./assets/06f9dab745c31ef36328b7bf07bb27b2.png)
+**3、把package.json中的项目名称vue-master修改成为vueapp-master，如下图：**
+
+![在这里插入图片描述](./assets/19c43760f68b945fb292f7453fcaae80.png)![在这里插入图片描述](./assets/6c03f22068b30200f8c182a13d69f58d.png)![在这里插入图片描述](./assets/9bf16bf0790bac316c6acb77601c6cca.png)
+
+**4、修改index.html文件中的title标签中内容为为vueapp-master，如下图：**
+![在这里插入图片描述](./assets/c1359648bc5652dbed8e5df39c009648.png)
+
+**5、修改完成，重新运行加载依赖，再运行项目，并使用浏览器即可正常访问。**
+
+
+
+---
 
 
 

@@ -14,17 +14,21 @@
     <dependencies>
         <!-- web相关依赖 -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
             <groupId>cn.elitecode</groupId>
-            <artifactId>ec-model</artifactId>
+            <artifactId>ec-spring-boot-starter-web</artifactId>
         </dependency>
         <!-- SpringSecurity -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cn.elitecode</groupId>
+            <artifactId>ec-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cn.elitecode</groupId>
+            <artifactId>ec-spring-boot-starter-redis</artifactId>
         </dependency>
     </dependencies>
 

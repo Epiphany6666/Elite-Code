@@ -8,7 +8,7 @@
   <dependencies>
     <dependency>
       <groupId>cn.elitecode</groupId>
-      <artifactId>ec-module-member-api</artifactId>
+      <artifactId>ec-common</artifactId>
       <version>1.0-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
@@ -19,9 +19,9 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>org.mybatis.spring.boot</groupId>
-      <artifactId>mybatis-spring-boot-starter</artifactId>
-      <version>2.2.2</version>
+      <groupId>cn.elitecode</groupId>
+      <artifactId>ec-spring-boot-starter-mybatis</artifactId>
+      <version>1.0-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>

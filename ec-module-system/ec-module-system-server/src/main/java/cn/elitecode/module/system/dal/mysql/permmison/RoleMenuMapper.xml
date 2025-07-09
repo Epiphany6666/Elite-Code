@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.elitecode.module.system.dal.mysql.permmison.RoleMenuMapper">
+
+    <!-- void batchRoleMenu(@Param("roleMenuDOList") List<RoleMenuDO> roleMenuDOList); -->
+    <insert id="batchRoleMenu">
+        insert into
+            system_role_menu_relation(role_id, menu_id)
+        values
+            <foreach collection="roleMenuDOList" separator="," item="roleMenu">
+                (#{roleMenu.roleId}, #{roleMenu.menuId})
+            </foreach>
+    </insert>
+
+    <!-- void deleteRoleMenuById(Long roleId); -->
+    <delete id="deleteRoleMenuById">
+        delete
+        from
+            system_role_menu_relation
+        where
+            role_id = #{roleId}
+    </delete>
+
+    <!-- void deleteRoleMenuByIds(@Param("roleIds") Long[] roleIds); -->
+    <delete id="deleteRoleMenuByIds">
+        delete
+        from
+            system_role_menu_relation
+        where
+            role_id in
+            <foreach collection="roleIds" open="(" separator="," close=")" item="roleId">
+                #{roleId}
+            </foreach>
+    </delete>
+
+</mapper>

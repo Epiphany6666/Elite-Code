@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.elitecode.module.system.dal.mysql.permmison.ResourceMapper">
+
+    <resultMap id="ResourceResult" type="cn.elitecode.module.system.dal.dataobject.permission.ResourceDO">
+            <result property="id" column="r_id" />
+            <result property="name" column="r_name" />
+            <result property="url" column="url" />
+            <result property="categoryId" column="category_id" />
+            <result property="createBy" column="create_by" />
+            <result property="createTime" column="create_time" />
+            <result property="updateBy" column="update_by" />
+            <result property="updateTime" column="update_time" />
+    </resultMap>
+
+    <!-- void insertResource(ResourceDO resourceDO); -->
+    <insert id="insertResource" useGeneratedKeys="true" keyProperty="id">
+        insert into system_resource
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="name != null and name != ''">name,</if>
+                <if test="url != null and url != ''">url,</if>
+                <if test="categoryId != null and categoryId != 0">category_id,</if>
+                <if test="createBy != null and createBy != 0">create_by,</if>
+            </trim>
+        values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="name != null and name != ''">#{name},</if>
+                <if test="url != null and url != ''">#{url},</if>
+                <if test="categoryId != null and categoryId != 0">#{categoryId},</if>
+                <if test="createBy != null and createBy != 0">#{createBy},</if>
+            </trim>
+    </insert>
+
+    <!-- void updateResourceById(ResourceDO resourceDO); -->
+    <update id="updateResourceById">
+        update system_resource
+        <set>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="url != null and url != ''">url = #{url},</if>
+            <if test="categoryId != null and categoryId != 0">category_id = #{categoryId},</if>
+            <if test="updateBy != null and updateBy != 0">update_by = #{updateBy},</if>
+        </set>
+        where
+            id = #{id}
+    </update>
+
+    <!-- void deleteResourceByIds(@Param("resourceIds") Long[] resourceIds); -->
+    <delete id="deleteResourceByIds">
+        delete from system_resource
+        where
+            id in
+            <foreach collection="resourceIds" open="(" separator="," close=")" item="resourceId">
+                #{resourceId}
+            </foreach>
+    </delete>
+
+    <!-- List<ResourceDO> selectResourceListByPage(ResourceQueryReqVO resourceQueryReqVO); -->
+    <select id="selectResourceListByPage" resultMap="ResourceResult">
+        select
+            id as r_id,
+            name as r_name,
+            url,
+            category_id,
+            create_by,
+            create_time,
+            update_by,
+            update_time
+        from
+            system_resource
+        <where>
+            <if test="name != null and name != ''">and name like concat("%", #{name}, "%")</if>
+            <if test="url != null and url != ''">and url like concat("%", #{url}, "%")</if>
+            <if test="categoryId != null and categoryId != 0">and category_id = #{categoryId}</if>
+        </where>
+        <if test="sortFieldPair != null and sortFieldPair.size() > 0">
+            order by
+            <foreach collection="sortFieldPair" separator="," item="sortField">
+                ${sortField}
+            </foreach>
+        </if>
+        limit #{current}, #{pageSize}
+    </select>
+
+    <select id="getTotal" resultType="java.lang.Long">
+        select
+            count(1)
+        from
+            system_resource
+        <where>
+            <if test="name != null and name != ''">and name like concat("%", #{name}, "%")</if>
+            <if test="url != null and url != ''">and url like concat("%", #{url}, "%")</if>
+            <if test="categoryId != null and categoryId != 0">and category_id = #{categoryId}</if>
+        </where>
+    </select>
+
+    <!-- ResourceDO getResourceById(Long resourceId); -->
+    <select id="getResourceById" resultMap="ResourceResult">
+        select
+            id as r_id,
+            name as r_name,
+            url,
+            category_id,
+            create_by,
+            create_time,
+            update_by,
+            update_time
+        from
+            system_resource
+        where
+            id = #{resourceId}
+    </select>
+
+    <!-- List<ResourceDO> listResourceByRoleId(Long roleId); -->
+    <select id="listResourceByRoleId" resultMap="ResourceResult">
+        select
+            r.id as r_id,
+            r.name as r_name,
+            r.url,
+            r.category_id,
+            r.create_by,
+            r.create_time,
+            r.update_by,
+            r.update_time
+        from
+            system_resource r
+            left join system_role_resource_relation rr on rr.resource_id = r.id
+        where
+            rr.role_id = #{roleId}
+    </select>
+
+    <!-- List<ResourceDO> selectResourceAll(); -->
+    <select id="selectResourceAll" resultMap="ResourceResult">
+        select
+            id as r_id,
+            name as r_name,
+            url,
+            category_id,
+            create_by,
+            create_time,
+            update_by,
+            update_time
+        from
+            system_resource
+    </select>
+
+    <!-- List<ResourceDO> selectResourceByUserId(Long userId) -->
+    <select id="selectResourceByUserId" resultMap="ResourceResult">
+        select
+            r.id as r_id,
+            r.name as r_name,
+            r.url,
+            r.category_id,
+            r.create_by,
+            r.create_time,
+            r.update_by,
+            r.update_time
+        from
+            system_resource r
+            left join system_role_resource_relation rr on rr.resource_id = r.id
+            left join system_user_role_relation ur on ur.role_id = rr.role_id
+        where
+            ur.user_id = #{userId}
+    </select>
+</mapper>

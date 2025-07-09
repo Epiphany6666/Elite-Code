@@ -1,6 +1,6 @@
 package cn.elitecode.module.member.service.user;
 
-import cn.elitecode.common.api.CommonPage;
+import cn.elitecode.framework.common.pojo.CommonPage;
 import cn.elitecode.module.member.controller.admin.user.vo.MemberUserQueryReqVO;
 import cn.elitecode.module.member.controller.admin.user.vo.MemberUserUpdateReqVO;
 import cn.elitecode.module.member.dal.dataobject.user.MemberUserDO;
