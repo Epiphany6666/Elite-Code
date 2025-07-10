@@ -167,9 +167,7 @@
   </description>
   ~~~
 
-- [ ] 思考后端业务校验是否完整？手机号、账号、邮箱是否唯一？
-
-- [ ] 去掉所有自定义异常
+- [ ] 思考后端业务校验是否完整？手机号、账号、邮箱是否唯一？是否要校验大小、长度？
 
 - [ ] 根据角色查询用户，传入的是否应该为角色的id值？
 
@@ -193,6 +191,44 @@
 - [ ] 学习 `@AutoConfiguration`，并使用该注解优化项目
 
 - [ ] 后端：统一URL前缀；前端：同后端修改请求路径
+
+- [ ] 是否可以使用mysql自动更新？`onupdate current_timestamp`
+
+- [ ] 去掉所有自定义异常，使用全局错误码改编
+
+  ~~~java
+  @Data
+  public class ErrorCode {
+  
+      /**
+       * 错误码
+       */
+      private final Integer code;
+      /**
+       * 错误提示
+       */
+      private final String msg;
+  
+      public ErrorCode(Integer code, String message) {
+          this.code = code;
+          this.msg = message;
+      }
+  
+  }
+  ~~~
+
+- [ ] 创建时间、更新时间等时间字段，将Data接收更改为LocalDateTime接收（参考yudao项目）
+
+  学习SpringMVC接收时间数据（String—>Data）如何不加 `@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")`
+
+  根据开始时间查询修改为
+
+  ~~~java
+  @ApiModelProperty(value = "创建时间")
+  private Date[] createTime;
+  ~~~
+
+- [ ] 除了 `create_by`、`create_time`、`update_by`、`update_time`、`del_flag` 外，是否要加上 `del_time(删除时间)`？
 
 
 
@@ -252,6 +288,7 @@
 - [ ] 所有JSON转换更改使用FastJson2工具
 - [ ] 常量引入的地方都不要加类前缀
 - [ ] 什么表才需要加 `del_flag`？加了 `del_flag` 的表查询记得添加 `del_flag = 0`
+- [ ] user service层#updateUser `updateReqVO.setPassword(null); // 特殊：此处不更新密码`
 
 
 
@@ -4238,6 +4275,45 @@ const searchKeywords = (e: any) => {
 # 按钮的显示与隐藏
 
 - 若依：`v-hasPer`、`v-hasRole`
+
+
+
+---
+
+# 数据字典
+
+## 一、实现
+
+- [x] 设计表结构（system_dict_type、system_dict_date）
+- [x] 使用MyBatisX生成do、service、mapper
+- [x] 编写 字典类型 接口
+  - 新增字典类型 √
+  - 批量删除字典类型 √
+  - 修改字典类型 √
+  - 分页查询字典类型 √
+  - 根据id查询字典类型 √
+- [x] 编写 字典数据 接口
+  - 新增字典数据 √
+  - 批量删除字典数据 √
+  - 修改字典数据 √
+  - 获取全部字典数据列表 √
+  - 获取字典类型的分页列表 √
+  - 根据id查询字典数据 √
+
+---
+
+## 二、优化
+
+- [ ] 使用wsCache缓存
+
+- [ ] system_data_data这两个字段
+
+  ~~~sql
+  css_class        varchar(100)    default null               comment '样式属性（其他样式扩展）',
+  list_class       varchar(100)    default null               comment '表格回显样式',
+  ~~~
+
+  
 
 
 

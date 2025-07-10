@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * user(用户表) | 实体类
+ * system_users(用户表) | 实体类
  * @TableName
  */
 public class UserDO {

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.elitecode.module.system.dal.mysql.dict.DictDataMapper">
+
+    <resultMap id="DictTypeResult" type="cn.elitecode.module.system.dal.dataobject.dict.DictDataDO">
+            <id property="id" column="id" />
+            <result property="sort" column="sort" />
+            <result property="label" column="label" />
+            <result property="value" column="value" />
+            <result property="dictType" column="dict_type" />
+            <result property="status" column="status" />
+            <result property="createBy" column="create_by" />
+            <result property="createTime" column="create_time" />
+            <result property="updateBy" column="update_by" />
+            <result property="updateTime" column="update_time" />
+            <result property="delFlag" column="del_flag" />
+            <result property="remark" column="remark" />
+    </resultMap>
+
+    <!-- void insertDictData(DictDataDO dictDataDO); -->
+    <insert id="insertDictData" useGeneratedKeys="true" keyProperty="id">
+        insert into system_dict_data
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="sort != null and sort != ''">sort,</if>
+                <if test="label != null and label != ''">label,</if>
+                <if test="value != null and value != ''">value,</if>
+                <if test="dictType != null and dictType != ''">dict_type,</if>
+                <if test="status != null">status,</if>
+                <if test="createBy != null and createBy != 0">create_by,</if>
+                <if test="updateBy != null and updateBy != 0">update_by,</if>
+                <if test="remark != null and remark != ''">remark,</if>
+            </trim>
+        values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="sort != null and sort != ''">#{sort},</if>
+                <if test="label != null and label != ''">#{label},</if>
+                <if test="value != null and value != ''">value,</if>
+                <if test="dictType != null and dictType != ''">#{dictType},</if>
+                <if test="status != null">#{status},</if>
+                <if test="createBy != null and createBy != 0">#{createBy},</if>
+                <if test="updateBy != null and updateBy != 0">#{updateBy},</if>
+                <if test="remark != null and remark != ''">#{remark},</if>
+            </trim>
+    </insert>
+
+    <!-- void updateDictDataById(DictDataDO dictDataDO); -->
+    <update id="updateDictDataById">
+        update system_dict_data
+        <set>
+            <if test="sort != null and sort != ''">sort = #{sort},</if>
+            <if test="label != null and label != ''">label = #{label},</if>
+            <if test="value != null and value != ''">value = #{value},</if>
+            <if test="dictType != null and dictType != ''">dict_type = #{dictType},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null and createBy != 0">create_by = #{createBy},</if>
+            <if test="updateBy != null and updateBy != 0">update_by = #{updateBy},</if>
+            <if test="remark != null and remark != ''">remark = #{remark},</if>
+        </set>
+        where
+            id = #{id}
+    </update>
+
+    <!-- void deleteDictDataByIds(@Param("ids") Long[] ids); -->
+    <delete id="deleteDictDataByIds">
+        update system_dict_data
+        set
+            del_flag = b'1'
+        where
+            id in
+            <foreach collection="ids" open="(" separator="," close=")" item="id">
+                #{id}
+            </foreach>
+    </delete>
+
+    <!-- List<DictDataDO> selectDictDataList(); -->
+    <select id="selectDictDataList" resultMap="DictTypeResult">
+        select
+            id,sort,label,value,dict_type,status,
+            create_by,create_time,update_by,update_time,del_flag,
+            remark
+        from
+            system_dict_data
+        where
+            status = 0
+            and del_flag = b'0'
+    </select>
+
+    <!-- List<DictDataDO> selectDictDataPage(DictDataPageReqVO pageReqVO); -->
+    <select id="selectDictDataPage" resultMap="DictTypeResult">
+        select
+            id,sort,label,value,dict_type,status,
+            create_by,create_time,update_by,update_time,del_flag,
+            remark
+        from
+            system_dict_data
+        where
+            del_flag = b'0'
+            <if test="label != null and label != ''">and label like concat("%", #{label}, "%")</if>
+            <if test="dictType != null and dictType != ''">and dict_type like concat("%", #{dictType}, "%")</if>
+            <if test="status != null">and status = #{status}</if>
+        <if test="sortFieldPair != null and sortFieldPair.size() > 0">
+            order by
+                <foreach collection="sortFieldPair" item="sortField">
+                    ${sortField}
+                </foreach>
+        </if>
+        limit #{current}, #{pageSize}
+    </select>
+
+    <!-- Long getTotalPage(DictDataPageReqVO pageReqVO); -->
+    <select id="getTotalPage" resultType="java.lang.Long">
+        select
+            count(1)
+        from
+            system_dict_data
+        where
+            del_flag = b'0'
+            <if test="label != null and label != ''">and label like concat("%", #{label}, "%")</if>
+            <if test="dictType != null and dictType != ''">and dict_type like concat("%", #{dictType}, "%")</if>
+            <if test="status != null">and status = #{status}</if>
+    </select>
+
+    <!-- DictDataDO selectDictDataById(Long id); -->
+    <select id="selectDictDataById" resultMap="DictTypeResult">
+        select
+            id,sort,label,value,dict_type,status,
+            create_by,create_time,update_by,update_time,del_flag,
+            remark
+        from
+            system_dict_data
+        where
+            id = #{id}
+    </select>
+</mapper>

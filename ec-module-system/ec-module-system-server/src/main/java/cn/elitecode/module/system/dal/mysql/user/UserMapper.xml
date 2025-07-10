@@ -135,7 +135,7 @@
         limit #{current}, #{pageSize}
     </select>
 
-    <!-- Long getTotal(UserQueryDTO userQueryDTO); -->
+    <!-- Long getTotal(UserQueryReqVO userQueryReqVO); -->
     <select id="getUserTotal" resultType="java.lang.Long">
         select
             count(*)

@@ -1,6 +1,6 @@
 package cn.elitecode.module.system.dal.mysql.user;
 
-import cn.elitecode.module.system.controller.admin.user.vo.UserQueryDTO;
+import cn.elitecode.module.system.controller.admin.user.vo.UserQueryReqVO;
 import cn.elitecode.module.system.dal.dataobject.user.UserDO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
- * 用户表 数据层
+ * 用户表 | 数据层
 */
 @Mapper
 public interface UserMapper {
@@ -36,17 +36,17 @@ public interface UserMapper {
 
     /**
      * 根据条件分页查询用户列表
-     * @param userQueryDTO
+     * @param userQueryReqVO
      * @return
      */
-    List<UserDO> selectUserList(UserQueryDTO userQueryDTO);
+    List<UserDO> selectUserList(UserQueryReqVO userQueryReqVO);
 
     /**
      * 获取总条数
-     * @param userQueryDTO
+     * @param userQueryReqVO
      * @return
      */
-    Long getUserTotal(UserQueryDTO userQueryDTO);
+    Long getUserTotal(UserQueryReqVO userQueryReqVO);
 
     /**
      * 根据主键动态更新用户信息

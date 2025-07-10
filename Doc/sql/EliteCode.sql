@@ -343,6 +343,66 @@ INSERT INTO system_role_resource_relation (`role_id`, `resource_id`) VALUES (1, 
 INSERT INTO system_role_resource_relation (`role_id`, `resource_id`) VALUES (1, 32);
 
 -- ----------------------------
+-- 字典类型表
+-- ----------------------------
+drop table if exists system_dict_type;
+create table if not exists system_dict_type (
+    id              bigint(20)      not null auto_increment         comment '字典类型ID，主键',
+    name            varchar(100)    not null default ''             comment '字典名称',
+    type            varchar(100)    not null default ''             comment '字典类型',
+    status          tinyint         not null default 0              comment '状态（0正常 1停用）',
+    create_by       bigint(20)      default null                    comment '创建者',
+    create_time     datetime        default current_timestamp       comment '创建时间',
+    update_by       bigint(20)      default null                    comment '更新者',
+    update_time     datetime        default current_timestamp       comment '更新时间',
+    del_flag        bit(1)          not null default b'0'           comment '删除标志（0代表存在，1代表删除）',
+    remark          varchar(500)    default null                    comment '备注',
+    primary key (id)
+) engine = InnoDB
+  auto_increment = 100 comment '字典类型表';
+
+-- ----------------------------
+-- 初始化-字典类型表数据
+-- ----------------------------
+INSERT INTO system_dict_type (id, name, type, status, create_by, create_time, update_by, update_time, del_flag, remark)
+VALUES (100, '用户性别', 'system_user_sex', 0, 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, b'0', '用户性别字典');
+INSERT INTO system_dict_type (id, name, type, status, create_by, create_time, update_by, update_time, del_flag, remark)
+VALUES (101, '通用状态', 'common_status', 0, 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, b'0', '系统通用状态字典');
+
+-- ----------------------------
+-- 字典数据表
+-- ----------------------------
+drop table if exists system_dict_data;
+create table if not exists system_dict_data (
+    id              bigint(20)      not null auto_increment         comment '字典数据ID，主键',
+    sort            int             not null default 0              comment '字典排序',
+    label           varchar(100)    not null default ''             comment '字典标签',
+    value           varchar(100)    not null default ''             comment '字典键值',
+    dict_type       varchar(100)    not null default ''             comment '字典类型',
+    status          tinyint         not null default 0              comment '状态（0正常 1停用）',
+    create_by       bigint(20)      default null                    comment '创建者',
+    create_time     datetime        default current_timestamp       comment '创建时间',
+    update_by       bigint(20)      default null                    comment '更新者',
+    update_time     datetime        default current_timestamp       comment '更新时间',
+    del_flag        bit(1)          not null default b'0'           comment '删除标志（0代表存在，1代表删除）',
+    remark          varchar(500)    default null                    comment '备注',
+    primary key (id)
+) engine = InnoDB
+  auto_increment = 100 comment '字典数据表';
+
+-- ----------------------------
+-- 初始化-字典数据表数据
+-- ----------------------------
+INSERT INTO system_dict_data (id, sort, label, value, dict_type, status, create_by, create_time, update_by, update_time, del_flag, remark)
+VALUES (100, 1, '男', '0', 'system_user_sex', 0, 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, b'0', '性别男');
+INSERT INTO system_dict_data (id, sort, label, value, dict_type, status, create_by, create_time, update_by, update_time, del_flag, remark)
+VALUES (101, 2, '女', '1', 'system_user_sex', 0, 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, b'0', '性别女');
+INSERT INTO system_dict_data (id, sort, label, value, dict_type, status, create_by, create_time, update_by, update_time, del_flag, remark)
+VALUES (102, 1, '正常', '0', 'common_status', 0, 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, b'0', '状态正常');
+INSERT INTO system_dict_data (id, sort, label, value, dict_type, status, create_by, create_time, update_by, update_time, del_flag, remark)
+VALUES (103, 2, '停用', '1', 'common_status', 0, 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, b'0', '状态停用');
+
+-- ----------------------------
 -- 题库表
 -- ----------------------------
 drop table if exists resume_problemset;

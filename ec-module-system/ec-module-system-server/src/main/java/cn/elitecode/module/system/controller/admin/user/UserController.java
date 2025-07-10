@@ -4,9 +4,9 @@ import cn.elitecode.framework.common.enums.HttpStatus;
 import cn.elitecode.framework.common.pojo.CommonPage;
 import cn.elitecode.framework.common.pojo.CommonResult;
 import cn.elitecode.framework.security.core.utils.SecurityUtil;
-import cn.elitecode.module.system.controller.admin.user.vo.UserAddDTO;
-import cn.elitecode.module.system.controller.admin.user.vo.UserQueryDTO;
-import cn.elitecode.module.system.controller.admin.user.vo.UserUpdateDTO;
+import cn.elitecode.module.system.controller.admin.user.vo.UserAddReqVO;
+import cn.elitecode.module.system.controller.admin.user.vo.UserQueryReqVO;
+import cn.elitecode.module.system.controller.admin.user.vo.UserUpdateReqVO;
 import cn.elitecode.module.system.dal.dataobject.permission.RoleDO;
 import cn.elitecode.module.system.dal.dataobject.user.UserDO;
 import cn.elitecode.module.system.service.permmision.RoleService;
@@ -38,8 +38,8 @@ public class UserController {
 
     @ApiOperation(value = "根据条件分页查询用户信息")
     @PostMapping("/list")
-    private CommonResult<CommonPage<UserDO>> listUser(@RequestBody UserQueryDTO userQueryDTO) {
-        CommonPage<UserDO> page = userService.selectUserList(userQueryDTO);
+    private CommonResult<CommonPage<UserDO>> listUser(@RequestBody UserQueryReqVO userQueryReqVO) {
+        CommonPage<UserDO> page = userService.selectUserList(userQueryReqVO);
         return CommonResult.success(page);
     }
 
@@ -58,15 +58,15 @@ public class UserController {
 
     @ApiOperation(value = "新增用户")
     @PostMapping
-    private CommonResult<Long> addUser(@Validated @RequestBody UserAddDTO userAddDTO) {
-        Long userId = userService.addUser(userAddDTO);
+    private CommonResult<Long> addUser(@Validated @RequestBody UserAddReqVO userAddReqVO) {
+        Long userId = userService.addUser(userAddReqVO);
         return CommonResult.success(userId);
     }
 
     @ApiOperation(value = "根据id更新用户信息")
     @PutMapping
-    private CommonResult updateUser(@Validated @RequestBody UserUpdateDTO userUpdateDTO) {
-        userService.updateUser(userUpdateDTO);
+    private CommonResult updateUser(@Validated @RequestBody UserUpdateReqVO userUpdateReqVO) {
+        userService.updateUser(userUpdateReqVO);
         return CommonResult.success();
     }
 
