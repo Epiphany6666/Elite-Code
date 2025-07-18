@@ -1,154 +1,83 @@
-<script setup lang="ts" name="Login">
-import { reactive, ref, watch } from 'vue'
-import { type LocationQueryValue, useRoute, useRouter } from 'vue-router'
-import useUserStore from '@/store/modules/user'
-import type { LoginForm } from '@/types/user'
-import type { FormRules } from 'element-plus'
+<script lang="ts" setup="">
+import {reactive, ref} from 'vue'
 
-const title = import.meta.env.VITE_APP_TITLE
-const loading = ref(false)
-const route = useRoute()
-const router = useRouter()
+import type {FormInstance, FormRules} from 'element-plus'
+import {setToken} from "@/utils/auth.ts";
+import {useRouter} from "vue-router";
+import {login} from "@/api/login.ts";
+import type {UserLoginReqVO} from "@/types/user.d.ts";
 
-const redirect = ref('')
-watch(route, (newRoute) => {
-  redirect.value = newRoute.query && newRoute.query.redirect as string
-}, { immediate: true })
-
-const userStore = useUserStore()
-const loginFormRef = ref()
-const loginForm = reactive<LoginForm>({
+const ruleFormRef = ref<FormInstance>()
+const ruleForm = reactive<UserLoginReqVO>({
   username: 'luoyan',
-  password: '12345678'
+  password: '12345678',
 })
 
-const loginRules = reactive<FormRules<LoginForm>>({
+
+const rules = reactive<FormRules<UserLoginReqVO>>({
   username: [
-    { required: true, trigger: 'blur', message: '请输入您的账号' },
-    { trigger: 'blur', message: '账号长度必须在2到20个字符之间' }
+    {required: true, message: 'Please input Activity name', trigger: 'blur'},
+    {min: 2, max: 20, message: 'Length should be 2 to 20', trigger: 'blur'},
   ],
   password: [
-    { required: true, trigger: 'blur', message: '请输入您的密码' },
-    { min: 6, max: 20, trigger: 'blur', message: '密码长度必须在6到20个字符之间' }
-  ]
+    {required: true, message: 'Please select Activity zone', trigger: 'change'},
+  ],
 })
 
-const handleLogin = async () => {
-  await loginFormRef.value.validate((valid: boolean) => {
+const router = useRouter()
+const submitForm = async (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  await formEl.validate((valid, fields) => {
     if (valid) {
-      loading.value = true
-      userStore.login(loginForm).then(() => {
-        const query = route.query
-        const otherQueryParams = Object.keys(query).reduce((acc, cur) => {
-          if (cur !== 'redirect') {
-            acc[cur] = query[cur]
-          }
-          return acc
-        }, {} as { [key: string]: LocationQueryValue | LocationQueryValue[] })
-        router.push({ path: redirect.value || '/', query: otherQueryParams })
-      }).finally(() => {
-        loading.value = false
+      login(ruleForm).then(res => {
+        setToken(res.data.token)
+        router.push('/')
       })
+    } else {
+      console.log('error submit!', fields)
     }
   })
 }
 
-// 睁眼/闭眼
-const pwdType = ref('password')
-const showPwd = () => {
-  if (pwdType.value === 'password') {
-    pwdType.value = ''
-  } else {
-    pwdType.value = 'password'
-  }
+const resetForm = (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  formEl.resetFields()
 }
-
 </script>
 
 <template>
-  <div class="login">
+  <div class="login-container">
+    <h1>登录页</h1>
     <el-form
-      ref="loginFormRef"
-      :model="loginForm"
-      :rules="loginRules"
-      label-width="auto"
-      class="login-form"
+        ref="ruleFormRef"
+        style="max-width: 250px"
+        :model="ruleForm"
+        :rules="rules"
+        label-width="auto"
     >
-      <h3 class="title">{{ title }}</h3>
-      <el-form-item prop="username">
-        <el-input
-          v-model="loginForm.username"
-          type="text"
-          size="large"
-          placeholder="账号"
-        >
-          <template #prefix>
-            <svg-icon icon-class="user" class="input-icon" />
-          </template>
-        </el-input>
+      <el-form-item label="账号" prop="username">
+        <el-input v-model="ruleForm.username"/>
       </el-form-item>
-      <el-form-item prop="password">
-        <el-input
-          v-model="loginForm.password"
-          :type="pwdType"
-          size="large"
-          placeholder="密码"
-          @keyup.enter="handleLogin"
-        >
-          <template #prefix>
-            <svg-icon icon-class="password" class="input_icon" />
-          </template>
-          <template #suffix>
-            <svg-icon :icon-class="pwdType ? 'closeEye' : 'openEye'" class="input_icon password-icon" @click="showPwd" />
-          </template>
-        </el-input>
+      <el-form-item label="密码" prop="password">
+        <el-input v-model="ruleForm.password"/>
       </el-form-item>
       <el-form-item>
-        <el-button
-          type="primary"
-          @click.prevent="handleLogin"
-          style="width: 100%"
-          :loading="loading"
-        >
-          <span v-if="!loading">登 录</span>
-          <span v-else>登 录 中...</span>
+        <el-button type="primary" @click="submitForm(ruleFormRef)">
+          登录
         </el-button>
-        <div>
-          <router-link to="/register">没有账号？去注册</router-link>
-        </div>
+        <el-button @click="resetForm(ruleFormRef)">重置</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
 
-<style scoped lang="scss">
-.login {
+<style scoped>
+.login-container {
+  height: 100vh;
+  width: 100vw;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-
-  .login-form {
-    width: 250px;
-
-    .el-input {
-      .input_icon {
-        height: 30px;
-        width: 14px;
-      }
-
-      .password-icon {
-        cursor: pointer;
-      }
-    }
-
-    .title {
-      text-align: center;
-      color: #5b9cf8;
-    }
-
-    :deep(.el-input--large) .el-input__wrapper {
-      padding: 1px 10px;
-    }
-  }
 }
 </style>

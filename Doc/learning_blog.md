@@ -3570,7 +3570,7 @@ mv tsconfig.json tsconfig.app.json tsconfig.node.json tsconfig.vitest.json tscon
 ![在这里插入图片描述](./assets/bb0f4c407ef274a01b7ba8109cec5845.png)
 [element-plus–Message 消息提示](https://element-plus.gitee.io/zh-CN/component/message.html#不同状态)
 
-```javascript
+```vue
 <template>
   <el-button :plain="true" @click="open2">success</el-button>
   <el-button :plain="true" @click="open3">warning</el-button>
@@ -3600,7 +3600,6 @@ const open4 = () => {
   ElMessage.error('Oops, this is a error message.')
 }
 </script>
-1234567891011121314151617181920212223242526272829
 ```
 
 预期样式：
@@ -3614,7 +3613,7 @@ const open4 = () => {
 
 1.去除单独引入`import { ElMessage } from 'element-plus`’
 
-```javascript
+```vue
 <template>
   <el-button :plain="true" @click="open">success</el-button>
 </template>
@@ -3630,8 +3629,6 @@ const open = () => {
   })
 }
 </script>
-
-12345678910111213141516
 ```
 
 2.进入**`tsconfig.app.json`**文件
@@ -4118,22 +4115,15 @@ defineProps({
 `npm`默认安装的是`Dart Sass`了。
 
 ```bash
-bash
-
- 代码解读
-复制代码npm install -g sass
+npm install -g sass
 ```
 
 ### 2、项目结构
 
 ```json
-json
-
- 代码解读
-复制代码code
-    --css
-        --index.scss
-    --dist
+--css
+    --index.scss
+--dist
 ```
 
 ### 3、监听运行
@@ -8526,6 +8516,24 @@ public WeiboDetailVO selectById(int id, String username){
 ![在这里插入图片描述](./assets/c1359648bc5652dbed8e5df39c009648.png)
 
 **5、修改完成，重新运行加载依赖，再运行项目，并使用浏览器即可正常访问。**
+
+
+
+---
+
+# 创建vue3+vite项目时报错TypeError: crypto.hash is not a function
+
+话说公司领导突然派发了一个紧急任务给我，我当机立断选择vue3+vite去实现，当我开开心心的使用npm命令创建vue3+vite项目后，下载了依赖，执行npm run dev命令，结果却令人意外，报错了，疑惑上一次创建vue3+vite的时候还好好的怎么现在就这样了呢？？？
+
+![image.png](./assets/bae405d768024a4386e1dacafd46d021~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAg5LiN5oq96LGh55qE5oq96LGh56iL5bqP5ZGY:q75.awebp)
+
+**于是找啊找，找到了答案，在最新版本的vite中需要更高版本的node，如下图：**
+
+![image.png](./assets/f9700a64ee714098ac4059083d808158~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAg5LiN5oq96LGh55qE5oq96LGh56iL5bqP5ZGY:q75.awebp)
+
+vite项目地址：[github.com/vitejs/vite…](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Fvitejs%2Fvite%2Fblob%2Fac528a44c384fefb6f10c3f531df93b5ac39324c%2Fpackages%2Fvite%2Fpackage.json%23L57)
+
+于是我下载了22.17.0版本的node，最后重新运行npm run dev 项目立刻启动成功！ 大功告成！！！
 
 
 

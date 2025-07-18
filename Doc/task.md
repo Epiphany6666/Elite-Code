@@ -405,6 +405,7 @@
 - [ ] 常量引入的地方都不要加类前缀
 - [ ] 什么表才需要加 `del_flag`？加了 `del_flag` 的表查询记得添加 `del_flag = 0`
 - [ ] user service层#updateUser `updateReqVO.setPassword(null); // 特殊：此处不更新密码`
+- [ ] 学习配置eslint、prettier
 
 
 
@@ -3807,15 +3808,104 @@ const searchKeywords = (e: any) => {
 
   推荐MD编辑器：https://github.com/pd4d10/bytemd
 
-- [ ] 
+
+
+---
+
+# 后台管理前端环境搭建
+
+- [x] 复习Vue语法
+
+- [x] 初始化Vue3
+
+- [x] 删除多余的项目结构
+
+- [x] 配置环境变量
+
+  .env.development
+
+  ~~~
+  # 页面标题
+  VITE_APP_TITLE = 易扣(EliteCode)
+  
+  # 开发环境配置
+  VITE_APP_ENV = development
+  VITE_APP_BASE_API = /api
+  
+  # 本地环境接口配置
+  VITE_API_URL = http://localhost:8901
+  ~~~
+
+  .env.production
+
+  ~~~
+  # 页面标题
+  VITE_APP_TITLE = 易扣(EliteCode)
+  
+  # 生产环境配置
+  VITE_APP_ENV = production
+  VITE_APP_BASE_API = /pro-api
+  
+  # 线上环境接口配置
+  VITE_API_URL = https://www.luo-yan.cn
+  ~~~
+
+- [x] 配置vite
+
+  ~~~ts
+  // https://vite.dev/config/#conditional-config
+  export default defineConfig(({ mode }) => {
+    // https://vite.dev/guide/api-javascript.html#loadenv
+    // https://vite.dev/config/shared-options.html#root
+    const env = loadEnv(mode, process.cwd())
+    return {
+      plugins: createVitePlugins(),
+      resolve: {
+        alias: {
+          '@': fileURLToPath(new URL('./src', import.meta.url))
+        },
+      },
+      server: {
+        // https://vite.dev/config/server-options.html#server-host
+        host: true,
+        port: 80,
+        // https://vite.dev/config/server-options.html#server-proxy
+        proxy: {
+          [env.VITE_APP_BASE_API]: {
+            target: env.VITE_API_URL,
+            changeOrigin: true, // 需要代理跨域
+            rewrite: (path) => path.replace(new RegExp(`^${env.VITE_APP_BASE_API}`), '')
+          }
+        }
+      }
+    }
+  })
+  ~~~
+
+- [x] 创建路由
+
+- [x] 引入Elementplus组件库
+
+- [x] 实现登录功能
+
+  - [x] 引入pinia
+  - [x] 新建用户仓库
+  - [x] 使用路由前置守卫进行鉴权（permission.ts）
+  - [x] 新建utile/auth.ts将token保存到cookie
+
+- [x] 封装axios实例
+
+- [x] 配置axios拦截器
+
+- [x] 将api全部封装到api文件夹中
+
+- [x] 使用NProgress搭建轻量级的页面加载进度条
 
 
 
 ---
 
 # RABC
-
-## 1
 
 - [x] 新建role、user_role、menu、role_menu
 

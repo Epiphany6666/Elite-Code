@@ -1,24 +1,39 @@
-export declare interface UserLoginVO {
-  tokenHead: string
-  token: string
+import type {RoleDO} from "@/types/role.d.ts";
+
+export declare interface UserLoginReqVO {
+    username: string
+    password: string
 }
 
-export declare interface UserRegisterDTO {
-  username: string
-  password: string
-  checkPassword: string
+export declare interface LoginUserVO {
+    token: string
+    tokenHead: string
 }
 
-export declare interface LoginForm {
-  username: string
-  password: string
+export declare interface UserDO {
+    avatar?: string
+    createBy?: string
+    createTime?: Date
+    delFlag?: string
+    id?: string
+    nickName?: string
+    password?: string
+    profile?: string
+    roleList?: Array<RoleDO>
+    updateBy?: string
+    updateTime?: Date
+    username?: string
 }
 
-export declare interface UserAddDTO {
-  username: string,
-  avatar: string,
-  nickName: string,
-  password: string,
-  profile: string,
-  roles: []
+export declare interface UserQueryReqVO {
+    createBy?: string
+    current?: number
+    endTime?: Date
+    nickName?: string
+    pageSize?: number
+    role?: string
+    sortFieldPair?: Array<string>
+    startTime?: Date
+    updateBy?: string
+    username?: string
 }

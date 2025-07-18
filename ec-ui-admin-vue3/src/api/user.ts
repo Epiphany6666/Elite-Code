@@ -1,11 +1,11 @@
-import request from '@/utils/request.ts'
-import type { UserAddDTO } from '@/types/user'
+import type {UserDO, UserQueryReqVO} from "@/types/user";
+import request from "@/utils/request.ts";
+import type {CommonPage} from "@/types/axios";
 
-// 新增用户
-export function addUser(userAddDTO: UserAddDTO) {
-  return request({
-    url: '/user/',
-    method: 'post',
-    data: userAddDTO
-  })
+export function listUser(userQueryReqVO: UserQueryReqVO) {
+    return request<CommonPage<UserDO>>({
+        url: '/admin-api/system/user/list',
+        method: 'post',
+        data: userQueryReqVO
+    })
 }

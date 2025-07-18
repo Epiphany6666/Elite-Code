@@ -85,6 +85,6 @@ secure:
       - "/**/*.js"
       - "/druid/**"
       # 对于登录login 注册register
-      - "/login"
-      - "/register"
+      - "/admin-api/system/login"
+      - "/admin-api/system/register"
       # 业务开放

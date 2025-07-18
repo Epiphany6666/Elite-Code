@@ -1,53 +1,44 @@
-import axios, { type AxiosInstance } from 'axios'
-import useUserStore from '@/store/modules/user.ts'
-import { getToken } from '@/utils/auth.ts'
+// 创建实例时配置默认值
+import axios from "axios";
+import {getToken} from "@/utils/auth.ts";
+import {useUserStore} from "@/store/modules/user.ts";
+import {ElMessage} from "element-plus";
 
-axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
-// 创建axios实例
-const request: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_APP_BASE_API, // api的base_url
-  timeout: 10000, // 请求超时时间
+const request = axios.create({
+    baseURL: import.meta.env.VITE_APP_BASE_API,
+    timeout: 10000,
 });
 
-// request拦截器
+// 添加请求拦截器
 request.interceptors.request.use(function (config) {
-  // Do something before request is sent
-  config.headers.set("Authorization", getToken())
-  return config;
+    // 在发送请求之前做些什么
+    config.headers.set('Authorization', 'Bearer ' + getToken())
+    return config;
 }, function (error) {
-  // Do something with request error
-  return Promise.reject(error);
+    // 对请求错误做些什么
+    return Promise.reject(error);
 });
 
-// response拦截器
-request.interceptors.response.use(response => {
-  const res = response.data
-  if (res.code === 401) {
-    useUserStore().logOut().then(() => {
-      location.reload() // 为了重新实例化vue-router对象，避免bug，例如缓存
-    })
-    return Promise.reject('无效的会话，或者会话已过期，请重新登录。')
-  } else if (res.code !== 200) {
-    ElMessage.error(res.msg)
-    return Promise.reject('error')
-  } else {
-    return response.data;
-  }
-}, error => {
-  let { message } = error
-  if (message == "Network Error") {
-    message = "后端接口连接异常"
-  } else if (message.includes("timeout")) {
-    message = "系统接口请求超时"
-  } else if (message.includes("Request failed with status code")) {
-    message = "系统接口" + message.substring(message.length - 3) + "异常"
-  }
-  ElMessage({
-    message: message,
-    type: 'error',
-    duration: 3 * 1000
-  })
-  return Promise.reject(error);
+// 添加响应拦截器
+request.interceptors.response.use(function (response) {
+    // 2xx 范围内的状态码都会触发该函数。
+    // 对响应数据做点什么
+    const res = response.data
+    if (res.code === 401) {
+        useUserStore().logout().then(() => {
+            location.reload() // 为了重新实例化vue-router对象，避免bug，例如缓存
+        })
+        return Promise.reject('无效会话，或会话已过期，请重新登陆')
+    } else if (res.code !== 200) {
+        ElMessage.error(res.message)
+        return Promise.reject('error')
+    } else {
+        return response.data
+    }
+}, function (error) {
+    // 超出 2xx 范围的状态码都会触发该函数。
+    // 对响应错误做点什么
+    return Promise.reject(error);
 });
 
 export default request

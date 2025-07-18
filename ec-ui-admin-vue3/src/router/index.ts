@@ -1,69 +1,29 @@
-import { createWebHistory, createRouter, type RouteRecordRaw } from 'vue-router'
-
-export const constantRoutes: Array<RouteRecordRaw> = [
-  {
-    path: '/login',
-    component: () => import('@/views/login/index.vue'),
-    meta: {
-      hidden: true
-    }
-  },
-  {
-    path: '/register',
-    component: () => import('@/views/register/index.vue'),
-    meta: {
-      hidden: true
-    }
-  },
-  {
-    path: '/',
-    component: () => import('@/views/problemset/index.vue'),
-    meta: {
-      title: '题库'
-    }
-  },
-  {
-    path: '/problemset/:id',
-    component: () => import('@/views/question/index.vue'),
-    meta: {
-      title: '题目',
-      hidden: true
-    }
-  },
-  {
-    path: '/question/:id',
-    component: () => import("@/views/questionDetail/index.vue"),
-    meta: {
-      title: '题目详情',
-      hidden: true
-    }
-  },
-  {
-    path: '/contest',
-    component: () => import('@/views/contest/index.vue'),
-    meta: {
-      title: '竞赛'
-    }
-  },
-  {
-    path: '/404',
-    component: () => import('@/views/error/404.vue'),
-    meta: {
-      hidden: true
-    }
-  },
-  {
-    path: '/:pathMatch(.*)*',
-    redirect: '/404',
-    meta: {
-      hidden: true
-    }
-  }
-]
+import {createRouter, createWebHistory} from "vue-router";
+import Layout from '@/layout/index.vue'
 
 const router = createRouter({
-  history: createWebHistory(),
-  routes: constantRoutes
+    history: createWebHistory(),
+    routes: [
+        {
+          path: '/login',
+          component: () => import('@/views/login/index.vue')
+        },
+        {
+            path: "/",
+            component: Layout,
+            redirect: '/system/user',
+            children: [
+                {
+                    path: '/system/user',
+                    component: () => import('@/views/system/user/index.vue')
+                },
+                {
+                    path: '/system/role',
+                    component: () => import('@/views/system/role/index.vue')
+                }
+            ]
+        }
+    ]
 })
 
 export default router
