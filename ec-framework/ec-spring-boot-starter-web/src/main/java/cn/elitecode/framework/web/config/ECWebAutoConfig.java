@@ -1,17 +1,36 @@
-package cn.elitecode.framework.security.config;
+package cn.elitecode.framework.web.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.AntPathMatcher;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * 资源配置类
  */
 @Configuration
-public class ResourceConfig implements WebMvcConfigurer {
+public class ECWebAutoConfig implements WebMvcConfigurer {
+
+    @Autowired
+    private WebProperties webProperties;
+
+    @Override
+    public void configurePathMatch(PathMatchConfigurer configurer) {
+        configurePathMatch(configurer, webProperties.appApi);
+        configurePathMatch(configurer, webProperties.adminApi);
+    }
+
+    private void configurePathMatch(PathMatchConfigurer configurer, WebProperties.Api api) {
+        AntPathMatcher antPathMatcher = new AntPathMatcher(".");
+        configurer.addPathPrefix(api.getPrefix(), clazz -> clazz.isAnnotationPresent(RestController.class)
+                        && antPathMatcher.match(api.getController(), clazz.getPackage().getName())); // 仅匹配controller包
+    }
 
     /**
      * 跨域配置

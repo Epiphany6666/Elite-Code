@@ -20,7 +20,7 @@ import java.util.Map;
 
 @Api(tags = "MenuController", description = "菜单管理")
 @RestController
-@RequestMapping("/menu")
+@RequestMapping("/system/menu")
 public class MenuController {
 
     @Autowired

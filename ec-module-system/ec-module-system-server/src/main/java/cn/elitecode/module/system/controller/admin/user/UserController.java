@@ -28,7 +28,7 @@ import java.util.Map;
  */
 @Api(tags = "UserController", description = "用户管理")
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/system/user")
 public class UserController {
 
     @Autowired

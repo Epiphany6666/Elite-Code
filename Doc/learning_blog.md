@@ -8199,6 +8199,313 @@ spring.application.name=pts8000
 
 ---
 
+# 如何新增API前缀的教程分享
+
+系统里的api前缀分为：admin-api,app-api，分别对应的后台管理和APP管理。很多人想在此基础上新增一个open-api的前缀用来做开放接口，这里做个教程和大家分享。
+
+## 一、基础配置
+
+1、在WebProperties中新增前缀配置。
+
+![img](./assets/Fj18facmcgq5Wg3k4ruCa8pe3oqW.png)
+
+
+
+**.controller.open.**，这里的open一定是和controller中对应的包名一致。
+
+2、YudaoWebAutoConfiguration中增加前缀配置。
+
+![img](./assets/Fj8Hnrq0_V-feGlFaAUxCJaHuGkZ.png)
+
+
+
+3、YudaoSwaggerAutoConfiguration中增加API分组配置。![img](./assets/FhPsuySVarplKuGdU-9b7BNlpwBQ.png)
+
+---
+
+## 二、过滤器配置
+
+ApiRequestFilter中增加刚设置的前缀，否则配置文件中的忽略租户不生效。
+
+![img](./assets/FmS5x4aY1M7Kb6fp4loBH4pz-fbz.png)
+
+---
+
+## 三、Controller下新建open包
+
+在controller下面新建与配置中对应的包（**.controller.open.**），然后写API就可以了。
+
+![img](./assets/FjpwxXXrgw_XhH3uMuHrf6RAabDp.png)
+
+**这样只要在open下面的API接口都是以：/open-api/xxx/xxx开头的，其他配置与admin-api一样。**
+
+
+
+---
+
+# Knife4j_接口概述、常用注解详解、搭建swagger项目、功能概述
+
+## 一、knife4j的概述
+
+- ①. knife4j是为Java MVC框架集成Swagger生成Api文档的增强解决方案,前身是swagger-bootstrap-ui,取名kni4j是希望它能像一把匕首一样小巧,轻量,并且功能强悍!
+- ②. [官方文档地址](https://doc.xiaominfo.com/docs/quick-start)
+- ③. http://ip:port/doc.html
+
+![在这里插入图片描述](./assets/c11c3feb9a4f9969dc282615136ae477.png)
+
+---
+
+## 二、knife4j核心功能
+
+- ①. 文档说明:根据Swagger的规范说明,详细列出接口文档的说明,包括接口地址、类型、请求示例、请求参数、响应示例、响应参数、响应码等信息,使用swagger-bootstrap-ui能根据该文档说明,对该接口的使用情况一目了然。
+- ②. 在线调试:提供在线接口联调的强大功能,自动解析当前接口参数,同时包含表单验证,调用参数可返回接口响应内容、headers、Curl请求命令实例、响应时间、响应状态码等信息,帮助开发者在线调试,而不必通过其他测试工具测试接口是否正确,简介、强大。
+- ③. 个性化配置:通过个性化ui配置项,可自定义UI的相关显示信息
+- ④. 离线文档:根据标准规范,生成的在线markdown离线文档,开发者可以进行拷贝生成markdown接口文档,通过其他第三方markdown转换工具转换成html或pdf,这样也可以放弃swagger2markdown组件
+- ⑤. 接口排序:自1.8.5后,ui支持了接口排序功能,例如一个注册功能主要包含了多个步骤,可以根据swagger-bootstrap-ui提供的接口排序规则实现接口的排序,step化接口操作,方便其他开发者进行接口对接
+
+---
+
+## 三、从0开始搭建knife4j项目
+
+①. pom文件引入
+
+```xml
+<properties>
+    <knife4j.version>2.0.9</knife4j.version>
+    <lombok.version>1.18.12</lombok.version>
+</properties>
+<dependencies>
+    <dependency>
+        <groupId>com.github.xiaoymin</groupId>
+        <artifactId>knife4j-spring-boot-starter</artifactId>
+        <version>${knife4j.version}</version>
+    </dependency>
+    <!--web场景-->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>com.alibaba</groupId>
+        <artifactId>fastjson</artifactId>
+        <version>1.2.80</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+    </dependency>
+</dependencies>
+```
+
+②. 配置类 - SwaggerConfig
+
+```java
+@Configuration
+@EnableSwagger2WebMvc
+// @ConditionalOnExpression(value = "'develop'.equals('${spring.cloud.nacos.config.namespace}') or 'testing'.equals('${spring.cloud.nacos.config.namespace}')")
+public class SwaggerConfig {
+    @Bean(value = "swaggerBean")
+    public Docket swaggerBean() {
+        //指定使用Swagger2规范
+        List<Parameter> pars = new ArrayList<>();
+        //暂无需token校验
+        //pars.add(new ParameterBuilder().name("token").description("认证token").modelRef(new ModelRef("string")).parameterType("header").build());
+        return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(new ApiInfoBuilder()
+                        .title("swagger测试查询")
+                        //描述字段支持Markdown语法
+                        .description("swagger测试查询系统")
+                        .contact(new Contact("tangzhi", "", "845195485@qq.com"))
+                        .version("1.0")
+                        .build())
+                //分组名称
+                .groupName("ssm-test-inquire")
+                .select()
+                //这里指定Controller扫描包路径
+                .apis(RequestHandlerSelectors.basePackage("com.xiaozhi.swagger"))
+                .paths(PathSelectors.any())
+                .build().globalOperationParameters(pars);
+    }
+}
+```
+
+③. 测试 - http://ip:port/doc.html
+![在这里插入图片描述](./assets/687a65066a1ffaf0f51b3ca7669cf4cf.png)
+
+---
+
+## 四、常用注解 - Api
+
+①. @Api注解用于标注一个ControllerClass)在默认情况下,Swagger-Core只会扫描解析具有@Api注解的类,而会自动忽略其他类别资源JAX-RS endpoints,Servlets等等的注解
+
+| 属性           | 解释                                             |
+| -------------- | ------------------------------------------------ |
+| tags           | 如果设置这个值、value的值会被覆盖                |
+| description    | 对api资源的描述                                  |
+| value          | url的路径值（显示在UI的值）                      |
+| basePath       | 基本路径可以不配置                               |
+| position       | 如果配置多个Api想改变显示的顺序位置              |
+| produces       | For example, “application/json, application/xml” |
+| consumes       | For example, “application/json, application/xml” |
+| protocols      | Possible values: http, https, ws, wss.           |
+| authorizations | 高级特性认证时配置                               |
+| hidden         | 配置为true将在文档中隐藏                         |
+
+```java
+@Controller
+@Slf4j
+@RequestMapping("/xxx")
+@Api(tags = "人员信息API", description = "提供人员信息相关的Rest API")
+public class XxxController{
+ 
+}
+```
+
+②. 案例演示 - 建议在配置的tags属性值上添加序号,例如:“01. 用户模块”、“02. 微博模块”,则框架会根据值进行排序
+
+```java
+// 1. UserController
+@Api(tags = "01.用户管理模块")
+public class UserController {...}
+
+// 2. WeiboController
+@Api(tags = "02.微博管理模块")
+public class WeiboController {...}
+
+// 3. CommentController
+@Api(tags = "03.评论管理模块")
+public class CommentController {...}
+```
+
+![在这里插入图片描述](./assets/5e1f0ecefb6371483b616ed737c05893.png)
+
+---
+
+## 五、@ApiOperation注解
+
+①. @ApiOperation注解在用于对一个操作或HTTP方法进行描述。具有相同路径的不同操作会被归组为同一个操作对象。不同的HTTP请求方法及路径组合构成一个唯一操作
+
+| 属性              | 解释                                                         |
+| ----------------- | ------------------------------------------------------------ |
+| value             | url的路径值（显示在UI的值）                                  |
+| tags              | 如果设置这个值、value的值会被覆盖                            |
+| description       | 对api资源的描述                                              |
+| basePath          | 基本路径可以不配置                                           |
+| position          | 如果配置多个Api 想改变显示的顺序位置                         |
+| produces          | For example, “application/json, application/xml”             |
+| consumes          | For example, “application/json, application/xml”             |
+| protocols         | Possible values: http, https, ws, wss.                       |
+| authorizations    | 高级特性认证时配置                                           |
+| hidden            | 配置为true将在文档中隐藏                                     |
+| response          | 返回的对象                                                   |
+| responseContainer | 这些对象是有效的 “List”, “Set” or “Map”.,其他无效            |
+| httpMethod        | “GET”, “HEAD”, “POST”, “PUT”, “DELETE”, “OPTIONS” and “PATCH” |
+
+②. 此处以注册功能为例,其他所有方法请添加说明
+
+```java
+/**注册功能*/
+@RequestMapping("reg")
+@ApiOperation(value = "注册功能")
+public int reg(@RequestBody UserRegDTO userRegDTO){...}
+
+AI写代码java
+运行1234
+```
+
+![在这里插入图片描述](./assets/b54ea64ee52ec82679a82fbbf439d886.png)
+
+---
+
+## 六、@ApiModelProperty注解
+
+①. 添加在POJO类的属性上的注解,用于对请求参数或响应结果中的某个属性进行说明,主要通过其value属性配置描述文本,并可通过example属性配置示例值
+
+②. 参数说明
+
+1. value属性:配置参数名称
+2. required属性:配置是否必须提交此请求参数
+3. example属性:配置示例值
+   注意:如果配置了 required=true,只是一种显示效果,Knife4j框架并不具备检查功能
+
+③. 案例演示
+
+```java
+@Data
+public class UserRegDTO {
+    @ApiModelProperty(value = "用户名", required = true, example = "赵丽颖")
+    private String username;
+    @ApiModelProperty(value = "密码", required = true)
+    private String password;
+    @ApiModelProperty(value = "昵称", required = true)
+    private String nickname;
+}
+```
+
+![在这里插入图片描述](./assets/561d8301a0494e3166687cbb31c648ee.png)
+
+---
+
+## 七、@ApiImplicitParam注解
+
+①. 添加在控制器类中处理请求的方法上的注解,主要用于配置非封装(非XxxDTO/XxxParam的参数)的参数
+
+②. 参数说明
+
+1. name:指定参数名称参数变量名
+2. value:配置参数名称
+3. dataType:配置数据类型
+4. required:配置是否必须提交此请求参数
+5. example:配置参数的示例值
+   注意:一旦使用此注解,各个参数的数据类型默认都会显示String,可以通过dataType指定数据类型
+
+③. 案例演示
+
+```java
+@ApiImplicitParam(name = "id", value = "微博", required=true, dataType = "int")
+public WeiboDetailVO selectById(int id){...}
+```
+
+![在这里插入图片描述](./assets/555a194202a74d7935e0aa470e535b63.png)
+
+---
+
+## 八、@ApiImplicitParams注解
+
+①. 添加在控制器类中处理请求的方法上的注解,当方法有多个非封装的参数时,在方法上添加此注解,并在注解内部通过@ApiImplicitParam数组配置多个参数
+
+②. 此处以微博详情功能为例
+
+```java
+/**微博详情页功能*/
+@GetMapping("selectById")
+@ApiOperation(value = "微博详情功能")
+@ApiImplicitParams(value = {
+    @ApiImplicitParam(name = "id", value = "微博", required=true, dataType = "int"),
+    @ApiImplicitParam(name = "username", value = "用户名", required=true)
+})
+// 额外增加username参数,仅仅用于测试
+public WeiboDetailVO selectById(int id, String username){
+    return weiboMapper.selectById(id);
+}
+```
+
+![在这里插入图片描述](./assets/c2a0a5d8dcf5de1221c57e9e8ea52217.png)
+
+---
+
+## 九、限制请求方式
+
+①. API文档中默认每个功能会展示7种请求方式,遵循RESTful规则将 @RequestMapping 注解修改为对应请求方法的注解,比如:@GetMapping @PostMapping @PutMapping @DeleteMapping 注解,重启工程后刷新测试
+![在这里插入图片描述](./assets/6537161ac5e1e71d11a6c2fc58283bbe.png)
+
+## ⑨. 导出离线API文档
+
+- 文档管理 - 离线文档 中存在多种格式的导出格式
+  ![在这里插入图片描述](./assets/359bd89a0de8570c3d4feee07a4f5ead.png)
+
 
 
 ---

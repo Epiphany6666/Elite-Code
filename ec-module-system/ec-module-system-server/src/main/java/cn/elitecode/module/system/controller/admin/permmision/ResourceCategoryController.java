@@ -15,7 +15,7 @@ import java.util.List;
 
 @Api(tags = "ResourceCategoryController", description = "后台资源分类管理")
 @RestController
-@RequestMapping("/resourceCategory")
+@RequestMapping("/system/resourceCategory")
 public class ResourceCategoryController {
 
     @Autowired

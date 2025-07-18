@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Api(tags = "RegisterController", description = "用户注册")
 @RestController
+@RequestMapping("/system")
 public class RegisterController {
 
     @Autowired

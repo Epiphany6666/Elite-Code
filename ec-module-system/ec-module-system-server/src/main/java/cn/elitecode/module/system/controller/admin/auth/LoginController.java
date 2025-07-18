@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Api(tags = "LoginController", description = "用户登录")
 @RestController
+@RequestMapping("/system")
 public class LoginController {
 
     @Autowired

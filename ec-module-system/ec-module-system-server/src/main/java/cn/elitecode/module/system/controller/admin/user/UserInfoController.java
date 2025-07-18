@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Api(tags = "UserInfoController", description = "个人信息管理")
 @RestController
-@RequestMapping("/user/profile")
+@RequestMapping("/system/user/profile")
 public class UserInfoController {
 
     @Autowired

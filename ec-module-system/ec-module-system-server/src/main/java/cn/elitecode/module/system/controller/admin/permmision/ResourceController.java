@@ -17,7 +17,7 @@ import java.util.List;
 
 @Api(tags = "ResourceController", description = "后台资源管理")
 @RestController
-@RequestMapping("/resource")
+@RequestMapping("/system/resource")
 public class ResourceController {
 
     @Autowired
