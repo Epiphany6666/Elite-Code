@@ -3,10 +3,10 @@ package cn.elitecode.module.system.service.user;
 import cn.elitecode.framework.common.enums.HttpStatus;
 import cn.elitecode.framework.common.pojo.CommonPage;
 import cn.elitecode.framework.security.core.utils.SecurityUtil;
-import cn.elitecode.module.system.controller.admin.user.vo.UserAddDTO;
-import cn.elitecode.module.system.controller.admin.user.vo.UserQueryDTO;
-import cn.elitecode.module.system.controller.admin.user.vo.UserUpdateDTO;
-import cn.elitecode.module.system.controller.admin.user.vo.UserUpdateProfileDto;
+import cn.elitecode.module.system.controller.admin.user.vo.UserAddReqVO;
+import cn.elitecode.module.system.controller.admin.user.vo.UserQueryReqVO;
+import cn.elitecode.module.system.controller.admin.user.vo.UserUpdateProfileReqVO;
+import cn.elitecode.module.system.controller.admin.user.vo.UserUpdateReqVO;
 import cn.elitecode.module.system.dal.dataobject.permission.UserRoleDO;
 import cn.elitecode.module.system.dal.dataobject.user.UserDO;
 import cn.elitecode.module.system.dal.mysql.permmison.UserRoleMapper;
@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 用户表（user） | 业务处理层
+ * 用户表（system_users） | 业务处理层
  */
 @Service
 public class UserServiceImpl implements UserService {
@@ -39,28 +39,28 @@ public class UserServiceImpl implements UserService {
     private UserRoleMapper userRoleMapper;
 
     @Override
-    public CommonPage<UserDO> selectUserList(UserQueryDTO userQueryDTO) {
-        if (userQueryDTO.getCurrent() != null && userQueryDTO.getPageSize() != null) {
-            userQueryDTO.setCurrent((userQueryDTO.getCurrent() - 1) * userQueryDTO.getPageSize());
+    public CommonPage<UserDO> selectUserList(UserQueryReqVO userQueryReqVO) {
+        if (userQueryReqVO.getCurrent() != null && userQueryReqVO.getPageSize() != null) {
+            userQueryReqVO.setCurrent((userQueryReqVO.getCurrent() - 1) * userQueryReqVO.getPageSize());
         }
-        List<UserDO> userDOList = userMapper.selectUserList(userQueryDTO);
-        Long total = userMapper.getUserTotal(userQueryDTO);
+        List<UserDO> userDOList = userMapper.selectUserList(userQueryReqVO);
+        Long total = userMapper.getUserTotal(userQueryReqVO);
         CommonPage<UserDO> page = new CommonPage<>(total, userDOList);
         return page;
     }
 
     @Override
     @Transactional
-    public void updateUser(UserUpdateDTO userUpdateDTO) {
+    public void updateUser(UserUpdateReqVO userUpdateReqVO) {
         UserDO userDO = new UserDO();
-        BeanUtils.copyProperties(userUpdateDTO, userDO);
+        BeanUtils.copyProperties(userUpdateReqVO, userDO);
         userDO.setUpdateBy(SecurityUtil.getUserId());
         userMapper.updateUserById(userDO);
 
         // 删除用户角色关联
         userRoleMapper.deleteUserRoleByUserId(userDO.getId());
         // 新增用户角色关联
-        insertUserRole(userDO.getId(), userUpdateDTO.getRoleIds());
+        insertUserRole(userDO.getId(), userUpdateReqVO.getRoleIds());
     }
 
     @Override
@@ -75,19 +75,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public Long addUser(UserAddDTO userAddDTO) {
+    public Long addUser(UserAddReqVO userAddReqVO) {
         // 新增用户
         UserDO userDO = new UserDO();
-        BeanUtils.copyProperties(userAddDTO, userDO);
+        BeanUtils.copyProperties(userAddReqVO, userDO);
         if (!checkUsernameUnique(userDO)) {
             throw new UsernameAlreadyExistsException(HttpStatus.PARAMS_ERROR, "新增用户 '" + userDO.getUsername() + "' 失败，账号已存在");
         }
         userDO.setCreateBy(SecurityUtil.getUserId());
-        userDO.setPassword(SecurityUtil.encryptPassword(userAddDTO.getPassword()));
+        userDO.setPassword(SecurityUtil.encryptPassword(userAddReqVO.getPassword()));
         userMapper.insertUser(userDO);
 
         // 新增用户角色关联
-        insertUserRole(userDO.getId(), userAddDTO.getRoleIds());
+        insertUserRole(userDO.getId(), userAddReqVO.getRoleIds());
         return userDO.getId();
     }
 
@@ -116,9 +116,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUserProfile(UserUpdateProfileDto userUpdateProfileDto) {
+    public void updateUserProfile(UserUpdateProfileReqVO userUpdateProfileReqVO) {
         UserDO userDO = new UserDO();
-        BeanUtils.copyProperties(userUpdateProfileDto, userDO);
+        BeanUtils.copyProperties(userUpdateProfileReqVO, userDO);
         userDO.setUpdateBy(SecurityUtil.getUserId());
         userDO.setId(SecurityUtil.getUserId());
         userMapper.updateUserById(userDO);
@@ -141,11 +141,13 @@ public class UserServiceImpl implements UserService {
      * @param roleIds
      */
     private void insertUserRole(Long userId, List<Long> roleIds) {
-        List<UserRoleDO> userRoleDOList = new ArrayList<>();
-        for (Long roleId : roleIds) {
-            userRoleDOList.add(new UserRoleDO(userId, roleId));
+        if (!roleIds.isEmpty()) {
+            List<UserRoleDO> userRoleDOList = new ArrayList<>();
+            for (Long roleId : roleIds) {
+                userRoleDOList.add(new UserRoleDO(userId, roleId));
+            }
+            userRoleMapper.batchUserRole(userRoleDOList);
         }
-        userRoleMapper.batchUserRole(userRoleDOList);
     }
 
 }

@@ -346,6 +346,8 @@
 
 - [ ] 除了 `create_by`、`create_time`、`update_by`、`update_time`、`del_flag` 外，是否要加上 `del_time(删除时间)`？
 
+- [ ] 所有的 `Map<String, Object>` 都封装成一个 `ReqVO`
+
 
 
 ----

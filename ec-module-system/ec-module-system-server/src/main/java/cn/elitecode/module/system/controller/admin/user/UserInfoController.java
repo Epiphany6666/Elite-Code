@@ -1,7 +1,7 @@
 package cn.elitecode.module.system.controller.admin.user;
 
 import cn.elitecode.framework.common.pojo.CommonResult;
-import cn.elitecode.module.system.controller.admin.user.vo.UserUpdateProfileDto;
+import cn.elitecode.module.system.controller.admin.user.vo.UserUpdateProfileReqVO;
 import cn.elitecode.module.system.service.user.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,8 +21,8 @@ public class UserInfoController {
 
     @ApiOperation(value = "更新个人信息")
     @PutMapping
-    private CommonResult updateProfile(@RequestBody UserUpdateProfileDto userUpdateProfileDto) {
-        userService.updateUserProfile(userUpdateProfileDto);
+    private CommonResult updateProfile(@RequestBody UserUpdateProfileReqVO userUpdateProfileReqVO) {
+        userService.updateUserProfile(userUpdateProfileReqVO);
         return CommonResult.success();
     }
 

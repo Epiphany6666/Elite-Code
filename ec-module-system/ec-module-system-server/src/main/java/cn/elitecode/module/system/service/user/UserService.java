@@ -1,29 +1,29 @@
 package cn.elitecode.module.system.service.user;
 
 import cn.elitecode.framework.common.pojo.CommonPage;
-import cn.elitecode.module.system.controller.admin.user.vo.UserAddDTO;
-import cn.elitecode.module.system.controller.admin.user.vo.UserQueryDTO;
-import cn.elitecode.module.system.controller.admin.user.vo.UserUpdateDTO;
-import cn.elitecode.module.system.controller.admin.user.vo.UserUpdateProfileDto;
+import cn.elitecode.module.system.controller.admin.user.vo.UserAddReqVO;
+import cn.elitecode.module.system.controller.admin.user.vo.UserQueryReqVO;
+import cn.elitecode.module.system.controller.admin.user.vo.UserUpdateReqVO;
+import cn.elitecode.module.system.controller.admin.user.vo.UserUpdateProfileReqVO;
 import cn.elitecode.module.system.dal.dataobject.user.UserDO;
 
 /**
- * 用户表（user） | 业务层
+ * 用户表（system_users） | 业务层
  */
 public interface UserService {
     
     /**
      * 根据条件分页获取用户信息
-     * @param userQueryDTO
+     * @param userQueryReqVO
      * @return
      */
-    CommonPage<UserDO> selectUserList(UserQueryDTO userQueryDTO);
+    CommonPage<UserDO> selectUserList(UserQueryReqVO userQueryReqVO);
 
     /**
      * 根据id更新用户信息
-     * @param userUpdateDTO
+     * @param userUpdateReqVO
      */
-    void updateUser(UserUpdateDTO userUpdateDTO);
+    void updateUser(UserUpdateReqVO userUpdateReqVO);
 
     /**
      * 校验用户账号是否唯一
@@ -34,10 +34,10 @@ public interface UserService {
 
     /**
      * 新增用户
-     * @param userAddDTO 用户信息
+     * @param userAddReqVO 用户信息
      * @return 结果
      */
-    Long addUser(UserAddDTO userAddDTO);
+    Long addUser(UserAddReqVO userAddReqVO);
 
     /**
      * 批量删除用户
@@ -61,7 +61,7 @@ public interface UserService {
 
     /**
      * 更改个人信息
-     * @param userUpdateProfileDto
+     * @param userUpdateProfileReqVO
      */
-    void updateUserProfile(UserUpdateProfileDto userUpdateProfileDto);
+    void updateUserProfile(UserUpdateProfileReqVO userUpdateProfileReqVO);
 }

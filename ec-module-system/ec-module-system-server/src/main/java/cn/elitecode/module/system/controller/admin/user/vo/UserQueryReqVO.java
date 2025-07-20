@@ -8,7 +8,7 @@ import java.util.Date;
 /**
  * 用户查询DTO
  */
-public class UserQueryDTO extends PageRequest {
+public class UserQueryReqVO extends PageRequest {
 
     @ApiModelProperty(value = "账号")
     private String username;
@@ -31,10 +31,10 @@ public class UserQueryDTO extends PageRequest {
     @ApiModelProperty(value = "结束时间")
     private Date endTime;
 
-    public UserQueryDTO() {
+    public UserQueryReqVO() {
     }
 
-    public UserQueryDTO(String username, String nickName, String role, String createBy, String updateBy, Date startTime, Date endTime) {
+    public UserQueryReqVO(String username, String nickName, String role, String createBy, String updateBy, Date startTime, Date endTime) {
         this.username = username;
         this.nickName = nickName;
         this.role = role;
@@ -157,6 +157,6 @@ public class UserQueryDTO extends PageRequest {
     }
 
     public String toString() {
-        return "UserQueryDTO{username = " + username + ", nickName = " + nickName + ", role = " + role + ", createBy = " + createBy + ", updateBy = " + updateBy + ", startTime = " + startTime + ", endTime = " + endTime + "}";
+        return "UserQueryReqVO{username = " + username + ", nickName = " + nickName + ", role = " + role + ", createBy = " + createBy + ", updateBy = " + updateBy + ", startTime = " + startTime + ", endTime = " + endTime + "}";
     }
 }

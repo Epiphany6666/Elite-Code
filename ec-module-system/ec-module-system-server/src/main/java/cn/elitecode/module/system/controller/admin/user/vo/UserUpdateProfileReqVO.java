@@ -1,18 +1,11 @@
 package cn.elitecode.module.system.controller.admin.user.vo;
 
 import io.swagger.annotations.ApiModelProperty;
-import javax.validation.constraints.NotEmpty;
-import java.util.List;
 
-public class UserAddDTO {
+public class UserUpdateProfileReqVO {
 
-    @ApiModelProperty(value = "账号", required = true)
-    @NotEmpty(message = "账号不能为空")
+    @ApiModelProperty(value = "账号")
     private String username;
-
-    @ApiModelProperty(value = "密码", required = true)
-    @NotEmpty(message = "密码不能为空")
-    private String password;
 
     @ApiModelProperty(value = "用户昵称")
     private String nickName;
@@ -23,19 +16,14 @@ public class UserAddDTO {
     @ApiModelProperty(value = "用户简介")
     private String profile;
 
-    @ApiModelProperty(value = "角色id列表")
-    private List<Long> roleIds;
-
-    public UserAddDTO() {
+    public UserUpdateProfileReqVO() {
     }
 
-    public UserAddDTO(String username, String password, String nickName, String avatar, String profile, List<Long> roleIds) {
+    public UserUpdateProfileReqVO(String username, String nickName, String avatar, String profile) {
         this.username = username;
-        this.password = password;
         this.nickName = nickName;
         this.avatar = avatar;
         this.profile = profile;
-        this.roleIds = roleIds;
     }
 
     /**
@@ -52,22 +40,6 @@ public class UserAddDTO {
      */
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    /**
-     * 获取
-     * @return password
-     */
-    public String getPassword() {
-        return password;
-    }
-
-    /**
-     * 设置
-     * @param password
-     */
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     /**
@@ -118,23 +90,7 @@ public class UserAddDTO {
         this.profile = profile;
     }
 
-    /**
-     * 获取
-     * @return roleIds
-     */
-    public List<Long> getRoleIds() {
-        return roleIds;
-    }
-
-    /**
-     * 设置
-     * @param roleIds
-     */
-    public void setRoleIds(List<Long> roleIds) {
-        this.roleIds = roleIds;
-    }
-
     public String toString() {
-        return "UserAddDTO{username = " + username + ", password = " + password + ", nickName = " + nickName + ", avatar = " + avatar + ", profile = " + profile + ", roleIds = " + roleIds + "}";
+        return "UserUpdateProfileReqVO{username = " + username + ", nickName = " + nickName + ", avatar = " + avatar + ", profile = " + profile + "}";
     }
 }

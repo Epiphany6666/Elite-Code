@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-public class UserUpdateDTO {
+public class UserUpdateReqVO {
 
     @ApiModelProperty(value = "用户ID", required = true)
     @NotNull(message = "用户ID不能为空")
@@ -25,10 +25,10 @@ public class UserUpdateDTO {
     @ApiModelProperty(value = "用户角色id列表")
     private List<Long> roleIds;
 
-    public UserUpdateDTO() {
+    public UserUpdateReqVO() {
     }
 
-    public UserUpdateDTO(Long id, String username, String nickName, String avatar, String profile, List<Long> roleIds) {
+    public UserUpdateReqVO(Long id, String username, String nickName, String avatar, String profile, List<Long> roleIds) {
         this.id = id;
         this.username = username;
         this.nickName = nickName;
@@ -134,6 +134,6 @@ public class UserUpdateDTO {
     }
 
     public String toString() {
-        return "UserUpdateDTO{id = " + id + ", username = " + username + ", nickName = " + nickName + ", avatar = " + avatar + ", profile = " + profile + ", roleIds = " + roleIds + "}";
+        return "UserUpdateReqVO{id = " + id + ", username = " + username + ", nickName = " + nickName + ", avatar = " + avatar + ", profile = " + profile + ", roleIds = " + roleIds + "}";
     }
 }

@@ -8539,6 +8539,375 @@ vite项目地址：[github.com/vitejs/vite…](https://link.juejin.cn?target=htt
 
 ---
 
+# 用了组合式 (Composition) API 后代码变得更乱了，怎么办？
+
+## 一、前言
+
+`组合式 (Composition) API` 的一大特点是“非常灵活”，但也因为非常灵活，每个开发都有自己的想法。加上项目的持续迭代导致我们的代码变得愈发混乱，最终到达无法维护的地步。本文是我这几年使用组合式API的一些经验总结，希望通过本文让你也能够写出**易维护**、**优雅**的`组合式API`代码。
+
+---
+
+## 二、选项式API
+
+vue2的选项式API因为每个选项都有固定的书写位置（比如数据就放在`data`里面，方法就放在`methods`里面），所以我们只需要将代码放到对应的选项中就行了。
+
+优点是因为已经固定了每个代码的书写位置，所有人写出来的代码风格都差不多。
+
+缺点是当单个组件的逻辑复杂到一定程度时，代码就会显得特别笨重，非常不灵活。
+
+~~~javascript
+export default {
+  name: "组件名称",
+  props: {
+    // 传入的props
+  },
+  components: {
+    // 组件
+  },
+  data() {
+    // 数据
+  },
+  computed: {
+    // 计算属性
+  },
+  watch: {
+    // watch监听
+  },
+  methods: {
+    // 方法
+  }
+  // 生命周期
+}
+~~~
+
+---
+
+## 三、随意的写组合式API
+
+vue3推出了`组合式 (Composition) API`，他的主要特点就是非常灵活。解决了选项式API不够灵活的问题。但是灵活也是一把双刃剑，因为每个开发的编码水平不同。所以就出现了有的人使用组合式 (Composition) API写出来的代码非常漂亮和易维护，有的人写的代码确实很混乱和难易维护。
+
+比如一个组件开始的时候还是规规矩矩的写，所有的`ref`响应式变量放在一块，所有的方法放在一块，所有的`computed`计算属性放在一块。
+
+但是随着项目的不断迭代 ，或者干脆是换了一个人来维护。这时的代码可能就不是最开始那样清晰了，比如新加的代码不管是`ref`、`computed`还是方法都放到一起去了。如下代码：
+
+~~~html
+<script setup lang="ts">
+import { ref, computed } from "vue";
+
+const count1 = ref(0);
+const count2 = ref(0);
+
+const doubleCount1 = computed(() => {
+  return count1.value * 2;
+});
+const doubleCount2 = computed(() => {
+  return count2.value * 2;
+});
+
+function increment1() {
+  count1.value++;
+}
+function increment2() {
+  count2.value++;
+}
+
+// 新加的代码
+const count3 = ref(0);
+const doubleCount3 = computed(() => {
+  return count3.value * 2;
+});
+function increment3() {
+  count3.value++;
+}
+</script>
+~~~
+
+只有`count1`和`count2`时，代码看着还挺整齐的。但是随着`count3`的代码加入后看着就比较凌乱了，后续如果再加`count4`的代码就会更加乱了。
+
+---
+
+## 四、有序的写组合式API
+
+为了解决上面的问题，所以我们约定了一个代码规范。同一种API的代码全部写在一个地方，比如所有的`props`放在一块、所有的`emits`放在一块、所有的`computed`放在一块。并且这些模块的代码都按照约定的顺序去写，如下代码：
+~~~html
+<script setup>
+  // import语句
+  // Props (defineProps)
+  // Emits (defineEmits)
+  // 响应式变量定义
+  // Computed
+  // Watchers
+  // 函数
+  // 生命周期
+  // Expose (defineExpose)
+</script>
+~~~
+
+随着vue组件的代码增加，上面的方案又有新的问题了。
+
+还是前面的那个例子比如有5个`count`的`ref`变量，对应的`computed`和`methods`也有5个。此时我们的vue组件代码量就很多了，比如此时我想看看`computed1`和`increment1`的逻辑是怎么样的。
+
+因为`computed1`和`increment1`函数分别在文件的`computed`和`methods`的代码块处，`computed1`和`increment1`之间隔了几十行代码，看完`computed1`的代码再跳转去看`increment1`的代码就很痛苦。如下代码：
+~~~html
+<script setup lang="ts">
+import { ref, computed } from "vue";
+
+const count1 = ref(0);
+// ...很多个count的ref定义，这里有很多行代码
+const count5 = ref(0);
+
+const doubleCount1 = computed(() => {
+  return count1.value * 2;
+});
+// ...很多个doubleCount的computed定义，这里有很多行代码
+const doubleCount5 = computed(() => {
+  return count5.value * 2;
+});
+
+function increment1() {
+  count1.value++;
+}
+// ...很多个increment的函数定义，这里有很多行代码
+function increment5() {
+  count5.value++;
+}
+</script>
+~~~
+
+这时有小伙伴会说，抽成`hooks`呗。这里有5个`count`，那么就抽5个`hooks`文件。像这样的代码。如下代码：
+~~~html
+<script setup lang="ts">
+import { ref, computed } from "vue";
+import { useCount1, useCount2, useCount3, useCount4, useCount5 } from "./userCount"
+
+const { count1, doubleCount1, increment1 } = useCount1();
+const { count2, doubleCount2, increment2 } = useCount2();
+const { count3, doubleCount3, increment3 } = useCount3();
+const { count4, doubleCount4, increment4 } = useCount4();
+const { count5, doubleCount5, increment5 } = useCount5();
+</script>
+~~~
+
+一般来说抽取出来的`hooks`都是用来多个组件进行逻辑共享，但是我们这里抽取出来的`useCount`文件明显只有这个vue组件会用他。达不到逻辑共享的目的，所以单独将这些逻辑抽取成名为`useCount`的`hooks`文件又有点不合适。
+
+---
+
+## 五、最终解决方案
+
+我们不如将前面的方案进行融合一下，抽取出多个`useCount`函数放在当前vue组件内，而不是抽成单个`hooks`文件。并且在多个`useCount`函数中我们还是按照前面约定的规范，按照顺序去写`ref`变量、`computed`、函数的代码。
+
+最终得出的最佳实践如下代码：
+~~~html
+<script setup lang="ts">
+import { ref, computed } from "vue";
+
+const { count1, doubleCount1, increment1 } = useCount1();
+const { count2, doubleCount2, increment2 } = useCount2();
+const { count3, doubleCount3, increment3 } = useCount3();
+const { count4, doubleCount4, increment4 } = useCount4();
+const { count5, doubleCount5, increment5 } = useCount5();
+
+function useCount1() {
+  const count1 = ref(0);
+
+  const doubleCount1 = computed(() => count1.value * 2);
+
+  function increment1() {
+    count1.value++;
+  }
+
+  return { count1, doubleCount1, increment1 };
+}
+
+function useCount2() {
+  // ...省略
+}
+
+function useCount3() {
+  // ...省略
+}
+
+function useCount4() {
+  // ...省略
+}
+
+function useCount5() {
+  // ...省略
+}
+</script>
+~~~
+
+上面这种写法有几个优势：
+
+- 我们将每个`count`的逻辑都抽取成单独的`useCount`函数，并且这些函数都在当前vue文件中，没有将其抽取成`hooks`文件。如果哪天`useCount1`中的逻辑需要给其他组件使用，我们只需要新建一个`useCount`文件，然后直接将`useCount1`函数的代码移到新建的文件中就可以了。
+- 如果我们想查看`doubleCount1`和`increment1`中的逻辑，只需要找到`useCount1`函数，关于`count1`相关的逻辑都在这个函数里面，无需像之前那样翻山越岭跨越几十行代码才能从`doubleCount1`的代码跳转到`increment1`的代码。
+
+---
+
+## 六、总结
+
+本文介绍了使用`Composition API`的最佳实践，规则如下：
+
+- 首先约定了一个代码规范，`Composition API`按照约定的顺序进行书写（书写顺序可以按照公司代码规范适当调整）。并且同一种组合式API的代码全部写在一个地方，比如所有的`props`放在一块、所有的`emits`放在一块、所有的`computed`放在一块。
+
+- 如果逻辑能够多个组件复用就抽取成单独的`hooks`文件。
+
+- 如果逻辑不能给多个组件复用，就将逻辑抽取成`useXXX`函数，将`useXXX`函数的代码还是放到当前组件中。
+
+  第一个好处是如果某天`useXXX`函数中的逻辑需要给其他组件复用，我们只需要将`useXXX`函数的代码移到新建的`hooks`文件中即可。
+
+  第二个好处是我们想查看某个业务逻辑的代码，只需要在对应的`useXXX`函数中去找即可。无需在整个vue文件中翻山越岭从`computed`模块的代码跳转到`function`函数的代码。
+
+
+
+----
+
+# vue3+element-plus表单重置resetFields方法不生效踩坑
+
+**前言：**按照项目需求，多处都会使用dialog+form组件，而form大多都会有重置需求，但点击[重置按钮](https://so.csdn.net/so/search?q=重置按钮&spm=1001.2101.3001.7020)，有的时候resetFields方法就仿佛失效一样。
+
+**首先需要明白resetFields方法是将表单重置为form组件dom刚渲染时的初始值**
+
+本文实现的重置是：
+
+1、以新增按钮打开弹窗，将数据重置为数据1（是数据的所有值都为pa.dialog.form中自定义的默认值）
+
+2、以编辑按钮打开弹窗，将数据重置为数据2（是刚打开编辑弹窗显示的数据，是未进行任何修改前的数据）
+
+```html
+// html
+<el-dialog v-model="pa.dialog.show" :title="pa.dialog.title" @close="handleClose">
+    <el-form :model="pa.dialog.form" ref="formRef">
+        <el-form-item label="名字：" prop="name">
+           <el-input v-model="pa.dialog.form.name" autocomplete="on"/>
+        </el-form-item>
+        ...
+    </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="pa.dialog.show = false">取消</el-button>
+        <el-button @click="resetEvent">重置</el-button>
+        <el-button type="primary" @click="sureSubmit">确定</el-button>
+      </span>
+    </template>
+</el-dialog>
+```
+
+情景一：如果打开修改弹框时，数据时直接传递过来的
+
+```javascript
+const pa = reactive({ //数据1
+    dialog:{
+        form:{
+            name:'',
+            age:10
+        }
+    }
+})
+const backupData = JSON.parse(JSON.stringify(pa.dialog.form))
+ 
+// 这是打开dialog弹框的事件
+const openDialogEvent = (v1:string,v2?:any) => {
+  pa.dialog.show = true
+  pa.dialog.type = v1
+  if(v1 == '1') { //add
+    pa.dialog.title = '新增'
+  }else {
+    pa.dialog.title = '修改'
+    pa.dialog.form = v2  // --------------------- 这里很重要，数据2
+  }
+}
+ 
+const resetEvent = () => {
+  formRef.value.resetFields()  // 此时的resetFields方法没有任何问题
+}
+ 
+// 当你点击了编辑按钮使得 pa.dialog.form获取了新数据（称为数据2）
+// 但当你关闭弹框时， pa.dialog.form值依然是数据2，并不会变回为数据1
+// 当你再点击新增按钮时，会导致form组件显示的数据是数据2
+// 因此笔者给弹框设置了一个关闭事件
+const handleClose = () => {
+  // 这一步是防止（仅用下面这一步的话）点击增加在里面输入内容后关闭第二次点击增加再输入内容再关闭再点击增加会出现未初始化
+  formRef.value.resetFields()  
+  // 这一步是防止(仅用上面那一步)先点击编辑后再关闭弹窗再点击增加，显示的为数据2
+  pa.dialog.form = backupData 
+}
+```
+
+情景二：如果打开修改弹框时，数据是请求的接口
+
+```javascript
+const pa = reactive({  //数据1
+    dialog:{
+        form:{
+            name:'',
+            age:10
+        }
+    }
+})
+let backupData = "{}"
+ 
+// 这是打开dialog弹框的事件
+const openDialogEvent = (v1:string,v2?:any) => {
+  pa.dialog.show = true
+  pa.dialog.type = v1
+  if(v1 == '1') { //add
+    pa.dialog.title = '新增'
+  }else {
+    pa.dialog.title = '修改'
+    _findInfoById({id:v2.id}).then((res:any) => {
+        pa.dialog.form = res.data   // 数据2
+        backupData = JSON.stringify(res.data)  // -------------很重要
+    }) 
+  }
+}
+ 
+// 当你点击编辑按钮打开弹窗时，dom刚渲染的数据依然是数据1
+// 因此调用resetFields()方法，重置显示的是数据1
+// 解决如下
+const resetEvent = () => {
+  formRef.value.resetFields() 
+  if(pa.dialog.type == '2') {
+    pa.dialog.form = JSON.parse(backupData)
+  }
+}
+ 
+// 这一步依然必须存在，否则当你点击新增按钮输入内容（数据3），关闭后，再点击新增按钮，显示的就是数据3
+const handleClose = () => {
+  formRef.value.resetFields() 
+}
+```
+
+**补充一下：**
+
+1、form组件上必须要有ref
+
+2、form-item上必须要有prop属性
+
+3、情景一不能使用nextTick
+
+```javascript
+const openDialogEvent = (v1:string,v2?:any) => {
+  pa.dialog.show = true
+  pa.dialog.type = v1
+  if(v1 == '1') { //add
+    pa.dialog.title = '新增'
+  }else {
+    pa.dialog.title = '修改'
+    // 如果使用了这个，那么弹框dom渲染时获取到的依然是数据1
+    // 那么不能实现将弹框的参数值重置为传递过去的v2数据
+    // 如果非要使用，想要实现本文的重置效果，其做法与情景二一样
+    nextTick(()=>{
+        pa.dialog.form = v2
+    })
+  }
+}
+```
+
+
+
+---
+
 
 
 # ----------------

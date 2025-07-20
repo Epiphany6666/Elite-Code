@@ -38,11 +38,6 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     }
   })
 }
-
-const resetForm = (formEl: FormInstance | undefined) => {
-  if (!formEl) return
-  formEl.resetFields()
-}
 </script>
 
 <template>
@@ -65,7 +60,6 @@ const resetForm = (formEl: FormInstance | undefined) => {
         <el-button type="primary" @click="submitForm(ruleFormRef)">
           登录
         </el-button>
-        <el-button @click="resetForm(ruleFormRef)">重置</el-button>
       </el-form-item>
     </el-form>
   </div>

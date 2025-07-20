@@ -1,4 +1,4 @@
-package cn.elitecode.module.system.dal.dataobject.user;
+package cn.elitecode.module.system.dal.dataobject.logger;
 
 import io.swagger.annotations.ApiModelProperty;
 import java.util.Date;

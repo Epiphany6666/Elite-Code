@@ -34,6 +34,25 @@ export declare interface UserQueryReqVO {
     role?: string
     sortFieldPair?: Array<string>
     startTime?: Date
+    dateRange?: Array<Date>
     updateBy?: string
+    username?: string
+}
+
+export declare interface UserAddReqVO {
+    avatar?: string
+    nickName?: string
+    password?: string
+    profile?: string
+    roleIds?: Array<string>
+    username?: string
+}
+
+export declare interface UserUpdateReqVO {
+    avatar?: string
+    id?: string
+    nickName?: string
+    profile?: string
+    roleIds?: Array<string>
     username?: string
 }

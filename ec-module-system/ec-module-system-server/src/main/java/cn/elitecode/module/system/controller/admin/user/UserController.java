@@ -44,13 +44,15 @@ public class UserController {
     }
 
     @ApiOperation(value = "根据id查询用户信息")
-    @GetMapping("/{userId}")
-    private CommonResult<Map<String, Object>> getUser(@PathVariable Long userId) {
+    @GetMapping({ "/", "/{userId}" })
+    private CommonResult<Map<String, Object>> getUser(@PathVariable(value = "userId", required = false) Long userId) {
         Map<String, Object> result = new HashMap<>();
-        UserDO userDO = userService.selectUserById(userId);
-        result.put("user", userDO);
-        List<Long> roleIds = userDO.getRoleList().stream().map(RoleDO::getId).toList();
-        result.put("roleIds", roleIds);
+        if (userId != null) {
+            UserDO userDO = userService.selectUserById(userId);
+            result.put("user", userDO);
+            List<Long> roleIds = userDO.getRoleList().stream().map(RoleDO::getId).toList();
+            result.put("roleIds", roleIds);
+        }
         List<RoleDO> roleDOAll = roleService.selectRoleListAll();
         result.put("roleAll", roleDOAll);
         return CommonResult.success(result);

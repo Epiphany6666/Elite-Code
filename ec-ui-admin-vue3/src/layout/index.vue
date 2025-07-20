@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ArrowDown, Location,} from '@element-plus/icons-vue'
+import {Location,} from '@element-plus/icons-vue'
 import Logo from "@/layout/components/Sidebar/Logo.vue";
 import {useRoute} from "vue-router";
 import {useUserStore} from "@/store/modules/user.ts";
@@ -49,11 +49,7 @@ const logout = () => {
         <el-header>
           <el-dropdown>
             <span class="el-dropdown-link">
-              <el-avatar size="small" :src="userStore.avatar" />
-              <span>{{ userStore.nickName }}</span>
-              <el-icon class="el-icon--right">
-                <arrow-down/>
-              </el-icon>
+              <el-avatar size="default" :src="userStore.avatar" />
             </span>
             <template #dropdown>
               <el-dropdown-menu>
@@ -72,5 +68,13 @@ const logout = () => {
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+.el-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  .el-dropdown {
+    cursor: pointer;
+  }
+}
 </style>

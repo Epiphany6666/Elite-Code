@@ -82,6 +82,7 @@
                 <if test="id != null and id != 0">id,</if>
                 <if test="username != null and username != ''">username,</if>
                 <if test="password != null and password != ''">password,</if>
+                <if test="nickName != null and nickName != ''">nick_name,</if>
                 <if test="avatar != null and avatar != ''">avatar,</if>
                 <if test="profile != null and profile != ''">profile,</if>
                 <if test="createBy != null and createBy != 0">create_by,</if>
@@ -92,6 +93,7 @@
                 <if test="id != null and id != 0">#{id},</if>
                 <if test="username != null and username != ''">#{username},</if>
                 <if test="password != null and password != ''">#{password},</if>
+                <if test="nickName != null and nickName != ''">#{nickName},</if>
                 <if test="avatar != null and avatar != ''">#{avatar},</if>
                 <if test="profile != null and profile != ''">#{profile},</if>
                 <if test="createBy != null and createBy != 0">#{createBy},</if>
