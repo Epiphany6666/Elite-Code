@@ -56,7 +56,7 @@ public class RoleController {
     }
 
     @ApiOperation(value = "根据id查询角色信息")
-    @GetMapping("/{roleId}")
+    @GetMapping({"/", "/{roleId}"})
     private CommonResult<RoleDO> getRole(@PathVariable Long roleId) {
         RoleDO roleDO = roleService.selectRoleById(roleId);
         return CommonResult.success(roleDO);

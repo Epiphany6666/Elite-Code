@@ -70,7 +70,7 @@ getList()
   <div class="app-container">
     <el-row :gutter="20">
       <el-col>
-        <el-form v-model="queryParams" :inline="true">
+        <el-form :inline="true">
           <el-form-item label="用户名称">
             <el-input v-model="queryParams.nickName" placeholder="请输入用户名称"></el-input>
           </el-form-item>
@@ -87,7 +87,7 @@ getList()
         </el-form>
       </el-col>
       <el-col>
-        <el-row :gutter="50" style="margin-bottom: 8px;">
+        <el-row :gutter="10" style="margin-bottom: 8px;">
           <el-col :span="1.5">
             <el-button type="primary" icon="Search" @click="getList">查询</el-button>
           </el-col>
@@ -110,6 +110,8 @@ getList()
           <el-table-column type="selection" width="55"/>
           <el-table-column prop="username" label="用户名" width="180"/>
           <el-table-column prop="nickName" label="用户别名" width="180"/>
+          <el-table-column prop="createBy" label="创建人" width="100"/>
+          <el-table-column prop="updateBy" label="更新人" width="100"/>
           <el-table-column prop="createTime" label="创建时间" width="180"/>
           <el-table-column prop="updateTime" label="更新时间" width="180"/>
           <el-table-column label="操作">
@@ -129,7 +131,7 @@ getList()
             v-model:page-size="queryParams.pageSize"
             :page-sizes="[5, 10, 15, 20]"
             size="default"
-            layout="prev, pager, next, sizes, total"
+            layout="prev, pager, next, sizes, total, jumper"
             :total="total"
             @size-change="getList"
             @current-change="getList"

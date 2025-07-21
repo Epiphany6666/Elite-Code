@@ -39,7 +39,6 @@ export function updateUser(userUpdateReqVO:UserUpdateReqVO) {
 
 // 批量删除用户
 export function removeUsers(ids: Array<string>) {
-    console.log("@@ids", ids)
     return request({
         url: '/admin-api/system/user/' + ids,
         method: 'delete'
@@ -47,7 +46,6 @@ export function removeUsers(ids: Array<string>) {
 }
 
 const parseStrEmpty = (str?: string) => {
-    console.log("@@str", str)
     if (!str || str === '') {
         return ''
     }

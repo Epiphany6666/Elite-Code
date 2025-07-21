@@ -24,6 +24,7 @@
                 <if test="sort != null">sort,</if>
                 <if test="menuCheckStrictly != null">menu_check_strictly,</if>
                 <if test="createBy != null and createBy != 0">create_by,</if>
+                <if test="updateBy != null and updateBy != 0">update_by,</if>
             </trim>
         values
             <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -31,6 +32,7 @@
                 <if test="sort != null">#{sort},</if>
                 <if test="menuCheckStrictly != null">#{menuCheckStrictly},</if>
                 <if test="createBy != null and createBy != 0">#{createBy},</if>
+                <if test="updateBy != null and updateBy != 0">#{updateBy},</if>
             </trim>
     </insert>
 
@@ -89,7 +91,7 @@
             system_role
         where
             del_flag = '0'
-            <if test="name != null and name != ''">and name like concat("%", #{name}, "%"})</if>
+            <if test="name != null and name != ''">and name like concat("%", #{name}, "%")</if>
             <if test="createBy != null and createBy != ''">and create_by = #{createBy}</if>
             <if test="updateBy != null and updateBy != ''">and update_by = #{updateBy}</if>
             <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>

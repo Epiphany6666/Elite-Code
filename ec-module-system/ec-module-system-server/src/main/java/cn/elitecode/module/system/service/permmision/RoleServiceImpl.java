@@ -44,6 +44,7 @@ public class RoleServiceImpl implements RoleService{
         RoleDO roleDO = new RoleDO();
         BeanUtils.copyProperties(roleAddReqVO, roleDO);
         roleDO.setCreateBy(SecurityUtil.getUserId());
+        roleDO.setUpdateBy(SecurityUtil.getUserId());
         roleMapper.insertRole(roleDO);
         // 新增角色菜单关联
         insertRoleMenu(roleDO.getId(), roleAddReqVO.getMenuIds());
@@ -115,11 +116,13 @@ public class RoleServiceImpl implements RoleService{
      * @param menuIds
      */
     private void insertRoleMenu(Long roleId, List<Long> menuIds) {
-        List<RoleMenuDO> roleMenuDOList = new ArrayList<>();
-        for (Long menuId : menuIds) {
-            roleMenuDOList.add(new RoleMenuDO(roleId, menuId));
+        if (menuIds != null && !menuIds.isEmpty()) {
+            List<RoleMenuDO> roleMenuDOList = new ArrayList<>();
+            for (Long menuId : menuIds) {
+                roleMenuDOList.add(new RoleMenuDO(roleId, menuId));
+            }
+            roleMenuMapper.batchRoleMenu(roleMenuDOList);
         }
-        roleMenuMapper.batchRoleMenu(roleMenuDOList);
     }
 }
 
