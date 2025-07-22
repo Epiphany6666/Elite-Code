@@ -27,3 +27,11 @@ export declare interface RoleAddReqVO {
     name?: string
     sort?: number
 }
+
+export declare interface RoleUpdateReqVO {
+    id?: string
+    menuCheckStrictly?: boolean
+    menuIds?: Array<string>
+    name?: string
+    sort?: number
+}

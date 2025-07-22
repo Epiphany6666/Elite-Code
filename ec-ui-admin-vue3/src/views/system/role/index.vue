@@ -43,6 +43,7 @@ const openForm = (id) => {
 
 const resetForm = () => {
   queryFormRef.value.resetFields()
+  dateRange.value = []
 }
 
 const handleDelete = (ids) => {
@@ -72,7 +73,7 @@ getList()
       <el-col>
         <!-- 表单查询 -->
         <el-form ref="queryFormRef" inline :model="queryParams">
-          <el-form-item label="角色名称">
+          <el-form-item label="角色名称" prop="name">
             <el-input v-model="queryParams.name" placeholder="请输入角色名称"></el-input>
           </el-form-item>
           <el-form-item v-model="dateRange" label="创建时间">
@@ -93,13 +94,13 @@ getList()
             <el-button type="primary" icon="Search" @click="getList">查询</el-button>
           </el-col>
           <el-col :span="1.5">
-            <el-button @click="resetForm">重置</el-button>
+            <el-button icon="Refresh" @click="resetForm">重置</el-button>
           </el-col>
           <el-col :span="1.5">
-            <el-button type="primary" plain icon="Plus" @click="handleAdd">新增</el-button>
+            <el-button type="primary" plain icon="Plus" @click="openForm()">新增</el-button>
           </el-col>
           <el-col :span="1.5">
-            <el-button type="danger" plain icon="Delete" :disabled="multiple">删除</el-button>
+            <el-button type="danger" plain icon="Delete" :disabled="multiple" @click="handleDelete(ids)">删除</el-button>
           </el-col>
         </el-row>
       </el-col>
@@ -113,7 +114,7 @@ getList()
           <el-table-column prop="updateTime" label="更新时间"/>
           <el-table-column label="操作">
             <template #default="scope">
-              <el-button type="primary" link @click=""><el-icon><Edit/></el-icon>修改</el-button>
+              <el-button type="primary" link @click="openForm(scope.row.id)"><el-icon><Edit/></el-icon>修改</el-button>
               <el-button type="danger" link @click="handleDelete(scope.row.id)"><el-icon><Delete/></el-icon>删除</el-button>
             </template>
           </el-table-column>

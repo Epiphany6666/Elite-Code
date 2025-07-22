@@ -18,6 +18,7 @@ const formRef = ref()
 const userList = ref<Array<UserDO>>([])
 const ids = ref<Array<string>>([])
 const multiple = ref(true)
+const queryFormRef = ref()
 
 function getList() {
   loading.value = true
@@ -63,6 +64,12 @@ const handleDelete = (id: string) => {
   })
 }
 
+const resetQueryForm = () => {
+  queryFormRef.value.resetFields()
+  dateRange.value = []
+  getList()
+}
+
 getList()
 </script>
 
@@ -70,8 +77,8 @@ getList()
   <div class="app-container">
     <el-row :gutter="20">
       <el-col>
-        <el-form :inline="true">
-          <el-form-item label="用户名称">
+        <el-form ref="queryFormRef" :model="queryParams" :inline="true">
+          <el-form-item label="用户名称" prop="nickName">
             <el-input v-model="queryParams.nickName" placeholder="请输入用户名称"></el-input>
           </el-form-item>
           <el-form-item label="创建时间" style="width: 308px;">
@@ -90,6 +97,9 @@ getList()
         <el-row :gutter="10" style="margin-bottom: 8px;">
           <el-col :span="1.5">
             <el-button type="primary" icon="Search" @click="getList">查询</el-button>
+          </el-col>
+          <el-col :span="1.5">
+            <el-button icon="Refresh" @click="resetQueryForm">重置</el-button>
           </el-col>
           <el-col :span="1.5">
             <el-button type="primary" icon="Plus" plain @click="openFrom()">新增</el-button>

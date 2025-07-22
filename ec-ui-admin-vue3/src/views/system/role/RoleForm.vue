@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import {ref} from 'vue'
-import {addRole} from "@/api/role.ts";
+import {addRole, getRole, updateRole} from "@/api/role.ts";
 
 const dialogVisible = ref(false)
+const dialogTitle = ref(undefined)
 const formData = ref({
   id: undefined, // 角色id
   name: undefined, // 角色名称
@@ -11,8 +12,17 @@ const formData = ref({
 })
 const formRef = ref()
 const open = (id?: string) => {
-  formData.value.id = id
   dialogVisible.value = true
+  resetForm()
+  if (!id) {
+    formData.value.id = id
+    dialogTitle.value = '新增'
+  } else {
+    dialogTitle.value = '修改'
+    getRole(id).then(res => {
+      formData.value = res.data
+    })
+  }
 }
 
 const handleChange = (value) => {
@@ -21,12 +31,21 @@ const handleChange = (value) => {
 
 const emit = defineEmits(['success'])
 const submitForm = () => {
-  addRole(formData.value).then(() => {
-    dialogVisible.value = false
-    resetForm()
-    emit('success')
-    ElMessage.success('新增成功')
-  })
+  if (!formData.value.id) {
+    addRole(formData.value).then(() => {
+      dialogVisible.value = false
+      resetForm()
+      emit('success')
+      ElMessage.success('新增成功')
+    })
+  } else {
+    updateRole(formData.value).then(() => {
+      dialogVisible.value = false
+      resetForm()
+      emit('success')
+      ElMessage.success('修改成功')
+    })
+  }
 }
 
 const resetForm = () => {
@@ -42,7 +61,7 @@ defineExpose({ open })
 </script>
 
 <template>
-  <el-dialog v-model="dialogVisible" title="系统提示" width="600" :inline="true">
+  <el-dialog v-model="dialogVisible" :title="dialogTitle" width="600" :inline="true">
     <el-form :model="formData" ref="formRef">
       <el-form-item label="角色名称">
         <el-input v-model="formData.name" placeholder="请输入角色名称"></el-input>
