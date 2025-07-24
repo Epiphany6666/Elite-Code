@@ -33,7 +33,7 @@ const logout = () => {
             @close="handleClose"
             router
         >
-          <el-sub-menu index="1">
+          <el-sub-menu index="/system">
             <template #title>
               <el-icon>
                 <location/>
@@ -42,6 +42,13 @@ const logout = () => {
             </template>
             <el-menu-item index="/system/user">用户管理</el-menu-item>
             <el-menu-item index="/system/role">角色管理</el-menu-item>
+          </el-sub-menu>
+          <el-sub-menu index="/resume">
+            <template #title>
+              <el-icon><ChatLineRound /></el-icon>
+              <span>面试管理</span>
+            </template>
+            <el-menu-item index="/resume/question">题目管理</el-menu-item>
           </el-sub-menu>
         </el-menu>
       </el-aside>

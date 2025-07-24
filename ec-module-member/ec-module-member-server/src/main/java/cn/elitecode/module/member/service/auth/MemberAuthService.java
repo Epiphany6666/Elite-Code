@@ -9,4 +9,11 @@ public interface MemberAuthService {
      * @return
      */
     String login(String mobile, String password);
+
+    /**
+     * App注册
+     * @param phone
+     * @param password
+     */
+    Long register(String phone, String password);
 }

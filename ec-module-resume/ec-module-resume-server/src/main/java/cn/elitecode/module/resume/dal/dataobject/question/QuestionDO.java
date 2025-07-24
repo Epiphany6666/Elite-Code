@@ -3,6 +3,7 @@ package cn.elitecode.module.resume.dal.dataobject.question;
 import cn.elitecode.module.resume.dal.dataobject.problemset.ProblemsetDO;
 import cn.elitecode.module.resume.dal.dataobject.tag.TagDO;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
@@ -12,6 +13,7 @@ import java.util.List;
 /**
 * resume_question(题目表) | 实体类
 */
+@Document(indexName = "question")
 public class QuestionDO {
 
     @ApiModelProperty("用户ID，主键")

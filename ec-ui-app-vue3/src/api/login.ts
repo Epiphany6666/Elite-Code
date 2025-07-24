@@ -4,10 +4,10 @@ import type { UserLoginVO, UserRegisterDTO } from '@/types/user'
 // 登录
 export function login(username: string, password: string) {
   return request<UserLoginVO>({
-    url: '/login',
+    url: '/app-api/app-api/member/auth/login',
     method: 'post',
     data: {
-      username,
+      mobile: username,
       password
     }
   })
@@ -16,10 +16,10 @@ export function login(username: string, password: string) {
 // 注册
 export function register(username: string, password: string, checkPassword: string) {
   return request<UserRegisterDTO>({
-    url: '/register',
+    url: '/app-api/app-api/member/auth/register',
     method: 'post',
     data: {
-      username,
+      phone: username,
       password,
       checkPassword
     }

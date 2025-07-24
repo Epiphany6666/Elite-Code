@@ -95,7 +95,7 @@
             q.id = #{questionId}
     </select>
 
-    <!-- List<QuestionDO> selectQuestionList(QuestionQueryDTO questionQueryDTO); -->
+    <!-- List<QuestionDO> selectQuestionList(QuestionQueryReqVO questionQueryReqVO); -->
     <select id="selectQuestionList" resultMap="QuestionResult">
         select
             q.id,
@@ -106,21 +106,12 @@
             q.create_by,
             q.create_time,
             q.update_by,
-            q.update_time,
-            p.id as p_id,
-            p.title as p_title,
-            t.id as t_id,
-            t.name as t_name
+            q.update_time
         from
             resume_question q
-            LEFT JOIN resume_problemset_question_relation pq on pq.question_id = q.id
-            LEFT JOIN resume_problemset p on p.id = pq.problemset_id
-            left join resume_tag_question_relation qt on qt.question_id = q.id
-            left join resume_tag t on t.id = tag_id
         where
             q.del_flag = '0'
             <if test="title != null and title != ''">and q.title like concat("%", #{title}, "%")</if>
-            <if test="content != null and content != ''">and q.content like concat("%", #{content}, "%")</if>
             <if test="createBy != null and createBy != 0">and q.create_by = #{createBy}</if>
             <if test="updateBy != null and updateBy != 0">and q.update_by = #{updateBy}</if>
             <if test="startTime != null and endTime != null">and q.create_time between #{startTime} and #{endTime}</if>
@@ -133,7 +124,7 @@
         limit #{current}, #{pageSize}
     </select>
 
-    <!-- Long getQuestionTotal(QuestionQueryDTO questionQueryDTO); -->
+    <!-- Long getQuestionTotal(QuestionQueryReqVO questionQueryReqVO); -->
     <select id="getQuestionTotal" resultType="java.lang.Long">
         select
             count(*)
@@ -142,7 +133,9 @@
         where
             del_flag = '0'
             <if test="title != null and title != ''">and title like concat("%", #{title}, "%")</if>
-            <if test="content != null and content != ''">and content like concat("%", #{content}, "%")</if>
+            <if test="createBy != null and createBy != 0">and q.create_by = #{createBy}</if>
+            <if test="updateBy != null and updateBy != 0">and q.update_by = #{updateBy}</if>
+            <if test="startTime != null and endTime != null">and q.create_time between #{startTime} and #{endTime}</if>
     </select>
 
     <!-- List<QuestionDO> selectProblemsetQuestionList(ProblemsetQueryQuestionReqVO problemsetQueryQuestionReqVO); -->

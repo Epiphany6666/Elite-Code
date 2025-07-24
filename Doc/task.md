@@ -348,6 +348,37 @@
 
 - [ ] 所有的 `Map<String, Object>` 都封装成一个 `ReqVO`
 
+- [ ] getUser、getQuestion这些方法返回DO时不用封装，直接返回，这样前端就可以直接 `formDate.value = res.data`
+  ~~~
+  {
+    "question": {
+      "id": 100,
+      "title": "两数之和",
+      "content": "给定一个整数数组 nums 和一个目标值 target...",
+      "answer": "使用哈希表存储遍历过的数字，时间复杂度O(n)",
+      "delFlag": "0",
+      "createBy": 1,
+      "createTime": "2025-04-07 16:18:01",
+      "updateBy": null,
+      "updateTime": "2025-04-07 16:18:01",
+      "tagList": [...],
+      "problemsetList": [...]
+    },
+    "problemsetIds": [
+      100,
+      101
+    ],
+    "problemsetAll": [...],
+    "tagIds": [
+      101,
+      100
+    ],
+    "tagAll": [...]
+  }
+  ~~~
+
+  
+
 
 
 ----
@@ -2137,9 +2168,9 @@
       public void testImportAllMySqlToES() {
           List<Question> allQuestionDOList = questionMapper.getAllQuestionList();
           esQuestionMapper.saveAll(allQuestionDOList.stream().map(item -> {
-              QuestionSearchDTO questionSearchDTO = new QuestionSearchDTO();
-              BeanUtils.copyProperties(item, questionSearchDTO);
-              return questionSearchDTO;
+              QuestionSearchDTO questionSearchReqVO = new QuestionSearchDTO();
+              BeanUtils.copyProperties(item, questionSearchReqVO);
+              return questionSearchReqVO;
           }).collect(Collectors.toList()));
       }
   }
@@ -2208,8 +2239,8 @@
       @Autowired
       private Map<String, SearchStrategy> searchStrategyMap;
   
-      public CommonPage<QuestionSearchDTO> executeSearchStrategy(QuestionQueryDTO questionQueryDTO) {
-          return searchStrategyMap.get(SearchModeEnum.getStrategy(mode)).selectQuestionList(questionQueryDTO);
+      public CommonPage<QuestionSearchDTO> executeSearchStrategy(QuestionQueryDTO questionQueryReqVO) {
+          return searchStrategyMap.get(SearchModeEnum.getStrategy(mode)).selectQuestionList(questionQueryReqVO);
       }
   }
   
@@ -2228,10 +2259,10 @@
   
       /**
        * 根据分页条件获取题目信息
-       * @param questionQueryDTO
+       * @param questionQueryReqVO
        * @return
        */
-      CommonPage<QuestionSearchDTO> selectQuestionList(QuestionQueryDTO questionQueryDTO);
+      CommonPage<QuestionSearchDTO> selectQuestionList(QuestionQueryDTO questionQueryReqVO);
   }
   ~~~
 
@@ -2258,16 +2289,16 @@
       private QuestionMapper questionMapper;
   
       @Override
-      public CommonPage<QuestionSearchDTO> selectQuestionList(QuestionQueryDTO questionQueryDTO) {
-          if (questionQueryDTO.getCurrent() != null && questionQueryDTO.getPageSize() != null) {
-              questionQueryDTO.setCurrent((questionQueryDTO.getCurrent() - 1) * questionQueryDTO.getPageSize());
+      public CommonPage<QuestionSearchDTO> selectQuestionList(QuestionQueryDTO questionQueryReqVO) {
+          if (questionQueryReqVO.getCurrent() != null && questionQueryReqVO.getPageSize() != null) {
+              questionQueryReqVO.setCurrent((questionQueryReqVO.getCurrent() - 1) * questionQueryReqVO.getPageSize());
           }
-          List<Question> questionDOList = questionMapper.selectQuestionList(questionQueryDTO);
-          Long total = questionMapper.getQuestionTotal(questionQueryDTO);
+          List<Question> questionDOList = questionMapper.selectQuestionList(questionQueryReqVO);
+          Long total = questionMapper.getQuestionTotal(questionQueryReqVO);
           List<QuestionSearchDTO> result = questionDOList.stream().map(item -> {
-              QuestionSearchDTO questionSearchDTO = new QuestionSearchDTO();
-              BeanUtils.copyProperties(item, questionSearchDTO);
-              return questionSearchDTO;
+              QuestionSearchDTO questionSearchReqVO = new QuestionSearchDTO();
+              BeanUtils.copyProperties(item, questionSearchReqVO);
+              return questionSearchReqVO;
           }).toList();
           CommonPage<QuestionSearchDTO> page = new CommonPage<>(total, result);
           return page;
@@ -2306,9 +2337,9 @@
       private ElasticsearchRestTemplate elasticsearchRestTemplate;
   
       @Override
-      public CommonPage<QuestionSearchDTO> selectQuestionList(QuestionQueryDTO questionQueryDTO) {
-          PageRequest pageRequest = getPageRequest(questionQueryDTO);
-          String title = questionQueryDTO.getTitle();
+      public CommonPage<QuestionSearchDTO> selectQuestionList(QuestionQueryDTO questionQueryReqVO) {
+          PageRequest pageRequest = getPageRequest(questionQueryReqVO);
+          String title = questionQueryReqVO.getTitle();
           CommonPage<QuestionSearchDTO> questionCommonPage = search(buildQuery(title, pageRequest));
           return questionCommonPage;
       }
@@ -2346,13 +2377,13 @@
   
       /**
        * 自定义的PageRequest转换成Spring的PageRequest
-       * @param questionQueryDTO
+       * @param questionQueryReqVO
        * @return
        */
-      private PageRequest getPageRequest(QuestionQueryDTO questionQueryDTO) {
-          int current = questionQueryDTO.getCurrent() - 1;
-          int pageSize = questionQueryDTO.getPageSize();
-          List<String> sortFieldPair = questionQueryDTO.getSortFieldPair();
+      private PageRequest getPageRequest(QuestionQueryDTO questionQueryReqVO) {
+          int current = questionQueryReqVO.getCurrent() - 1;
+          int pageSize = questionQueryReqVO.getPageSize();
+          List<String> sortFieldPair = questionQueryReqVO.getSortFieldPair();
           List<Sort.Order> orders = new ArrayList<>();
           if (sortFieldPair != null && sortFieldPair.size() > 0) {
               for (String sortField : sortFieldPair) {

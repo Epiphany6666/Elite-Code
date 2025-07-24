@@ -61,7 +61,7 @@ elitecode:
   info:
     base-package: cn.elitecode
   search:
-    mode: elasticsearch
+    mode: mysql
 
 # jwt配置
 jwt:
@@ -87,4 +87,6 @@ secure:
       # 对于登录login 注册register
       - "/admin-api/system/login"
       - "/admin-api/system/register"
+      - "/app-api/app-api/member/auth/login"
+      - "/app-api/app-api/member/auth/register"
       # 业务开放

@@ -1,6 +1,6 @@
-package cn.elitecode;
+package elitecode.module.resume;
 
-import cn.elitecode.module.resume.controller.admin.question.vo.QuestionSearchDTO;
+import cn.elitecode.ECServerApplication;
 import cn.elitecode.module.resume.dal.dataobject.question.QuestionDO;
 import cn.elitecode.module.resume.dal.mysql.question.EsQuestionMapper;
 import cn.elitecode.module.resume.dal.mysql.question.QuestionMapper;
@@ -12,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@SpringBootTest
+@SpringBootTest(classes = ECServerApplication.class)
 public class EliteCodeApplicationTests {
 
     @Autowired
@@ -27,9 +27,9 @@ public class EliteCodeApplicationTests {
     public void testImportAllMySqlToES() {
         List<QuestionDO> allQuestionDOList = questionMapper.getAllQuestionList();
         esQuestionMapper.saveAll(allQuestionDOList.stream().map(item -> {
-            QuestionSearchDTO questionSearchDTO = new QuestionSearchDTO();
-            BeanUtils.copyProperties(item, questionSearchDTO);
-            return questionSearchDTO;
+            QuestionDO questionDO = new QuestionDO();
+            BeanUtils.copyProperties(item, questionDO);
+            return questionDO;
         }).collect(Collectors.toList()));
     }
 }

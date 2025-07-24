@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
-public class QuestionAddDTO {
+public class QuestionAddReqVO {
 
     @ApiModelProperty(value = "标题", required = true)
     @NotEmpty(message = "标题不能为空")
@@ -23,10 +23,10 @@ public class QuestionAddDTO {
     @ApiModelProperty("标签id列表")
     private List<Long> tagIds;
 
-    public QuestionAddDTO() {
+    public QuestionAddReqVO() {
     }
 
-    public QuestionAddDTO(String title, String content, String answer, List<Long> problemsetIds, List<Long> tagIds) {
+    public QuestionAddReqVO(String title, String content, String answer, List<Long> problemsetIds, List<Long> tagIds) {
         this.title = title;
         this.content = content;
         this.answer = answer;
@@ -115,6 +115,6 @@ public class QuestionAddDTO {
     }
 
     public String toString() {
-        return "QuestionAddDTO{title = " + title + ", content = " + content + ", answer = " + answer + ", problemsetIds = " + problemsetIds + ", tagIds = " + tagIds + "}";
+        return "QuestionAddReqVO{title = " + title + ", content = " + content + ", answer = " + answer + ", problemsetIds = " + problemsetIds + ", tagIds = " + tagIds + "}";
     }
 }

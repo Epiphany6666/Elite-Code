@@ -1,8 +1,8 @@
 package cn.elitecode.module.resume.service.search;
 
 import cn.elitecode.framework.common.pojo.CommonPage;
-import cn.elitecode.module.resume.controller.admin.question.vo.QuestionQueryDTO;
-import cn.elitecode.module.resume.controller.admin.question.vo.QuestionSearchDTO;
+import cn.elitecode.module.resume.controller.admin.question.vo.QuestionQueryReqVO;
+import cn.elitecode.module.resume.dal.dataobject.question.QuestionDO;
 import cn.elitecode.module.resume.strategy.SearchStrategy;
 import cn.hutool.core.util.StrUtil;
 import org.elasticsearch.index.query.BoolQueryBuilder;
@@ -26,10 +26,10 @@ public class EsQuestionServiceImpl implements SearchStrategy {
     private ElasticsearchRestTemplate elasticsearchRestTemplate;
 
     @Override
-    public CommonPage<QuestionSearchDTO> selectQuestionList(QuestionQueryDTO questionQueryDTO) {
-        PageRequest pageRequest = getPageRequest(questionQueryDTO);
-        String title = questionQueryDTO.getTitle();
-        CommonPage<QuestionSearchDTO> questionCommonPage = search(buildQuery(title, pageRequest));
+    public CommonPage<QuestionDO> selectQuestionList(QuestionQueryReqVO questionQueryReqVO) {
+        PageRequest pageRequest = getPageRequest(questionQueryReqVO);
+        String title = questionQueryReqVO.getTitle();
+        CommonPage<QuestionDO> questionCommonPage = search(buildQuery(title, pageRequest));
         return questionCommonPage;
     }
 
@@ -56,23 +56,23 @@ public class EsQuestionServiceImpl implements SearchStrategy {
      * @param nativeSearchQueryBuilder
      * @return
      */
-    private CommonPage<QuestionSearchDTO> search(NativeSearchQueryBuilder nativeSearchQueryBuilder) {
-        SearchHits<QuestionSearchDTO> search = elasticsearchRestTemplate.search(nativeSearchQueryBuilder.build(), QuestionSearchDTO.class);
-        List<QuestionSearchDTO> questionList = search.getSearchHits().stream().map(item -> item.getContent()).collect(Collectors.toList());
+    private CommonPage<QuestionDO> search(NativeSearchQueryBuilder nativeSearchQueryBuilder) {
+        SearchHits<QuestionDO> search = elasticsearchRestTemplate.search(nativeSearchQueryBuilder.build(), QuestionDO.class);
+        List<QuestionDO> questionList = search.getSearchHits().stream().map(item -> item.getContent()).collect(Collectors.toList());
         long total = search.getTotalHits();
-        CommonPage<QuestionSearchDTO> questionCommonPage = new CommonPage<>(total, questionList);
+        CommonPage<QuestionDO> questionCommonPage = new CommonPage<>(total, questionList);
         return questionCommonPage;
     }
 
     /**
      * 自定义的PageRequest转换成Spring的PageRequest
-     * @param questionQueryDTO
+     * @param questionQueryReqVO
      * @return
      */
-    private PageRequest getPageRequest(QuestionQueryDTO questionQueryDTO) {
-        int current = questionQueryDTO.getCurrent() - 1;
-        int pageSize = questionQueryDTO.getPageSize();
-        List<String> sortFieldPair = questionQueryDTO.getSortFieldPair();
+    private PageRequest getPageRequest(QuestionQueryReqVO questionQueryReqVO) {
+        int current = questionQueryReqVO.getCurrent() - 1;
+        int pageSize = questionQueryReqVO.getPageSize();
+        List<String> sortFieldPair = questionQueryReqVO.getSortFieldPair();
         List<Sort.Order> orders = new ArrayList<>();
         if (sortFieldPair != null && sortFieldPair.size() > 0) {
             for (String sortField : sortFieldPair) {

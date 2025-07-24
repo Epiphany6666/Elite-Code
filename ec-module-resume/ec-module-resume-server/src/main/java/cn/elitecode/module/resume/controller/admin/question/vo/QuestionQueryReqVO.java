@@ -8,7 +8,7 @@ import java.util.Date;
 /**
  * 题目查询DTO
  */
-public class QuestionQueryDTO extends PageRequest {
+public class QuestionQueryReqVO extends PageRequest {
 
     @ApiModelProperty(value = "标题")
     private String title;
@@ -25,10 +25,10 @@ public class QuestionQueryDTO extends PageRequest {
     @ApiModelProperty(value = "结束时间")
     private Date endTime;
 
-    public QuestionQueryDTO() {
+    public QuestionQueryReqVO() {
     }
 
-    public QuestionQueryDTO(String title, Long createBy, Long updateBy, Date startTime, Date endTime) {
+    public QuestionQueryReqVO(String title, Long createBy, Long updateBy, Date startTime, Date endTime) {
         this.title = title;
         this.createBy = createBy;
         this.updateBy = updateBy;
@@ -117,6 +117,6 @@ public class QuestionQueryDTO extends PageRequest {
     }
 
     public String toString() {
-        return "QuestionQueryDTO{title = " + title + ", createBy = " + createBy + ", updateBy = " + updateBy + ", startTime = " + startTime + ", endTime = " + endTime + "}";
+        return "QuestionQueryReqVO{title = " + title + ", createBy = " + createBy + ", updateBy = " + updateBy + ", startTime = " + startTime + ", endTime = " + endTime + "}";
     }
 }

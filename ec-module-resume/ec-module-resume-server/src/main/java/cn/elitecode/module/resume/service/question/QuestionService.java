@@ -2,8 +2,8 @@ package cn.elitecode.module.resume.service.question;
 
 import cn.elitecode.framework.common.pojo.CommonPage;
 import cn.elitecode.module.resume.controller.admin.problemset.vo.ProblemsetQueryQuestionReqVO;
-import cn.elitecode.module.resume.controller.admin.question.vo.QuestionAddDTO;
-import cn.elitecode.module.resume.controller.admin.question.vo.QuestionUpdateDTO;
+import cn.elitecode.module.resume.controller.admin.question.vo.QuestionAddReqVO;
+import cn.elitecode.module.resume.controller.admin.question.vo.QuestionUpdateReqVO;
 import cn.elitecode.module.resume.dal.dataobject.question.QuestionDO;
 
 /**
@@ -13,9 +13,9 @@ public interface QuestionService {
 
     /**
      * 新增题目
-     * @param questionAddDTO
+     * @param questionAddReqVO
      */
-    Long addQuestion(QuestionAddDTO questionAddDTO);
+    Long addQuestion(QuestionAddReqVO questionAddReqVO);
 
     /**
      * 批量删除题目
@@ -25,9 +25,9 @@ public interface QuestionService {
 
     /**
      * 根据id更新题目信息
-     * @param questionUpdateDTO
+     * @param questionUpdateReqVO
      */
-    void updateQuestion(QuestionUpdateDTO questionUpdateDTO);
+    void updateQuestion(QuestionUpdateReqVO questionUpdateReqVO);
 
     /**
      * 根据id查询题目信息

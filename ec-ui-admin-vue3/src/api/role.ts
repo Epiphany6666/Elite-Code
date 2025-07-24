@@ -21,7 +21,7 @@ export function addRole(roleAddReqVO: RoleAddReqVO) {
 }
 
 /* 根据id数组批量删除角色信息 */
-export function removeRoles(ids) {
+export function removeRoles(ids?: string | Array<string>) {
     return request({
         url: '/admin-api/system/role/' + ids,
         method: 'delete'
@@ -29,7 +29,7 @@ export function removeRoles(ids) {
 }
 
 /* 根据id查询角色信息 */
-export function getRole(id) {
+export function getRole(id?: string) {
     return request<RoleDO>({
         url: '/admin-api/system/role/' + id,
         method: 'get'

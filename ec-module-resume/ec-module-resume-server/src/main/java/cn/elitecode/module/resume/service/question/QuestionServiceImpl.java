@@ -3,8 +3,8 @@ package cn.elitecode.module.resume.service.question;
 import cn.elitecode.framework.common.pojo.CommonPage;
 import cn.elitecode.framework.security.core.utils.SecurityUtil;
 import cn.elitecode.module.resume.controller.admin.problemset.vo.ProblemsetQueryQuestionReqVO;
-import cn.elitecode.module.resume.controller.admin.question.vo.QuestionAddDTO;
-import cn.elitecode.module.resume.controller.admin.question.vo.QuestionUpdateDTO;
+import cn.elitecode.module.resume.controller.admin.question.vo.QuestionAddReqVO;
+import cn.elitecode.module.resume.controller.admin.question.vo.QuestionUpdateReqVO;
 import cn.elitecode.module.resume.dal.dataobject.question.ProblemsetQuestionDO;
 import cn.elitecode.module.resume.dal.dataobject.question.QuestionDO;
 import cn.elitecode.module.resume.dal.dataobject.question.TagQuestionDO;
@@ -34,15 +34,18 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     @Transactional
-    public Long addQuestion(QuestionAddDTO questionAddDTO) {
+    public Long addQuestion(QuestionAddReqVO questionAddReqVO) {
         // 新增题目信息
         QuestionDO questionDO = new QuestionDO();
-        BeanUtils.copyProperties(questionAddDTO, questionDO);
+        BeanUtils.copyProperties(questionAddReqVO, questionDO);
         questionDO.setCreateBy(SecurityUtil.getUserId());
         questionMapper.insertQuestion(questionDO);
 
         // 新增题库题目关联
-        insertProblemsetQuestion(questionDO.getId(), questionAddDTO.getProblemsetIds());
+        insertProblemsetQuestion(questionDO.getId(), questionAddReqVO.getProblemsetIds());
+
+        // 新增题目标签关联
+        insertTagQuestion(questionDO.getId(), questionAddReqVO.getTagIds());
         return questionDO.getId();
     }
 
@@ -59,22 +62,22 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     @Transactional
-    public void updateQuestion(QuestionUpdateDTO questionUpdateDTO) {
+    public void updateQuestion(QuestionUpdateReqVO questionUpdateReqVO) {
         // 修改题目信息
         QuestionDO questionDO = new QuestionDO();
-        BeanUtils.copyProperties(questionUpdateDTO, questionDO);
+        BeanUtils.copyProperties(questionUpdateReqVO, questionDO);
         questionDO.setUpdateBy(SecurityUtil.getUserId());
         questionMapper.updateQuestionById(questionDO);
 
         // 删除题目与题库关联
-        problemsetQuestionMapper.deleteProblemsetQuestionByQuestionId(questionUpdateDTO.getId());
+        problemsetQuestionMapper.deleteProblemsetQuestionByQuestionId(questionUpdateReqVO.getId());
         // 新增题目与题库关联
-        insertProblemsetQuestion(questionUpdateDTO.getId(), questionUpdateDTO.getProblemsetIds());
+        insertProblemsetQuestion(questionUpdateReqVO.getId(), questionUpdateReqVO.getProblemsetIds());
 
         // 删除题目与标签关联
-        tagQuestionMapper.deleteTagQuestionByQuestionId(questionUpdateDTO.getId());
+        tagQuestionMapper.deleteTagQuestionByQuestionId(questionUpdateReqVO.getId());
         // 新增题目与标签关联
-        insertTagQuestion(questionUpdateDTO.getId(), questionUpdateDTO.getTagIds());
+        insertTagQuestion(questionUpdateReqVO.getId(), questionUpdateReqVO.getTagIds());
     }
 
     @Override

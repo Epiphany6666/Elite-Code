@@ -42,6 +42,12 @@ public interface MemberUserMapper {
      * @return
      */
     MemberUserDO selectUserByMobile(String mobile);
+
+    /**
+     * 插入会员信息
+     * @param memberUserDO
+     */
+    void insertUser(MemberUserDO memberUserDO);
 }
 
 

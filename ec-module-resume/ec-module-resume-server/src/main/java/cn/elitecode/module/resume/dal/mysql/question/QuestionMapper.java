@@ -1,7 +1,7 @@
 package cn.elitecode.module.resume.dal.mysql.question;
 
 import cn.elitecode.module.resume.controller.admin.problemset.vo.ProblemsetQueryQuestionReqVO;
-import cn.elitecode.module.resume.controller.admin.question.vo.QuestionQueryDTO;
+import cn.elitecode.module.resume.controller.admin.question.vo.QuestionQueryReqVO;
 import cn.elitecode.module.resume.dal.dataobject.question.QuestionDO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -43,17 +43,17 @@ public interface QuestionMapper {
 
     /**
      * 根据条件分页查询题目列表
-     * @param questionQueryDTO
+     * @param questionQueryReqVO
      * @return
      */
-    List<QuestionDO> selectQuestionList(QuestionQueryDTO questionQueryDTO);
+    List<QuestionDO> selectQuestionList(QuestionQueryReqVO questionQueryReqVO);
 
     /**
      * 获取总条数
-     * @param questionQueryDTO
+     * @param questionQueryReqVO
      * @return
      */
-    Long getQuestionTotal(QuestionQueryDTO questionQueryDTO);
+    Long getQuestionTotal(QuestionQueryReqVO questionQueryReqVO);
 
     /**
      * 根据分页条件查询所在题库的题目信息

@@ -17,6 +17,30 @@
             <result property="updateTime" column="update_time" />
     </resultMap>
 
+    <!-- void insertUser(MemberUserDO memberUserDO); -->
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
+        insert into member_user
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="mobile != null and mobile != ''">mobile,</if>
+                <if test="password != null and password != ''">password,</if>
+                <if test="nickName != null and nickName != ''">nickName,</if>
+                <if test="avatar != null and avatar != ''">avatar,</if>
+                <if test="sex != null">sex,</if>
+                <if test="createBy != null and createBy != ''">createBy,</if>
+                <if test="updateBy != null and updateBy != ''">updateBy,</if>
+            </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mobile != null and mobile != ''">#{mobile},</if>
+            <if test="password != null and password != ''">#{password},</if>
+            <if test="nickName != null and nickName != ''">#{nickName},</if>
+            <if test="avatar != null and avatar != ''">#{avatar},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="createBy != null and createBy != 0">#{createBy},</if>
+            <if test="updateBy != null and updateBy != 0">#{updateBy},</if>
+        </trim>
+    </insert>
+
     <!-- void updateUserById(MemberUserDO memberUserDO); -->
     <update id="updateUserById">
         update member_user

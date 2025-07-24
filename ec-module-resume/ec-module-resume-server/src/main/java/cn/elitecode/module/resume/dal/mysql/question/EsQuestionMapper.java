@@ -1,7 +1,7 @@
 package cn.elitecode.module.resume.dal.mysql.question;
 
-import cn.elitecode.module.resume.controller.admin.question.vo.QuestionSearchDTO;
+import cn.elitecode.module.resume.dal.dataobject.question.QuestionDO;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
-public interface EsQuestionMapper extends ElasticsearchRepository<QuestionSearchDTO, String> {
+public interface EsQuestionMapper extends ElasticsearchRepository<QuestionDO, String> {
 }

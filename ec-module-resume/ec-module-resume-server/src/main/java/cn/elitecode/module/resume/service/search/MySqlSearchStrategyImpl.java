@@ -1,14 +1,14 @@
 package cn.elitecode.module.resume.service.search;
 
 import cn.elitecode.framework.common.pojo.CommonPage;
-import cn.elitecode.module.resume.controller.admin.question.vo.QuestionQueryDTO;
-import cn.elitecode.module.resume.controller.admin.question.vo.QuestionSearchDTO;
+import cn.elitecode.module.resume.controller.admin.question.vo.QuestionQueryReqVO;
 import cn.elitecode.module.resume.dal.dataobject.question.QuestionDO;
 import cn.elitecode.module.resume.dal.mysql.question.QuestionMapper;
 import cn.elitecode.module.resume.strategy.SearchStrategy;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -18,18 +18,18 @@ public class MySqlSearchStrategyImpl implements SearchStrategy {
     private QuestionMapper questionMapper;
 
     @Override
-    public CommonPage<QuestionSearchDTO> selectQuestionList(QuestionQueryDTO questionQueryDTO) {
-        if (questionQueryDTO.getCurrent() != null && questionQueryDTO.getPageSize() != null) {
-            questionQueryDTO.setCurrent((questionQueryDTO.getCurrent() - 1) * questionQueryDTO.getPageSize());
+    public CommonPage<QuestionDO> selectQuestionList(QuestionQueryReqVO questionQueryReqVO) {
+        if (questionQueryReqVO.getCurrent() != null && questionQueryReqVO.getPageSize() != null) {
+            questionQueryReqVO.setCurrent((questionQueryReqVO.getCurrent() - 1) * questionQueryReqVO.getPageSize());
         }
-        List<QuestionDO> questionDOList = questionMapper.selectQuestionList(questionQueryDTO);
-        Long total = questionMapper.getQuestionTotal(questionQueryDTO);
-        List<QuestionSearchDTO> result = questionDOList.stream().map(item -> {
-            QuestionSearchDTO questionSearchDTO = new QuestionSearchDTO();
-            BeanUtils.copyProperties(item, questionSearchDTO);
-            return questionSearchDTO;
+        List<QuestionDO> questionDOList = questionMapper.selectQuestionList(questionQueryReqVO);
+        Long total = questionMapper.getQuestionTotal(questionQueryReqVO);
+        List<QuestionDO> result = questionDOList.stream().map(item -> {
+            QuestionDO questionDO = new QuestionDO();
+            BeanUtils.copyProperties(item, questionDO);
+            return questionDO;
         }).toList();
-        CommonPage<QuestionSearchDTO> page = new CommonPage<>(total, result);
+        CommonPage<QuestionDO> page = new CommonPage<>(total, result);
         return page;
     }
 

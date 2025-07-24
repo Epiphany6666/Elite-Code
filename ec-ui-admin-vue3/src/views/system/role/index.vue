@@ -18,9 +18,12 @@ const ids = ref([])
 const multiple = ref(true)
 const formRef = ref()
 const queryFormRef = ref()
+const loading = ref(true)
 
 const getList = () => {
+  loading.value = true
   getRolePage(addDateRange()).then(res => {
+    loading.value = false
     roleList.value = res.data.list
     total.value = res.data.total
   })
@@ -105,8 +108,8 @@ getList()
         </el-row>
       </el-col>
       <el-col>
-        <el-table :data="roleList" border @selection-change="handleSelectionChange" style="margin-bottom: 8px;">
-          <el-table-column type="selection"></el-table-column>
+        <el-table :data="roleList" border @selection-change="handleSelectionChange" v-loading="loading" style="margin-bottom: 8px;">
+          <el-table-column type="selection" />
           <el-table-column prop="name" label="角色名"/>
           <el-table-column prop="createBy" label="创建人"/>
           <el-table-column prop="updateBy" label="更新人"/>

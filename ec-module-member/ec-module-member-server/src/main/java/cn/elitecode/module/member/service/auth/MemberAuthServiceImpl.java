@@ -32,6 +32,15 @@ public class MemberAuthServiceImpl implements MemberAuthService{
         return token;
     }
 
+    @Override
+    public Long register(String phone, String password) {
+        MemberUserDO memberUserDO = new MemberUserDO();
+        memberUserDO.setMobile(phone);
+        memberUserDO.setPassword(passwordEncoder.encode(password));
+        memberUserMapper.insertUser(memberUserDO);
+        return memberUserDO.getId();
+    }
+
     private MemberUserDO authenticate(String mobile, String password) {
         MemberUserDO memberUserDO = memberUserMapper.selectUserByMobile(mobile);
         if (memberUserDO == null) {

@@ -15,7 +15,7 @@ import java.util.List;
  * resume_question(题目表) | 实体类
  */
 @Document(indexName = "resume_question")
-public class QuestionSearchDTO {
+public class QuestionSearchReqVO {
 
     @ApiModelProperty("用户ID，主键")
     @Id
@@ -61,10 +61,10 @@ public class QuestionSearchDTO {
     @Field(type = FieldType.Nested)
     List<TagDO> tagDOList;
 
-    public QuestionSearchDTO() {
+    public QuestionSearchReqVO() {
     }
 
-    public QuestionSearchDTO(Long id, String title, String content, String answer, String delFlag, Long createBy, Date createTime, Long updateBy, Date updateTime, List<ProblemsetDO> problemsetDOList, List<TagDO> tagDOList) {
+    public QuestionSearchReqVO(Long id, String title, String content, String answer, String delFlag, Long createBy, Date createTime, Long updateBy, Date updateTime, List<ProblemsetDO> problemsetDOList, List<TagDO> tagDOList) {
         this.id = id;
         this.title = title;
         this.content = content;

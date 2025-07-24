@@ -9,7 +9,7 @@ const router = createRouter({
           component: () => import('@/views/login/index.vue')
         },
         {
-            path: "/",
+            path: '/',
             component: Layout,
             redirect: '/system/user',
             children: [
@@ -20,6 +20,10 @@ const router = createRouter({
                 {
                     path: '/system/role',
                     component: () => import('@/views/system/role/index.vue')
+                },
+                {
+                    path: '/resume/question',
+                    component: () => import('@/views/resume/question/index.vue')
                 }
             ]
         }

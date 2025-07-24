@@ -4,7 +4,7 @@ package cn.elitecode.module.resume.enums;
  * 搜索模式枚举类
  */
 public enum SearchModeEnum {
-    MYSQL("mysql", "questionServiceImpl"),
+    MYSQL("mysql", "mySqlSearchStrategyImpl"),
     ELASTICSEARCH("elasticsearch", "esQuestionServiceImpl");
 
     private SearchModeEnum(String mode, String strategy) {
