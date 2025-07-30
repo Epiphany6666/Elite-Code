@@ -1,7 +1,9 @@
 package cn.elitecode.framework.security.config;
 
+import cn.elitecode.framework.security.core.RestAuthenticationEntryPoint;
 import cn.elitecode.framework.security.core.filter.JwtAuthenticationTokenFilter;
 import cn.elitecode.framework.security.core.handler.LogoutSuccessHandlerImpl;
+import cn.elitecode.framework.security.core.handler.RestfulAccessDeniedHandler;
 import cn.elitecode.framework.security.core.manager.DynamicAuthorizationManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -31,6 +33,10 @@ public class SecurityConfig {
     private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
     @Autowired
     private IgnoreUrlConfig ignoreUrlConfig;
+    @Autowired
+    private RestfulAccessDeniedHandler restfulAccessDeniedHandler;
+    @Autowired
+    private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
     @Autowired(required = false)
     private DynamicAuthorizationManager dynamicAuthorizationManager;
 
@@ -50,17 +56,17 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // 注解标记允许匿名访问的url
                 .authorizeHttpRequests((requests) -> {
-                    //  允许匿名访问（即无需认证就可以进行访问）
-                    requests.antMatchers(ignoreUrlConfig.getUrls()).permitAll();
+                    // 允许匿名访问（即无需认证就可以进行访问）
+                    requests.antMatchers(ignoreUrlConfig.getUrls()).permitAll()
+                            // 仅需登录就可以访问的url
+                            .antMatchers(ignoreUrlConfig.getAppUrls()).authenticated()
+                            // 除上面外的所有请求全部需要鉴权认证
+                            .anyRequest().access(dynamicAuthorizationManager == null ? AuthenticatedAuthorizationManager.authenticated() : dynamicAuthorizationManager);
                 })
-                // 除上面外的所有请求全部需要鉴权认证
-                .authorizeHttpRequests(registry ->
-                        registry.anyRequest()
-                                .access(dynamicAuthorizationManager == null ? AuthenticatedAuthorizationManager.authenticated() : dynamicAuthorizationManager)
-                )
                 .logout(logout -> logout.logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler))
                 // 将 JWTFilter 添加到 UsernamePasswordAuthenticationFilter 前面（校验账号密码之前）
                 .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(configure -> configure.accessDeniedHandler(restfulAccessDeniedHandler).authenticationEntryPoint(restAuthenticationEntryPoint))
                 // 添加CORS filter
                 .addFilterBefore(corsFilter, JwtAuthenticationTokenFilter.class)
                 .addFilterBefore(corsFilter, LogoutFilter.class)

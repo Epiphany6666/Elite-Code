@@ -87,6 +87,13 @@ secure:
       # 对于登录login 注册register
       - "/admin-api/system/login"
       - "/admin-api/system/register"
-      - "/app-api/app-api/member/auth/login"
-      - "/app-api/app-api/member/auth/register"
+      - "/app-api/member/auth/login"
+      - "/app-api/member/auth/register"
       # 业务开放
+      - "/app-api/problemset/getAll"
+    # 前端用户无需权限控制
+    appUrls:
+      - "/app-api/member/**"
+      - "/app-api/problemset/**"
+      - "/app-api/question/**"
+      - "/app-api/tag/**"

@@ -1,6 +1,8 @@
 package cn.elitecode.framework.security.config;
 
 import cn.elitecode.framework.security.core.DynamicSecurityMetadataSource;
+import cn.elitecode.framework.security.core.RestAuthenticationEntryPoint;
+import cn.elitecode.framework.security.core.handler.RestfulAccessDeniedHandler;
 import cn.elitecode.framework.security.core.manager.DynamicAuthorizationManager;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
@@ -32,4 +34,13 @@ public class CommonSecurityConfig {
         return new DynamicSecurityMetadataSource();
     }
 
+    @Bean
+    public RestfulAccessDeniedHandler restfulAccessDeniedHandler() {
+        return new RestfulAccessDeniedHandler();
+    }
+
+    @Bean
+    public RestAuthenticationEntryPoint restAuthenticationEntryPoint() {
+        return new RestAuthenticationEntryPoint();
+    }
 }

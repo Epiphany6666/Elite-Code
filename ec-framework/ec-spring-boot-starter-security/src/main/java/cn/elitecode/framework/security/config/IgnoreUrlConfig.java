@@ -9,6 +9,8 @@ public class IgnoreUrlConfig {
 
     private String[] urls;
 
+    private String[] appUrls;
+
     /**
      * 获取
      * @return urls
@@ -23,5 +25,13 @@ public class IgnoreUrlConfig {
      */
     public void setUrls(String[] urls) {
         this.urls = urls;
+    }
+
+    public String[] getAppUrls() {
+        return appUrls;
+    }
+
+    public void setAppUrls(String[] appUrls) {
+        this.appUrls = appUrls;
     }
 }
