@@ -4,7 +4,7 @@ import type { UserLoginVO, UserRegisterDTO } from '@/types/user'
 // 登录
 export function login(username: string, password: string) {
   return request<UserLoginVO>({
-    url: '/app-api/app-api/member/auth/login',
+    url: '/app-api/member/auth/login',
     method: 'post',
     data: {
       mobile: username,
@@ -16,7 +16,7 @@ export function login(username: string, password: string) {
 // 注册
 export function register(username: string, password: string, checkPassword: string) {
   return request<UserRegisterDTO>({
-    url: '/app-api/app-api/member/auth/register',
+    url: '/app-api/member/auth/register',
     method: 'post',
     data: {
       phone: username,
@@ -29,7 +29,7 @@ export function register(username: string, password: string, checkPassword: stri
 // 获取用户信息
 export function getInfo() {
   return request({
-    url: '/getInfo',
+    url: '/app-api/member/user/getInfo',
     method: 'get'
   })
 }

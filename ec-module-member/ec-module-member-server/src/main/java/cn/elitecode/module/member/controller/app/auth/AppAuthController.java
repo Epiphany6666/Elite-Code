@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Api(tags = "AppAuthController", description = "用户 APP - 认证")
 @RestController
-@RequestMapping("/app-api/member/auth")
+@RequestMapping("/member/auth")
 public class AppAuthController {
 
     @Autowired

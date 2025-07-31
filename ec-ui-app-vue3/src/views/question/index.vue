@@ -6,14 +6,19 @@ import type { QuestionType } from '@/types/question'
 
 const route = useRoute()
 const router = useRouter()
-const problemsetId = route.params.id as string
+
+const queryParam = ref({
+  current: 1,
+  pageSize: 5,
+  problemsetId: route.params.id
+})
 
 const questionList = ref<Array<QuestionType>>([])
 const total = ref<number>(0)
 
 /* 获取所属题库的题目 */
 function getQuestion() {
-  listProblemsetQuestion({ problemsetId }).then(res => {
+  listProblemsetQuestion(queryParam.value).then(res => {
     questionList.value = res.data.list
     total.value = res.data.total
   })
@@ -27,16 +32,26 @@ getQuestion()
 </script>
 
 <template>
-  <el-table :data="questionList" border style="width: 100%">
-    <el-table-column type="selection" width="55" />
-    <el-table-column prop="title" label="题目" width="180">
-      <template #default="scope">
+  <div>
+    <el-table :data="questionList" stripe border style="margin-bottom: 10px;">
+      <el-table-column prop="title" label="题目">
+        <template #default="scope">
         <span @click="goQuestionDetail(scope.row.id)">
           {{ scope.row.title }}
         </span>
-      </template>
-    </el-table-column>
-  </el-table>
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-pagination
+      v-model:current-page="queryParam.current"
+      v-model:page-size="queryParam.pageSize"
+      :page-sizes="[5, 10, 15, 20]"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total"
+      @size-change="getQuestion"
+      @current-change="getQuestion"
+    />
+  </div>
 </template>
 
 <style scoped>

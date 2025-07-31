@@ -51,10 +51,26 @@ knife4j:
     title: "EliteCode面试刷题平台"
     version: 1.0
     group:
-      default:
+      all:
         api-rule: package
         api-rule-resources:
           - cn.elitecode.module
+      system:
+        api-rule: package
+        api-rule-resources:
+          - cn.elitecode.module.system
+      infra:
+        api-rule: package
+        api-rule-resources:
+          - cn.elitecode.module.infra
+      member:
+        api-rule: package
+        api-rule-resources:
+          - cn.elitecode.module.member
+      resume:
+        api-rule: package
+        api-rule-resources:
+          - cn.elitecode.module.resume
 
 # 易扣项目配置
 elitecode:

@@ -9,9 +9,16 @@ import type { QuestionType } from '@/types/question'
 
 export function listProblemset(problemsetQueryDTO?: ProblemsetQueryDTO) {
   return request<CommonPage<ProblemsetType>>({
-    url: '/problemset/list',
+    url: '/app-api/problemset/list',
     method: 'post',
     data: problemsetQueryDTO
+  })
+}
+
+export function getProblemsetAll() {
+  return request({
+    url: '/app-api/problemset/getAll',
+    method: 'get'
   })
 }
 
@@ -21,8 +28,8 @@ export function listProblemset(problemsetQueryDTO?: ProblemsetQueryDTO) {
  */
 export function listProblemsetQuestion(problemQueryQuestionDTO: ProblemQueryQuestionDTO) {
   return request<CommonPage<QuestionType>>({
-    url: '/problemset/questionList',
-    method: 'post',
-    data: problemQueryQuestionDTO
+    url: '/app-api/problemset/page',
+    method: 'get',
+    params: problemQueryQuestionDTO
   })
 }

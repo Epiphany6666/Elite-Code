@@ -18,7 +18,7 @@ watch(route, (newRoute) => {
 const userStore = useUserStore()
 const loginFormRef = ref()
 const loginForm = reactive<LoginForm>({
-  username: 'luoyan',
+  username: '13187237183',
   password: '12345678'
 })
 

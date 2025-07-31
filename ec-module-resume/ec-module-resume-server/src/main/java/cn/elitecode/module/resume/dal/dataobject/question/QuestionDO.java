@@ -16,7 +16,7 @@ import java.util.List;
 @Document(indexName = "question")
 public class QuestionDO {
 
-    @ApiModelProperty("用户ID，主键")
+    @ApiModelProperty("题目ID，主键")
     private Long id;
 
     @ApiModelProperty("标题")

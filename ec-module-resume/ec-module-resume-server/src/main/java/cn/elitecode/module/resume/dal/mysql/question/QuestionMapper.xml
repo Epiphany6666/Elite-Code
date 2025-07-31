@@ -202,4 +202,47 @@
             q.del_flag = '0'
     </select>
 
+    <!-- List<QuestionDO> selectAppProblemsetQuestionList(AppProblemsetQuestionQueryReqVO appProblemsetQuestionQueryReqVO); -->
+    <select id="selectAppProblemsetQuestionList" resultMap="QuestionResult">
+        SELECT
+            q.id,
+            q.title,
+            q.content,
+            q.answer,
+            q.del_flag,
+            q.create_by,
+            q.create_time,
+            q.update_by,
+            q.update_time
+        FROM
+            resume_question q
+            LEFT JOIN resume_problemset_question_relation pq on pq.question_id = q.id
+            LEFT JOIN resume_problemset p on p.id = pq.problemset_id
+        where
+            q.del_flag = '0'
+            and p.id = #{problemsetId}
+            <if test="title != null and title != ''">and q.title like concat("%", #{title}, "%")</if>
+        <if test="sortFieldPair != null and sortFieldPair.size() > 0">
+            order by
+            <foreach collection="sortFieldPair" separator="," item="sortField">
+                ${sortField}
+            </foreach>
+        </if>
+        limit #{current}, #{pageSize}
+    </select>
+
+    <!-- Long selectAppProblemsetQuestionTotal(AppProblemsetQuestionQueryReqVO appProblemsetQuestionQueryReqVO); -->
+    <select id="selectAppProblemsetQuestionTotal" resultType="java.lang.Long">
+        SELECT
+            count(*)
+        FROM
+            resume_question q
+            LEFT JOIN resume_problemset_question_relation pq on pq.question_id = q.id
+            LEFT JOIN resume_problemset p on p.id = pq.problemset_id
+        where
+            q.del_flag = '0'
+            and p.id = #{problemsetId}
+            <if test="title != null and title != ''">and q.title like concat("%", #{title}, "%")</if>
+    </select>
+
 </mapper>

@@ -2,7 +2,6 @@
 import axios from "axios";
 import {getToken} from "@/utils/auth.ts";
 import {useUserStore} from "@/store/modules/user.ts";
-import {ElMessage} from "element-plus";
 
 const request = axios.create({
     baseURL: import.meta.env.VITE_APP_BASE_API,
@@ -30,7 +29,7 @@ request.interceptors.response.use(function (response) {
         })
         return Promise.reject('无效会话，或会话已过期，请重新登陆')
     } else if (res.code !== 200) {
-        ElMessage.error(res.message)
+        ElMessage.error(res.msg)
         return Promise.reject('error')
     } else {
         return response.data

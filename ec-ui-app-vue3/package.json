@@ -13,10 +13,14 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@bytemd/plugin-gfm": "^1.22.0",
     "@element-plus/icons-vue": "^2.3.1",
     "axios": "^1.7.9",
     "element-plus": "^2.9.5",
+    "highlight.js": "^11.11.1",
     "js-cookie": "^3.0.5",
+    "markdown-it": "^14.1.0",
+    "markdown-it-highlightjs": "^4.2.0",
     "normalize.css": "^8.0.1",
     "nprogress": "^0.2.0",
     "pinia": "^3.0.1",
@@ -27,6 +31,7 @@
   "devDependencies": {
     "@tsconfig/node22": "^22.0.0",
     "@types/js-cookie": "^3.0.6",
+    "@types/markdown-it": "^14.1.2",
     "@types/node": "^22.13.4",
     "@types/nprogress": "^0.2.3",
     "@vitejs/plugin-vue": "^5.2.1",

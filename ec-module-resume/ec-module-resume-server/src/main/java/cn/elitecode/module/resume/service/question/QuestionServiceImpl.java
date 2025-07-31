@@ -5,6 +5,7 @@ import cn.elitecode.framework.security.core.utils.SecurityUtil;
 import cn.elitecode.module.resume.controller.admin.problemset.vo.ProblemsetQueryQuestionReqVO;
 import cn.elitecode.module.resume.controller.admin.question.vo.QuestionAddReqVO;
 import cn.elitecode.module.resume.controller.admin.question.vo.QuestionUpdateReqVO;
+import cn.elitecode.module.resume.controller.app.problemset.vo.AppProblemsetQuestionQueryReqVO;
 import cn.elitecode.module.resume.dal.dataobject.question.ProblemsetQuestionDO;
 import cn.elitecode.module.resume.dal.dataobject.question.QuestionDO;
 import cn.elitecode.module.resume.dal.dataobject.question.TagQuestionDO;
@@ -94,12 +95,26 @@ public class QuestionServiceImpl implements QuestionService {
         return page;
     }
 
+    @Override
+    public CommonPage<QuestionDO> selectAppProblemsetQuestionList(AppProblemsetQuestionQueryReqVO appProblemsetQuestionQueryReqVO) {
+        if (appProblemsetQuestionQueryReqVO.getCurrent() != null && appProblemsetQuestionQueryReqVO.getPageSize() != null) {
+            appProblemsetQuestionQueryReqVO.setCurrent((appProblemsetQuestionQueryReqVO.getCurrent() - 1) * appProblemsetQuestionQueryReqVO.getPageSize());
+        }
+        List<QuestionDO> questionDOList = questionMapper.selectAppProblemsetQuestionList(appProblemsetQuestionQueryReqVO);
+        Long total = questionMapper.selectAppProblemsetQuestionTotal(appProblemsetQuestionQueryReqVO);
+        CommonPage<QuestionDO> page = new CommonPage<>(total, questionDOList);
+        return page;
+    }
+
     /**
      * 新增题库题目关联
      * @param questionId
      * @param problemsetIds
      */
     private void insertProblemsetQuestion(Long questionId, List<Long> problemsetIds) {
+        if (problemsetIds == null && problemsetIds.size() == 0) {
+            return;
+        }
         List<ProblemsetQuestionDO> problemsetQuestionDOList = new ArrayList<>();
         for (Long problemsetId : problemsetIds) {
             problemsetQuestionDOList.add(new ProblemsetQuestionDO(problemsetId, questionId));

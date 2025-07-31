@@ -3,7 +3,7 @@ import type { QuestionType } from '@/types/question'
 
 export function getQuestionById(questionId) {
   return request<QuestionType>({
-    url: `/question/${questionId}`,
+    url: `/app-api/question/get?id=` + questionId,
     method: 'get'
   })
 }

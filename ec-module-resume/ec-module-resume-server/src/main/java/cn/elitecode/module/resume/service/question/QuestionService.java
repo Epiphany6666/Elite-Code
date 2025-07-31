@@ -4,6 +4,7 @@ import cn.elitecode.framework.common.pojo.CommonPage;
 import cn.elitecode.module.resume.controller.admin.problemset.vo.ProblemsetQueryQuestionReqVO;
 import cn.elitecode.module.resume.controller.admin.question.vo.QuestionAddReqVO;
 import cn.elitecode.module.resume.controller.admin.question.vo.QuestionUpdateReqVO;
+import cn.elitecode.module.resume.controller.app.problemset.vo.AppProblemsetQuestionQueryReqVO;
 import cn.elitecode.module.resume.dal.dataobject.question.QuestionDO;
 
 /**
@@ -42,4 +43,6 @@ public interface QuestionService {
      * @return
      */
     CommonPage<QuestionDO> selectProblemsetQuestionList(ProblemsetQueryQuestionReqVO problemsetQueryQuestionReqVO);
+
+    CommonPage<QuestionDO> selectAppProblemsetQuestionList(AppProblemsetQuestionQueryReqVO appProblemsetQuestionQueryReqVO);
 }

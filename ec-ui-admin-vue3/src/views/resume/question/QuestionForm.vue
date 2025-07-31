@@ -3,12 +3,17 @@ import {nextTick, ref} from "vue";
 import type {QuestionAddReqVO} from "@/types/quetion";
 import {addQuestion, getQuestion, updateQuestion} from "@/api/question.ts";
 import type {ProblemsetDO} from "@/api/problemset.ts";
-import type {TagDO} from "@/types/tag";
+import type {TagDO} from "@/types/tag"
+import 'bytemd/dist/index.css'
+import gfm from '@bytemd/plugin-gfm'
+import {Editor} from '@bytemd/vue-next'
+import {upload} from "@/api/minio.ts";
+
 const formData = ref<QuestionAddReqVO>({
   id: undefined,
   title: undefined,
-  content: undefined,
-  answer: undefined,
+  content: '',
+  answer: '',
   problemsetIds: [],
   tagIds: [],
 })
@@ -17,6 +22,18 @@ const dialogTitle = ref('')
 const formRef = ref()
 const problemsetAll = ref<Array<ProblemsetDO>>([])
 const tagAll = ref<Array<TagDO>>([])
+const plugins = [
+  gfm(),
+  // Add more plugins here
+]
+
+const handleChangeContent = (v) => {
+  formData.value.content = v
+}
+
+const handleChangeAnswer = (v) => {
+  formData.value.answer = v
+}
 
 const open = (id?: string) => {
   dialogVisible.value = true
@@ -45,9 +62,9 @@ defineExpose({open})
 
 const resetForm = () => {
   formData.value = {
-    title: undefined,
-    content: undefined,
-    answer: undefined,
+    title: '',
+    content: '',
+    answer: '',
     problemsetIds: [],
     tagIds: [],
   }
@@ -70,22 +87,36 @@ const submitForm = () => {
     })
   }
 }
+
+const handleUploadImage = async (files) => {
+  const uploadPromises = files.map(file => {
+    const formData = new FormData()
+    formData.append('file', file)
+    return upload(formData)
+  })
+  const responses = await Promise.all(uploadPromises)
+  console.log("@@responses", responses)
+  return responses.map(res => res.data)
+}
 </script>
 
 <template>
   <el-dialog
-    v-model="dialogVisible"
-    :title="dialogTitle"
+      v-model="dialogVisible"
+      :title="dialogTitle"
+      width="1000"
   >
     <el-form ref="formRef" :model="formData" :inline="true">
-      <el-form-item label="标题" :inline="true" prop="title">
-        <el-input v-model="formData.title" placeholder="请输入标题" />
+      <el-form-item label="标题" :inline="true" prop="title" style="width: 300px;">
+        <el-input v-model="formData.title" placeholder="请输入标题"/>
       </el-form-item>
-      <el-form-item label="内容" prop="content">
-        <el-input v-model="formData.content" placeholder="请输入内容" />
+      <el-form-item label="内容" prop="content" style="width: 1000px;">
+        <Editor :value="formData.content" mode="split" placeholder="请输入内容..." :plugins="plugins"
+                :uploadImages="handleUploadImage" @change="handleChangeContent"/>
       </el-form-item>
-      <el-form-item label="答案" prop="answer">
-        <el-input v-model="formData.answer" placeholder="请输入答案" />
+      <el-form-item label="答案" prop="answer" style="width: 1000px;">
+        <Editor :value="formData.answer" mode="split" placeholder="请输入答案..." :plugins="plugins"
+                :uploadImages="handleUploadImage" @change="handleChangeAnswer"/>
       </el-form-item>
       <el-form-item label="题库" prop="problemsetIds" style="width: 300px;">
         <el-select v-model="formData.problemsetIds" multiple placeholder="请选择题库">
@@ -118,4 +149,23 @@ const submitForm = () => {
 </template>
 
 <style scoped>
+.el-form-item {
+  :deep(.bytemd) {
+    width: 900px;
+    height: 300px;
+
+    [bytemd-tippy-path="0"],
+    [bytemd-tippy-path="5"] {
+      display: none;
+    }
+
+    /* 控制 Bytemd 编辑器预览区域和编辑区域的图片大小 */
+    :deep(.bytemd-preview img),
+    :deep(.cm-line img) {
+      max-width: 100%; /* 图片最大宽度为其容器的100% */
+      height: auto;    /* 高度自动缩放以保持比例 */
+      display: block;  /* 确保图片为块级元素，避免奇怪的行内对齐问题 */
+    }
+  }
+}
 </style>

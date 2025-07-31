@@ -12,7 +12,7 @@ const request: AxiosInstance = axios.create({
 // request拦截器
 request.interceptors.request.use(function (config) {
   // Do something before request is sent
-  config.headers.set("Authorization", "Bearer " + getToken())
+  config.headers.set("Authorization", getToken())
   return config;
 }, function (error) {
   // Do something with request error

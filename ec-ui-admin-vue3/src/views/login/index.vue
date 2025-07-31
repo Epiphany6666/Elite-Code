@@ -54,7 +54,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         <el-input v-model="ruleForm.username"/>
       </el-form-item>
       <el-form-item label="密码" prop="password">
-        <el-input v-model="ruleForm.password"/>
+        <el-input type="password" v-model="ruleForm.password"/>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm(ruleFormRef)">

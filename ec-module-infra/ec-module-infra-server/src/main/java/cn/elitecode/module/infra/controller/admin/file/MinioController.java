@@ -1,5 +1,6 @@
 package cn.elitecode.module.infra.controller.admin.file;
 
+import cn.elitecode.framework.common.enums.HttpStatus;
 import cn.elitecode.framework.common.pojo.CommonResult;
 import cn.elitecode.module.infra.MinioProperties;
 import cn.elitecode.module.infra.controller.admin.file.vo.MinioUploadReqVO;
@@ -76,7 +77,7 @@ public class MinioController {
             return CommonResult.success(minioUploadReqVO);
         } catch (Exception e) {
             logger.error(e.toString());
-            return CommonResult.error("文件上传失败");
+            return CommonResult.error(HttpStatus.PARAMS_ERROR, "文件上传失败");
         }
     }
 }
