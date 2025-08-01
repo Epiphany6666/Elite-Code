@@ -24,6 +24,10 @@ const router = createRouter({
                 {
                     path: '/resume/question',
                     component: () => import('@/views/resume/question/index.vue')
+                },
+                {
+                    path: '/resume/problemset',
+                    component: () => import('@/views/resume/problemset/index.vue')
                 }
             ]
         }

@@ -173,7 +173,7 @@ public class ProblemsetDO {
     /**
     * 编辑时间
     */
-    private Date getUpdateTime(){
+    public Date getUpdateTime(){
     return this.updateTime;
     }
 

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import {nextTick, ref} from "vue";
 import type {QuestionAddReqVO} from "@/types/quetion";
+import type {ProblemsetDO} from "@/types/problemset";
 import {addQuestion, getQuestion, updateQuestion} from "@/api/question.ts";
-import type {ProblemsetDO} from "@/api/problemset.ts";
 import type {TagDO} from "@/types/tag"
 import 'bytemd/dist/index.css'
 import gfm from '@bytemd/plugin-gfm'

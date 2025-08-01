@@ -36,7 +36,7 @@ const logout = () => {
           <el-sub-menu index="/system">
             <template #title>
               <el-icon>
-                <location/>
+                <Tools />
               </el-icon>
               <span>系统管理</span>
             </template>
@@ -49,6 +49,7 @@ const logout = () => {
               <span>面试管理</span>
             </template>
             <el-menu-item index="/resume/question">题目管理</el-menu-item>
+            <el-menu-item index="/resume/problemset">题库管理</el-menu-item>
           </el-sub-menu>
         </el-menu>
       </el-aside>

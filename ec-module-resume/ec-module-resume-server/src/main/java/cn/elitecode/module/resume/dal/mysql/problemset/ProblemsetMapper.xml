@@ -63,12 +63,12 @@
             create_time,update_by,update_time
         from
             resume_problemset
-        <where>
+        where
+            del_flag = '0'
             <if test="title != null and title != ''">and title like concat("%", #{title}, "%")</if>
             <if test="createBy != null and createBy != 0">and create_by = #{createBy}</if>
             <if test="updateBy != null and updateBy != 0">and update_by = #{updateBy}</if>
             <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>
-        </where>
         <if test="sortFieldPair != null and sortFieldPair.size() > 0">
             order by
                 <foreach collection="sortFieldPair" separator="," item="sortField">
@@ -84,12 +84,12 @@
             count(*)
         from
             resume_problemset
-        <where>
+        where
+            del_flag = '0'
             <if test="title != null and title != ''">and title like concat("%", #{title}, "%")</if>
             <if test="createBy != null and createBy != 0">and create_by = #{createBy}</if>
             <if test="updateBy != null and updateBy != 0">and update_by = #{updateBy}</if>
             <if test="startTime != null and endTime != null">and create_time between #{startTime} and #{endTime}</if>
-        </where>
     </select>
 
     <!-- List<ProblemsetDO> selectProblemsetAll(); -->

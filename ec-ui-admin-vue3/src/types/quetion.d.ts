@@ -1,5 +1,5 @@
 import type {TagDO} from "@/types/tag";
-import type {ProblemsetDO} from "@/api/problemset.ts";
+import type {ProblemsetDO} from "@/types/problemset";
 
 export declare interface QuestionDO {
     title?: string
