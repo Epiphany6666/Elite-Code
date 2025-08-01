@@ -14,23 +14,37 @@ const router = createRouter({
             redirect: '/system/user',
             children: [
                 {
-                    path: '/system/user',
-                    component: () => import('@/views/system/user/index.vue')
+                    path: 'system',
+                    children: [
+                        {
+                            path: 'user',
+                            component: () => import('@/views/system/user/index.vue')
+                        },
+                        {
+                            path: 'role',
+                            component: () => import('@/views/system/role/index.vue')
+                        }
+                    ]
                 },
                 {
-                    path: '/system/role',
-                    component: () => import('@/views/system/role/index.vue')
-                },
-                {
-                    path: '/resume/question',
-                    component: () => import('@/views/resume/question/index.vue')
-                },
-                {
-                    path: '/resume/problemset',
-                    component: () => import('@/views/resume/problemset/index.vue')
+                    path: 'resume',
+                    children: [
+                        {
+                            path: 'question',
+                            component: () => import('@/views/resume/question/index.vue')
+                        },
+                        {
+                            path: 'problemset',
+                            component: () => import('@/views/resume/problemset/index.vue')
+                        },
+                        {
+                            path: 'tag',
+                            component: () => import('@/views/resume/tag/index.vue')
+                        }
+                    ]
                 }
             ]
-        }
+        },
     ]
 })
 

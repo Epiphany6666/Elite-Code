@@ -50,6 +50,7 @@ const logout = () => {
             </template>
             <el-menu-item index="/resume/question">题目管理</el-menu-item>
             <el-menu-item index="/resume/problemset">题库管理</el-menu-item>
+            <el-menu-item index="/resume/tag">标签管理</el-menu-item>
           </el-sub-menu>
         </el-menu>
       </el-aside>
