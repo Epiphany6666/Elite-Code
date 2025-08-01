@@ -8,6 +8,9 @@ import 'bytemd/dist/index.css'
 import gfm from '@bytemd/plugin-gfm'
 import {Editor} from '@bytemd/vue-next'
 import {upload} from "@/api/minio.ts";
+// bytemd中文语言包
+import zh_Hans from 'bytemd/locales/zh_Hans.json'
+import gfm_zh_Hans from '@bytemd/plugin-gfm/locales/zh_Hans.json'
 
 const formData = ref<QuestionAddReqVO>({
   id: undefined,
@@ -23,7 +26,9 @@ const formRef = ref()
 const problemsetAll = ref<Array<ProblemsetDO>>([])
 const tagAll = ref<Array<TagDO>>([])
 const plugins = [
-  gfm(),
+  gfm({
+    locale: gfm_zh_Hans
+  }),
   // Add more plugins here
 ]
 
@@ -111,12 +116,25 @@ const handleUploadImage = async (files) => {
         <el-input v-model="formData.title" placeholder="请输入标题"/>
       </el-form-item>
       <el-form-item label="内容" prop="content" style="width: 1000px;">
-        <Editor :value="formData.content" mode="split" placeholder="请输入内容..." :plugins="plugins"
-                :uploadImages="handleUploadImage" @change="handleChangeContent"/>
+        <Editor
+            :value="formData.content"
+            mode="split" placeholder="请输入内容..."
+            :plugins="plugins"
+            :uploadImages="handleUploadImage"
+            @change="handleChangeContent"
+            :locale="zh_Hans"
+        />
       </el-form-item>
       <el-form-item label="答案" prop="answer" style="width: 1000px;">
-        <Editor :value="formData.answer" mode="split" placeholder="请输入答案..." :plugins="plugins"
-                :uploadImages="handleUploadImage" @change="handleChangeAnswer"/>
+        <Editor
+            :value="formData.answer"
+            mode="split"
+            placeholder="请输入答案..."
+            :plugins="plugins"
+            :uploadImages="handleUploadImage"
+            @change="handleChangeAnswer"
+            :locale="zh_Hans"
+        />
       </el-form-item>
       <el-form-item label="题库" prop="problemsetIds" style="width: 300px;">
         <el-select v-model="formData.problemsetIds" multiple placeholder="请选择题库">
@@ -160,11 +178,12 @@ const handleUploadImage = async (files) => {
     }
 
     /* 控制 Bytemd 编辑器预览区域和编辑区域的图片大小 */
+
     :deep(.bytemd-preview img),
     :deep(.cm-line img) {
       max-width: 100%; /* 图片最大宽度为其容器的100% */
-      height: auto;    /* 高度自动缩放以保持比例 */
-      display: block;  /* 确保图片为块级元素，避免奇怪的行内对齐问题 */
+      height: auto; /* 高度自动缩放以保持比例 */
+      display: block; /* 确保图片为块级元素，避免奇怪的行内对齐问题 */
     }
   }
 }
